@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v1.5.1</title>
+<title>runSGD v1.5.2</title>
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--card:#fffffff0}
 *{box-sizing:border-box}
@@ -20,7 +20,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.5.1</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.5.2</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -97,7 +97,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v1.5.1</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v1.5.2</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 </section>
 </main>
 
@@ -223,7 +223,13 @@ function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather
 async function loadDiscover(type){if(type!=='news'&&type!=='events'&&type!=='shopping')return;let feed=$('exploreFeed');feed.innerHTML='<div class="feedcard"><h3>Loading…</h3><div class="sub">Checking current items.</div></div>';let qs={news:'Singapore Johor Malaysia causeway immigration transport',events:'Singapore Johor event festival concert exhibition',shopping:'Singapore Johor shopping sale promotion mall'};try{let q=qs[type],rss='https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=en-SG&gl=SG&ceid=SG:en',j=await get('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rss),9000),items=(j.items||[]).slice(0,7).map(x=>({title:x.title,url:x.link,source:x.author||'Google News',date:x.pubDate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
  try{let q=qs[type],j=await get('https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent(q)+'&mode=artlist&maxrecords=8&format=json&sort=datedesc',9000),items=(j.articles||[]).slice(0,7).map(x=>({title:x.title,url:x.url,source:x.domain,date:x.seendate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
  let cached=old('feed-'+type);if(cached?.length){live.feeds[type]=cached;renderFeed(type,cached,'Saved');return}renderFeed(type,[], 'Search')}
-function renderFeed(type,items,label){let f=$('exploreFeed');txt('feedStatus',label==='Live'?'Live sources':label==='Saved'?'Last successful feed':'Live feed unavailable');if(items.length){f.innerHTML=items.map(a=>`<a class="feedcard" target="_blank" rel="noopener" href="${a.url}"><span class="feedtag">${type.toUpperCase()}</span><h3>${esc(a.title)}</h3><div class="feedmeta">${esc(a.source||'Web')}${a.date?' · '+esc(String(a.date).slice(0,16)):''}</div></a>`).join('');return}let searches={news:['Latest SG ↔ JB news','Singapore Johor Causeway latest news'],shopping:['Current SG/JB sales & promotions','Singapore Johor shopping sales today'],events:['Events happening this week','Singapore Johor events this week']};let x=searches[type];f.innerHTML=`<a class="feedcard" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(x[1])}"><span class="feedtag">CURRENT SEARCH</span><h3>${x[0]}</h3><div class="sub">Open fresh web results while the in-app feed is unavailable.</div></a>`}
+function feedTime(v){
+ if(!v)return 0;let s=String(v).trim();
+ if(/^\d{8}T\d{6}Z?$/.test(s))s=s.slice(0,4)+'-'+s.slice(4,6)+'-'+s.slice(6,8)+'T'+s.slice(9,11)+':'+s.slice(11,13)+':'+s.slice(13,15)+'Z';
+ let t=Date.parse(s);return Number.isFinite(t)?t:0
+}
+function feedDate(v){let t=feedTime(v);return t?new Date(t).toLocaleString('en-SG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}
+function renderFeed(type,items,label){let f=$('exploreFeed');items=[...items].sort((a,b)=>feedTime(b.date)-feedTime(a.date));live.feeds[type]=items;txt('feedStatus',label+' · newest first');if(items.length){f.innerHTML=items.map(a=>`<a class="feedcard" target="_blank" rel="noopener" href="${a.url}"><span class="feedtag">${type.toUpperCase()}</span><h3>${esc(a.title)}</h3><div class="feedmeta">${esc(a.source||'Web')}${feedDate(a.date)?' · '+esc(feedDate(a.date)):''}</div></a>`).join('');return}let searches={news:['Latest SG ↔ JB news','Singapore Johor Causeway latest news'],shopping:['Current SG/JB sales & promotions','Singapore Johor shopping sales today'],events:['Events happening this week','Singapore Johor events this week']};let x=searches[type];f.innerHTML=`<a class="feedcard" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(x[1])}"><span class="feedtag">CURRENT SEARCH</span><h3>${x[0]}</h3><div class="sub">Open fresh web results while the in-app feed is unavailable.</div></a>`}
 function showExplore(type,force=false){localStorage.setItem('runsgdExploreTab',type);document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.explore===type));let f=$('exploreFeed');if(!f)return;if(type==='know'){txt('feedStatus','Based on your current signals');f.innerHTML=signalCards().map(c=>`<div class="feedcard"><span class="feedtag">WHAT SHOULD I KNOW?</span><h3>${c[0]}</h3><div class="sub">${c[1]}</div></div>`).join('');return}let cached=live.feeds[type];if(cached?.length&&!force){renderFeed(type,cached,'Live');return}loadDiscover(type)}
 async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getItem('runsgdExploreTab')||'know';if(type==='know'){showExplore('know');setBusy(btn,false);return}live.feeds[type]=[];showExplore(type,true);setBusy(btn,false)}
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
