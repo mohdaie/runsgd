@@ -1,1 +1,271 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f8fbff"><title>runSGD v1.4.0</title><style>*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#17213b;background:radial-gradient(circle at 8% 3%,#dff2ff 0,transparent 29%),radial-gradient(circle at 92% 8%,#efe5ff 0,transparent 28%),linear-gradient(180deg,#fbfdff,#faf9ff 55%,#fffaf7);min-height:100vh}.app{max-width:480px;margin:auto;padding:26px 18px 104px}.top,.head{display:flex;align-items:center;justify-content:space-between}.brandwrap{display:flex;align-items:center;gap:7px}.brand{font-weight:900;font-size:31px;letter-spacing:-2px;background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;color:transparent}.version,.tag{font-size:10px;font-weight:800;color:#65718a;background:#ffffffcc;border:1px solid #fff;padding:5px 8px;border-radius:99px}.loc,.btn,.chip{border:0;font-weight:750}.loc{border-radius:99px;padding:10px 13px;background:#ffffffcc;color:#34415e}.hello{padding:27px 4px 15px}.hello h1{font-size:30px;margin:0 0 7px}.sub,.hello p,.status{color:#748097;font-size:13px;line-height:1.45}.stack{display:flex;flex-direction:column;gap:19px}.card{background:#fffffff0;border:1px solid #fff;border-radius:25px;padding:19px;box-shadow:0 12px 32px #46537d12}.head{margin-bottom:12px}.title{font-weight:800}.big{font-size:35px;font-weight:900}.soft,.result{padding:14px;border-radius:18px;background:linear-gradient(120deg,#eff8ff,#f7f0ff,#fff5ef)}.briefAction{font-size:19px;line-height:1.3;font-weight:850}.briefWhy{margin-top:7px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.temp{font-size:28px;font-weight:900}.amount{display:flex;gap:9px;margin-top:14px}.amount input,.amount select,.toolInput{min-width:0;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px;font-size:15px;color:#17213b}.amount input{flex:1}.result{margin-top:10px;font-weight:800}.status{margin-top:9px}.refresh{width:100%;margin-top:13px;border-radius:99px;padding:11px 14px;background:linear-gradient(120deg,#3f7df4,#8a63ef);color:#fff}.nav{position:fixed;left:0;right:0;bottom:0;height:68px;background:#ffffffea;backdrop-filter:blur(18px);border-top:1px solid #edf0f5;display:flex;justify-content:center;z-index:5}.navin{width:min(480px,100%);display:flex;justify-content:space-around;align-items:center}.nav button{border:0;background:transparent;color:#7b869c;padding:9px 16px;border-radius:15px}.nav button.active{color:#4167d8;background:#eef4ff}.nav b{display:block;font-size:18px}.page{display:none}.page.active{display:block}.pageTitle{font-size:28px;margin:24px 3px 7px}.place{padding:10px 0;border-top:1px solid #edf0f5}.tabs{display:flex;gap:8px;overflow:auto;padding:8px 0 15px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.chip{white-space:nowrap;border-radius:99px;padding:10px 14px;background:#fff;color:#68748b;border:1px solid #e9edf5}.chip.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,#4b82f5,#8b67ef,#e77da8)}.feed{display:flex;flex-direction:column;gap:13px}.feedcard{display:block;text-decoration:none;color:inherit;background:#ffffffe6;border:1px solid #fff;border-radius:20px;padding:16px;box-shadow:0 8px 24px #46537d0d}.feedcard h3{font-size:17px;margin:4px 0 6px}.feedtag{font-size:10px;font-weight:850;color:#607199}.toolgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.toolcard{border:0;text-align:left;background:#ffffffe8;border-radius:21px;padding:17px;color:#17213b;box-shadow:0 8px 24px #46537d0d}.toolcard .ico{font-size:26px;margin-bottom:12px}.toolcard strong{display:block}.toolbox{margin-top:16px}.toolrow{display:flex;gap:8px}.toolrow .toolInput{flex:1}.timerDisplay{font-size:35px;font-weight:900;margin:10px 0}.miniBtn{border:0;border-radius:13px;padding:10px 12px;background:#edf2fb;color:#2e4369;font-weight:800}.actionline{margin-top:9px;padding:10px 12px;border-radius:14px;background:#edf7ff;color:#31517c;font-size:12px;font-weight:700}</style></head><body><main class="app"><div class="top"><div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.4.0</span></div><button id="locBtn" class="loc" onclick="requestLocation()">📍 Location</button></div><section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section><section id="home" class="page"><div class="stack"><article class="card"><div class="head"><div class="title">✦ What should I do?</div><span id="briefStatus" class="tag">Starting</span></div><div class="soft"><div id="brief" class="briefAction">Checking your latest signals…</div><div id="briefWhy" class="sub briefWhy">Looking at weather, prayer, holidays and available live data.</div></div><div id="briefExtra" class="actionline">RunSGD only shows an action when a signal is actually useful.</div></article><article class="card"><div class="head"><div class="title">💱 SGD / MYR</div><span id="rateBadge" class="tag">Loading</span></div><div id="rate" class="big">—</div><div class="sub">1 SGD = MYR · reference rate</div><div class="amount"><input id="amount" inputmode="decimal" placeholder="Amount" oninput="convert()"><select id="direction" onchange="convert()"><option value="SGD">SGD → MYR</option><option value="MYR">MYR → SGD</option></select></div><div id="conversion" class="result">Enter an amount to convert.</div><div id="rateStatus" class="status">Connecting…</div></article><article class="card"><div class="head"><div class="title">🌦 Weather</div><span id="weatherBadge" class="tag">Loading</span></div><div class="grid"><div class="soft"><div class="sub">Singapore</div><div id="sgTemp" class="temp">—°</div><div id="sgRain" class="sub">Loading…</div></div><div class="soft"><div class="sub">Johor Bahru</div><div id="jbTemp" class="temp">—°</div><div id="jbRain" class="sub">Loading…</div></div></div><div id="weatherStatus" class="status">Connecting…</div></article><article class="card"><div class="head"><div class="title">🕌 Prayer</div><span id="prayerLoc" class="tag">Location</span></div><div class="sub">Next prayer</div><div id="nextPrayer" class="big">—</div><div id="prayerTime" class="sub">Loading…</div><button class="btn refresh" onclick="requestLocation()">📍 Update my location</button></article><article class="card"><div class="head"><div class="title">📅 Coming up</div><span id="holidayBadge" class="tag">Loading</span></div><div id="holidays" class="sub">Connecting…</div></article><button class="btn refresh" onclick="refreshAll()">↻ Refresh live data</button></div></section><section id="explore" class="page"><h2 class="pageTitle">Explore</h2><p class="sub">Things worth looking out for around your JB ↔ Singapore routine.</p><div class="tabs"><button class="chip" data-explore="know" onclick="showExplore('know')">✨ For You</button><button class="chip" data-explore="news" onclick="showExplore('news')">📰 News</button><button class="chip" data-explore="shopping" onclick="showExplore('shopping')">🛍 Shopping</button><button class="chip" data-explore="events" onclick="showExplore('events')">🎟 Events</button></div><div id="exploreFeed" class="feed"></div></section><section id="tools" class="page"><h2 class="pageTitle">Tools</h2><p class="sub">Small utilities for the daily commute.</p><div class="toolgrid"><button class="toolcard" onclick="showPage('home');setTimeout(()=>document.getElementById('amount').focus(),100)"><div class="ico">💱</div><strong>Currency</strong><span class="sub">SGD ↔ MYR</span></button><button class="toolcard" onclick="showPage('home')"><div class="ico">🌦</div><strong>Weather</strong><span class="sub">SG + JB</span></button><button class="toolcard" onclick="showPage('home')"><div class="ico">🕌</div><strong>Prayer</strong><span class="sub">Next prayer</span></button><button class="toolcard" onclick="requestLocation()"><div class="ico">📍</div><strong>Location</strong><span class="sub">Refresh area</span></button></div><article class="card toolbox"><div class="title">⏱ Quick timer</div><div id="timerDisplay" class="timerDisplay">05:00</div><div class="toolrow"><button class="miniBtn" onclick="setTimer(5)">5 min</button><button class="miniBtn" onclick="setTimer(10)">10 min</button><button class="miniBtn" onclick="setTimer(15)">15 min</button><button class="miniBtn" onclick="toggleTimer()" id="timerBtn">Start</button></div></article><article class="card toolbox"><div class="title">🚪 Leave-time buffer</div><p class="sub">Add a simple buffer to the time you want to arrive.</p><div class="toolrow"><input id="arrivalTime" class="toolInput" type="time"><select id="bufferMin" class="toolInput"><option value="15">15 min</option><option value="30" selected>30 min</option><option value="45">45 min</option><option value="60">60 min</option></select><button class="miniBtn" onclick="calcLeave()">Calculate</button></div><div id="leaveResult" class="result">Choose an arrival time.</div></article></section><section id="more" class="page"><h2 class="pageTitle">More</h2><article class="card"><div class="title">RunSGD v1.4.0</div><p class="sub">Your last approved location and the page you are viewing are stored in this browser.</p><button class="btn refresh" onclick="refreshAll()">↻ Refresh live data</button></article></section></main><nav class="nav"><div class="navin"><button data-page="home" onclick="showPage('home')"><b>⌂</b>Home</button><button data-page="explore" onclick="showPage('explore')"><b>◇</b>Explore</button><button data-page="tools" onclick="showPage('tools')"><b>⊞</b>Tools</button><button data-page="more" onclick="showPage('more')"><b>•••</b>More</button></div></nav><script>const SG={name:'Singapore',lat:1.3521,lon:103.8198,method:11},JB={name:'Johor Bahru',lat:1.4927,lon:103.7414,method:17},live={rate:null,weather:{},prayer:null,holidays:[],location:null,news:[],events:[]};const $=x=>document.getElementById(x),txt=(x,v)=>{if($(x))$(x).textContent=v};function save(k,v){localStorage.setItem('rsg-'+k,JSON.stringify({v,t:Date.now()}))}function old(k){try{return JSON.parse(localStorage.getItem('rsg-'+k)||'null')?.v||null}catch{return null}}function greeting(){let h=new Date().getHours();txt('greeting',(h<12?'Good morning':h<18?'Good afternoon':'Good evening')+' 👋')}function restoreLocation(){try{let p=JSON.parse(localStorage.getItem('runsgdLocation')||'null');if(p?.lat){live.location=p;txt('locBtn','📍 '+p.name);txt('prayerLoc',p.name)}}catch{}}function requestLocation(){if(!navigator.geolocation)return alert('Location is unavailable in this browser.');txt('locBtn','📍 Locating…');navigator.geolocation.getCurrentPosition(p=>{let lat=p.coords.latitude,lon=p.coords.longitude,a=Math.hypot(lat-SG.lat,lon-SG.lon),b=Math.hypot(lat-JB.lat,lon-JB.lon);live.location=b<a?{name:'Johor area',lat,lon,method:17}:{name:'Singapore area',lat,lon,method:11};localStorage.setItem('runsgdLocation',JSON.stringify(live.location));txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);loadPrayer();updateBrief()},()=>{txt('locBtn',live.location?'📍 '+live.location.name:'📍 Location')},{enableHighAccuracy:true,timeout:15000,maximumAge:120000})}async function get(u,ms=12000){let c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{let r=await fetch(u,{signal:c.signal,cache:'no-store'});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(t)}}async function loadRate(){txt('rateBadge','Loading');let ps=[async()=>Number((await get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/sgd.json')).sgd?.myr),async()=>Number((await get('https://open.er-api.com/v6/latest/SGD')).rates?.MYR),async()=>Number((await get('https://api.frankfurter.dev/v2/rate/sgd/myr')).rate)];for(let p of ps)try{let v=await p();if(v>2&&v<5){live.rate=v;save('rate',v);txt('rate',v.toFixed(4));txt('rateBadge','Live');txt('rateStatus','Live reference · '+new Date().toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}));convert();updateBrief();return}}catch{}let v=old('rate');if(v){live.rate=+v;txt('rate',live.rate.toFixed(4));txt('rateBadge','Saved');txt('rateStatus','Using last successful rate.');convert()}else{txt('rateBadge','Unavailable');txt('rateStatus','Currency providers temporarily unreachable.')}updateBrief()}function convert(){let a=parseFloat($('amount')?.value),d=$('direction')?.value;if(!a||!live.rate)return txt('conversion','Enter an amount to convert.');txt('conversion',d==='SGD'?`≈ RM ${(a*live.rate).toFixed(2)}`:`≈ S$ ${(a/live.rate).toFixed(2)}`)}async function loadWeather(){try{let o={};for(let [k,p] of [['SG',SG],['JB',JB]]){let j=await get(`https://api.open-meteo.com/v1/forecast?latitude=${p.lat}&longitude=${p.lon}&current=temperature_2m&hourly=precipitation_probability&forecast_days=1&timezone=Asia%2FSingapore`),i=Math.max(0,j.hourly.time.findIndex(x=>new Date(x)>=new Date()));o[k]={temp:j.current.temperature_2m,rain:Math.max(...j.hourly.precipitation_probability.slice(i,i+6))}}live.weather=o;save('weather',o);applyWeather(o,'Live')}catch{let o=old('weather');if(o)applyWeather(o,'Saved');else{txt('weatherBadge','Unavailable');txt('weatherStatus','Weather service unavailable.')}}updateBrief()}function applyWeather(o,l){live.weather=o;txt('sgTemp',Math.round(o.SG.temp)+'°');txt('jbTemp',Math.round(o.JB.temp)+'°');txt('sgRain','Rain chance up to '+o.SG.rain+'%');txt('jbRain','Rain chance up to '+o.JB.rain+'%');txt('weatherBadge',l);txt('weatherStatus',l+' · '+new Date().toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}))}async function loadPrayer(){let p=live.location||SG,d=new Date(),date=`${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;try{let t=(await get(`https://api.aladhan.com/v1/timings/${date}?latitude=${p.lat}&longitude=${p.lon}&method=${p.method}`)).data.timings,names=[['Fajr','Subuh'],['Dhuhr','Zohor'],['Asr','Asar'],['Maghrib','Maghrib'],['Isha','Isyak']],now=new Date(),n=null;for(let [a,b] of names){let raw=String(t[a]).match(/\d{1,2}:\d{2}/)?.[0];if(!raw)continue;let [h,m]=raw.split(':').map(Number),x=new Date();x.setHours(h,m,0,0);if(x>now){n={label:b,time:raw,mins:Math.round((x-now)/60000)};break}}if(!n)n={label:'Subuh',time:String(t.Fajr).slice(0,5),mins:null};live.prayer=n;txt('prayerLoc',p.name);txt('nextPrayer',n.label);txt('prayerTime',n.mins==null?'Tomorrow · '+n.time:n.time+' · in '+n.mins+' min')}catch{txt('prayerTime','Prayer service unavailable.')}updateBrief()}async function loadHolidays(){try{let y=new Date().getFullYear(),j=await get(`https://date.nager.at/api/v3/PublicHolidays/${y}/SG`),today=new Date().toISOString().slice(0,10);live.holidays=j.filter(x=>x.date>=today).slice(0,3);txt('holidayBadge','Live');$('holidays').innerHTML=live.holidays.map(x=>`<div class="place"><b>${esc(x.localName||x.name)}</b><div class="sub">${new Date(x.date+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'})}</div></div>`).join('')||'No upcoming listed holidays.'}catch{txt('holidayBadge','Unavailable');txt('holidays','Holiday service unavailable.')}updateBrief()}function updateBrief(){let r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0),h=new Date().getHours(),action='No action needed right now.',why='No strong signal is asking you to change your plan.',extra='Check again before your next border crossing or trip.';if(r>=75){action=h<15?'Bring an umbrella and allow about 15 minutes extra.':'Give your trip a little extra buffer.';why=`Rain chance is up to ${r}% around SG/JB in the next few hours.`;extra='Weather is the strongest signal right now.'}else if(live.prayer?.mins!=null&&live.prayer.mins<=45){action=`Plan around ${live.prayer.label}.`;why=`It is about ${live.prayer.mins} minutes away at ${live.prayer.time}.`;extra='Useful if you are about to commute, eat or enter a long journey.'}else if(live.holidays[0]){let d=new Date(live.holidays[0].date+'T00:00:00'),t=new Date();t.setHours(0,0,0,0);let days=Math.round((d-t)/86400000);if(days>=0&&days<=2){action='Expect unusual crowd or operating patterns.';why=`${live.holidays[0].name} is ${days===0?'today':days===1?'tomorrow':'in '+days+' days'}.`;extra='Plan shopping, transport and border timing with a little more margin.'}}txt('brief',action);txt('briefWhy',why);txt('briefExtra',extra);txt('briefStatus',(live.weather.SG||live.prayer||live.holidays.length)?'Ready':'Limited');if(localStorage.getItem('runsgdPage')==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know')}async function refreshAll(){txt('briefStatus','Updating');await Promise.allSettled([loadRate(),loadWeather(),loadPrayer(),loadHolidays()]);updateBrief()}function showPage(n){if(!['home','explore','tools','more'].includes(n))n='home';document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===n));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===n));localStorage.setItem('runsgdPage',n);history.replaceState(null,'','#'+n);if(n==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know');window.scrollTo({top:0,behavior:'instant'})}function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);if(live.prayer)c.push(['🕌 Prayer',`${live.prayer.label} ${live.prayer.mins==null?'is tomorrow at '+live.prayer.time:'is in about '+live.prayer.mins+' minutes'}.`]);if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);if(live.rate)c.push(['💱 SGD/MYR',`Reference rate is ${live.rate.toFixed(4)} MYR per SGD.`]);if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);return c}async function loadDiscover(type){if(type!=='news'&&type!=='events')return;let feed=$('exploreFeed');feed.innerHTML='<div class="feedcard"><h3>Loading…</h3><div class="sub">Checking current items.</div></div>';let q=type==='news'?'Singapore Johor Malaysia causeway immigration transport':'Singapore Johor event festival concert shopping';try{let j=await get('https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent(q)+'&mode=artlist&maxrecords=8&format=json&sort=datedesc',10000),items=(j.articles||[]).slice(0,6);live[type]=items;if(items.length){feed.innerHTML=items.map(a=>`<a class="feedcard" target="_blank" rel="noopener" href="${a.url}"><span class="feedtag">${type==='news'?'LATEST':'EVENT DISCOVERY'}</span><h3>${esc(a.title||'Open item')}</h3><div class="sub">${esc(a.domain||'Web')}</div></a>`).join('');return}}catch{}feed.innerHTML=fallbackDiscover(type)}function fallbackDiscover(type){if(type==='news')return `<a class="feedcard" target="_blank" rel="noopener" href="https://www.google.com/search?q=Singapore+Johor+Causeway+latest+news"><span class="feedtag">NEWS SEARCH</span><h3>SG ↔ JB latest news</h3><div class="sub">Open current border, transport and local news results.</div></a><a class="feedcard" target="_blank" rel="noopener" href="https://www.google.com/search?q=Singapore+Malaysia+commuter+news+today"><span class="feedtag">COMMUTER</span><h3>Singapore–Malaysia commuter updates</h3><div class="sub">Search current items when the in-app feed is unavailable.</div></a>`;return `<a class="feedcard" target="_blank" rel="noopener" href="https://www.google.com/search?q=Singapore+events+this+week"><span class="feedtag">SINGAPORE</span><h3>Events this week</h3><div class="sub">Concerts, exhibitions, family events and more.</div></a><a class="feedcard" target="_blank" rel="noopener" href="https://www.google.com/search?q=Johor+Bahru+events+this+week"><span class="feedtag">JOHOR BAHRU</span><h3>JB events this week</h3><div class="sub">Things happening around Johor Bahru.</div></a>`}function showExplore(type){localStorage.setItem('runsgdExploreTab',type);document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.explore===type));let f=$('exploreFeed');if(!f)return;if(type==='know'){f.innerHTML=signalCards().map(c=>`<div class="feedcard"><span class="feedtag">WHAT SHOULD I KNOW?</span><h3>${c[0]}</h3><div class="sub">${c[1]}</div></div>`).join('');return}if(type==='shopping'){f.innerHTML=`<a class="feedcard" target="_blank" rel="noopener" href="https://www.google.com/search?q=Singapore+shopping+sales+today"><span class="feedtag">SINGAPORE</span><h3>🛍 Sales & promotions</h3><div class="sub">Look for current mall and retail promotions.</div></a><a class="feedcard" target="_blank" rel="noopener" href="https://www.google.com/search?q=Johor+Bahru+shopping+sales+today"><span class="feedtag">JOHOR BAHRU</span><h3>🛍 JB shopping</h3><div class="sub">Current sales, mall promotions and shopping ideas.</div></a>`;return}loadDiscover(type)}let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}async function init(){greeting();restoreLocation();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','tools','more'].includes(hash)?hash:['home','explore','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();refreshAll()}window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','tools','more'].includes(n))showPage(n)});init();</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f8fbff">
+<title>runSGD v1.5.0</title>
+<style>
+:root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--card:#fffffff0}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 3%,#dff2ff 0,transparent 29%),radial-gradient(circle at 92% 8%,#efe5ff 0,transparent 28%),linear-gradient(180deg,#fbfdff,#faf9ff 55%,#fffaf7);min-height:100vh}
+button,input,select{font:inherit}.app{max-width:480px;margin:auto;padding:26px 18px 106px}.top,.head{display:flex;align-items:center;justify-content:space-between}.brandwrap{display:flex;align-items:center;gap:7px}.brand{font-weight:900;font-size:31px;letter-spacing:-2px;background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;color:transparent}.version,.tag{font-size:10px;font-weight:800;color:#65718a;background:#ffffffcc;border:1px solid #fff;padding:5px 8px;border-radius:99px}.loc,.btn,.chip,.miniBtn{border:0;font-weight:750}.loc{border-radius:99px;padding:10px 13px;background:#ffffffcc;color:#34415e}.hello{padding:27px 4px 15px}.hello h1{font-size:30px;margin:0 0 7px}.sub,.hello p,.status{color:var(--muted);font-size:13px;line-height:1.45}.stack{display:flex;flex-direction:column;gap:19px}.card{background:var(--card);border:1px solid #fff;border-radius:25px;padding:19px;box-shadow:0 12px 32px #46537d12}.head{margin-bottom:12px}.title{font-weight:800}.big{font-size:35px;font-weight:900}.soft,.result{padding:14px;border-radius:18px;background:linear-gradient(120deg,#eff8ff,#f7f0ff,#fff5ef)}.briefAction{font-size:19px;line-height:1.3;font-weight:850}.briefWhy{margin-top:7px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.temp{font-size:28px;font-weight:900}.amount{display:flex;gap:9px;margin-top:14px}.amount input,.amount select,.toolInput{min-width:0;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px;font-size:15px;color:#17213b}.amount input{flex:1}.result{margin-top:10px;font-weight:800}.status{margin-top:9px}.refresh{width:100%;margin-top:13px;border-radius:99px;padding:11px 14px;background:linear-gradient(120deg,var(--blue),var(--violet));color:#fff}.actionline{margin-top:9px;padding:10px 12px;border-radius:14px;background:#edf7ff;color:#31517c;font-size:12px;font-weight:700}.place{padding:11px 0;border-top:1px solid #edf0f5}.place:first-child{border-top:0}.place a{color:#4965c7;text-decoration:none;font-weight:750}.nearbyBox{margin-top:14px;padding-top:13px;border-top:1px solid #edf0f5}.distance{font-size:12px;color:#6f7d95;margin-top:3px}
+.page{display:none}.page.active{display:block}.pageTitle{font-size:28px;margin:24px 3px 7px}.tabs{display:flex;gap:8px;overflow:auto;padding:8px 0 15px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.chip{white-space:nowrap;border-radius:99px;padding:10px 14px;background:#fff;color:#68748b;border:1px solid #e9edf5}.chip.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--blue),var(--violet),var(--pink))}.feed{display:flex;flex-direction:column;gap:13px}.feedcard{display:block;text-decoration:none;color:inherit;background:#ffffffe6;border:1px solid #fff;border-radius:20px;padding:16px;box-shadow:0 8px 24px #46537d0d}.feedcard h3{font-size:17px;margin:4px 0 6px;line-height:1.32}.feedtag{font-size:10px;font-weight:850;color:#607199}.feedmeta{font-size:11px;color:#8a95aa;margin-top:8px}.feedbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.feedRefresh{border:0;background:#eef3ff;color:#4964ba;border-radius:99px;padding:7px 10px;font-weight:800;font-size:11px}
+.toolbox{margin-top:16px}.toolrow{display:flex;gap:8px;flex-wrap:wrap}.toolrow .toolInput{flex:1}.timerDisplay{font-size:35px;font-weight:900;margin:10px 0}.miniBtn{border-radius:13px;padding:10px 12px;background:#edf2fb;color:#2e4369}.clockGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.clockFace{padding:14px;border-radius:18px;background:linear-gradient(120deg,#eff8ff,#f7f0ff)}.clockTime{font-size:25px;font-weight:900;margin-top:4px}.stopwatch{font-size:32px;font-weight:900;letter-spacing:1px;margin:10px 0}
+.nav{position:fixed;left:0;right:0;bottom:0;height:72px;background:#ffffffec;backdrop-filter:blur(18px);border-top:1px solid #edf0f5;display:flex;justify-content:center;z-index:5}.navin{width:min(480px,100%);display:flex;justify-content:space-around;align-items:center}.nav button{border:0;background:transparent;color:#8a94aa;padding:7px 13px;border-radius:18px;min-width:70px;font-size:11px}.nav button.active{color:#4669dd;background:linear-gradient(120deg,#edf6ff,#f3efff)}.navIcon{width:24px;height:24px;display:block;margin:0 auto 3px}.navIcon path,.navIcon circle,.navIcon rect,.navIcon line,.navIcon polyline{stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}.nav button.active .navIcon{filter:drop-shadow(0 3px 7px #6b78d933)}
+</style>
+</head>
+<body>
+<main class="app">
+<div class="top">
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.5.0</span></div>
+  <button id="locBtn" class="loc" onclick="requestLocation()">📍 Location</button>
+</div>
+<section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
+
+<section id="home" class="page">
+<div class="stack">
+<article class="card">
+  <div class="head"><div class="title">✦ What should I do?</div><span id="briefStatus" class="tag">Starting</span></div>
+  <div class="soft"><div id="brief" class="briefAction">Checking your latest signals…</div><div id="briefWhy" class="sub briefWhy">Looking at weather, prayer, holidays and current context.</div></div>
+  <div id="briefExtra" class="actionline">RunSGD only recommends an action when a signal is actually useful.</div>
+</article>
+
+<article class="card">
+  <div class="head"><div class="title">💱 SGD / MYR</div><span id="rateBadge" class="tag">Loading</span></div>
+  <div id="rate" class="big">—</div><div class="sub">1 SGD = MYR · reference rate</div>
+  <div class="amount"><input id="amount" inputmode="decimal" placeholder="Amount" oninput="convert()"><select id="direction" onchange="convert()"><option value="SGD">SGD → MYR</option><option value="MYR">MYR → SGD</option></select></div>
+  <div id="conversion" class="result">Enter an amount to convert.</div><div id="rateStatus" class="status">Connecting…</div>
+</article>
+
+<article class="card">
+  <div class="head"><div class="title">🌦 Weather</div><span id="weatherBadge" class="tag">Loading</span></div>
+  <div class="grid"><div class="soft"><div class="sub">Singapore</div><div id="sgTemp" class="temp">—°</div><div id="sgRain" class="sub">Loading…</div></div><div class="soft"><div class="sub">Johor Bahru</div><div id="jbTemp" class="temp">—°</div><div id="jbRain" class="sub">Loading…</div></div></div>
+  <div id="weatherStatus" class="status">Connecting…</div>
+</article>
+
+<article class="card">
+  <div class="head"><div class="title">🕌 Prayer</div><span id="prayerLoc" class="tag">Location</span></div>
+  <div class="sub">Next prayer</div><div id="nextPrayer" class="big">—</div><div id="prayerTime" class="sub">Loading…</div>
+  <div id="nearestPrayer" class="nearbyBox"><div class="sub">📍 Enable location to find the nearest mosque or surau.</div></div>
+  <button class="btn refresh" onclick="requestLocation()">📍 Update my location & nearest prayer place</button>
+</article>
+
+<article class="card">
+  <div class="head"><div class="title">📅 Coming up</div><span id="holidayBadge" class="tag">Loading</span></div><div id="holidays" class="sub">Connecting…</div>
+</article>
+<button class="btn refresh" onclick="refreshAll()">↻ Refresh live data</button>
+</div>
+</section>
+
+<section id="explore" class="page">
+<h2 class="pageTitle">Explore</h2>
+<p class="sub">Live discovery for your JB ↔ Singapore routine.</p>
+<div class="tabs">
+  <button class="chip" data-explore="know" onclick="showExplore('know')">✨ For You</button>
+  <button class="chip" data-explore="news" onclick="showExplore('news')">📰 News</button>
+  <button class="chip" data-explore="shopping" onclick="showExplore('shopping')">🛍 Shopping</button>
+  <button class="chip" data-explore="events" onclick="showExplore('events')">🎟 Events</button>
+</div>
+<div class="feedbar"><span id="feedStatus" class="sub">Live sources</span><button class="feedRefresh" onclick="refreshExplore()">↻ Refresh</button></div>
+<div id="exploreFeed" class="feed"></div>
+</section>
+
+<section id="tools" class="page">
+<h2 class="pageTitle">Tools</h2><p class="sub">Small utilities that do not duplicate your Home widgets.</p>
+<article class="card toolbox">
+  <div class="title">🕒 SG / JB live clock</div>
+  <div class="clockGrid"><div class="clockFace"><div class="sub">Singapore</div><div id="sgClock" class="clockTime">--:--:--</div></div><div class="clockFace"><div class="sub">Johor Bahru</div><div id="jbClock" class="clockTime">--:--:--</div></div></div>
+  <div id="clockDate" class="status"></div>
+</article>
+<article class="card toolbox">
+  <div class="title">⏱ Quick timer</div><div id="timerDisplay" class="timerDisplay">05:00</div>
+  <div class="toolrow"><button class="miniBtn" onclick="setTimer(5)">5 min</button><button class="miniBtn" onclick="setTimer(10)">10 min</button><button class="miniBtn" onclick="setTimer(15)">15 min</button><button class="miniBtn" onclick="toggleTimer()" id="timerBtn">Start</button></div>
+</article>
+<article class="card toolbox">
+  <div class="title">🚪 Leave-time buffer</div><p class="sub">Work backwards from your desired arrival time.</p>
+  <div class="toolrow"><input id="arrivalTime" class="toolInput" type="time"><select id="bufferMin" class="toolInput"><option value="15">15 min</option><option value="30" selected>30 min</option><option value="45">45 min</option><option value="60">60 min</option></select><button class="miniBtn" onclick="calcLeave()">Calculate</button></div><div id="leaveResult" class="result">Choose an arrival time.</div>
+</article>
+<article class="card toolbox">
+  <div class="title">🏃 Trip stopwatch</div><div id="stopwatchDisplay" class="stopwatch">00:00:00</div>
+  <div class="toolrow"><button class="miniBtn" onclick="toggleStopwatch()" id="stopwatchBtn">Start</button><button class="miniBtn" onclick="resetStopwatch()">Reset</button></div>
+  <div class="status">Useful for timing your real checkpoint-to-work or home journey.</div>
+</article>
+</section>
+
+<section id="more" class="page">
+<h2 class="pageTitle">More</h2>
+<article class="card"><div class="title">RunSGD v1.5.0</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll()">↻ Refresh live data</button></article>
+</section>
+</main>
+
+<nav class="nav"><div class="navin">
+<button data-page="home" onclick="showPage('home')">
+<svg class="navIcon" viewBox="0 0 24 24"><path d="M4 10.8 12 4l8 6.8v7.7a1.5 1.5 0 0 1-1.5 1.5H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M9.5 20v-5.5h5V20"/></svg>Home
+</button>
+<button data-page="explore" onclick="showPage('explore')">
+<svg class="navIcon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m14.9 9.1-1.7 4.1-4.1 1.7 1.7-4.1z"/><path d="M18.5 5.5h.01"/></svg>Explore
+</button>
+<button data-page="tools" onclick="showPage('tools')">
+<svg class="navIcon" viewBox="0 0 24 24"><line x1="5" y1="6" x2="19" y2="6"/><circle cx="9" cy="6" r="2"/><line x1="5" y1="12" x2="19" y2="12"/><circle cx="15" cy="12" r="2"/><line x1="5" y1="18" x2="19" y2="18"/><circle cx="11" cy="18" r="2"/></svg>Tools
+</button>
+<button data-page="more" onclick="showPage('more')">
+<svg class="navIcon" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg>More
+</button>
+</div></nav>
+
+<script>
+const SG={name:'Singapore',lat:1.3521,lon:103.8198,method:11},JB={name:'Johor Bahru',lat:1.4927,lon:103.7414,method:17};
+const live={rate:null,weather:{},prayer:null,holidays:[],location:null,nearby:[],feeds:{news:[],shopping:[],events:[]}};
+const $=x=>document.getElementById(x),txt=(x,v)=>{if($(x))$(x).textContent=v};
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function save(k,v){try{localStorage.setItem('rsg-'+k,JSON.stringify({v,t:Date.now()}))}catch{}}
+function old(k){try{return JSON.parse(localStorage.getItem('rsg-'+k)||'null')?.v||null}catch{return null}}
+function greeting(){let h=new Date().getHours();txt('greeting',(h<12?'Good morning':h<18?'Good afternoon':'Good evening')+' 👋')}
+function restoreLocation(){try{let p=JSON.parse(localStorage.getItem('runsgdLocation')||'null');if(p?.lat){live.location=p;txt('locBtn','📍 '+p.name);txt('prayerLoc',p.name)}}catch{}}
+function classify(lat,lon){let a=Math.hypot(lat-SG.lat,lon-SG.lon),b=Math.hypot(lat-JB.lat,lon-JB.lon);return b<a?{name:'Johor area',lat,lon,method:17}:{name:'Singapore area',lat,lon,method:11}}
+function requestLocation(){
+ if(!navigator.geolocation)return alert('Location is unavailable in this browser.');
+ txt('locBtn','📍 Locating…');
+ navigator.geolocation.getCurrentPosition(async p=>{
+   live.location=classify(p.coords.latitude,p.coords.longitude);
+   localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
+   txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);
+   await Promise.allSettled([loadPrayer(),loadNearbyPrayer()]);
+   updateBrief();
+ },()=>{txt('locBtn',live.location?'📍 '+live.location.name:'📍 Location')},{enableHighAccuracy:true,timeout:15000,maximumAge:120000});
+}
+async function get(u,ms=12000){
+ let c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+ try{let r=await fetch(u,{signal:c.signal,cache:'no-store'});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(t)}
+}
+async function loadRate(){
+ txt('rateBadge','Loading');
+ let ps=[
+   async()=>Number((await get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/sgd.json')).sgd?.myr),
+   async()=>Number((await get('https://open.er-api.com/v6/latest/SGD')).rates?.MYR),
+   async()=>Number((await get('https://api.frankfurter.dev/v2/rate/sgd/myr')).rate)
+ ];
+ for(let p of ps)try{let v=await p();if(v>2&&v<5){live.rate=v;save('rate',v);txt('rate',v.toFixed(4));txt('rateBadge','Live');txt('rateStatus','Live reference · '+new Date().toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}));convert();updateBrief();return}}catch{}
+ let v=old('rate');if(v){live.rate=+v;txt('rate',live.rate.toFixed(4));txt('rateBadge','Saved');txt('rateStatus','Using last successful rate.');convert()}else{txt('rateBadge','Unavailable');txt('rateStatus','Currency providers temporarily unreachable.')}updateBrief()
+}
+function convert(){let a=parseFloat($('amount')?.value),d=$('direction')?.value;if(!a||!live.rate)return txt('conversion','Enter an amount to convert.');txt('conversion',d==='SGD'?`≈ RM ${(a*live.rate).toFixed(2)}`:`≈ S$ ${(a/live.rate).toFixed(2)}`)}
+async function loadWeather(){
+ try{let o={};for(let [k,p] of [['SG',SG],['JB',JB]]){let j=await get(`https://api.open-meteo.com/v1/forecast?latitude=${p.lat}&longitude=${p.lon}&current=temperature_2m&hourly=precipitation_probability&forecast_days=1&timezone=Asia%2FSingapore`),i=Math.max(0,j.hourly.time.findIndex(x=>new Date(x)>=new Date()));o[k]={temp:j.current.temperature_2m,rain:Math.max(...j.hourly.precipitation_probability.slice(i,i+6))}}live.weather=o;save('weather',o);applyWeather(o,'Live')}
+ catch{let o=old('weather');if(o)applyWeather(o,'Saved');else{txt('weatherBadge','Unavailable');txt('weatherStatus','Weather service unavailable.')}}
+ updateBrief()
+}
+function applyWeather(o,l){live.weather=o;txt('sgTemp',Math.round(o.SG.temp)+'°');txt('jbTemp',Math.round(o.JB.temp)+'°');txt('sgRain','Rain chance up to '+o.SG.rain+'%');txt('jbRain','Rain chance up to '+o.JB.rain+'%');txt('weatherBadge',l);txt('weatherStatus',l+' · '+new Date().toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}))}
+async function loadPrayer(){
+ let p=live.location||SG,d=new Date(),date=`${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
+ try{
+   let t=(await get(`https://api.aladhan.com/v1/timings/${date}?latitude=${p.lat}&longitude=${p.lon}&method=${p.method}`)).data.timings,
+   names=[['Fajr','Subuh'],['Dhuhr','Zohor'],['Asr','Asar'],['Maghrib','Maghrib'],['Isha','Isyak']],now=new Date(),n=null;
+   for(let [a,b] of names){let raw=String(t[a]).match(/\d{1,2}:\d{2}/)?.[0];if(!raw)continue;let [h,m]=raw.split(':').map(Number),x=new Date();x.setHours(h,m,0,0);if(x>now){n={label:b,time:raw,mins:Math.round((x-now)/60000)};break}}
+   if(!n)n={label:'Subuh',time:String(t.Fajr).slice(0,5),mins:null};
+   live.prayer=n;txt('prayerLoc',p.name);txt('nextPrayer',n.label);txt('prayerTime',n.mins==null?'Tomorrow · '+n.time:n.time+' · in '+n.mins+' min')
+ }catch{txt('prayerTime','Prayer service unavailable.')}
+ updateBrief()
+}
+function hav(a,b,c,d){let R=6371,r=x=>x*Math.PI/180,da=r(c-a),db=r(d-b),h=Math.sin(da/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(db/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+async function loadNearbyPrayer(){
+ let el=$('nearestPrayer');if(!el)return;
+ if(!live.location){el.innerHTML='<div class="sub">📍 Enable location to find the nearest mosque or surau.</div>';return}
+ el.innerHTML='<div class="sub">Finding nearby mosque / surau…</div>';
+ let {lat,lon}=live.location;
+ let q=`[out:json][timeout:18];(nwr["amenity"="place_of_worship"]["religion"="muslim"](around:8000,${lat},${lon});nwr["place_of_worship"="musalla"](around:8000,${lat},${lon});nwr["amenity"="prayer_room"](around:8000,${lat},${lon});nwr["name"~"surau|mosque|masjid|musolla|musalla",i](around:8000,${lat},${lon}););out center tags;`;
+ let eps=['https://overpass-api.de/api/interpreter?data=','https://overpass.kumi.systems/api/interpreter?data=','https://overpass.private.coffee/api/interpreter?data='];
+ let j=null;
+ for(let ep of eps){try{j=await get(ep+encodeURIComponent(q),18000);if(j?.elements?.length)break}catch{}}
+ if(!j){let cached=old('nearbyPrayer');if(cached){live.nearby=cached;renderNearby(cached,'Saved');return}el.innerHTML='<div class="sub">Nearby mosque lookup is temporarily unavailable. Tap Update location to retry.</div>';return}
+ let map=new Map();
+ for(let x of j.elements||[]){let la=x.lat??x.center?.lat,lo=x.lon??x.center?.lon;if(!Number.isFinite(la)||!Number.isFinite(lo))continue;let name=x.tags?.name||x.tags?.['name:en']||x.tags?.['name:ms']||(x.tags?.place_of_worship==='musalla'||x.tags?.amenity==='prayer_room'?'Surau / Prayer room':'Mosque');let d=hav(lat,lon,la,lo),key=(name+'|'+la.toFixed(4)+'|'+lo.toFixed(4)).toLowerCase();if(!map.has(key))map.set(key,{name,lat:la,lon:lo,d})}
+ let v=[...map.values()].sort((a,b)=>a.d-b.d).slice(0,3);live.nearby=v;if(v.length)save('nearbyPrayer',v);renderNearby(v,'Live')
+}
+function renderNearby(v,label){
+ let el=$('nearestPrayer');if(!el)return;
+ if(!v.length){el.innerHTML='<div class="sub">No mapped mosque or surau found within 8 km.</div>';return}
+ el.innerHTML=`<div class="head" style="margin-bottom:3px"><div class="sub"><b>Nearest prayer places</b></div><span class="tag">${label}</span></div>`+v.map((p,i)=>`<div class="place"><b>${i===0?'📍 ':''}${esc(p.name)}</b><div class="distance">${p.d<1?Math.round(p.d*1000)+' m':p.d.toFixed(1)+' km'} away · <a target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=17/${p.lat}/${p.lon}">Open map ↗</a></div></div>`).join('')
+}
+async function loadHolidays(){
+ try{let y=new Date().getFullYear(),j=await get(`https://date.nager.at/api/v3/PublicHolidays/${y}/SG`),today=new Date().toISOString().slice(0,10);live.holidays=j.filter(x=>x.date>=today).slice(0,3);txt('holidayBadge','Live');$('holidays').innerHTML=live.holidays.map(x=>`<div class="place"><b>${esc(x.localName||x.name)}</b><div class="sub">${new Date(x.date+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'})}</div></div>`).join('')||'No upcoming listed holidays.'}catch{txt('holidayBadge','Unavailable');txt('holidays','Holiday service unavailable.')}
+ updateBrief()
+}
+function updateBrief(){
+ let r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0),h=new Date().getHours(),action='No action needed right now.',why='No strong signal is asking you to change your plan.',extra='Check again before your next border crossing or trip.';
+ if(r>=75){action=h<15?'Bring an umbrella and allow about 15 minutes extra.':'Give your trip a little extra buffer.';why=`Rain chance is up to ${r}% around SG/JB in the next few hours.`;extra='Weather is the strongest signal right now.'}
+ else if(live.prayer?.mins!=null&&live.prayer.mins<=45){action=`Plan around ${live.prayer.label}.`;why=`It is about ${live.prayer.mins} minutes away at ${live.prayer.time}.`;extra=live.nearby[0]?`Nearest mapped prayer place: ${live.nearby[0].name}, ${live.nearby[0].d<1?Math.round(live.nearby[0].d*1000)+' m':live.nearby[0].d.toFixed(1)+' km'} away.`:'Use location to find the nearest prayer place.'}
+ else if(live.holidays[0]){let d=new Date(live.holidays[0].date+'T00:00:00'),t=new Date();t.setHours(0,0,0,0);let days=Math.round((d-t)/86400000);if(days>=0&&days<=2){action='Expect unusual crowd or operating patterns.';why=`${live.holidays[0].name} is ${days===0?'today':days===1?'tomorrow':'in '+days+' days'}.`;extra='Plan shopping, transport and border timing with a little more margin.'}}
+ txt('brief',action);txt('briefWhy',why);txt('briefExtra',extra);txt('briefStatus',(live.weather.SG||live.prayer||live.holidays.length)?'Ready':'Limited');
+ if(localStorage.getItem('runsgdPage')==='explore'&&(localStorage.getItem('runsgdExploreTab')||'know')==='know')showExplore('know')
+}
+async function refreshAll(){txt('briefStatus','Updating');await Promise.allSettled([loadRate(),loadWeather(),loadPrayer(),loadHolidays(),live.location?loadNearbyPrayer():Promise.resolve()]);updateBrief()}
+function showPage(n){
+ if(!['home','explore','tools','more'].includes(n))n='home';
+ document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===n));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===n));
+ localStorage.setItem('runsgdPage',n);history.replaceState(null,'','#'+n);
+ if(n==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know');window.scrollTo({top:0,behavior:'instant'})
+}
+function signalCards(){
+ let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);
+ if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);
+ if(live.prayer)c.push(['🕌 Prayer',`${live.prayer.label} ${live.prayer.mins==null?'is tomorrow at '+live.prayer.time:'is in about '+live.prayer.mins+' minutes'}.${live.nearby[0]?' Nearest mapped place: '+live.nearby[0].name+'.':''}`]);
+ if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);
+ if(live.feeds.news[0])c.push(['📰 Worth knowing',live.feeds.news[0].title]);
+ if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);
+ return c
+}
+const FEEDS={
+ news:{q:'Singapore Johor Bahru Causeway Malaysia transport immigration when:2d',label:'LATEST',days:2},
+ shopping:{q:'Singapore Johor Bahru shopping sale promotion mall when:7d',label:'SHOPPING',days:7},
+ events:{q:'Singapore Johor Bahru events festival concert exhibition when:7d',label:'EVENTS',days:7}
+};
+function googleRss(q){return 'https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=en-SG&gl=SG&ceid=SG:en'}
+async function loadExplore(type,force=false){
+ if(!FEEDS[type])return;
+ let f=$('exploreFeed'),cfg=FEEDS[type],cacheKey='feed-'+type,cached=old(cacheKey);
+ if(cached&&!force){live.feeds[type]=cached;renderFeed(type,cached,'Saved');return}
+ f.innerHTML='<div class="feedcard"><h3>Loading live items…</h3><div class="sub">Checking current sources.</div></div>';txt('feedStatus','Updating…');
+ let items=[];
+ try{
+   let rss=googleRss(cfg.q),j=await get('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rss),12000);
+   items=(j.items||[]).slice(0,8).map(x=>({title:x.title,url:x.link,source:x.author||'Google News',date:x.pubDate}));
+ }catch{}
+ if(!items.length)try{
+   let j=await get('https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent(cfg.q.replace(/ when:\d+d/g,''))+'&mode=artlist&maxrecords=8&format=json&sort=datedesc',12000);
+   items=(j.articles||[]).slice(0,8).map(x=>({title:x.title,url:x.url,source:x.domain||'Web',date:x.seendate||''}));
+ }catch{}
+ if(items.length){live.feeds[type]=items;save(cacheKey,items);renderFeed(type,items,'Live');if(type==='news')updateBrief();return}
+ if(cached){live.feeds[type]=cached;renderFeed(type,cached,'Saved');return}
+ renderFallback(type)
+}
+function renderFeed(type,items,label){
+ txt('feedStatus',label+' · '+new Date().toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}));
+ $('exploreFeed').innerHTML=items.map(x=>`<a class="feedcard" target="_blank" rel="noopener" href="${esc(x.url)}"><span class="feedtag">${FEEDS[type].label}</span><h3>${esc(x.title)}</h3><div class="feedmeta">${esc(x.source||'Web')}${x.date?' · '+esc(String(x.date).slice(0,16)):''}</div></a>`).join('')
+}
+function renderFallback(type){
+ txt('feedStatus','Live feed unavailable · search fallback');
+ let q=FEEDS[type].q.replace(/ when:\d+d/g,''),label=type==='news'?'current news':type==='shopping'?'current shopping sales & promotions':'events this week';
+ $('exploreFeed').innerHTML=`<a class="feedcard" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(q)}"><span class="feedtag">SEARCH</span><h3>Open ${label}</h3><div class="sub">The in-app live feed could not be reached. Open current web results instead.</div></a>`
+}
+function showExplore(type){
+ if(!['know','news','shopping','events'].includes(type))type='know';
+ localStorage.setItem('runsgdExploreTab',type);document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.explore===type));let f=$('exploreFeed');if(!f)return;
+ if(type==='know'){txt('feedStatus','Personal signals');f.innerHTML=signalCards().map(c=>`<div class="feedcard"><span class="feedtag">WHAT SHOULD I KNOW?</span><h3>${c[0]}</h3><div class="sub">${esc(c[1])}</div></div>`).join('');if(!live.feeds.news.length)loadExplore('news').then(()=>{if((localStorage.getItem('runsgdExploreTab')||'know')==='know'){document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.explore==='know'));showExplore('know')}});return}
+ loadExplore(type)
+}
+function refreshExplore(){let t=localStorage.getItem('runsgdExploreTab')||'know';if(t==='know'){Promise.allSettled([loadExplore('news',true),refreshAll()]).then(()=>showExplore('know'))}else loadExplore(t,true)}
+let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}
+function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
+let sw=0,swId=null;function drawStopwatch(){let h=Math.floor(sw/3600),m=Math.floor((sw%3600)/60),s=sw%60;txt('stopwatchDisplay',[h,m,s].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{txt('stopwatchBtn','Pause');swId=setInterval(()=>{sw++;drawStopwatch()},1000)}}function resetStopwatch(){clearInterval(swId);swId=null;sw=0;drawStopwatch();txt('stopwatchBtn','Start')}
+function updateClock(){let d=new Date(),time=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(d);txt('sgClock',time);txt('jbClock',time);txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(d)+' · UTC+8')}
+async function init(){
+ greeting();restoreLocation();updateClock();setInterval(updateClock,1000);
+ let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','tools','more'].includes(hash)?hash:['home','explore','tools','more'].includes(saved)?saved:'home';
+ showPage(page);updateBrief();refreshAll();if(live.location)loadNearbyPrayer()
+}
+window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','tools','more'].includes(n))showPage(n)});
+init();
+</script>
+</body>
+</html>
