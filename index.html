@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v1.5.2</title>
+<title>runSGD v1.5.3</title>
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--card:#fffffff0}
 *{box-sizing:border-box}
@@ -20,7 +20,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.5.2</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.5.3</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -97,7 +97,8 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v1.5.2</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v1.5.3</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card toolbox"><div class="title">💱 Twelve Data FX</div><p class="sub">Primary live SGD/MYR source for this test build. The API key is stored only in this browser's local storage.</p><div class="toolrow"><input id="twelveKey" class="toolInput" type="password" placeholder="Twelve Data API key" autocomplete="off"><button class="miniBtn" onclick="saveTwelveKey(this)">Save & test</button></div><div id="twelveKeyStatus" class="status">If no key is saved, RunSGD uses the existing fallback FX providers.</div></article>
 </section>
 </main>
 
@@ -148,15 +149,30 @@ async function get(u,ms=12000){
  let c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
  try{let r=await fetch(u,{signal:c.signal,cache:'no-store'});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(t)}
 }
+function loadTwelveKeyField(){let e=document.getElementById('twelveKey');if(e)e.value=localStorage.getItem('runsgdTwelveDataKey')||''}
+function saveTwelveKey(btn){let e=document.getElementById('twelveKey'),v=(e?.value||'').trim();if(v)localStorage.setItem('runsgdTwelveDataKey',v);else localStorage.removeItem('runsgdTwelveDataKey');txt('twelveKeyStatus',v?'Saved on this device. Testing live SGD/MYR now…':'Key cleared. RunSGD will use fallback FX sources.');loadRate().finally(()=>txt('twelveKeyStatus',v?'Saved on this device. Twelve Data is now the primary FX source.':'Key cleared.'));}
 async function loadRate(){
  txt('rateBadge','Loading');
+ let tdKey=(localStorage.getItem('runsgdTwelveDataKey')||'').trim();
+ if(tdKey){
+   try{
+     let j=await get('https://api.twelvedata.com/exchange_rate?symbol=SGD%2FMYR&apikey='+encodeURIComponent(tdKey),10000),v=Number(j.rate);
+     if(v>2&&v<5){
+       live.rate=v;save('rate',v);save('rateMeta',{source:'Twelve Data',timestamp:j.timestamp||Math.floor(Date.now()/1000)});
+       txt('rate',v.toFixed(4));txt('rateBadge','Live');
+       let stamp=j.timestamp?new Date(j.timestamp*1000):new Date();
+       txt('rateStatus','Twelve Data · live market · '+stamp.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}));
+       convert();updateBrief();return
+     }
+   }catch(e){console.warn('Twelve Data unavailable',e)}
+ }
  let ps=[
-   async()=>Number((await get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/sgd.json')).sgd?.myr),
-   async()=>Number((await get('https://open.er-api.com/v6/latest/SGD')).rates?.MYR),
-   async()=>Number((await get('https://api.frankfurter.dev/v2/rate/sgd/myr')).rate)
+   ['Fawaz currency API',async()=>Number((await get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/sgd.json')).sgd?.myr)],
+   ['ExchangeRate-API',async()=>Number((await get('https://open.er-api.com/v6/latest/SGD')).rates?.MYR)],
+   ['Frankfurter',async()=>Number((await get('https://api.frankfurter.dev/v2/rate/sgd/myr')).rate)]
  ];
- for(let p of ps)try{let v=await p();if(v>2&&v<5){live.rate=v;save('rate',v);txt('rate',v.toFixed(4));txt('rateBadge','Live');txt('rateStatus','Live reference · '+new Date().toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}));convert();updateBrief();return}}catch{}
- let v=old('rate');if(v){live.rate=+v;txt('rate',live.rate.toFixed(4));txt('rateBadge','Saved');txt('rateStatus','Using last successful rate.');convert()}else{txt('rateBadge','Unavailable');txt('rateStatus','Currency providers temporarily unreachable.')}updateBrief()
+ for(let [name,fn] of ps)try{let v=await fn();if(v>2&&v<5){live.rate=v;save('rate',v);save('rateMeta',{source:name,timestamp:Math.floor(Date.now()/1000)});txt('rate',v.toFixed(4));txt('rateBadge',tdKey?'Fallback':'Live');txt('rateStatus',name+(tdKey?' · Twelve Data unavailable':' · reference rate')+' · '+new Date().toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}));convert();updateBrief();return}}catch{}
+ let v=old('rate'),meta=old('rateMeta');if(v){live.rate=+v;txt('rate',live.rate.toFixed(4));txt('rateBadge','Saved');txt('rateStatus','Saved '+(meta?.source||'reference')+' rate.');convert()}else{txt('rateBadge','Unavailable');txt('rateStatus',tdKey?'Twelve Data and fallback providers are currently unreachable.':'Add a Twelve Data API key in More, or retry later.')}updateBrief()
 }
 function convert(){let a=parseFloat($('amount')?.value),d=$('direction')?.value;if(!a||!live.rate)return txt('conversion','Enter an amount to convert.');txt('conversion',d==='SGD'?`≈ RM ${(a*live.rate).toFixed(2)}`:`≈ S$ ${(a/live.rate).toFixed(2)}`)}
 async function loadWeather(){
@@ -235,7 +251,7 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){greeting();restoreLocation();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','tools','more'].includes(hash)?hash:['home','explore','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();refreshAll();if(live.location)loadNearbyPrayer()}
+async function init(){greeting();restoreLocation();loadTwelveKeyField();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','tools','more'].includes(hash)?hash:['home','explore','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();refreshAll();if(live.location)loadNearbyPrayer()}
 window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','tools','more'].includes(n))showPage(n)});init();
 </script>
 </body>
