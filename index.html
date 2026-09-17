@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v1.6.1</title>
+<title>runSGD v1.6.2</title>
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--card:#fffffff0}
 *{box-sizing:border-box}
@@ -17,12 +17,13 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 .communityAuth{display:flex;flex-direction:column;gap:10px}.communityAuth input,.communityComposer input,.communityComposer textarea{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px;color:#17213b}.communityComposer textarea{resize:vertical;min-height:74px}.communityRooms{display:flex;gap:8px;overflow:auto;padding:4px 0 12px}.roomBtn{border:1px solid #e4e9f3;background:#fff;color:#64718a;border-radius:99px;padding:9px 12px;font-weight:800;white-space:nowrap}.roomBtn.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--blue),var(--violet))}.chatList{display:flex;flex-direction:column;gap:10px;max-height:55vh;overflow:auto;padding:4px 1px 10px}.chatMsg{background:#fff;border:1px solid #edf0f5;border-radius:18px;padding:12px}.chatMeta{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:#8994a8;margin-bottom:5px}.chatName{font-weight:850;color:#46536d}.communityComposer{display:flex;flex-direction:column;gap:9px;margin-top:10px}.memberBar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.memberName{font-weight:850}.smallLink{color:#4965c7;text-decoration:none;font-weight:800}.nav button{min-width:62px;padding-left:9px;padding-right:9px}
 
+.googleBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid #dde3ed;background:#fff;color:#24314c;border-radius:18px;padding:14px 16px;font-weight:850;font-size:16px;box-shadow:0 7px 18px #37486d0b}.googleMark{font-size:20px;font-weight:900;color:#4285f4}.authNote{text-align:center;margin:0 8px}.emailLink{align-self:center;border:0;background:transparent;color:#4965c7;font-weight:850;padding:8px 10px}.emailAuthForm{display:flex;flex-direction:column;gap:10px;padding-top:5px;border-top:1px solid #edf0f5}.emailAuthForm .toolrow{margin-top:2px}.communityAuth{gap:12px}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.6.1</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.6.2</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -87,18 +88,18 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <p class="sub">Basic SG ↔ JB commuter chat. Read freely, sign in to post.</p>
 <article id="communityAuthCard" class="card">
   <div class="title">👤 Join RunSGD</div>
-  <p class="sub">Create a simple member account with email and password.</p>
+  <p class="sub">Join the commuter community in one tap.</p>
   <div class="communityAuth">
-    <button class="btn refresh" style="margin-top:0;background:#fff;color:#26334f;border:1px solid #e2e7f1" onclick="communityGoogle(this)">G&nbsp;&nbsp; Continue with Google</button>
-    <div class="status" style="text-align:center;margin:0">Fastest option · your Google name is used automatically.</div>
-    <div class="status" style="text-align:center;margin:0">If the same verified email already has a RunSGD account, Supabase links Google to that existing profile automatically.</div>
-    <div style="height:1px;background:#edf0f5;margin:4px 0"></div>
-    <div class="sub" style="font-weight:800">Or use email</div>
-    <input id="memberName" placeholder="Display name">
-    <input id="memberEmail" type="email" placeholder="Email">
-    <input id="memberPassword" type="password" placeholder="Password (6+ characters)">
-    <div class="toolrow"><button class="miniBtn" onclick="communitySignUp(this)">Create account</button><button class="miniBtn" onclick="communitySignIn(this)">Sign in</button></div>
-    <div id="communityAuthStatus" class="status">You can still read community messages without signing in.</div>
+    <button class="googleBtn" onclick="communityGoogle(this)"><span class="googleMark">G</span><span>Continue with Google</span></button>
+    <div class="status authNote">Your Google name is used automatically. You can change it later.</div>
+    <button id="emailToggle" class="emailLink" onclick="toggleEmailAuth()">Use email instead</button>
+    <div id="emailAuthForm" class="emailAuthForm" style="display:none">
+      <input id="memberName" placeholder="Display name">
+      <input id="memberEmail" type="email" placeholder="Email">
+      <input id="memberPassword" type="password" placeholder="Password (6+ characters)">
+      <div class="toolrow"><button class="miniBtn" onclick="communitySignUp(this)">Create account</button><button class="miniBtn" onclick="communitySignIn(this)">Sign in</button></div>
+    </div>
+    <div id="communityAuthStatus" class="status">You can read community messages without signing in.</div>
   </div>
 </article>
 <article id="communityChatCard" class="card" style="margin-top:16px">
@@ -137,7 +138,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v1.6.1</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v1.6.2</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article class="card toolbox"><div class="title">⚙️ Admin settings</div><p class="sub">Manage API keys and test integrations from the temporary admin page.</p><a class="feedcard" style="margin-top:12px;text-align:center;font-weight:800;color:#4965c7" href="./admin/">Open Admin →</a></article>
 </section>
@@ -170,13 +171,44 @@ const SUPABASE_KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let communityUser=null,communityRooms=[],activeRoom=null,chatChannel=null;
 async function initCommunity(){
-  try{let {data:{session}}=await sb.auth.getSession();communityUser=session?.user||null;await loadCommunityRooms();applyMemberState();if(activeRoom)await loadCommunityMessages();sb.auth.onAuthStateChange(async(_e,session)=>{communityUser=session?.user||null;applyMemberState();if(activeRoom)await loadCommunityMessages()})}catch(e){txt('communityAuthStatus','Community connection unavailable.')}
+  try{
+    let {data:{session}}=await sb.auth.getSession();
+    communityUser=session?.user||null;
+    await loadCommunityRooms();
+    await applyMemberState();
+    if(activeRoom)await loadCommunityMessages();
+    let returned=new URLSearchParams(location.search).get('auth')==='google'||localStorage.getItem('runsgdAuthReturn')==='community';
+    if(communityUser&&returned){
+      localStorage.removeItem('runsgdAuthReturn');
+      history.replaceState(null,'',location.pathname+'#community');
+      showPage('community');
+      txt('communityAuthStatus','Signed in with Google.');
+    }
+    sb.auth.onAuthStateChange(async(event,session)=>{
+      communityUser=session?.user||null;
+      await applyMemberState();
+      if(activeRoom)await loadCommunityMessages();
+      if(event==='SIGNED_IN'&&communityUser&&localStorage.getItem('runsgdAuthReturn')==='community'){
+        localStorage.removeItem('runsgdAuthReturn');
+        history.replaceState(null,'',location.pathname+'#community');
+        showPage('community');
+      }
+    })
+  }catch(e){txt('communityAuthStatus','Community connection unavailable.')}
 }
 async function communityGoogle(btn){
   setBusy(btn,true);
   txt('communityAuthStatus','Opening Google sign-in…');
-  let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://mohdaie.github.io/runsgd/#community'}});
+  localStorage.setItem('runsgdAuthReturn','community');
+  let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://mohdaie.github.io/runsgd/?auth=google'}});
   if(error){setBusy(btn,false);txt('communityAuthStatus',error.message)}
+}
+function toggleEmailAuth(){
+  let f=$('emailAuthForm'),b=$('emailToggle');
+  if(!f||!b)return;
+  let open=f.style.display!=='none';
+  f.style.display=open?'none':'flex';
+  b.textContent=open?'Use email instead':'Hide email sign in';
 }
 async function communityProfileName(user){
   if(!user)return 'Member';
