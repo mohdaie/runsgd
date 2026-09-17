@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v1.6.6</title>
+<title>runSGD v1.6.7</title>
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--card:#fffffff0}
 *{box-sizing:border-box}
@@ -22,12 +22,14 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .profileCard{display:none}.profileTop{display:flex;align-items:center;gap:14px;margin-bottom:14px}.profileAvatar{width:70px;height:70px;border-radius:22px;object-fit:cover;background:linear-gradient(120deg,#eef5ff,#f5efff);border:1px solid #e6eaf2}.profileFields{display:flex;flex-direction:column;gap:10px}.profileFields input,.profileFields textarea{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px;color:#17213b}.profileFields textarea{min-height:82px;resize:vertical}.badgeTag{display:inline-flex;align-items:center;border-radius:99px;padding:5px 9px;font-size:10px;font-weight:900;background:#eef3ff;color:#5067b4;text-transform:uppercase;letter-spacing:.3px}.badgeTag.admin{background:#fff0f2;color:#a33e53}.chatIdentity{display:flex;align-items:center;gap:7px;min-width:0}.chatAvatar{width:24px;height:24px;border-radius:8px;object-fit:cover;background:#eef3ff;flex:0 0 auto}.chatBadge{font-size:8px;font-weight:900;text-transform:uppercase;border-radius:99px;padding:2px 5px;background:#eef3ff;color:#5067b4}.chatBadge.admin{background:#fff0f2;color:#a33e53}
 
 .profileView{display:block}.profileEdit{display:none}.profileSummary{display:flex;flex-direction:column;gap:8px}.profileBioLine{font-size:14px;line-height:1.5;color:#58647a;white-space:pre-wrap}.editProfileLink{border:0;background:transparent;color:#4965c7;font-weight:850;padding:7px 0;text-align:left;align-self:flex-start}.profileCard.editing .profileView{display:none}.profileCard.editing .profileEdit{display:flex}
+
+.trafficSnap{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:18px;background:linear-gradient(120deg,#eef4ff,#f7f1ff);display:none}.trafficPlaceholder{display:grid;place-items:center;min-height:180px;border-radius:18px;background:linear-gradient(120deg,#eef4ff,#f7f1ff);color:#748097;text-align:center;padding:24px}.trafficControls{display:flex;gap:8px;align-items:center;margin-top:10px}.trafficControls select{flex:1;min-width:0;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:10px 11px;color:#17213b}.trafficMeta{font-size:11px;color:#7b879c;margin-top:8px;line-height:1.45}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.6.6</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.6.7</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -38,6 +40,23 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
   <div class="head"><div class="title">✦ What should I do?</div><span id="briefStatus" class="tag">Starting</span></div>
   <div class="soft"><div id="brief" class="briefAction">Checking your latest signals…</div><div id="briefWhy" class="sub briefWhy">Looking at weather, prayer, holidays and current context.</div></div>
   <div id="briefExtra" class="actionline">RunSGD only recommends an action when a signal is actually useful.</div>
+</article>
+
+<article class="card">
+  <div class="head"><div class="title">🚦 Causeway snapshot</div><span id="trafficBadge" class="tag">Loading</span></div>
+  <div id="trafficPlaceholder" class="trafficPlaceholder">Connecting to LTA traffic camera…</div>
+  <img id="trafficImage" class="trafficSnap" alt="Latest LTA traffic camera snapshot">
+  <div id="trafficName" class="title" style="margin-top:11px">Woodlands Causeway (Towards Johor)</div>
+  <div id="trafficTime" class="trafficMeta">Latest LTA DataMall snapshot · refreshes every 1–5 minutes.</div>
+  <div class="trafficControls">
+    <select id="trafficCamera" onchange="loadTrafficSnapshot()">
+      <option value="2701">Causeway → Johor</option>
+      <option value="2702">Woodlands Checkpoint</option>
+      <option value="4703">Tuas Second Link</option>
+      <option value="4713">Tuas Checkpoint</option>
+    </select>
+    <button class="miniBtn" onclick="loadTrafficSnapshot(this)">Refresh</button>
+  </div>
 </article>
 
 <article class="card">
@@ -142,7 +161,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v1.6.6</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v1.6.7</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -193,6 +212,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 const SUPABASE_URL='https://gdycbluljgfezhgslppe.supabase.co';
 const SUPABASE_KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
+const LTA_SNAPSHOT_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/lta-traffic-snapshot';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let communityUser=null,communityRooms=[],activeRoom=null,chatChannel=null,communityRole='member',communityProfile=null;
 async function initCommunity(){
@@ -298,6 +318,22 @@ async function get(u,ms=12000){
  let c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
  try{let r=await fetch(u,{signal:c.signal,cache:'no-store'});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(t)}
 }
+function trafficClock(v){if(!v)return '';let d=new Date(v);if(!Number.isFinite(d.getTime()))return '';return d.toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}
+async function loadTrafficSnapshot(btn){
+ let camera=$('trafficCamera')?.value||'2701',img=$('trafficImage'),ph=$('trafficPlaceholder');
+ if(btn)setBusy(btn,true);txt('trafficBadge','Loading');
+ try{
+   let r=await fetch(LTA_SNAPSHOT_URL+'?camera='+encodeURIComponent(camera),{cache:'no-store'}),j=await r.json();
+   if(!r.ok||!j.image_url)throw Error(j.error||'Snapshot unavailable');
+   if(ph)ph.style.display='none';if(img){img.style.display='block';img.src=j.image_url+'#'+Date.now()}
+   txt('trafficName',j.name||'LTA traffic camera');txt('trafficBadge','Live');
+   let captured=trafficClock(j.captured_at),fetched=trafficClock(j.fetched_at);
+   txt('trafficTime',(captured?'Captured '+captured:(fetched?'Checked '+fetched:'Latest image'))+' · LTA DataMall · refresh 1–5 min');
+ }catch(e){
+   if(img)img.style.display='none';if(ph){ph.style.display='grid';ph.textContent=String(e.message||'Snapshot unavailable').includes('configured')?'LTA API key is not configured yet. Add it in Admin settings.':'Causeway snapshot is temporarily unavailable.'}
+   txt('trafficBadge','Unavailable');txt('trafficTime','LTA DataMall traffic image service.');
+ }finally{if(btn)setBusy(btn,false)}
+}
 function loadTwelveKeyField(){let e=document.getElementById('twelveKey');if(e)e.value=localStorage.getItem('runsgdTwelveDataKey')||''}
 function saveTwelveKey(btn){let e=document.getElementById('twelveKey'),v=(e?.value||'').trim();if(v)localStorage.setItem('runsgdTwelveDataKey',v);else localStorage.removeItem('runsgdTwelveDataKey');txt('twelveKeyStatus',v?'Saved on this device. Testing live SGD/MYR now…':'Key cleared. RunSGD will use fallback FX sources.');loadRate().finally(()=>txt('twelveKeyStatus',v?'Saved on this device. Twelve Data is now the primary FX source.':'Key cleared.'));}
 async function loadRate(){
@@ -402,7 +438,7 @@ function updateBrief(){
  else if(live.holidays[0]){let d=new Date(live.holidays[0].date+'T00:00:00'),t=new Date();t.setHours(0,0,0,0);let days=Math.round((d-t)/86400000);if(days>=0&&days<=2){action='Expect unusual crowd or operating patterns.';why=`${live.holidays[0].name} is ${days===0?'today':days===1?'tomorrow':'in '+days+' days'}.`;extra='Plan shopping, transport and border timing with a little more margin.'}}
  txt('brief',action);txt('briefWhy',why);txt('briefExtra',extra);txt('briefStatus',(live.weather.SG||live.prayer||live.holidays.length)?'Ready':'Limited');if(localStorage.getItem('runsgdPage')==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know')
 }
-async function refreshAll(btn){setBusy(btn,true);txt('briefStatus','Updating');await Promise.allSettled([loadRate(),loadWeather(),loadPrayer(),loadHolidays(),live.location?loadNearbyPrayer():Promise.resolve(),live.location?loadAir():Promise.resolve()]);updateBrief();setBusy(btn,false)}
+async function refreshAll(btn){setBusy(btn,true);txt('briefStatus','Updating');await Promise.allSettled([loadTrafficSnapshot(),loadRate(),loadWeather(),loadPrayer(),loadHolidays(),live.location?loadNearbyPrayer():Promise.resolve(),live.location?loadAir():Promise.resolve()]);updateBrief();setBusy(btn,false)}
 function showPage(n){if(!['home','explore','community','tools','more'].includes(n))n='home';document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===n));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===n));localStorage.setItem('runsgdPage',n);history.replaceState(null,'','#'+n);if(n==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know');if(n==='community'&&activeRoom)loadCommunityMessages();window.scrollTo({top:0,behavior:'instant'})}
 function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);if(live.prayer)c.push(['🕌 Prayer',`${live.prayer.label} ${live.prayer.mins==null?'is tomorrow at '+live.prayer.time:'is in about '+live.prayer.mins+' minutes'}.${live.nearby[0]?' Nearest mapped place: '+live.nearby[0].name+'.':''}`]);if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);if(live.rate)c.push(['💱 SGD/MYR',`Reference rate is ${live.rate.toFixed(4)} MYR per SGD.`]);if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);return c}
 async function loadDiscover(type){if(type!=='news'&&type!=='events'&&type!=='shopping')return;let feed=$('exploreFeed');feed.innerHTML='<div class="feedcard"><h3>Loading…</h3><div class="sub">Checking current items.</div></div>';let qs={news:'Singapore Johor Malaysia causeway immigration transport',events:'Singapore Johor event festival concert exhibition',shopping:'Singapore Johor shopping sale promotion mall'};try{let q=qs[type],rss='https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=en-SG&gl=SG&ceid=SG:en',j=await get('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rss),9000),items=(j.items||[]).slice(0,7).map(x=>({title:x.title,url:x.link,source:x.author||'Google News',date:x.pubDate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}

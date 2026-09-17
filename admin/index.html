@@ -28,6 +28,14 @@
  <div id="memberList" class="memberList"><div class="sub">Loading members…</div></div>
 </article>
 
+<article class="card" id="ltaCard">
+ <div class="head"><div class="title">🚦 LTA DataMall · Traffic Images</div><span id="ltaState" class="pill">Not configured</span></div>
+ <p class="sub">AccountKey for the Causeway snapshot on Home. Saved securely in Supabase for RunSGD; it is not stored in GitHub or exposed to visitors.</p>
+ <div class="field"><label for="ltaKey">LTA AccountKey</label><div class="row"><input id="ltaKey" class="input" type="password" placeholder="Paste LTA DataMall AccountKey" autocomplete="off"><button class="btn soft" onclick="toggleKey('ltaKey',this)">Show</button></div></div>
+ <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveLtaKey()">Save</button><button id="ltaTestBtn" class="btn soft" onclick="testLta()">Test Causeway</button></div>
+ <div id="ltaStatus" class="status">Camera 2701 · Woodlands Causeway towards Johor.</div>
+</article>
+
 <article class="card" id="fxCard">
  <div class="head"><div class="title">💱 Currency · Twelve Data</div><span id="twelveState" class="pill">Not configured</span></div>
  <p class="sub">Primary live SGD/MYR provider. RunSGD keeps the existing free FX sources as fallback.</p>
@@ -80,10 +88,13 @@ function toggleKey(id,btn){let e=$(id),show=e.type==='password';e.type=show?'tex
 function cfg(){try{return JSON.parse(localStorage.getItem('runsgdAdminConfig')||'{}')}catch{return {}}}
 function saveCfg(next){localStorage.setItem('runsgdAdminConfig',JSON.stringify(next))}
 function maskState(){let key=localStorage.getItem('runsgdTwelveDataKey')||'';$('twelveState').textContent=key?'Configured':'Not configured';$('twelveState').classList.toggle('ok',!!key)}
-function load(){let c=cfg(),tk=localStorage.getItem('runsgdTwelveDataKey')||c.twelveDataKey||'';$('twelveKey').value=tk;$('llmProvider').value=c.llmProvider||'disabled';$('llmKey').value=c.llmKey||'';$('llmModel').value=c.llmModel||'';$('llmEndpoint').value=c.llmEndpoint||'';maskState()}
+function load(){let c=cfg(),tk=localStorage.getItem('runsgdTwelveDataKey')||c.twelveDataKey||'';$('twelveKey').value=tk;$('llmProvider').value=c.llmProvider||'disabled';$('llmKey').value=c.llmKey||'';$('llmModel').value=c.llmModel||'';$('llmEndpoint').value=c.llmEndpoint||'';maskState();loadLtaState()}
 function saveTwelve(){let key=$('twelveKey').value.trim(),c=cfg();if(key){localStorage.setItem('runsgdTwelveDataKey',key);c.twelveDataKey=key}else{localStorage.removeItem('runsgdTwelveDataKey');delete c.twelveDataKey}saveCfg(c);maskState();$('twelveStatus').textContent=key?'Saved on this browser.':'Twelve Data key cleared.';flash($('fxCard'))}
 async function testTwelve(){let key=$('twelveKey').value.trim();if(!key)return $('twelveStatus').textContent='Enter a Twelve Data API key first.';let b=$('testBtn');b.disabled=true;b.textContent='Testing…';$('twelveStatus').textContent='Requesting live SGD/MYR…';try{let r=await fetch('https://api.twelvedata.com/exchange_rate?symbol=SGD%2FMYR&apikey='+encodeURIComponent(key),{cache:'no-store'}),j=await r.json();if(!r.ok||!j.rate)throw Error(j.message||('HTTP '+r.status));let rate=Number(j.rate);$('twelveStatus').textContent='✓ Working · 1 SGD = RM '+rate.toFixed(4);saveTwelve()}catch(e){$('twelveStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test SGD/MYR'}}
 function saveLLM(){let c=cfg();c.llmProvider=$('llmProvider').value;c.llmKey=$('llmKey').value.trim();c.llmModel=$('llmModel').value.trim();c.llmEndpoint=$('llmEndpoint').value.trim();saveCfg(c);$('llmStatus').textContent='Saved. Main app integration will use these settings in the LLM release.';flash($('llmStatus').closest('.card'))}
+async function loadLtaState(){try{let {data,error}=await adminSb.from('app_settings').select('secret_value').eq('key','lta_account_key').maybeSingle();if(error)throw error;let ok=!!data?.secret_value;$('ltaState').textContent=ok?'Configured':'Not configured';$('ltaState').classList.toggle('ok',ok)}catch(e){$('ltaState').textContent='Unavailable'}}
+async function saveLtaKey(){let key=$('ltaKey').value.trim();if(!key)return $('ltaStatus').textContent='Paste your LTA AccountKey first.';$('ltaStatus').textContent='Saving…';let {error}=await adminSb.from('app_settings').update({secret_value:key,updated_at:new Date().toISOString()}).eq('key','lta_account_key');if(error)return $('ltaStatus').textContent='Save failed · '+error.message;$('ltaKey').value='';$('ltaState').textContent='Configured';$('ltaState').classList.add('ok');$('ltaStatus').textContent='Saved in Supabase. Testing Causeway camera…';await testLta()}
+async function testLta(){let b=$('ltaTestBtn');b.disabled=true;b.textContent='Testing…';try{let r=await fetch('https://gdycbluljgfezhgslppe.supabase.co/functions/v1/lta-traffic-snapshot?camera=2701',{cache:'no-store'}),j=await r.json();if(!r.ok||!j.image_url)throw Error(j.error||'No image returned');$('ltaStatus').textContent='✓ Working · '+(j.name||'Causeway camera')+' snapshot available';$('ltaState').textContent='Configured';$('ltaState').classList.add('ok')}catch(e){$('ltaStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test Causeway'}}
 function clearAll(){if(!confirm('Clear RunSGD API settings from this browser?'))return;localStorage.removeItem('runsgdTwelveDataKey');localStorage.removeItem('runsgdAdminConfig');load();$('twelveStatus').textContent='API settings cleared.';$('llmStatus').textContent='LLM settings cleared.'}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function tagLabel(v){return ({newbie:'Newbie',pro:'Pro',oldtimer:'Oldtimer',paid:'Paid'})[v]||'Newbie'}
