@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v210';
+const CACHE='runsgd-shell-v211';
 const SHELL=['/runsgd/','/runsgd/index.html','/runsgd/manifest.webmanifest','/runsgd/icon.svg','/runsgd/privacy.html'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));

@@ -146,12 +146,15 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 /* v2.1 public transport + journey intent */
 .journeyChoices{display:flex;gap:7px;overflow:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:none}.journeyChoices::-webkit-scrollbar{display:none}.journeyChoice{flex:0 0 auto;border:1px solid #e4e9f3;background:#fff;color:#56647d;border-radius:99px;padding:9px 12px;font-size:12px;font-weight:800}.journeyChoice.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--blue),var(--violet))}.journeyCustom{width:100%;margin-top:9px;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px 13px;color:#17213b}.transitPanel{padding:12px 13px;border-radius:17px;background:linear-gradient(120deg,#f2f8ff,#f8f4ff);margin-top:9px}.transitHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.transitState{font-size:11px;font-weight:850;color:#53627c}.transitStop{padding-top:9px;margin-top:9px;border-top:1px solid #e6ebf4}.transitStop:first-child{border-top:0;margin-top:4px}.busArrivalRow{display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:start;padding:6px 0}.busNo{display:inline-grid;place-items:center;background:#fff;border:1px solid #e4e9f3;border-radius:10px;padding:5px 7px;font-weight:900;font-size:12px}.busTimes{font-weight:800;font-size:13px;color:#263550}.busMeta{font-size:10px;color:#7e899e;margin-top:2px}.transitRefresh{width:100%;margin-top:10px}
+
+/* v2.1.1 journey dropdown */
+.journeySelectWrap{margin-top:12px}.journeySelectLabel{display:block;font-size:11px;font-weight:850;color:#6a7690;margin:0 0 6px 2px}.journeySelect{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:15px;padding:12px 13px;color:#17213b;font-weight:800}.journeyCustom{display:none}.journeyCustom.show{display:block}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.1.0</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.1.1</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -161,12 +164,18 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <article class="card">
   <div class="head"><div class="title">✦ What should I do?</div><span id="briefStatus" class="tag">Ready</span></div>
   <div class="sub">Tell RunSGD what you are trying to do. It will check only the app data that matters for that trip.</div>
-  <div class="journeyChoices" aria-label="Journey choices">
-    <button class="journeyChoice" data-journey="sg-jb" onclick="selectJourneyIntent('sg-jb',this)">🇸🇬 → 🇲🇾 Going to JB</button>
-    <button class="journeyChoice" data-journey="within-sg" onclick="selectJourneyIntent('within-sg',this)">🚇 Within SG</button>
-    <button class="journeyChoice" data-journey="surrounding" onclick="selectJourneyIntent('surrounding',this)">📍 Surroundings</button>
+  <div class="journeySelectWrap">
+    <label class="journeySelectLabel" for="journeyIntentSelect">My journey</label>
+    <select id="journeyIntentSelect" class="journeySelect" onchange="journeyIntentChanged()">
+      <option value="">Choose what you are doing…</option>
+      <option value="sg-jb">🇸🇬 → 🇲🇾 Going to JB from SG</option>
+      <option value="jb-sg">🇲🇾 → 🇸🇬 Going to SG from JB</option>
+      <option value="within-sg">🚇 Commuting within SG</option>
+      <option value="surrounding">📍 Check my surroundings</option>
+      <option value="custom">✍️ Something else</option>
+    </select>
   </div>
-  <input id="journeyCustom" class="journeyCustom" maxlength="180" placeholder="Or tell RunSGD what you want to do…" oninput="journeyCustomChanged()">
+  <input id="journeyCustom" class="journeyCustom" maxlength="180" placeholder="Tell RunSGD what you want to do…" oninput="journeyCustomChanged()">
   <button id="aiBriefBtn" class="btn refresh" onclick="loadAiBrief(true,this)">✨ Check my journey</button>
   <div class="soft" style="margin-top:12px"><div id="brief" class="briefAction">Choose a trip or type what you want to do.</div><div id="briefWhy" class="sub briefWhy">RunSGD will use traffic, weather, public transport, community and your enabled widgets.</div></div>
   <div id="briefExtra" class="actionline">If there is nothing important to act on, RunSGD will simply say you are good to go.</div>
@@ -331,7 +340,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.1.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.1.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -355,7 +364,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.1.0</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.1.1</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -501,7 +510,7 @@ function requestLocation(btn){
  setBusy(btn,true);txt('locBtn','📍 Locating…');
  let near=$('nearestPrayer');if(near)near.innerHTML='<div class="sub">📍 Getting your location…</div>';
  navigator.geolocation.getCurrentPosition(async p=>{
-   live.location=classify(p.coords.latitude,p.coords.longitude);
+   live.location={...classify(p.coords.latitude,p.coords.longitude),detected_at:Date.now()};
    localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
    txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);
    await Promise.allSettled([loadPrayer(),loadNearbyPrayer(),loadAir(),loadPublicTransport()]);
@@ -543,23 +552,49 @@ function renderPublicTransport(j){
    txt('mrtDetail',m||(a?`${a.line||'MRT'} affected${a.stations?' · '+a.stations:''}.`:'LTA reports a major train disruption.'));
  }else{
    txt('mrtStatus','✓ Normal');
-   txt('mrtDetail',crowd?`Network normal · Woodlands NS9 crowd: ${crowd.crowd_label}.`:'Network normal · Woodlands crowd data unavailable.');
+   txt('mrtDetail',crowd?`Singapore MRT normal · Woodlands NS9 crowd: ${crowd.crowd_label}.`:'Singapore MRT normal · Woodlands crowd data unavailable.');
  }
  let box=$('nearbyBusList');
  if(!box)return;
- if(!live.location||live.location.name!=='Singapore area'){
-   txt('busStatus','Location needed');
-   box.innerHTML='<div class="sub">Use the location button at the top while you are in Singapore to see nearby bus arrivals.</div>';
+ if(!live.location){
+   txt('busStatus','Location unavailable');
+   box.innerHTML='<div class="sub">RunSGD could not detect your location automatically.</div><button class="miniBtn" style="margin-top:9px" onclick="useTransportLocation(this)">📍 Use my location</button>';
+ }else if(live.location.name==='Johor area'){
+   txt('busStatus','Johor detected');
+   box.innerHTML='<div class="sub">You are currently in the Johor area. Singapore nearby-bus arrivals will switch on automatically after RunSGD detects you in Singapore.</div>';
  }else if(!stops.length){
    txt('busStatus','No stop found');box.innerHTML='<div class="sub">No nearby bus stop data is available right now.</div>';
  }else{
    txt('busStatus','Live arrivals');
    box.innerHTML=stops.map(st=>`<div class="transitStop"><b>🚏 ${esc(st.description||st.road||st.code)}</b><div class="busMeta">${esc(st.code)} · ${Math.round(st.distance_m||0)} m away</div>${(st.services||[]).slice(0,5).map(sv=>{let arr=(sv.arrivals||[]).slice(0,3),times=arr.map(a=>a.minutes===0?'Due':a.minutes+' min').join(' · '),meta=arr[0]?.load_label||'';return `<div class="busArrivalRow"><span class="busNo">${esc(sv.service_no)}</span><div><div class="busTimes">${esc(times||'No prediction')}</div><div class="busMeta">${esc(meta)}${arr[0]?.wheelchair?' · ♿':''}</div></div></div>`}).join('')}</div>`).join('');
  }
- txt('transportTime','Checked '+new Date(j.fetched_at||Date.now()).toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' · LTA DataMall');
+ txt('transportTime','Checked '+new Date(j.fetched_at||Date.now()).toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' · '+(live.location?.name||'Location unavailable')+' · LTA DataMall');
+}
+async function autoDetectTransportLocation(force=false){
+ if(!navigator.geolocation)return false;
+ let fresh=live.location?.detected_at&&Date.now()-live.location.detected_at<120000;
+ if(fresh&&!force)return true;
+ txt('busStatus','Detecting location…');
+ txt('transportTime','Detecting your current area for nearby transport…');
+ return await new Promise(resolve=>{
+   navigator.geolocation.getCurrentPosition(p=>{
+     live.location={...classify(p.coords.latitude,p.coords.longitude),detected_at:Date.now()};
+     localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
+     txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);
+     resolve(true);
+   },()=>resolve(false),{enableHighAccuracy:false,timeout:7000,maximumAge:60000});
+ });
+}
+async function useTransportLocation(btn){
+ setBusy(btn,true);
+ let ok=await autoDetectTransportLocation(true);
+ setBusy(btn,false);
+ if(ok)loadPublicTransport();
+ else{txt('busStatus','Location off');let b=$('nearbyBusList');if(b)b.innerHTML='<div class="sub">Location access is off. Enable it in your browser to see nearby Singapore buses.</div>'}
 }
 async function loadPublicTransport(btn=null){
  if(btn)setBusy(btn,true);txt('transportBadge','Loading');
+ await autoDetectTransportLocation(false);
  try{
    let q='';
    if(live.location?.name==='Singapore area')q='?lat='+encodeURIComponent(live.location.lat)+'&lon='+encodeURIComponent(live.location.lon);
@@ -749,30 +784,35 @@ function resetHomeWidgets(){localStorage.removeItem('runsgdHomeWidgets');applyHo
 
 const JOURNEY_PRESETS={
  'sg-jb':'I am going to JB from Singapore.',
+ 'jb-sg':'I am going to Singapore from JB.',
  'within-sg':'I am commuting within Singapore.',
  'surrounding':'I just want to check my surrounding status.'
 };
-function selectJourneyIntent(id,btn){
- localStorage.setItem('runsgdJourneyIntent',id);
- document.querySelectorAll('.journeyChoice').forEach(x=>x.classList.toggle('active',x.dataset.journey===id));
- let e=$('journeyCustom');if(e)e.value='';
+function journeyIntentChanged(){
+ let sel=$('journeyIntentSelect'),id=sel?.value||'';
+ if(id)localStorage.setItem('runsgdJourneyIntent',id);else localStorage.removeItem('runsgdJourneyIntent');
+ let custom=$('journeyCustom'),isCustom=id==='custom';
+ if(custom)custom.classList.toggle('show',isCustom);
+ if(!isCustom){localStorage.removeItem('runsgdJourneyCustom');if(custom)custom.value=''}
+ else custom?.focus();
 }
 function journeyCustomChanged(){
  let e=$('journeyCustom');if(!e)return;
- if(e.value.trim()){localStorage.setItem('runsgdJourneyIntent','custom');document.querySelectorAll('.journeyChoice').forEach(x=>x.classList.remove('active'));localStorage.setItem('runsgdJourneyCustom',e.value.trim())}
- else localStorage.removeItem('runsgdJourneyCustom')
+ let v=e.value.trim();
+ if(v)localStorage.setItem('runsgdJourneyCustom',v);else localStorage.removeItem('runsgdJourneyCustom');
 }
 function getJourneyIntent(){
- let custom=$('journeyCustom')?.value.trim()||localStorage.getItem('runsgdJourneyCustom')||'';
- if(custom)return custom;
- let id=localStorage.getItem('runsgdJourneyIntent')||'';
- return JOURNEY_PRESETS[id]||'Check what matters for me right now based on my current location and RunSGD data.'
+ let id=$('journeyIntentSelect')?.value||localStorage.getItem('runsgdJourneyIntent')||'';
+ if(id==='custom'){
+   let custom=$('journeyCustom')?.value.trim()||localStorage.getItem('runsgdJourneyCustom')||'';
+   return custom||'I have a custom journey. Use my current RunSGD data to tell me what matters.';
+ }
+ return JOURNEY_PRESETS[id]||'Check what matters for me right now based on my current location and RunSGD data.';
 }
 function restoreJourneyIntent(){
- let id=localStorage.getItem('runsgdJourneyIntent')||'';
- let custom=localStorage.getItem('runsgdJourneyCustom')||'';
- if(custom){let e=$('journeyCustom');if(e)e.value=custom;return}
- document.querySelectorAll('.journeyChoice').forEach(x=>x.classList.toggle('active',x.dataset.journey===id));
+ let id=localStorage.getItem('runsgdJourneyIntent')||'',custom=localStorage.getItem('runsgdJourneyCustom')||'';
+ let sel=$('journeyIntentSelect');if(sel)sel.value=id;
+ let e=$('journeyCustom');if(e){e.value=custom;e.classList.toggle('show',id==='custom')}
 }
 
 function aiContext(){
@@ -780,7 +820,7 @@ function aiContext(){
    time:new Date().toLocaleString('en-SG',{timeZone:'Asia/Singapore',weekday:'short',hour:'2-digit',minute:'2-digit'}),
    location:live.location?.name||'Not provided',
    journey_intent:journey,
-   likely_direction:journey.includes('JB from Singapore')?'SG → JB (user selected)':journey.includes('within Singapore')?'Within Singapore (user selected)':live.location?.name==='Johor area'?'JB → SG':live.location?.name==='Singapore area'?'SG → JB':'Unknown',
+   likely_direction:journey.includes('JB from Singapore')?'SG → JB (user selected)':journey.includes('Singapore from JB')?'JB → SG (user selected)':journey.includes('within Singapore')?'Within Singapore (user selected)':live.location?.name==='Johor area'?'JB → SG':live.location?.name==='Singapore area'?'SG → JB':'Unknown',
    enabled_widgets:enabled
  };
  if(enabled.includes('traffic')&&live.traffic)c.causeway=live.traffic;
