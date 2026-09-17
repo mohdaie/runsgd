@@ -66,12 +66,13 @@ jobs:
               "}else if(live.location?.country==='MY'){\n   txt('busStatus','Johor detected');\n   box.innerHTML='<div class=\"sub\">You are currently around '+esc(live.location.name||'Johor')+'. Singapore LTA nearby-bus arrivals will switch on automatically after RunSGD detects you in Singapore.</div>';"
           )
 
-          text = text.replace('v2.1.7', 'v2.1.8')
-          text = text.replace('v2.1.8', 'v2.1.9')
+          text = text.replace('v2.1.7', 'v2.2.0')
+          text = text.replace('v2.1.8', 'v2.2.0')
+          text = text.replace('v2.1.9', 'v2.2.0')
           index.write_text(text)
 
           sw = Path('sw.js')
-          sw_text = sw.read_text().replace('runsgd-shell-v217', 'runsgd-shell-v219').replace('runsgd-shell-v218', 'runsgd-shell-v219').replace('runsgd-shell-v216', 'runsgd-shell-v219')
+          sw_text = sw.read_text().replace('runsgd-shell-v217', 'runsgd-shell-v220').replace('runsgd-shell-v218', 'runsgd-shell-v220').replace('runsgd-shell-v219', 'runsgd-shell-v220').replace('runsgd-shell-v216', 'runsgd-shell-v220')
           sw.write_text(sw_text)
           PY
       - name: Persist app fix
@@ -83,7 +84,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add index.html sw.js
-            git commit -m "RunSGD v2.1.9: add Johor town-level location mapping"
+            git commit -m "RunSGD v2.2.0: publish expanded knowledge and AI update"
             git push
           fi
       - name: Setup Pages
