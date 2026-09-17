@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v1.5.4</title>
+<title>runSGD v1.6.0</title>
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--card:#fffffff0}
 *{box-sizing:border-box}
@@ -14,6 +14,8 @@ button,input,select{font:inherit}.app{max-width:480px;margin:auto;padding:26px 1
 .toolbox{margin-top:16px}.toolrow{display:flex;gap:8px;flex-wrap:wrap}.toolrow .toolInput{flex:1}.timerDisplay{font-size:35px;font-weight:900;margin:10px 0}.miniBtn{border-radius:13px;padding:10px 12px;background:#edf2fb;color:#2e4369}.clockGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.clockFace{padding:14px;border-radius:18px;background:linear-gradient(120deg,#eff8ff,#f7f0ff)}.clockTime{font-size:25px;font-weight:900;margin-top:4px}.stopwatch{font-size:32px;font-weight:900;letter-spacing:1px;margin:10px 0}
 .nav{position:fixed;left:0;right:0;bottom:0;height:72px;background:#ffffffec;backdrop-filter:blur(18px);border-top:1px solid #edf0f5;display:flex;justify-content:center;z-index:5}.navin{width:min(480px,100%);display:flex;justify-content:space-around;align-items:center}.nav button{border:0;background:transparent;color:#8a94aa;padding:7px 13px;border-radius:18px;min-width:70px;font-size:11px}.nav button.active{color:#4669dd;background:linear-gradient(120deg,#edf6ff,#f3efff)}.navIcon{width:24px;height:24px;display:block;margin:0 auto 3px}.navIcon path,.navIcon circle,.navIcon rect,.navIcon line,.navIcon polyline{stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}.nav button.active .navIcon{filter:drop-shadow(0 3px 7px #6b78d933)}
 button{position:relative;overflow:hidden;transition:transform .14s ease,box-shadow .18s ease,filter .18s ease,opacity .18s ease}button:active,.tapfx{transform:scale(.965);filter:brightness(.97)}button.tapfx{box-shadow:0 0 0 6px rgba(75,130,245,.10)}button.busy{pointer-events:none;opacity:.78}button.busy::after{content:"";display:inline-block;width:14px;height:14px;margin-left:8px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;vertical-align:-2px;animation:rsgspin .7s linear infinite}@keyframes rsgspin{to{transform:rotate(360deg)}}
+
+.communityAuth{display:flex;flex-direction:column;gap:10px}.communityAuth input,.communityComposer input,.communityComposer textarea{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px;color:#17213b}.communityComposer textarea{resize:vertical;min-height:74px}.communityRooms{display:flex;gap:8px;overflow:auto;padding:4px 0 12px}.roomBtn{border:1px solid #e4e9f3;background:#fff;color:#64718a;border-radius:99px;padding:9px 12px;font-weight:800;white-space:nowrap}.roomBtn.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--blue),var(--violet))}.chatList{display:flex;flex-direction:column;gap:10px;max-height:55vh;overflow:auto;padding:4px 1px 10px}.chatMsg{background:#fff;border:1px solid #edf0f5;border-radius:18px;padding:12px}.chatMeta{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:#8994a8;margin-bottom:5px}.chatName{font-weight:850;color:#46536d}.communityComposer{display:flex;flex-direction:column;gap:9px;margin-top:10px}.memberBar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.memberName{font-weight:850}.smallLink{color:#4965c7;text-decoration:none;font-weight:800}.nav button{min-width:62px;padding-left:9px;padding-right:9px}
 
 </style>
 </head>
@@ -79,6 +81,33 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <div id="exploreFeed" class="feed"></div>
 </section>
 
+
+<section id="community" class="page">
+<h2 class="pageTitle">Community</h2>
+<p class="sub">Basic SG ↔ JB commuter chat. Read freely, sign in to post.</p>
+<article id="communityAuthCard" class="card">
+  <div class="title">👤 Join RunSGD</div>
+  <p class="sub">Create a simple member account with email and password.</p>
+  <div class="communityAuth">
+    <input id="memberName" placeholder="Display name">
+    <input id="memberEmail" type="email" placeholder="Email">
+    <input id="memberPassword" type="password" placeholder="Password (6+ characters)">
+    <div class="toolrow"><button class="miniBtn" onclick="communitySignUp(this)">Create account</button><button class="miniBtn" onclick="communitySignIn(this)">Sign in</button></div>
+    <div id="communityAuthStatus" class="status">You can still read community messages without signing in.</div>
+  </div>
+</article>
+<article id="communityChatCard" class="card" style="margin-top:16px">
+  <div class="memberBar"><div><div class="title">💬 Live community</div><div id="memberState" class="sub">Guest mode</div></div><button id="signOutBtn" class="miniBtn" onclick="communitySignOut()" style="display:none">Sign out</button></div>
+  <div id="communityRooms" class="communityRooms"></div>
+  <div id="chatList" class="chatList"><div class="sub">Loading messages…</div></div>
+  <div id="communityComposer" class="communityComposer" style="display:none">
+    <textarea id="chatMessage" maxlength="500" placeholder="Share a quick update with commuters…"></textarea>
+    <button class="btn refresh" onclick="sendCommunityMessage(this)">Send message</button>
+  </div>
+  <div id="communityGuestHint" class="status">Sign in to post. Keep updates short, useful and respectful.</div>
+</article>
+</section>
+
 <section id="tools" class="page">
 <h2 class="pageTitle">Tools</h2><p class="sub">Small utilities that do not duplicate your Home widgets.</p>
 <article class="card toolbox">
@@ -103,7 +132,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v1.5.4</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v1.6.0</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article class="card toolbox"><div class="title">⚙️ Admin settings</div><p class="sub">Manage API keys and test integrations from the temporary admin page.</p><a class="feedcard" style="margin-top:12px;text-align:center;font-weight:800;color:#4965c7" href="./admin/">Open Admin →</a></article>
 </section>
@@ -116,6 +145,10 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <button data-page="explore" onclick="showPage('explore')">
 <svg class="navIcon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m14.9 9.1-1.7 4.1-4.1 1.7 1.7-4.1z"/><path d="M18.5 5.5h.01"/></svg>Explore
 </button>
+
+<button data-page="community" onclick="showPage('community')">
+<svg class="navIcon" viewBox="0 0 24 24"><path d="M5 6.5h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-7l-4.5 3v-3H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z"/><path d="M7.5 11h9M7.5 14h6"/></svg>Community
+</button>
 <button data-page="tools" onclick="showPage('tools')">
 <svg class="navIcon" viewBox="0 0 24 24"><line x1="5" y1="6" x2="19" y2="6"/><circle cx="9" cy="6" r="2"/><line x1="5" y1="12" x2="19" y2="12"/><circle cx="15" cy="12" r="2"/><line x1="5" y1="18" x2="19" y2="18"/><circle cx="11" cy="18" r="2"/></svg>Tools
 </button>
@@ -124,7 +157,28 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </button>
 </div></nav>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+
+const SUPABASE_URL='https://gdycbluljgfezhgslppe.supabase.co';
+const SUPABASE_KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let communityUser=null,communityRooms=[],activeRoom=null,chatChannel=null;
+async function initCommunity(){
+  try{let {data:{session}}=await sb.auth.getSession();communityUser=session?.user||null;await loadCommunityRooms();applyMemberState();if(activeRoom)await loadCommunityMessages();sb.auth.onAuthStateChange(async(_e,session)=>{communityUser=session?.user||null;applyMemberState();if(activeRoom)await loadCommunityMessages()})}catch(e){txt('communityAuthStatus','Community connection unavailable.')}
+}
+async function communitySignUp(btn){let email=$('memberEmail')?.value.trim(),password=$('memberPassword')?.value||'',name=$('memberName')?.value.trim();if(!email||password.length<6||!name)return txt('communityAuthStatus','Enter display name, valid email and password of at least 6 characters.');setBusy(btn,true);let {data,error}=await sb.auth.signUp({email,password,options:{data:{display_name:name}}});setBusy(btn,false);if(error)return txt('communityAuthStatus',error.message);txt('communityAuthStatus',data.session?'Account created and signed in.':'Account created. Check your email if confirmation is required.')}
+async function communitySignIn(btn){let email=$('memberEmail')?.value.trim(),password=$('memberPassword')?.value||'';if(!email||!password)return txt('communityAuthStatus','Enter your email and password.');setBusy(btn,true);let {error}=await sb.auth.signInWithPassword({email,password});setBusy(btn,false);txt('communityAuthStatus',error?error.message:'Signed in successfully.')}
+async function communitySignOut(){await sb.auth.signOut();communityUser=null;applyMemberState()}
+function applyMemberState(){let signed=!!communityUser;$('communityAuthCard').style.display=signed?'none':'block';$('communityComposer').style.display=signed?'flex':'none';$('signOutBtn').style.display=signed?'inline-block':'none';$('communityGuestHint').style.display=signed?'none':'block';let name=communityUser?.user_metadata?.display_name||communityUser?.email||'Member';txt('memberState',signed?'Signed in as '+name:'Guest mode')}
+async function loadCommunityRooms(){let {data,error}=await sb.from('community_rooms').select('id,slug,name,description').order('created_at');if(error){txt('chatList','Could not load community rooms.');return}communityRooms=data||[];if(!activeRoom&&communityRooms.length)activeRoom=communityRooms[0].id;renderCommunityRooms()}
+function renderCommunityRooms(){let el=$('communityRooms');if(!el)return;el.innerHTML=communityRooms.map(r=>`<button class="roomBtn ${r.id===activeRoom?'active':''}" onclick="selectCommunityRoom('${r.id}')">${esc(r.name)}</button>`).join('')}
+async function selectCommunityRoom(id){activeRoom=id;renderCommunityRooms();await loadCommunityMessages()}
+async function loadCommunityMessages(){if(!activeRoom)return;let {data,error}=await sb.from('community_messages').select('id,message,created_at,user_id,profiles(display_name)').eq('room_id',activeRoom).order('created_at',{ascending:false}).limit(60);if(error){$('chatList').innerHTML='<div class="sub">Could not load messages.</div>';return}renderCommunityMessages((data||[]).reverse());subscribeCommunity()}
+function renderCommunityMessages(items){let el=$('chatList');if(!el)return;if(!items.length){el.innerHTML='<div class="sub">No messages yet. Be the first commuter to say hello 👋</div>';return}el.innerHTML=items.map(m=>{let n=m.profiles?.display_name||'Commuter',d=new Date(m.created_at).toLocaleString('en-SG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});return `<div class="chatMsg"><div class="chatMeta"><span class="chatName">${esc(n)}</span><span>${esc(d)}</span></div><div>${esc(m.message)}</div></div>`}).join('');el.scrollTop=el.scrollHeight}
+function subscribeCommunity(){if(chatChannel){sb.removeChannel(chatChannel);chatChannel=null}if(!activeRoom)return;chatChannel=sb.channel('community-'+activeRoom).on('postgres_changes',{event:'*',schema:'public',table:'community_messages',filter:'room_id=eq.'+activeRoom},()=>loadCommunityMessages()).subscribe()}
+async function sendCommunityMessage(btn){if(!communityUser)return txt('communityGuestHint','Please sign in before posting.');let message=$('chatMessage')?.value.trim();if(!message||!activeRoom)return;setBusy(btn,true);let {error}=await sb.from('community_messages').insert({room_id:activeRoom,user_id:communityUser.id,message});setBusy(btn,false);if(error){alert(error.message);return}$('chatMessage').value='';await loadCommunityMessages()}
+
 const SG={name:'Singapore',lat:1.3521,lon:103.8198,method:11},JB={name:'Johor Bahru',lat:1.4927,lon:103.7414,method:17};
 const live={rate:null,weather:{},air:null,prayer:null,holidays:[],location:null,nearby:[],feeds:{news:[],shopping:[],events:[]}};
 const $=x=>document.getElementById(x),txt=(x,v)=>{if($(x))$(x).textContent=v};
@@ -261,7 +315,7 @@ function updateBrief(){
  txt('brief',action);txt('briefWhy',why);txt('briefExtra',extra);txt('briefStatus',(live.weather.SG||live.prayer||live.holidays.length)?'Ready':'Limited');if(localStorage.getItem('runsgdPage')==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know')
 }
 async function refreshAll(btn){setBusy(btn,true);txt('briefStatus','Updating');await Promise.allSettled([loadRate(),loadWeather(),loadPrayer(),loadHolidays(),live.location?loadNearbyPrayer():Promise.resolve(),live.location?loadAir():Promise.resolve()]);updateBrief();setBusy(btn,false)}
-function showPage(n){if(!['home','explore','tools','more'].includes(n))n='home';document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===n));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===n));localStorage.setItem('runsgdPage',n);history.replaceState(null,'','#'+n);if(n==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know');window.scrollTo({top:0,behavior:'instant'})}
+function showPage(n){if(!['home','explore','community','tools','more'].includes(n))n='home';document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===n));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===n));localStorage.setItem('runsgdPage',n);history.replaceState(null,'','#'+n);if(n==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know');if(n==='community'&&activeRoom)loadCommunityMessages();window.scrollTo({top:0,behavior:'instant'})}
 function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);if(live.prayer)c.push(['🕌 Prayer',`${live.prayer.label} ${live.prayer.mins==null?'is tomorrow at '+live.prayer.time:'is in about '+live.prayer.mins+' minutes'}.${live.nearby[0]?' Nearest mapped place: '+live.nearby[0].name+'.':''}`]);if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);if(live.rate)c.push(['💱 SGD/MYR',`Reference rate is ${live.rate.toFixed(4)} MYR per SGD.`]);if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);return c}
 async function loadDiscover(type){if(type!=='news'&&type!=='events'&&type!=='shopping')return;let feed=$('exploreFeed');feed.innerHTML='<div class="feedcard"><h3>Loading…</h3><div class="sub">Checking current items.</div></div>';let qs={news:'Singapore Johor Malaysia causeway immigration transport',events:'Singapore Johor event festival concert exhibition',shopping:'Singapore Johor shopping sale promotion mall'};try{let q=qs[type],rss='https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=en-SG&gl=SG&ceid=SG:en',j=await get('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rss),9000),items=(j.items||[]).slice(0,7).map(x=>({title:x.title,url:x.link,source:x.author||'Google News',date:x.pubDate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
  try{let q=qs[type],j=await get('https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent(q)+'&mode=artlist&maxrecords=8&format=json&sort=datedesc',9000),items=(j.articles||[]).slice(0,7).map(x=>({title:x.title,url:x.url,source:x.domain,date:x.seendate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
@@ -278,8 +332,8 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){greeting();restoreLocation();loadTwelveKeyField();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','tools','more'].includes(hash)?hash:['home','explore','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
-window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','tools','more'].includes(n))showPage(n)});init();
+async function init(){greeting();restoreLocation();loadTwelveKeyField();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();refreshAll();initCommunity();if(live.location){loadNearbyPrayer();loadAir()}}
+window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','community','tools','more'].includes(n))showPage(n)});init();
 </script>
 </body>
 </html>
