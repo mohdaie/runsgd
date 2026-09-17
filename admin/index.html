@@ -11,7 +11,8 @@
 </style>
 </head>
 <body>
-<main class="app">
+<div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
+<main id="adminApp" class="app" style="display:none">
 <div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN</span></div>
 <section class="hero"><h1>API & App Settings</h1><p class="sub">Configure provider keys for this browser. Settings are shared with the main RunSGD app because <b>/admin</b> uses the same site origin.</p></section>
 <div class="stack">
@@ -56,7 +57,11 @@
 <a class="back" href="../">← Back to RunSGD</a>
 </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const ADMIN_SUPABASE_URL='https://gdycbluljgfezhgslppe.supabase.co';
+const ADMIN_SUPABASE_KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
+const adminSb=window.supabase.createClient(ADMIN_SUPABASE_URL,ADMIN_SUPABASE_KEY);
 const $=id=>document.getElementById(id);
 function flash(el){el.classList.remove('saved');void el.offsetWidth;el.classList.add('saved')}
 function toggleKey(id,btn){let e=$(id),show=e.type==='password';e.type=show?'text':'password';btn.textContent=show?'Hide':'Show'}
@@ -68,7 +73,18 @@ function saveTwelve(){let key=$('twelveKey').value.trim(),c=cfg();if(key){localS
 async function testTwelve(){let key=$('twelveKey').value.trim();if(!key)return $('twelveStatus').textContent='Enter a Twelve Data API key first.';let b=$('testBtn');b.disabled=true;b.textContent='Testing…';$('twelveStatus').textContent='Requesting live SGD/MYR…';try{let r=await fetch('https://api.twelvedata.com/exchange_rate?symbol=SGD%2FMYR&apikey='+encodeURIComponent(key),{cache:'no-store'}),j=await r.json();if(!r.ok||!j.rate)throw Error(j.message||('HTTP '+r.status));let rate=Number(j.rate);$('twelveStatus').textContent='✓ Working · 1 SGD = RM '+rate.toFixed(4);saveTwelve()}catch(e){$('twelveStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test SGD/MYR'}}
 function saveLLM(){let c=cfg();c.llmProvider=$('llmProvider').value;c.llmKey=$('llmKey').value.trim();c.llmModel=$('llmModel').value.trim();c.llmEndpoint=$('llmEndpoint').value.trim();saveCfg(c);$('llmStatus').textContent='Saved. Main app integration will use these settings in the LLM release.';flash($('llmStatus').closest('.card'))}
 function clearAll(){if(!confirm('Clear RunSGD API settings from this browser?'))return;localStorage.removeItem('runsgdTwelveDataKey');localStorage.removeItem('runsgdAdminConfig');load();$('twelveStatus').textContent='API settings cleared.';$('llmStatus').textContent='LLM settings cleared.'}
-load();
+async function guardAdmin(){
+  try{
+    let {data:{session}}=await adminSb.auth.getSession();
+    if(!session){document.getElementById('gateText').textContent='Sign in with the RunSGD admin account first.';return}
+    let {data,error}=await adminSb.from('profiles').select('role,display_name').eq('id',session.user.id).maybeSingle();
+    if(error||data?.role!=='admin'){document.getElementById('gateText').textContent='This RunSGD account does not have admin access.';return}
+    document.getElementById('adminGate').style.display='none';
+    document.getElementById('adminApp').style.display='block';
+    load();
+  }catch(e){document.getElementById('gateText').textContent='Could not verify admin access.'}
+}
+guardAdmin();
 </script>
 </body>
 </html>
