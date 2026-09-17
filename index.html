@@ -4,7 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v1.6.9</title>
+<title>runSGD v1.6.10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--card:#fffffff0}
 *{box-sizing:border-box}
@@ -48,12 +51,45 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .homeWidgetStack{display:flex;flex-direction:column;gap:19px}
 .homeWidget[hidden]{display:none!important}
 
+
+/* Community refresh — lively social inbox, same chat viewport size */
+#community,#community button,#community textarea,#community input{font-family:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+#communityChatCard{background:linear-gradient(145deg,#ffffff 0%,#fffafd 52%,#f8f7ff 100%);border:1px solid #fff;box-shadow:0 16px 38px rgba(77,74,128,.10)}
+.communityTitleLine{display:flex;align-items:center;gap:8px}
+.communityLiveDot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#25d67f,#56e6ad);box-shadow:0 0 0 5px rgba(52,211,153,.12);flex:0 0 auto}
+#memberState{font-size:12px;line-height:1.35;color:#7a8092;margin-top:2px}
+#signOutBtn{border-radius:16px;background:linear-gradient(135deg,#f2f5ff,#f8f1ff);color:#43547a;padding:9px 12px;font-size:12px;white-space:nowrap;box-shadow:none}
+.communityRooms{gap:9px;padding:5px 1px 13px;scrollbar-width:none}.communityRooms::-webkit-scrollbar{display:none}
+.roomBtn{border:1px solid #e6e4ef;background:rgba(255,255,255,.94);color:#616b81;border-radius:999px;padding:10px 14px;font-size:13px;font-weight:900;box-shadow:0 4px 12px rgba(65,72,120,.05)}
+.roomBtn.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,#4b82f5 0%,#786bf1 48%,#ed77a9 100%);box-shadow:0 9px 22px rgba(110,93,225,.25)}
+.chatList{height:min(58vh,520px);background:radial-gradient(circle at 95% 3%,rgba(235,122,171,.09),transparent 24%),radial-gradient(circle at 5% 98%,rgba(75,130,245,.10),transparent 28%),linear-gradient(180deg,#fbfcff 0%,#f8f6ff 55%,#fff9fc 100%);border:1px solid #ebe8f4;border-radius:22px;padding:13px 9px 15px;gap:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.9);scroll-behavior:smooth}
+.chatMsg{max-width:86%;background:rgba(255,255,255,.96);border:1px solid rgba(229,226,239,.95);border-radius:20px 20px 20px 7px;padding:10px 12px;box-shadow:0 7px 18px rgba(65,72,120,.075);animation:chatPop .18s ease-out}
+.chatMsg.mine{background:linear-gradient(145deg,#edf4ff 0%,#f2efff 55%,#fff3f8 100%);border-color:#dce3ff;border-radius:20px 20px 7px 20px;box-shadow:0 8px 20px rgba(106,97,214,.10)}
+@keyframes chatPop{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}
+.chatMeta{font-size:10px;color:#9499aa;margin-bottom:5px;gap:8px}
+.chatIdentity{gap:6px;min-width:0}.chatAvatar{width:27px;height:27px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 7px rgba(58,68,105,.12)}
+.chatName{font-size:11px;font-weight:900;color:#33405c;max-width:125px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chatBadge{font-size:8px;padding:3px 6px;background:#edf3ff;color:#536bc0;letter-spacing:.2px}.chatBadge.admin{background:linear-gradient(120deg,#ffecef,#fff2f8);color:#b63d60}
+.chatText{font-size:15px;line-height:1.46;color:#202a40;font-weight:600;letter-spacing:.02px}
+.moderateBtn{border:0;background:#fff0f4;color:#b64361;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900;margin-left:5px}
+.communityComposer{gap:9px;margin-top:11px;padding-top:11px;border-top:1px solid #ece9f3}
+.quickChatChips{display:flex;gap:7px;overflow-x:auto;padding:1px 1px 3px;scrollbar-width:none}.quickChatChips::-webkit-scrollbar{display:none}
+.quickChatChip{flex:0 0 auto;border:1px solid #e6e3ef;background:#fff;color:#58657f;border-radius:999px;padding:8px 10px;font-size:11px;font-weight:900;box-shadow:0 4px 11px rgba(65,72,120,.05)}
+.quickChatChip:active{background:#f5f1ff}
+.composerShell{display:flex;align-items:flex-end;gap:8px;padding:8px 9px 8px 12px;border:1px solid #e5e1ef;border-radius:20px;background:linear-gradient(180deg,#fff,#fdfaff);box-shadow:0 7px 18px rgba(70,76,120,.06);transition:border-color .16s ease,box-shadow .16s ease}
+.composerShell:focus-within{border-color:#a897f0;box-shadow:0 0 0 4px rgba(139,103,239,.10),0 8px 20px rgba(70,76,120,.07)}
+.communityComposer textarea{min-height:58px;max-height:130px;resize:vertical;border:0!important;background:transparent!important;border-radius:0!important;padding:7px 2px!important;font-size:14px;line-height:1.45;color:#26324b;box-shadow:none!important;outline:none}
+.communityComposer textarea::placeholder{color:#9a9fb0}
+.communitySendBtn{flex:0 0 auto;width:44px;height:44px;border:0;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#4b82f5,#796af0 52%,#ed78aa);box-shadow:0 8px 19px rgba(114,95,229,.30);font-size:18px;font-weight:900;padding:0;margin:0}
+.communitySendBtn.busy::after{margin:0;width:14px;height:14px}
+.communityHint{font-size:10px;color:#9ba1b1;padding:0 3px}
+
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.6.9</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.6.10</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -158,12 +194,22 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
   </div>
 </article>
 <article id="communityChatCard" class="card" style="margin-top:16px">
-  <div class="memberBar"><div><div class="title">💬 Live community</div><div id="memberState" class="sub">Guest mode</div></div><button id="signOutBtn" class="miniBtn" onclick="communitySignOut()" style="display:none">Sign out</button></div>
+  <div class="memberBar"><div><div class="communityTitleLine"><span class="communityLiveDot"></span><div class="title">💬 Live community</div></div><div id="memberState" class="sub">Guest mode</div></div><button id="signOutBtn" class="miniBtn" onclick="communitySignOut()" style="display:none">Sign out</button></div>
   <div id="communityRooms" class="communityRooms"></div>
   <div id="chatList" class="chatList"><div class="sub">Loading messages…</div></div>
   <div id="communityComposer" class="communityComposer" style="display:none">
-    <textarea id="chatMessage" maxlength="500" placeholder="Share a quick update with commuters…"></textarea>
-    <button class="btn refresh" onclick="sendCommunityMessage(this)">Send message</button>
+    <div class="quickChatChips" aria-label="Quick update starters">
+      <button class="quickChatChip" onclick="quickChat('🚦 Heavy traffic — ')">🚦 Jam</button>
+      <button class="quickChatChip" onclick="quickChat('✅ Traffic moving smoothly — ')">✅ Smooth</button>
+      <button class="quickChatChip" onclick="quickChat('🌧 Heavy rain around ')">🌧 Rain</button>
+      <button class="quickChatChip" onclick="quickChat('🚌 Bus delay — ')">🚌 Delay</button>
+      <button class="quickChatChip" onclick="quickChat('📍 Checkpoint update — ')">📍 Checkpoint</button>
+    </div>
+    <div class="composerShell">
+      <textarea id="chatMessage" maxlength="500" placeholder="Share what’s happening…"></textarea>
+      <button class="communitySendBtn" onclick="sendCommunityMessage(this)" aria-label="Send message">➤</button>
+    </div>
+    <div class="communityHint">Useful updates help everyone cross smarter ✨</div>
   </div>
   <div id="communityGuestHint" class="status">Sign in to post. Keep updates short, useful and respectful.</div>
 </article>
@@ -193,7 +239,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v1.6.9</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v1.6.10</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -306,12 +352,14 @@ async function communitySignIn(btn){let email=$('memberEmail')?.value.trim(),pas
 async function communitySignOut(){await sb.auth.signOut();communityUser=null;applyMemberState()}
 async function applyMemberState(){let signed=!!communityUser;$('communityAuthCard').style.display=signed?'none':'block';$('communityComposer').style.display=signed?'flex':'none';$('signOutBtn').style.display=signed?'inline-block':'none';$('communityGuestHint').style.display=signed?'none':'block';let adminCard=$('adminSettingsCard'),profileCard=$('profileCard');if(!signed){communityRole='member';communityProfile=null;if(adminCard)adminCard.style.display='none';if(profileCard)profileCard.style.display='none';txt('memberState','Guest mode');return}let {data:p}=await sb.from('profiles').select('display_name,avatar_url,bio,badge,role').eq('id',communityUser.id).maybeSingle();communityProfile=p||{};let name=communityProfile.display_name||await communityProfileName(communityUser),linked=await communityLinkedStatus(communityUser);communityRole=communityProfile.role||await communityRoleOf(communityUser);if(adminCard)adminCard.style.display=communityRole==='admin'?'block':'none';if(profileCard){profileCard.style.display='block';profileCard.classList.remove('editing');$('profileName').value=name||'';$('profileBio').value=communityProfile.bio||'';txt('profileEmail',communityUser.email||'');txt('profileViewName',name||'Member');txt('profileViewBio','Bio: '+(communityProfile.bio||'—'));let tag=communityRole==='admin'?'admin':(communityProfile.badge||'newbie');$('profileBadge').textContent=tag;$('profileBadge').classList.toggle('admin',communityRole==='admin');let av=communityProfile.avatar_url||communityUser.user_metadata?.avatar_url||communityUser.user_metadata?.picture||'';$('profileAvatar').src=av||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 rx=%2222%22 fill=%22%23eef3ff%22/%3E%3Ctext x=%2235%22 y=%2243%22 text-anchor=%22middle%22 font-size=%2228%22%3E👤%3C/text%3E%3C/svg%3E'}txt('memberState','Signed in as '+name+' · '+(communityRole==='admin'?'Admin':labelBadge(communityProfile.badge||'newbie'))+linked)}
 async function loadCommunityRooms(){let {data,error}=await sb.from('community_rooms').select('id,slug,name,description').order('created_at');if(error){txt('chatList','Could not load community rooms.');return}communityRooms=data||[];if(!activeRoom&&communityRooms.length)activeRoom=communityRooms[0].id;renderCommunityRooms()}
-function renderCommunityRooms(){let el=$('communityRooms');if(!el)return;el.innerHTML=communityRooms.map(r=>`<button class="roomBtn ${r.id===activeRoom?'active':''}" onclick="selectCommunityRoom('${r.id}')">${esc(r.name)}</button>`).join('')}
+function communityRoomIcon(r){let x=(r.slug||r.name||'').toLowerCase();return x.includes('causeway')?'🚦 ':x.includes('second')||x.includes('tuas')?'🔗 ':'💬 '}
+function renderCommunityRooms(){let el=$('communityRooms');if(!el)return;el.innerHTML=communityRooms.map(r=>`<button class="roomBtn ${r.id===activeRoom?'active':''}" onclick="selectCommunityRoom('${r.id}')">${communityRoomIcon(r)}${esc(r.name)}</button>`).join('')}
 async function selectCommunityRoom(id){activeRoom=id;renderCommunityRooms();await loadCommunityMessages()}
 async function loadCommunityMessages(){if(!activeRoom)return;let {data,error}=await sb.from('community_messages').select('id,message,created_at,user_id,profiles(display_name,avatar_url,badge,role)').eq('room_id',activeRoom).order('created_at',{ascending:false}).limit(60);if(error){$('chatList').innerHTML='<div class="sub">Could not load messages.</div>';return}renderCommunityMessages((data||[]).reverse());subscribeCommunity()}
 function labelBadge(v){return ({newbie:'Newbie',pro:'Pro',oldtimer:'Oldtimer',paid:'Paid'})[v]||'Newbie'}
 function renderCommunityMessages(items){let el=$('chatList');if(!el)return;if(!items.length){el.innerHTML='<div class="sub" style="padding:12px">No messages yet. Be the first commuter to say hello 👋</div>';return}el.innerHTML=items.map(m=>{let p=m.profiles||{},n=p.display_name||'Commuter',d=new Date(m.created_at).toLocaleString('en-SG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),mine=m.user_id===communityUser?.id,remove=communityRole==='admin'?`<button class="moderateBtn" onclick="deleteCommunityMessage(${Number(m.id)})">Remove</button>`:'',tag=p.role==='admin'?'Admin':labelBadge(p.badge||'newbie'),av=p.avatar_url||'';return `<div class="chatMsg ${mine?'mine':''}"><div class="chatMeta"><span class="chatIdentity">${av?`<img class="chatAvatar" src="${esc(av)}" alt="">`:''}<span class="chatName">${esc(n)}</span><span class="chatBadge ${p.role==='admin'?'admin':''}">${esc(tag)}</span></span><span>${esc(d)}${remove}</span></div><div class="chatText">${esc(m.message)}</div></div>`}).join('');el.scrollTop=el.scrollHeight}
 function subscribeCommunity(){if(chatChannel){sb.removeChannel(chatChannel);chatChannel=null}if(!activeRoom)return;chatChannel=sb.channel('community-'+activeRoom).on('postgres_changes',{event:'*',schema:'public',table:'community_messages',filter:'room_id=eq.'+activeRoom},()=>loadCommunityMessages()).subscribe()}
+function quickChat(starter){let e=$('chatMessage');if(!e)return;let current=e.value.trim();e.value=current?current+' '+starter:starter;e.focus();e.setSelectionRange(e.value.length,e.value.length)}
 async function sendCommunityMessage(btn){if(!communityUser)return txt('communityGuestHint','Please sign in before posting.');let message=$('chatMessage')?.value.trim();if(!message||!activeRoom)return;setBusy(btn,true);let {error}=await sb.from('community_messages').insert({room_id:activeRoom,user_id:communityUser.id,message});setBusy(btn,false);if(error){alert(error.message);return}$('chatMessage').value='';await loadCommunityMessages()}
 async function deleteCommunityMessage(id){if(communityRole!=='admin')return;if(!confirm('Remove this community message?'))return;let {error}=await sb.from('community_messages').delete().eq('id',id);if(error){alert(error.message);return}await loadCommunityMessages()}
 
