@@ -28,25 +28,16 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-
           index = Path('index.html')
           text = index.read_text()
           old = "function classify(lat,lon){let a=Math.hypot(lat-SG.lat,lon-SG.lon),b=Math.hypot(lat-JB.lat,lon-JB.lon);return b<a?{name:'Johor area',lat,lon,method:17}:{name:'Singapore area',lat,lon,method:11}}"
-          new = """function classify(lat,lon){
- const inSG=lon>=103.55&&lon<=104.10&&lat>=1.15&&((lon<103.70&&lat<=1.365)||(lon>=103.70&&lat<=1.462));
- if(!inSG)return {name:'Johor area',area:'Johor',country:'MY',lat,lon,method:17};
- const towns=[['Woodlands',1.4382,103.7890],['Sembawang',1.4491,103.8185],['Yishun',1.4304,103.8354],['Choa Chu Kang',1.3840,103.7470],['Bukit Panjang',1.3786,103.7626],['Bukit Batok',1.3496,103.7499],['Jurong West',1.3404,103.7090],['Jurong East',1.3329,103.7436],['Clementi',1.3151,103.7650],['Queenstown',1.2942,103.7861],['Bukit Merah',1.2819,103.8239],['Bishan',1.3508,103.8485],['Ang Mo Kio',1.3691,103.8454],['Toa Payoh',1.3343,103.8563],['Kallang',1.3115,103.8714],['Geylang',1.3201,103.8918],['Serangoon',1.3496,103.8737],['Hougang',1.3612,103.8863],['Sengkang',1.3917,103.8950],['Punggol',1.4051,103.9023],['Bedok',1.3236,103.9273],['Tampines',1.3526,103.9446],['Pasir Ris',1.3730,103.9493],['Marine Parade',1.3020,103.9072],['Downtown',1.2838,103.8591]];
- let town=towns[0],best=Infinity;
- for(const t of towns){const d=Math.hypot(lat-t[1],lon-t[2]);if(d<best){best=d;town=t}}
- return {name:town[0]+', SG',area:town[0],country:'SG',lat,lon,method:11};
-}"""
+          new = "function classify(lat,lon){\n const inSG=lon>=103.55&&lon<=104.10&&lat>=1.15&&((lon<103.70&&lat<=1.365)||(lon>=103.70&&lat<=1.462));\n if(!inSG)return {name:'Johor area',area:'Johor',country:'MY',lat,lon,method:17};\n const towns=[['Woodlands',1.4382,103.7890],['Sembawang',1.4491,103.8185],['Yishun',1.4304,103.8354],['Choa Chu Kang',1.3840,103.7470],['Bukit Panjang',1.3786,103.7626],['Bukit Batok',1.3496,103.7499],['Jurong West',1.3404,103.7090],['Jurong East',1.3329,103.7436],['Clementi',1.3151,103.7650],['Queenstown',1.2942,103.7861],['Bukit Merah',1.2819,103.8239],['Bishan',1.3508,103.8485],['Ang Mo Kio',1.3691,103.8454],['Toa Payoh',1.3343,103.8563],['Kallang',1.3115,103.8714],['Geylang',1.3201,103.8918],['Serangoon',1.3496,103.8737],['Hougang',1.3612,103.8863],['Sengkang',1.3917,103.8950],['Punggol',1.4051,103.9023],['Bedok',1.3236,103.9273],['Tampines',1.3526,103.9446],['Pasir Ris',1.3730,103.9493],['Marine Parade',1.3020,103.9072],['Downtown',1.2838,103.8591]];\n let town=towns[0],best=Infinity;\n for(const t of towns){const d=Math.hypot(lat-t[1],lon-t[2]);if(d<best){best=d;town=t}}\n return {name:town[0]+', SG',area:town[0],country:'SG',lat,lon,method:11};\n}"
           if old in text:
               text = text.replace(old, new)
           text = text.replace('v2.1.6', 'v2.1.7')
           index.write_text(text)
-
           sw = Path('sw.js')
-          sw_text = sw.read_text().replace("runsgd-shell-v216", "runsgd-shell-v217")
+          sw_text = sw.read_text().replace('runsgd-shell-v216', 'runsgd-shell-v217')
           sw.write_text(sw_text)
           PY
       - name: Persist app fix
