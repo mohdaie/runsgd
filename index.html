@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v1.5.3</title>
+<title>runSGD v1.5.4</title>
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--card:#fffffff0}
 *{box-sizing:border-box}
@@ -20,7 +20,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.5.3</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.5.4</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -44,6 +44,12 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
   <div class="head"><div class="title">🌦 Weather</div><span id="weatherBadge" class="tag">Loading</span></div>
   <div class="grid"><div class="soft"><div class="sub">Singapore</div><div id="sgTemp" class="temp">—°</div><div id="sgRain" class="sub">Loading…</div></div><div class="soft"><div class="sub">Johor Bahru</div><div id="jbTemp" class="temp">—°</div><div id="jbRain" class="sub">Loading…</div></div></div>
   <div id="weatherStatus" class="status">Connecting…</div>
+</article>
+
+<article class="card">
+  <div class="head"><div class="title">🌫 IPU / Air Quality</div><span id="ipuBadge" class="tag">Location</span></div>
+  <div id="ipuValue" class="big">—</div><div id="ipuLevel" class="sub">Enable location to estimate air quality at your current area.</div>
+  <div id="ipuMeta" class="status">Uses a 24-hour PM2.5 estimate and Malaysia DOE IPU breakpoints.</div>
 </article>
 
 <article class="card">
@@ -97,8 +103,9 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v1.5.3</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
-<article class="card toolbox"><div class="title">💱 Twelve Data FX</div><p class="sub">Primary live SGD/MYR source for this test build. The API key is stored only in this browser's local storage.</p><div class="toolrow"><input id="twelveKey" class="toolInput" type="password" placeholder="Twelve Data API key" autocomplete="off"><button class="miniBtn" onclick="saveTwelveKey(this)">Save & test</button></div><div id="twelveKeyStatus" class="status">If no key is saved, RunSGD uses the existing fallback FX providers.</div></article>
+<article class="card"><div class="title">RunSGD v1.5.4</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+
+<article class="card toolbox"><div class="title">⚙️ Admin settings</div><p class="sub">Manage API keys and test integrations from the temporary admin page.</p><a class="feedcard" style="margin-top:12px;text-align:center;font-weight:800;color:#4965c7" href="./admin/">Open Admin →</a></article>
 </section>
 </main>
 
@@ -119,7 +126,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <script>
 const SG={name:'Singapore',lat:1.3521,lon:103.8198,method:11},JB={name:'Johor Bahru',lat:1.4927,lon:103.7414,method:17};
-const live={rate:null,weather:{},prayer:null,holidays:[],location:null,nearby:[],feeds:{news:[],shopping:[],events:[]}};
+const live={rate:null,weather:{},air:null,prayer:null,holidays:[],location:null,nearby:[],feeds:{news:[],shopping:[],events:[]}};
 const $=x=>document.getElementById(x),txt=(x,v)=>{if($(x))$(x).textContent=v};
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function setBusy(btn,on){if(!btn)return;btn.classList.toggle('busy',!!on);btn.setAttribute('aria-busy',on?'true':'false')}
@@ -137,7 +144,7 @@ function requestLocation(btn){
    live.location=classify(p.coords.latitude,p.coords.longitude);
    localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
    txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);
-   await Promise.allSettled([loadPrayer(),loadNearbyPrayer()]);
+   await Promise.allSettled([loadPrayer(),loadNearbyPrayer(),loadAir()]);
    setBusy(btn,false);updateBrief();
  },e=>{
    txt('locBtn',live.location?'📍 '+live.location.name:'📍 Location');
@@ -181,6 +188,26 @@ async function loadWeather(){
  updateBrief()
 }
 function applyWeather(o,l){live.weather=o;txt('sgTemp',Math.round(o.SG.temp)+'°');txt('jbTemp',Math.round(o.JB.temp)+'°');txt('sgRain','Rain chance up to '+o.SG.rain+'%');txt('jbRain','Rain chance up to '+o.JB.rain+'%');txt('weatherBadge',l);txt('weatherStatus',l+' · '+new Date().toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}))}
+function pm25ToIpu(x){
+ x=Number(x);if(!Number.isFinite(x)||x<0)return null;
+ let bands=[[0,12.0,0,50],[12.1,75.5,51,100],[75.5,150.4,101,200],[150.5,250.4,201,300],[250.5,350.4,301,400],[350.5,500.4,401,500]];
+ if(x>500.4)return 500;
+ for(let [cl,ch,il,ih] of bands){if(x>=cl&&x<=ch)return Math.round(((ih-il)/(ch-cl))*(x-cl)+il)}
+ return null
+}
+function ipuLabel(v){return v<=50?'Baik / Good':v<=100?'Sederhana / Moderate':v<=200?'Tidak Sihat / Unhealthy':v<=300?'Sangat Tidak Sihat / Very Unhealthy':'Berbahaya / Hazardous'}
+async function loadAir(){
+ let p=live.location;if(!p){txt('ipuBadge','Location');txt('ipuValue','—');txt('ipuLevel','Enable location to estimate air quality at your current area.');txt('ipuMeta','Uses a 24-hour PM2.5 estimate and Malaysia DOE IPU breakpoints.');return}
+ txt('ipuBadge','Loading');
+ try{
+   let j=await get(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${p.lat}&longitude=${p.lon}&hourly=pm2_5&past_days=1&forecast_days=1&timezone=Asia%2FSingapore`,12000),times=j.hourly?.time||[],vals=j.hourly?.pm2_5||[],now=Date.now(),a=[];
+   for(let i=0;i<times.length;i++){let t=Date.parse(times[i]);let v=Number(vals[i]);if(Number.isFinite(t)&&t<=now&&Number.isFinite(v))a.push({t,v})}
+   a=a.slice(-24);if(!a.length)throw Error('no pm25');let avg=a.reduce((n,x)=>n+x.v,0)/a.length,ipu=pm25ToIpu(avg);if(ipu==null)throw Error('bad ipu');
+   live.air={ipu,pm25:avg,label:ipuLabel(ipu),location:p.name};save('air',live.air);
+   txt('ipuValue',String(ipu));txt('ipuLevel',live.air.label);txt('ipuBadge',p.name);txt('ipuMeta',`Estimated from ${a.length}h PM2.5 avg ${avg.toFixed(1)} µg/m³ · Open-Meteo model`)
+ }catch{let a=old('air');if(a){live.air=a;txt('ipuValue',String(a.ipu));txt('ipuLevel',a.label);txt('ipuBadge','Saved');txt('ipuMeta',`Saved estimate · PM2.5 ${Number(a.pm25).toFixed(1)} µg/m³`)}else{txt('ipuBadge','Unavailable');txt('ipuMeta','Air-quality service unavailable.')}}
+ updateBrief()
+}
 async function loadPrayer(){
  let p=live.location||SG,d=new Date(),date=`${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
  try{
@@ -233,7 +260,7 @@ function updateBrief(){
  else if(live.holidays[0]){let d=new Date(live.holidays[0].date+'T00:00:00'),t=new Date();t.setHours(0,0,0,0);let days=Math.round((d-t)/86400000);if(days>=0&&days<=2){action='Expect unusual crowd or operating patterns.';why=`${live.holidays[0].name} is ${days===0?'today':days===1?'tomorrow':'in '+days+' days'}.`;extra='Plan shopping, transport and border timing with a little more margin.'}}
  txt('brief',action);txt('briefWhy',why);txt('briefExtra',extra);txt('briefStatus',(live.weather.SG||live.prayer||live.holidays.length)?'Ready':'Limited');if(localStorage.getItem('runsgdPage')==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know')
 }
-async function refreshAll(btn){setBusy(btn,true);txt('briefStatus','Updating');await Promise.allSettled([loadRate(),loadWeather(),loadPrayer(),loadHolidays(),live.location?loadNearbyPrayer():Promise.resolve()]);updateBrief();setBusy(btn,false)}
+async function refreshAll(btn){setBusy(btn,true);txt('briefStatus','Updating');await Promise.allSettled([loadRate(),loadWeather(),loadPrayer(),loadHolidays(),live.location?loadNearbyPrayer():Promise.resolve(),live.location?loadAir():Promise.resolve()]);updateBrief();setBusy(btn,false)}
 function showPage(n){if(!['home','explore','tools','more'].includes(n))n='home';document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===n));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===n));localStorage.setItem('runsgdPage',n);history.replaceState(null,'','#'+n);if(n==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know');window.scrollTo({top:0,behavior:'instant'})}
 function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);if(live.prayer)c.push(['🕌 Prayer',`${live.prayer.label} ${live.prayer.mins==null?'is tomorrow at '+live.prayer.time:'is in about '+live.prayer.mins+' minutes'}.${live.nearby[0]?' Nearest mapped place: '+live.nearby[0].name+'.':''}`]);if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);if(live.rate)c.push(['💱 SGD/MYR',`Reference rate is ${live.rate.toFixed(4)} MYR per SGD.`]);if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);return c}
 async function loadDiscover(type){if(type!=='news'&&type!=='events'&&type!=='shopping')return;let feed=$('exploreFeed');feed.innerHTML='<div class="feedcard"><h3>Loading…</h3><div class="sub">Checking current items.</div></div>';let qs={news:'Singapore Johor Malaysia causeway immigration transport',events:'Singapore Johor event festival concert exhibition',shopping:'Singapore Johor shopping sale promotion mall'};try{let q=qs[type],rss='https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=en-SG&gl=SG&ceid=SG:en',j=await get('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rss),9000),items=(j.items||[]).slice(0,7).map(x=>({title:x.title,url:x.link,source:x.author||'Google News',date:x.pubDate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
@@ -251,7 +278,7 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){greeting();restoreLocation();loadTwelveKeyField();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','tools','more'].includes(hash)?hash:['home','explore','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();refreshAll();if(live.location)loadNearbyPrayer()}
+async function init(){greeting();restoreLocation();loadTwelveKeyField();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','tools','more'].includes(hash)?hash:['home','explore','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
 window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','tools','more'].includes(n))showPage(n)});init();
 </script>
 </body>
