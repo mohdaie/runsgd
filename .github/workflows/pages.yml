@@ -66,11 +66,32 @@ jobs:
           if old_empty in text:
               text = text.replace(old_empty, checkpoint_empty)
 
+          # v2.1.9: Johor gets the same town-level location experience as Singapore.
+          # Use a JB CIQ geofence first, then nearest recognised southern-Johor locality.
+          old_johor = " if(!inSG)return {name:'Johor area',area:'Johor',country:'MY',lat,lon,method:17};"
+          new_johor = """ if(!inSG){
+  if(Math.hypot(lat-1.4637,lon-103.7648)<0.0040)return {name:'JB CIQ, MY',area:'JB CIQ',country:'MY',lat,lon,method:17};
+  const johorTowns=[['JB City Centre',1.4655,103.7578],['Bukit Chagar',1.4677,103.7647],['Larkin',1.4950,103.7500],['Danga Bay',1.4756,103.7252],['Taman Sentosa',1.4867,103.7695],['Tampoi',1.4997,103.7050],['Kempas',1.5385,103.7147],['Skudai',1.5372,103.6578],['Bukit Indah',1.4828,103.6556],['Iskandar Puteri',1.4200,103.6300],['Gelang Patah',1.4494,103.5988],['Forest City',1.3366,103.5901],['Permas Jaya',1.4971,103.8169],['Taman Molek',1.5290,103.7910],['Tebrau',1.5490,103.7950],['Mount Austin',1.5617,103.7785],['Ulu Tiram',1.6006,103.8165],['Masai',1.4907,103.8835],['Pasir Gudang',1.4620,103.9020],['Senai',1.6006,103.6419],['Kulai',1.6561,103.6032]];
+  let town=johorTowns[0],best=Infinity;
+  for(const t of johorTowns){const d=Math.hypot(lat-t[1],lon-t[2]);if(d<best){best=d;town=t}}
+  return {name:town[0]+', MY',area:town[0],country:'MY',lat,lon,method:17};
+ }"""
+          if old_johor in text:
+              text = text.replace(old_johor, new_johor, 1)
+
+          # Any Malaysian town-level label should still suppress Singapore-only nearby-bus
+          # results instead of falling through to a misleading "No stop found" state.
+          text = text.replace(
+              "}else if(live.location.name==='Johor area'){\n   txt('busStatus','Johor detected');\n   box.innerHTML='<div class=\"sub\">You are currently in the Johor area. Singapore nearby-bus arrivals will switch on automatically after RunSGD detects you in Singapore.</div>';",
+              "}else if(live.location?.country==='MY'){\n   txt('busStatus','Johor detected');\n   box.innerHTML='<div class=\"sub\">You are currently around '+esc(live.location.name||'Johor')+'. Singapore LTA nearby-bus arrivals will switch on automatically after RunSGD detects you in Singapore.</div>';"
+          )
+
           text = text.replace('v2.1.7', 'v2.1.8')
+          text = text.replace('v2.1.8', 'v2.1.9')
           index.write_text(text)
 
           sw = Path('sw.js')
-          sw_text = sw.read_text().replace('runsgd-shell-v217', 'runsgd-shell-v218').replace('runsgd-shell-v216', 'runsgd-shell-v218')
+          sw_text = sw.read_text().replace('runsgd-shell-v217', 'runsgd-shell-v219').replace('runsgd-shell-v218', 'runsgd-shell-v219').replace('runsgd-shell-v216', 'runsgd-shell-v219')
           sw.write_text(sw_text)
           PY
       - name: Persist app fix
@@ -82,7 +103,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add index.html sw.js
-            git commit -m "RunSGD v2.1.8: fix nearby buses at Woodlands Checkpoint"
+            git commit -m "RunSGD v2.1.9: add Johor town-level location mapping"
             git push
           fi
       - name: Setup Pages
