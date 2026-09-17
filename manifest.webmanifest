@@ -1,0 +1,21 @@
+{
+  "id": "/runsgd/",
+  "name": "RunSGD",
+  "short_name": "RunSGD",
+  "description": "Your intelligent Singapore ↔ Johor daily companion",
+  "start_url": "/runsgd/",
+  "scope": "/runsgd/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#f8fbff",
+  "theme_color": "#f8fbff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/runsgd/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
