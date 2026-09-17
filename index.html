@@ -450,7 +450,7 @@ async function communityGoogle(btn){
   setBusy(btn,true);
   txt('communityAuthStatus','Opening Google sign-in…');
   localStorage.setItem('runsgdAuthReturn','community');
-  let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://mohdaie.github.io/runsgd/?auth=google'}});
+  let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://runsgd.site/?auth=google'}});
   if(error){setBusy(btn,false);txt('communityAuthStatus',error.message)}
 }
 function toggleEmailAuth(){
