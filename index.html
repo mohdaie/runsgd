@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v1.6.0</title>
+<title>runSGD v1.6.1</title>
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--card:#fffffff0}
 *{box-sizing:border-box}
@@ -89,6 +89,11 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
   <div class="title">👤 Join RunSGD</div>
   <p class="sub">Create a simple member account with email and password.</p>
   <div class="communityAuth">
+    <button class="btn refresh" style="margin-top:0;background:#fff;color:#26334f;border:1px solid #e2e7f1" onclick="communityGoogle(this)">G&nbsp;&nbsp; Continue with Google</button>
+    <div class="status" style="text-align:center;margin:0">Fastest option · your Google name is used automatically.</div>
+    <div class="status" style="text-align:center;margin:0">If the same verified email already has a RunSGD account, Supabase links Google to that existing profile automatically.</div>
+    <div style="height:1px;background:#edf0f5;margin:4px 0"></div>
+    <div class="sub" style="font-weight:800">Or use email</div>
     <input id="memberName" placeholder="Display name">
     <input id="memberEmail" type="email" placeholder="Email">
     <input id="memberPassword" type="password" placeholder="Password (6+ characters)">
@@ -132,7 +137,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v1.6.0</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v1.6.1</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article class="card toolbox"><div class="title">⚙️ Admin settings</div><p class="sub">Manage API keys and test integrations from the temporary admin page.</p><a class="feedcard" style="margin-top:12px;text-align:center;font-weight:800;color:#4965c7" href="./admin/">Open Admin →</a></article>
 </section>
@@ -167,10 +172,26 @@ let communityUser=null,communityRooms=[],activeRoom=null,chatChannel=null;
 async function initCommunity(){
   try{let {data:{session}}=await sb.auth.getSession();communityUser=session?.user||null;await loadCommunityRooms();applyMemberState();if(activeRoom)await loadCommunityMessages();sb.auth.onAuthStateChange(async(_e,session)=>{communityUser=session?.user||null;applyMemberState();if(activeRoom)await loadCommunityMessages()})}catch(e){txt('communityAuthStatus','Community connection unavailable.')}
 }
+async function communityGoogle(btn){
+  setBusy(btn,true);
+  txt('communityAuthStatus','Opening Google sign-in…');
+  let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://mohdaie.github.io/runsgd/#community'}});
+  if(error){setBusy(btn,false);txt('communityAuthStatus',error.message)}
+}
+async function communityProfileName(user){
+  if(!user)return 'Member';
+  try{let {data}=await sb.from('profiles').select('display_name').eq('id',user.id).maybeSingle();if(data?.display_name)return data.display_name}catch{}
+  let m=user.user_metadata||{},joined=[m.given_name,m.family_name].filter(Boolean).join(' ').trim();
+  return joined||m.full_name||m.name||m.display_name||user.email||'Member'
+}
+async function communityLinkedStatus(user){
+  if(!user)return '';
+  try{let {data}=await sb.auth.getUserIdentities(),ids=data?.identities||[];return ids.some(x=>x.provider==='google')&&ids.length>1?' · Google linked':''}catch{return ''}
+}
 async function communitySignUp(btn){let email=$('memberEmail')?.value.trim(),password=$('memberPassword')?.value||'',name=$('memberName')?.value.trim();if(!email||password.length<6||!name)return txt('communityAuthStatus','Enter display name, valid email and password of at least 6 characters.');setBusy(btn,true);let {data,error}=await sb.auth.signUp({email,password,options:{data:{display_name:name}}});setBusy(btn,false);if(error)return txt('communityAuthStatus',error.message);txt('communityAuthStatus',data.session?'Account created and signed in.':'Account created. Check your email if confirmation is required.')}
 async function communitySignIn(btn){let email=$('memberEmail')?.value.trim(),password=$('memberPassword')?.value||'';if(!email||!password)return txt('communityAuthStatus','Enter your email and password.');setBusy(btn,true);let {error}=await sb.auth.signInWithPassword({email,password});setBusy(btn,false);txt('communityAuthStatus',error?error.message:'Signed in successfully.')}
 async function communitySignOut(){await sb.auth.signOut();communityUser=null;applyMemberState()}
-function applyMemberState(){let signed=!!communityUser;$('communityAuthCard').style.display=signed?'none':'block';$('communityComposer').style.display=signed?'flex':'none';$('signOutBtn').style.display=signed?'inline-block':'none';$('communityGuestHint').style.display=signed?'none':'block';let name=communityUser?.user_metadata?.display_name||communityUser?.email||'Member';txt('memberState',signed?'Signed in as '+name:'Guest mode')}
+async function applyMemberState(){let signed=!!communityUser;$('communityAuthCard').style.display=signed?'none':'block';$('communityComposer').style.display=signed?'flex':'none';$('signOutBtn').style.display=signed?'inline-block':'none';$('communityGuestHint').style.display=signed?'none':'block';if(!signed){txt('memberState','Guest mode');return}let name=await communityProfileName(communityUser),linked=await communityLinkedStatus(communityUser);txt('memberState','Signed in as '+name+linked)}
 async function loadCommunityRooms(){let {data,error}=await sb.from('community_rooms').select('id,slug,name,description').order('created_at');if(error){txt('chatList','Could not load community rooms.');return}communityRooms=data||[];if(!activeRoom&&communityRooms.length)activeRoom=communityRooms[0].id;renderCommunityRooms()}
 function renderCommunityRooms(){let el=$('communityRooms');if(!el)return;el.innerHTML=communityRooms.map(r=>`<button class="roomBtn ${r.id===activeRoom?'active':''}" onclick="selectCommunityRoom('${r.id}')">${esc(r.name)}</button>`).join('')}
 async function selectCommunityRoom(id){activeRoom=id;renderCommunityRooms();await loadCommunityMessages()}
