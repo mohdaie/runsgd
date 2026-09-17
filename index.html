@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v1.6.12</title>
+<title>runSGD v2.0.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -123,12 +123,25 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 #community .chatText{font-size:13px;line-height:1.34;font-weight:650}
 #community .moderateBtn{font-size:8px;padding:3px 6px;margin-left:3px}
 
+
+/* v2.0 AI Companion */
+.aiBriefBar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.aiMeta{font-size:10px;color:#8a94a8;line-height:1.35}
+.aiMiniBtn{border:0;border-radius:999px;padding:7px 10px;background:linear-gradient(120deg,#eef5ff,#f5efff);color:#5063a9;font-size:10px;font-weight:900;white-space:nowrap}
+.aiCard{background:linear-gradient(145deg,#ffffff 0%,#faf8ff 55%,#fff9fb 100%);border:1px solid #fff}
+.aiAskShell{display:flex;align-items:center;gap:8px;margin-top:12px;padding:7px 8px 7px 12px;border:1px solid #e2e5ef;border-radius:18px;background:#fff;box-shadow:0 7px 18px #46537d0a}
+.aiAskShell:focus-within{border-color:#9d8df0;box-shadow:0 0 0 4px #8b67ef12}
+.aiAskInput{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#22304b;padding:7px 1px;font-size:14px}
+.aiAskBtn{width:42px;height:42px;flex:0 0 auto;border:0;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;background:linear-gradient(135deg,#4b82f5,#7b69ef 55%,#e77da8);box-shadow:0 8px 18px #7566dd38}
+.aiAnswer{display:none;margin-top:12px;padding:13px 14px;border-radius:17px;background:#fff;border:1px solid #e8e9f1}
+.aiAnswer.show{display:block}.aiAnswerMain{font-size:15px;font-weight:850;line-height:1.38;color:#24304b}.aiAnswerReason{font-size:12px;line-height:1.45;color:#6f7a90;margin-top:5px}.aiSources{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.aiSource{font-size:9px;font-weight:850;padding:4px 7px;border-radius:999px;background:#eef3ff;color:#566bb5}
+
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.6.12</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.0.0</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -139,6 +152,15 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
   <div class="head"><div class="title">✦ What should I do?</div><span id="briefStatus" class="tag">Starting</span></div>
   <div class="soft"><div id="brief" class="briefAction">Checking your latest signals…</div><div id="briefWhy" class="sub briefWhy">Looking at border, weather, holidays and your enabled signals.</div></div>
   <div id="briefExtra" class="actionline">RunSGD only recommends an action when a signal is actually useful.</div>
+  <div class="aiBriefBar"><div id="aiBriefMeta" class="aiMeta">Deterministic fallback · AI uses RunSGD data only</div><button id="aiBriefBtn" class="aiMiniBtn" onclick="loadAiBrief(true,this)">✨ AI insight</button></div>
+</article>
+
+<article class="card aiCard">
+  <div class="head"><div class="title">✨ Ask RunSGD</div><span class="tag">Gemini 2.5 Flash-Lite</span></div>
+  <div class="sub">Ask about RunSGD live data, commuter knowledge or recent community updates. No external web search in v2.0.</div>
+  <div class="aiAskShell"><input id="aiQuestion" class="aiAskInput" maxlength="500" placeholder="e.g. Is Causeway busy? Do I need MDAC?" onkeydown="if(event.key==='Enter')askRunSgd()"><button id="aiAskBtn" class="aiAskBtn" onclick="askRunSgd(this)" aria-label="Ask RunSGD">➤</button></div>
+  <div id="aiAnswer" class="aiAnswer"><div id="aiAnswerMain" class="aiAnswerMain"></div><div id="aiAnswerReason" class="aiAnswerReason"></div><div id="aiSources" class="aiSources"></div></div>
+  <div id="aiAskStatus" class="status">Members can use AI after the Gemini key is configured by Admin.</div>
 </article>
 
 <div class="homeCustomizeBar"><button id="homeCustomizeBtn" class="homeCustomizeBtn" onclick="toggleHomeWidgetManager()">⚙ Customize Home</button></div>
@@ -278,7 +300,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v1.6.12</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v2.0.0</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -330,6 +352,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 const SUPABASE_URL='https://gdycbluljgfezhgslppe.supabase.co';
 const SUPABASE_KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
 const LTA_SNAPSHOT_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/lta-traffic-snapshot';
+const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-ai';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let communityUser=null,communityRooms=[],activeRoom=null,chatChannel=null,communityRole='member',communityProfile=null;
 async function initCommunity(){
@@ -407,7 +430,7 @@ async function saveProfile(btn){if(!communityUser)return;let name=$('profileName
 async function uploadProfilePhoto(input){if(!communityUser||!input.files?.[0])return;let file=input.files[0];if(file.size>2097152){txt('profileStatus','Photo must be 2 MB or smaller.');input.value='';return}txt('profileStatus','Uploading photo…');let path=communityUser.id+'/avatar',r=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type||'image/jpeg'});if(r.error){txt('profileStatus',r.error.message);input.value='';return}let url=sb.storage.from('avatars').getPublicUrl(path).data.publicUrl+'?v='+Date.now();let {error}=await sb.from('profiles').update({avatar_url:url}).eq('id',communityUser.id);input.value='';if(error)return txt('profileStatus',error.message);txt('profileStatus','Profile photo updated.');await applyMemberState();if(activeRoom)await loadCommunityMessages()}
 
 const SG={name:'Singapore',lat:1.3521,lon:103.8198,method:11},JB={name:'Johor Bahru',lat:1.4927,lon:103.7414,method:17};
-const live={rate:null,weather:{},air:null,prayer:null,holidays:[],location:null,nearby:[],feeds:{news:[],shopping:[],events:[]}};
+const live={rate:null,weather:{},air:null,traffic:null,prayer:null,holidays:[],location:null,nearby:[],feeds:{news:[],shopping:[],events:[]}};
 const $=x=>document.getElementById(x),txt=(x,v)=>{if($(x))$(x).textContent=v};
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function setBusy(btn,on){if(!btn)return;btn.classList.toggle('busy',!!on);btn.setAttribute('aria-busy',on?'true':'false')}
@@ -445,7 +468,7 @@ async function loadTrafficSnapshot(btn){
    let r=await fetch(LTA_SNAPSHOT_URL+'?camera='+encodeURIComponent(camera),{cache:'no-store'}),j=await r.json();
    if(!r.ok||!j.image_url)throw Error(j.error||'Snapshot unavailable');
    if(ph)ph.style.display='none';if(img){img.style.display='block';img.src=j.image_url+'#'+Date.now()}
-   txt('trafficName',j.name||'LTA traffic camera');txt('trafficBadge','Live');
+   live.traffic={camera_id:j.camera_id,name:j.name||'LTA traffic camera',captured_at:j.captured_at||j.fetched_at||null};txt('trafficName',j.name||'LTA traffic camera');txt('trafficBadge','Live');
    let captured=trafficClock(j.captured_at),fetched=trafficClock(j.fetched_at);
    txt('trafficTime',(captured?'Captured '+captured:(fetched?'Checked '+fetched:'Latest image'))+' · LTA DataMall · refresh 1–5 min');
  }catch(e){
@@ -568,7 +591,7 @@ const knowledgeBase=[
  {icon:'💱',title:'SGD ↔ MYR money basics',summary:'Reference rate is not the same as your cash rate.',body:['RunSGD shows a reference SGD/MYR market rate for comparison.','Money changers, cards and remittance services use their own spread or fees, so the final rate can differ.','Compare the amount you actually receive, not only the advertised headline rate.'],source:'',sourceLabel:''}
 ];
 function toggleKb(i){let c=document.querySelector('[data-kb="'+i+'"]');if(c)c.classList.toggle('open')}
-function renderKnowledge(){let f=$('exploreFeed');if(!f)return;let refresh=$('feedRefreshBtn');if(refresh)refresh.style.display='none';txt('feedStatus','Quick guides · checked Sep 2026');f.innerHTML='<div class="kbIntro"><strong>📚 SG ↔ JB commuter knowledge</strong><div class="sub">Short, practical guides. AI search will come later.</div></div><div class="kbGrid">'+knowledgeBase.map((a,i)=>`<article class="kbCard" data-kb="${i}"><div class="kbHead" onclick="toggleKb(${i})"><div class="kbIcon">${a.icon}</div><div class="kbMain"><div class="kbTitle">${esc(a.title)}</div><div class="kbSummary">${esc(a.summary)}</div></div><div class="kbChevron">⌄</div></div><div class="kbBody"><ul>${a.body.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${a.source?`<a class="kbSource" target="_blank" rel="noopener" href="${a.source}">${esc(a.sourceLabel)} ↗</a>`:''}<div class="kbChecked">Quick reference · rules can change</div></div></article>`).join('')+'</div>'}
+async function renderKnowledge(){let f=$('exploreFeed');if(!f)return;let refresh=$('feedRefreshBtn');if(refresh)refresh.style.display='none';txt('feedStatus','RunSGD knowledge · Supabase');let list=knowledgeBase;try{let {data,error}=await sb.from('knowledge_articles').select('title,category,summary,content,source_url,source_label,checked_at').eq('active',true).order('id');if(!error&&data?.length)list=data.map(a=>({icon:({border:'🚦',transport:'🚌',immigration:'🛂',driving:'🚗',shopping:'🛍️',money:'💱'})[a.category]||'📚',title:a.title,summary:a.summary,body:String(a.content||'').split(/(?<=[.!?])\s+/).filter(Boolean),source:a.source_url||'',sourceLabel:a.source_label||''}))}catch{}f.innerHTML='<div class="kbIntro"><strong>📚 SG ↔ JB commuter knowledge</strong><div class="sub">Short guides stored in RunSGD and searchable by the v2.0 AI.</div></div><div class="kbGrid">'+list.map((a,i)=>`<article class="kbCard" data-kb="${i}"><div class="kbHead" onclick="toggleKb(${i})"><div class="kbIcon">${a.icon}</div><div class="kbMain"><div class="kbTitle">${esc(a.title)}</div><div class="kbSummary">${esc(a.summary)}</div></div><div class="kbChevron">⌄</div></div><div class="kbBody"><ul>${a.body.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${a.source?`<a class="kbSource" target="_blank" rel="noopener" href="${a.source}">${esc(a.sourceLabel)} ↗</a>`:''}<div class="kbChecked">RunSGD knowledge · rules can change</div></div></article>`).join('')+'</div>'}
 
 const HOME_WIDGETS=[
  {id:'traffic',label:'🚦 Causeway snapshot'},
@@ -620,6 +643,38 @@ function toggleHomeWidget(id){
 }
 function resetHomeWidgets(){localStorage.removeItem('runsgdHomeWidgets');applyHomeWidgets();updateBrief()}
 
+
+function aiContext(){
+ let p=getHomeWidgetPrefs(),enabled=p.order.filter(x=>!p.hidden.includes(x)),c={
+   time:new Date().toLocaleString('en-SG',{timeZone:'Asia/Singapore',weekday:'short',hour:'2-digit',minute:'2-digit'}),
+   location:live.location?.name||'Not provided',enabled_widgets:enabled
+ };
+ if(enabled.includes('traffic')&&live.traffic)c.causeway=live.traffic;
+ if(enabled.includes('currency')&&live.rate)c.currency={sgd_myr:Number(live.rate.toFixed(4))};
+ if(enabled.includes('weather'))c.weather={SG:live.weather.SG||null,JB:live.weather.JB||null};
+ if(enabled.includes('air')&&live.air)c.air_quality=live.air;
+ if(enabled.includes('prayer')&&live.prayer)c.prayer={label:live.prayer.label,time:live.prayer.time,mins:live.prayer.mins,nearest:live.nearby?.[0]?.name||null};
+ if(enabled.includes('holidays'))c.holidays=(live.holidays||[]).slice(0,3).map(x=>({name:x.name||x.localName,date:x.date}));
+ return c
+}
+async function callRunSgdAi(mode,question=''){
+ let {data:{session}}=await sb.auth.getSession();
+ if(!session)throw Error('Sign in from Community to use RunSGD AI.');
+ let r=await fetch(RUNSGD_AI_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({mode,question,context:aiContext()})});
+ let j=await r.json();if(!r.ok)throw Error(j.error||'RunSGD AI is unavailable.');return j
+}
+function renderAiSources(id,sources){let e=$(id);if(!e)return;e.innerHTML=(sources||[]).slice(0,5).map(x=>`<span class="aiSource">${esc(x)}</span>`).join('')}
+async function loadAiBrief(force=false,btn=null){
+ let {data:{session}}=await sb.auth.getSession();if(!session){txt('aiBriefMeta','Sign in to enable AI · deterministic recommendation shown');return}
+ let cached=old('aiBriefV2');if(!force&&cached?.answer&&Date.now()-(cached.saved_at||0)<600000){txt('brief',cached.answer);txt('briefWhy',cached.reason||'');txt('briefExtra',(cached.sources||[]).length?'AI sources: '+cached.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 2.5 Flash-Lite · cached');return}
+ setBusy(btn,true);txt('briefStatus','AI…');txt('aiBriefMeta','Analysing current RunSGD signals…');
+ try{let j=await callRunSgdAi('brief');txt('brief',j.answer||'No action needed right now.');txt('briefWhy',j.reason||'');txt('briefExtra',(j.sources||[]).length?'AI sources: '+j.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 2.5 Flash-Lite · RunSGD data only');save('aiBriefV2',{...j,saved_at:Date.now()})}catch(e){txt('aiBriefMeta',e.message||'AI unavailable · deterministic recommendation kept');updateBrief()}finally{setBusy(btn,false)}
+}
+async function askRunSgd(btn=null){
+ let q=$('aiQuestion')?.value.trim();if(!q)return txt('aiAskStatus','Type a question first.');setBusy(btn||$('aiAskBtn'),true);txt('aiAskStatus','Searching RunSGD data…');$('aiAnswer')?.classList.remove('show');
+ try{let j=await callRunSgdAi('ask',q);txt('aiAnswerMain',j.answer||'');txt('aiAnswerReason',j.reason||'');renderAiSources('aiSources',j.sources||[]);$('aiAnswer')?.classList.add('show');txt('aiAskStatus','Gemini 2.5 Flash-Lite · app data only · no web search')}catch(e){txt('aiAskStatus',e.message||'AI unavailable.')}finally{setBusy(btn||$('aiAskBtn'),false)}
+}
+
 function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);if(live.prayer)c.push(['🕌 Prayer',`${live.prayer.label} ${live.prayer.mins==null?'is tomorrow at '+live.prayer.time:'is in about '+live.prayer.mins+' minutes'}.${live.nearby[0]?' Nearest mapped place: '+live.nearby[0].name+'.':''}`]);if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);if(live.rate)c.push(['💱 SGD/MYR',`Reference rate is ${live.rate.toFixed(4)} MYR per SGD.`]);if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);return c}
 async function loadDiscover(type){if(type!=='news'&&type!=='events'&&type!=='shopping')return;let feed=$('exploreFeed');feed.innerHTML='<div class="feedcard"><h3>Loading…</h3><div class="sub">Checking current items.</div></div>';let qs={news:'Singapore Johor Malaysia causeway immigration transport',events:'Singapore Johor event festival concert exhibition',shopping:'Singapore Johor shopping sale promotion mall'};try{let q=qs[type],rss='https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=en-SG&gl=SG&ceid=SG:en',j=await get('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rss),9000),items=(j.items||[]).slice(0,7).map(x=>({title:x.title,url:x.link,source:x.author||'Google News',date:x.pubDate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
  try{let q=qs[type],j=await get('https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent(q)+'&mode=artlist&maxrecords=8&format=json&sort=datedesc',9000),items=(j.articles||[]).slice(0,7).map(x=>({title:x.title,url:x.url,source:x.domain,date:x.seendate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
@@ -636,7 +691,7 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){greeting();restoreLocation();loadTwelveKeyField();applyHomeWidgets();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();refreshAll();initCommunity();if(live.location){loadNearbyPrayer();loadAir()}}
+async function init(){greeting();restoreLocation();loadTwelveKeyField();applyHomeWidgets();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();await initCommunity();await refreshAll();if(communityUser)loadAiBrief();if(live.location){loadNearbyPrayer();loadAir()}}
 window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','community','tools','more'].includes(n))showPage(n)});init();
 </script>
 </body>
