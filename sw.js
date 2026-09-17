@@ -1,24 +1,27 @@
-const CACHE='runsgd-shell-v213';
-const SHELL=['/runsgd/','/runsgd/index.html','/runsgd/manifest.webmanifest','/runsgd/icon.svg','/runsgd/privacy.html','/runsgd/cwbus.js'];
+const CACHE='runsgd-shell-v214';
+const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg','/privacy.html','/cwbus.js'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
 self.addEventListener('activate',event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('runsgd-shell-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
 });
 self.addEventListener('fetch',event=>{
   const req=event.request;
   if(req.method!=='GET')return;
   const url=new URL(req.url);
+  if(url.origin!==self.location.origin)return;
+  // Auth callbacks must reach the app unchanged and must never be cached.
+  if(url.searchParams.has('auth')||url.searchParams.has('code')||url.searchParams.has('error'))return;
   if(req.mode==='navigate'){
     event.respondWith(fetch(req).then(res=>{
-      const copy=res.clone();caches.open(CACHE).then(c=>c.put('/runsgd/',copy));return res;
-    }).catch(()=>caches.match('/runsgd/')));
+      if(res.ok){const copy=res.clone();caches.open(CACHE).then(c=>c.put('/',copy));}
+      return res;
+    }).catch(()=>caches.match('/')));
     return;
   }
-  if(url.origin===self.location.origin){
-    event.respondWith(caches.match(req).then(cached=>cached||fetch(req).then(res=>{
-      const copy=res.clone();caches.open(CACHE).then(c=>c.put(req,copy));return res;
-    })));
-  }
+  event.respondWith(caches.match(req).then(cached=>cached||fetch(req).then(res=>{
+    if(res.ok){const copy=res.clone();caches.open(CACHE).then(c=>c.put(req,copy));}
+    return res;
+  })));
 });
