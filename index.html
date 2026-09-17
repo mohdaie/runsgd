@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v2.0.1</title>
+<title>runSGD v2.0.2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -141,7 +141,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.0.1</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.0.2</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -149,18 +149,12 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <section id="home" class="page">
 <div class="stack">
 <article class="card">
-  <div class="head"><div class="title">✦ What should I do?</div><span id="briefStatus" class="tag">Starting</span></div>
-  <div class="soft"><div id="brief" class="briefAction">Checking your latest signals…</div><div id="briefWhy" class="sub briefWhy">Looking at border, weather, holidays and your enabled signals.</div></div>
-  <div id="briefExtra" class="actionline">RunSGD only recommends an action when a signal is actually useful.</div>
-  <div class="aiBriefBar"><div id="aiBriefMeta" class="aiMeta">Deterministic fallback · AI uses RunSGD data only</div><button id="aiBriefBtn" class="aiMiniBtn" onclick="loadAiBrief(true,this)">✨ AI insight</button></div>
-</article>
-
-<article class="card aiCard">
-  <div class="head"><div class="title">✨ Ask RunSGD</div><span class="tag">Gemini 3.5 Flash-Lite</span></div>
-  <div class="sub">Ask about RunSGD live data, commuter knowledge or recent community updates. No external web search in v2.0.</div>
-  <div class="aiAskShell"><input id="aiQuestion" class="aiAskInput" maxlength="500" placeholder="e.g. Is Causeway busy? Do I need MDAC?" onkeydown="if(event.key==='Enter')askRunSgd()"><button id="aiAskBtn" class="aiAskBtn" onclick="askRunSgd(this)" aria-label="Ask RunSGD">➤</button></div>
-  <div id="aiAnswer" class="aiAnswer"><div id="aiAnswerMain" class="aiAnswerMain"></div><div id="aiAnswerReason" class="aiAnswerReason"></div><div id="aiSources" class="aiSources"></div></div>
-  <div id="aiAskStatus" class="status">Members can use AI after the Gemini key is configured by Admin.</div>
+  <div class="head"><div class="title">✦ What should I do?</div><span id="briefStatus" class="tag">Ready</span></div>
+  <div class="sub">One tap checks the useful parts of RunSGD — traffic, weather, recent community activity and only the widgets you keep enabled.</div>
+  <button id="aiBriefBtn" class="btn refresh" onclick="loadAiBrief(true,this)">✨ Check my journey</button>
+  <div class="soft" style="margin-top:12px"><div id="brief" class="briefAction">Tap “Check my journey” for a current recommendation.</div><div id="briefWhy" class="sub briefWhy">RunSGD will only surface something when it can actually help your next move.</div></div>
+  <div id="briefExtra" class="actionline">If conditions look normal, RunSGD will simply tell you that you are good to go.</div>
+  <div id="aiBriefMeta" class="aiMeta" style="margin-top:9px">Gemini 3.5 Flash-Lite · RunSGD app data only</div>
 </article>
 
 <div class="homeCustomizeBar"><button id="homeCustomizeBtn" class="homeCustomizeBtn" onclick="toggleHomeWidgetManager()">⚙ Customize Home</button></div>
@@ -224,6 +218,14 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <section id="explore" class="page">
 <h2 class="pageTitle">Explore</h2>
 <p class="sub">Quick commuter knowledge first. Live discovery when you need it.</p>
+
+<article class="card aiCard">
+  <div class="head"><div class="title">✨ Ask RunSGD</div><span class="tag">Gemini 3.5 Flash-Lite</span></div>
+  <div class="sub">Ask about RunSGD live data, commuter knowledge or recent community updates. No external web search in v2.0.</div>
+  <div class="aiAskShell"><input id="aiQuestion" class="aiAskInput" maxlength="500" placeholder="e.g. Is Causeway busy? Do I need MDAC?" onkeydown="if(event.key==='Enter')askRunSgd()"><button id="aiAskBtn" class="aiAskBtn" onclick="askRunSgd(this)" aria-label="Ask RunSGD">➤</button></div>
+  <div id="aiAnswer" class="aiAnswer"><div id="aiAnswerMain" class="aiAnswerMain"></div><div id="aiAnswerReason" class="aiAnswerReason"></div><div id="aiSources" class="aiSources"></div></div>
+  <div id="aiAskStatus" class="status">Members can use AI after the Gemini key is configured by Admin.</div>
+</article>
 <div class="tabs">
   <button class="chip" data-explore="know" onclick="showExplore('know')">📚 Knowledge</button>
   <button class="chip" data-explore="news" onclick="showExplore('news')">📰 News</button>
@@ -300,7 +302,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v2.0.1</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v2.0.2</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -468,7 +470,7 @@ async function loadTrafficSnapshot(btn){
    let r=await fetch(LTA_SNAPSHOT_URL+'?camera='+encodeURIComponent(camera),{cache:'no-store'}),j=await r.json();
    if(!r.ok||!j.image_url)throw Error(j.error||'Snapshot unavailable');
    if(ph)ph.style.display='none';if(img){img.style.display='block';img.src=j.image_url+'#'+Date.now()}
-   live.traffic={camera_id:j.camera_id,name:j.name||'LTA traffic camera',captured_at:j.captured_at||j.fetched_at||null};txt('trafficName',j.name||'LTA traffic camera');txt('trafficBadge','Live');
+   live.traffic={camera_id:j.camera_id,name:j.name||'LTA traffic camera',captured_at:j.captured_at||j.fetched_at||null,fetched_at:j.fetched_at||null,image_url:j.image_url};txt('trafficName',j.name||'LTA traffic camera');txt('trafficBadge','Live');
    let captured=trafficClock(j.captured_at),fetched=trafficClock(j.fetched_at);
    txt('trafficTime',(captured?'Captured '+captured:(fetched?'Checked '+fetched:'Latest image'))+' · LTA DataMall · refresh 1–5 min');
  }catch(e){
@@ -573,12 +575,19 @@ async function loadHolidays(){
  try{let y=new Date().getFullYear(),j=await get(`https://date.nager.at/api/v3/PublicHolidays/${y}/SG`),today=new Date().toISOString().slice(0,10);live.holidays=j.filter(x=>x.date>=today).slice(0,3);txt('holidayBadge','Live');$('holidays').innerHTML=live.holidays.map(x=>`<div class="place"><b>${esc(x.localName||x.name)}</b><div class="sub">${new Date(x.date+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'})}</div></div>`).join('')||'No upcoming listed holidays.'}catch{txt('holidayBadge','Unavailable');txt('holidays','Holiday service unavailable.')}
  updateBrief()
 }
-function updateBrief(){
- let r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0),h=new Date().getHours(),action='No action needed right now.',why='No strong signal is asking you to change your plan.',extra='Check again before your next border crossing or trip.';
- if(r>=75){action=h<15?'Bring an umbrella and allow about 15 minutes extra.':'Give your trip a little extra buffer.';why=`Rain chance is up to ${r}% around SG/JB in the next few hours.`;extra='Weather is the strongest signal right now.'}
- else if(homeWidgetEnabled('prayer')&&live.prayer?.mins!=null&&live.prayer.mins<=45){action=`Plan around ${live.prayer.label}.`;why=`It is about ${live.prayer.mins} minutes away at ${live.prayer.time}.`;extra=live.nearby[0]?`Nearest mapped prayer place: ${live.nearby[0].name}, ${live.nearby[0].d<1?Math.round(live.nearby[0].d*1000)+' m':live.nearby[0].d.toFixed(1)+' km'} away.`:'Use location to find the nearest prayer place.'}
- else if(live.holidays[0]){let d=new Date(live.holidays[0].date+'T00:00:00'),t=new Date();t.setHours(0,0,0,0);let days=Math.round((d-t)/86400000);if(days>=0&&days<=2){action='Expect unusual crowd or operating patterns.';why=`${live.holidays[0].name} is ${days===0?'today':days===1?'tomorrow':'in '+days+' days'}.`;extra='Plan shopping, transport and border timing with a little more margin.'}}
- txt('brief',action);txt('briefWhy',why);txt('briefExtra',extra);txt('briefStatus',(live.weather.SG||live.prayer||live.holidays.length)?'Ready':'Limited');if(localStorage.getItem('runsgdPage')==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know')
+function updateBrief(fallback=false){
+ if(!fallback){
+   txt('brief','Tap “Check my journey” for a current recommendation.');
+   txt('briefWhy','RunSGD will analyse traffic, weather, community and only your enabled widgets.');
+   txt('briefExtra','No background AI calls — you decide when to check.');
+   txt('briefStatus','Ready');
+   return
+ }
+ let r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0),h=new Date().getHours(),action='You’re good to go.',why='No strong RunSGD signal suggests changing your plan right now.',extra='Check the latest Causeway snapshot before crossing.';
+ if(r>=75){action=h<15?'Allow about 15 minutes extra.':'Give your trip a little extra buffer.';why=`Rain chance is up to ${r}% around SG/JB in the next few hours.`;extra='Weather is the clearest useful signal right now.'}
+ else if(homeWidgetEnabled('prayer')&&live.prayer?.mins!=null&&live.prayer.mins<=45){action=`Plan around ${live.prayer.label}.`;why=`It is about ${live.prayer.mins} minutes away at ${live.prayer.time}.`;extra=live.nearby[0]?`Nearest mapped prayer place: ${live.nearby[0].name}.`:'Use location to find a nearby prayer place.'}
+ else if(live.holidays[0]){let d=new Date(live.holidays[0].date+'T00:00:00'),t=new Date();t.setHours(0,0,0,0);let days=Math.round((d-t)/86400000);if(days>=0&&days<=2){action='Add a little extra travel margin.';why=`${live.holidays[0].name} is ${days===0?'today':days===1?'tomorrow':'in '+days+' days'}.`;extra='Crowd and operating patterns may be less predictable.'}}
+ txt('brief',action);txt('briefWhy',why);txt('briefExtra',extra);txt('briefStatus','Fallback')
 }
 async function refreshAll(btn){setBusy(btn,true);txt('briefStatus','Updating');await Promise.allSettled([loadTrafficSnapshot(),loadRate(),loadWeather(),loadPrayer(),loadHolidays(),live.location?loadNearbyPrayer():Promise.resolve(),live.location?loadAir():Promise.resolve()]);updateBrief();setBusy(btn,false)}
 function showPage(n){if(!['home','explore','community','tools','more'].includes(n))n='home';document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===n));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===n));localStorage.setItem('runsgdPage',n);history.replaceState(null,'','#'+n);if(n==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know');if(n==='community'&&activeRoom)loadCommunityMessages();window.scrollTo({top:0,behavior:'instant'})}
@@ -647,7 +656,9 @@ function resetHomeWidgets(){localStorage.removeItem('runsgdHomeWidgets');applyHo
 function aiContext(){
  let p=getHomeWidgetPrefs(),enabled=p.order.filter(x=>!p.hidden.includes(x)),c={
    time:new Date().toLocaleString('en-SG',{timeZone:'Asia/Singapore',weekday:'short',hour:'2-digit',minute:'2-digit'}),
-   location:live.location?.name||'Not provided',enabled_widgets:enabled
+   location:live.location?.name||'Not provided',
+   likely_direction:live.location?.name==='Johor area'?'JB → SG':live.location?.name==='Singapore area'?'SG → JB':'Unknown',
+   enabled_widgets:enabled
  };
  if(enabled.includes('traffic')&&live.traffic)c.causeway=live.traffic;
  if(enabled.includes('currency')&&live.rate)c.currency={sgd_myr:Number(live.rate.toFixed(4))};
@@ -668,7 +679,7 @@ async function loadAiBrief(force=false,btn=null){
  let {data:{session}}=await sb.auth.getSession();if(!session){txt('aiBriefMeta','Sign in to enable AI · deterministic recommendation shown');return}
  let cached=old('aiBriefV2');if(!force&&cached?.answer&&Date.now()-(cached.saved_at||0)<600000){txt('brief',cached.answer);txt('briefWhy',cached.reason||'');txt('briefExtra',(cached.sources||[]).length?'AI sources: '+cached.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 3.5 Flash-Lite · cached');return}
  setBusy(btn,true);txt('briefStatus','AI…');txt('aiBriefMeta','Analysing current RunSGD signals…');
- try{let j=await callRunSgdAi('brief');txt('brief',j.answer||'No action needed right now.');txt('briefWhy',j.reason||'');txt('briefExtra',(j.sources||[]).length?'AI sources: '+j.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 3.5 Flash-Lite · RunSGD data only');save('aiBriefV2',{...j,saved_at:Date.now()})}catch(e){txt('aiBriefMeta',e.message||'AI unavailable · deterministic recommendation kept');updateBrief()}finally{setBusy(btn,false)}
+ try{let j=await callRunSgdAi('brief');txt('brief',j.answer||'No action needed right now.');txt('briefWhy',j.reason||'');txt('briefExtra',(j.sources||[]).length?'AI sources: '+j.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 3.5 Flash-Lite · RunSGD data only');save('aiBriefV2',{...j,saved_at:Date.now()})}catch(e){txt('aiBriefMeta',e.message||'AI unavailable · using simple fallback');updateBrief(true)}finally{setBusy(btn,false)}
 }
 async function askRunSgd(btn=null){
  let q=$('aiQuestion')?.value.trim();if(!q)return txt('aiAskStatus','Type a question first.');setBusy(btn||$('aiAskBtn'),true);txt('aiAskStatus','Searching RunSGD data…');$('aiAnswer')?.classList.remove('show');
@@ -691,7 +702,7 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){greeting();restoreLocation();loadTwelveKeyField();applyHomeWidgets();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();await initCommunity();await refreshAll();if(communityUser)loadAiBrief();if(live.location){loadNearbyPrayer();loadAir()}}
+async function init(){greeting();restoreLocation();loadTwelveKeyField();applyHomeWidgets();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();await initCommunity();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
 window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','community','tools','more'].includes(n))showPage(n)});init();
 </script>
 </body>
