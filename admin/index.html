@@ -8,14 +8,26 @@
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--green:#20a36a}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 3%,#dff2ff 0,transparent 30%),radial-gradient(circle at 92% 8%,#efe5ff 0,transparent 28%),linear-gradient(180deg,#fbfdff,#faf9ff 55%,#fffaf7);min-height:100vh}.app{max-width:620px;margin:auto;padding:24px 18px 54px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;font-size:30px;letter-spacing:-2px;background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;color:transparent}.badge{font-size:10px;font-weight:850;padding:6px 9px;border-radius:99px;background:#ffffffd9;color:#65718a;border:1px solid #fff}.hero{padding:28px 4px 18px}.hero h1{font-size:30px;margin:0 0 7px}.sub,.status,.note{color:var(--muted);font-size:13px;line-height:1.5}.stack{display:flex;flex-direction:column;gap:16px}.card{background:#fffffff0;border:1px solid #fff;border-radius:24px;padding:18px;box-shadow:0 12px 32px #46537d12}.head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.title{font-weight:850}.pill{font-size:10px;font-weight:850;padding:5px 8px;border-radius:99px;background:#eef4ff;color:#5067b4}.pill.ok{background:#eaf8f1;color:#247a55}.field{margin-top:12px}.field label{display:block;font-size:12px;font-weight:800;color:#58647a;margin-bottom:6px}.input,.select{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px 13px;color:var(--ink);outline:none}.input:focus,.select:focus{border-color:#9eb9fb;box-shadow:0 0 0 4px #4b82f510}.row{display:flex;gap:9px;align-items:center}.row .input{flex:1}.btn{border:0;border-radius:14px;padding:11px 14px;font-weight:850;cursor:pointer;transition:transform .14s ease,filter .18s ease,opacity .18s ease}.btn:active{transform:scale(.965);filter:brightness(.97)}.primary{background:linear-gradient(120deg,var(--blue),var(--violet));color:#fff}.soft{background:#edf2fb;color:#2e4369}.danger{background:#fff0f2;color:#a33e53}.full{width:100%;margin-top:12px}.status{margin-top:10px}.services{display:grid;grid-template-columns:1fr 1fr;gap:10px}.service{padding:13px;border-radius:17px;background:linear-gradient(120deg,#f4f8ff,#faf6ff)}.service strong{display:block;font-size:13px}.service span{display:block;font-size:11px;color:var(--muted);margin-top:4px}.back{display:inline-flex;align-items:center;gap:6px;color:#4965c7;text-decoration:none;font-weight:800;font-size:13px}.note{padding:12px 13px;border-radius:15px;background:#fff8e9;color:#806339}.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}.switch input{width:20px;height:20px}.saved{animation:flash .55s ease}@keyframes flash{0%{box-shadow:0 0 0 0 #4b82f533}50%{box-shadow:0 0 0 8px #4b82f510}100%{box-shadow:none}}@media(max-width:520px){.services{grid-template-columns:1fr}}
+
+.adminProfile{display:flex;align-items:center;gap:13px;padding:14px;border-radius:18px;background:linear-gradient(120deg,#f3f8ff,#faf5ff);margin-bottom:16px}.adminAvatar{width:58px;height:58px;border-radius:18px;object-fit:cover;background:#eef3ff;border:1px solid #e2e7f1}.memberList{display:flex;flex-direction:column;gap:10px}.memberRow{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid #edf0f5;border-radius:17px;background:#fff}.memberAvatar{width:45px;height:45px;border-radius:14px;object-fit:cover;background:#eef3ff;flex:0 0 auto}.memberInfo{min-width:0;flex:1}.memberName{font-weight:850;font-size:14px}.memberBio{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.memberTags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}.memberTag{font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 7px;border-radius:99px;background:#eef3ff;color:#5067b4}.memberTag.admin{background:#fff0f2;color:#a33e53}.memberTag.paid{background:#fff7df;color:#8b6b16}
 </style>
 </head>
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
 <div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN</span></div>
-<section class="hero"><h1>API & App Settings</h1><p class="sub">Configure provider keys for this browser. Settings are shared with the main RunSGD app because <b>/admin</b> uses the same site origin.</p></section>
+<section class="hero"><h1>Admin</h1><p class="sub">Manage RunSGD settings and community membership.</p></section>
+<div id="adminProfileCard" class="adminProfile">
+  <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
+  <div><div id="adminName" class="title">Admin</div><div id="adminEmail" class="sub"></div><div class="memberTags"><span class="memberTag admin">Admin</span></div></div>
+</div>
 <div class="stack">
+<article class="card">
+ <div class="head"><div class="title">👥 Community members</div><span id="memberCount" class="pill">0 members</span></div>
+ <p class="sub">Profile photo and community tag shown exactly as members appear in RunSGD chat.</p>
+ <div id="memberList" class="memberList"><div class="sub">Loading members…</div></div>
+</article>
+
 <article class="card" id="fxCard">
  <div class="head"><div class="title">💱 Currency · Twelve Data</div><span id="twelveState" class="pill">Not configured</span></div>
  <p class="sub">Primary live SGD/MYR provider. RunSGD keeps the existing free FX sources as fallback.</p>
@@ -73,15 +85,32 @@ function saveTwelve(){let key=$('twelveKey').value.trim(),c=cfg();if(key){localS
 async function testTwelve(){let key=$('twelveKey').value.trim();if(!key)return $('twelveStatus').textContent='Enter a Twelve Data API key first.';let b=$('testBtn');b.disabled=true;b.textContent='Testing…';$('twelveStatus').textContent='Requesting live SGD/MYR…';try{let r=await fetch('https://api.twelvedata.com/exchange_rate?symbol=SGD%2FMYR&apikey='+encodeURIComponent(key),{cache:'no-store'}),j=await r.json();if(!r.ok||!j.rate)throw Error(j.message||('HTTP '+r.status));let rate=Number(j.rate);$('twelveStatus').textContent='✓ Working · 1 SGD = RM '+rate.toFixed(4);saveTwelve()}catch(e){$('twelveStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test SGD/MYR'}}
 function saveLLM(){let c=cfg();c.llmProvider=$('llmProvider').value;c.llmKey=$('llmKey').value.trim();c.llmModel=$('llmModel').value.trim();c.llmEndpoint=$('llmEndpoint').value.trim();saveCfg(c);$('llmStatus').textContent='Saved. Main app integration will use these settings in the LLM release.';flash($('llmStatus').closest('.card'))}
 function clearAll(){if(!confirm('Clear RunSGD API settings from this browser?'))return;localStorage.removeItem('runsgdTwelveDataKey');localStorage.removeItem('runsgdAdminConfig');load();$('twelveStatus').textContent='API settings cleared.';$('llmStatus').textContent='LLM settings cleared.'}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function tagLabel(v){return ({newbie:'Newbie',pro:'Pro',oldtimer:'Oldtimer',paid:'Paid'})[v]||'Newbie'}
+async function loadMembers(){
+  let el=document.getElementById('memberList');
+  try{
+    let {data,error}=await adminSb.from('profiles').select('id,display_name,avatar_url,bio,badge,role,created_at').order('created_at',{ascending:true});
+    if(error)throw error;
+    let rows=data||[];document.getElementById('memberCount').textContent=rows.length+' member'+(rows.length===1?'':'s');
+    if(!rows.length){el.innerHTML='<div class="sub">No members yet.</div>';return}
+    el.innerHTML=rows.map(p=>{let tag=p.role==='admin'?'Admin':tagLabel(p.badge),av=p.avatar_url||'';return `<div class="memberRow">${av?`<img class="memberAvatar" src="${esc(av)}" alt="">`:`<div class="memberAvatar" style="display:grid;place-items:center">👤</div>`}<div class="memberInfo"><div class="memberName">${esc(p.display_name||'Commuter')}</div><div class="memberBio">${esc(p.bio||'No bio yet')}</div><div class="memberTags"><span class="memberTag ${p.role==='admin'?'admin':p.badge==='paid'?'paid':''}">${esc(tag)}</span></div></div></div>`}).join('');
+  }catch(e){el.innerHTML='<div class="sub">Could not load member profiles.</div>'}
+}
 async function guardAdmin(){
   try{
     let {data:{session}}=await adminSb.auth.getSession();
     if(!session){document.getElementById('gateText').textContent='Sign in with the RunSGD admin account first.';return}
-    let {data,error}=await adminSb.from('profiles').select('role,display_name').eq('id',session.user.id).maybeSingle();
+    let {data,error}=await adminSb.from('profiles').select('role,display_name,avatar_url,badge,bio').eq('id',session.user.id).maybeSingle();
     if(error||data?.role!=='admin'){document.getElementById('gateText').textContent='This RunSGD account does not have admin access.';return}
     document.getElementById('adminGate').style.display='none';
     document.getElementById('adminApp').style.display='block';
+    document.getElementById('adminName').textContent=data.display_name||'Admin';
+    document.getElementById('adminEmail').textContent=session.user.email||'';
+    let avatar=data.avatar_url||session.user.user_metadata?.avatar_url||session.user.user_metadata?.picture||'';
+    document.getElementById('adminAvatar').src=avatar||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2258%22 height=%2258%22%3E%3Crect width=%2258%22 height=%2258%22 rx=%2218%22 fill=%22%23eef3ff%22/%3E%3Ctext x=%2229%22 y=%2237%22 text-anchor=%22middle%22 font-size=%2224%22%3E👤%3C/text%3E%3C/svg%3E';
     load();
+    await loadMembers();
   }catch(e){document.getElementById('gateText').textContent='Could not verify admin access.'}
 }
 guardAdmin();
