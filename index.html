@@ -147,14 +147,14 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 /* v2.1 public transport + journey intent */
 .journeyChoices{display:flex;gap:7px;overflow:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:none}.journeyChoices::-webkit-scrollbar{display:none}.journeyChoice{flex:0 0 auto;border:1px solid #e4e9f3;background:#fff;color:#56647d;border-radius:99px;padding:9px 12px;font-size:12px;font-weight:800}.journeyChoice.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--blue),var(--violet))}.journeyCustom{width:100%;margin-top:9px;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px 13px;color:#17213b}.transitPanel{padding:12px 13px;border-radius:17px;background:linear-gradient(120deg,#f2f8ff,#f8f4ff);margin-top:9px}.transitHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.transitState{font-size:11px;font-weight:850;color:#53627c}.transitStop{padding-top:9px;margin-top:9px;border-top:1px solid #e6ebf4}.transitStop:first-child{border-top:0;margin-top:4px}.busArrivalRow{display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:start;padding:6px 0}.busNo{display:inline-grid;place-items:center;background:#fff;border:1px solid #e4e9f3;border-radius:10px;padding:5px 7px;font-weight:900;font-size:12px}.busTimes{font-weight:800;font-size:13px;color:#263550}.busMeta{font-size:10px;color:#7e899e;margin-top:2px}.transitRefresh{width:100%;margin-top:10px}
 
-/* v2.1.4 journey dropdown */
+/* v2.1.5 journey dropdown */
 .journeySelectWrap{margin-top:12px}.journeySelectLabel{display:block;font-size:11px;font-weight:850;color:#6a7690;margin:0 0 6px 2px}.journeySelect{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:15px;padding:12px 13px;color:#17213b;font-weight:800}.journeyCustom{display:none}.journeyCustom.show{display:block}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.1.4</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.1.5</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -340,7 +340,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.1.4</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.1.5</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -364,7 +364,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.1.4</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.1.5</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -404,6 +404,7 @@ const SUPABASE_KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
 const LTA_SNAPSHOT_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/lta-traffic-snapshot';
 const LTA_TRANSPORT_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/lta-public-transport';
 const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-ai';
+const isGooglePopupReturn=!!sessionStorage.getItem('runsgdGooglePopup')&&new URLSearchParams(location.search).get('auth')==='google';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let communityUser=null,communityRooms=[],activeRoom=null,chatChannel=null,communityRole='member',communityProfile=null;
 async function submitBetaFeedback(btn){
@@ -424,6 +425,17 @@ async function initCommunity(){
   try{
     let {data:{session}}=await sb.auth.getSession();
     communityUser=session?.user||null;
+    const popupAttempt=sessionStorage.getItem('runsgdGooglePopup');
+    if(popupAttempt&&isGooglePopupReturn){
+      if(communityUser){
+        sessionStorage.removeItem('runsgdGooglePopup');
+        localStorage.setItem('runsgdGoogleDone',popupAttempt);
+        history.replaceState(null,'',location.pathname);
+        document.body.innerHTML='<main style="font-family:system-ui;padding:40px;text-align:center"><h1>Signed in successfully</h1><p>Return to your original RunSGD window. You can close this sign-in window.</p><button onclick="window.close()">Close sign-in window</button></main>';
+        try{window.opener?.focus();window.close()}catch{}
+        return;
+      }
+    }
     await loadCommunityRooms();
     await applyMemberState();
     if(activeRoom)await loadCommunityMessages();
@@ -434,7 +446,7 @@ async function initCommunity(){
       showPage('community');
       txt('communityAuthStatus','Signed in with Google.');
     }
-    sb.auth.onAuthStateChange(async(event,session)=>{
+    sb.auth.onAuthStateChange((event,session)=>{setTimeout(async()=>{
       communityUser=session?.user||null;
       await applyMemberState();
       if(activeRoom)await loadCommunityMessages();
@@ -443,15 +455,62 @@ async function initCommunity(){
         history.replaceState(null,'',location.pathname+'#community');
         showPage('community');
       }
-    })
+    },0)})
   }catch(e){txt('communityAuthStatus','Community connection unavailable.')}
 }
+let googleLoginWindow=null,googleLoginTimer=null;
 async function communityGoogle(btn){
+  if(googleLoginWindow){try{googleLoginWindow.focus()}catch{}return}
+  // Open synchronously from the tap so the original app/tab never navigates.
+  const popup=window.open('about:blank','runsgd-google-login','popup,width=480,height=720');
+  if(!popup){txt('communityAuthStatus','Allow pop-ups for RunSGD, then tap Google sign-in again.');return}
+  googleLoginWindow=popup;
+  const attempt=crypto.randomUUID();
+  popup.sessionStorage.setItem('runsgdGooglePopup',attempt);
   setBusy(btn,true);
-  txt('communityAuthStatus','Opening Google sign-in…');
-  localStorage.setItem('runsgdAuthReturn','community');
-  let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://runsgd.site/?auth=google'}});
-  if(error){setBusy(btn,false);txt('communityAuthStatus',error.message)}
+  txt('communityAuthStatus','Complete Google sign-in in the new window. This window will stay open.');
+  const started=Date.now();
+  let checking=false;
+  const cleanup=()=>{
+    clearInterval(googleLoginTimer);googleLoginTimer=null;
+    window.removeEventListener('storage',check);
+    window.removeEventListener('focus',check);
+    googleLoginWindow=null;setBusy(btn,false);
+  };
+  const check=async()=>{
+    if(checking)return;
+    checking=true;
+    try{
+      if(localStorage.getItem('runsgdGoogleDone')===attempt){
+        const {data:{session}}=await sb.auth.getSession();
+        if(session){
+          cleanup();localStorage.removeItem('runsgdGoogleDone');
+          communityUser=session.user;
+          await applyMemberState();if(activeRoom)await loadCommunityMessages();
+          txt('communityAuthStatus','Signed in with Google.');
+          try{popup.close();window.focus()}catch{}
+          return;
+        }
+      }
+      if(Date.now()-started>300000){
+        cleanup();txt('communityAuthStatus','Sign-in timed out. You can try again.');
+      }
+    }catch{}finally{checking=false}
+  };
+  window.addEventListener('storage',check);
+  window.addEventListener('focus',check);
+  googleLoginTimer=setInterval(check,1000);
+  try{
+    const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{
+      redirectTo:'https://runsgd.site/?auth=google',skipBrowserRedirect:true
+    }});
+    if(error)throw error;
+    if(!data?.url)throw Error('Google sign-in is unavailable.');
+    popup.location.replace(data.url);
+  }catch(e){
+    cleanup();try{popup.close()}catch{}
+    txt('communityAuthStatus',e.message||'Could not open Google sign-in.');
+  }
 }
 function toggleEmailAuth(){
   let f=$('emailAuthForm'),b=$('emailToggle');
@@ -871,7 +930,7 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){greeting();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();await initCommunity();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
+async function init(){if(isGooglePopupReturn){await initCommunity();return}greeting();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();await initCommunity();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
 window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','community','tools','more'].includes(n))showPage(n)});init();
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
