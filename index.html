@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v2.0.0</title>
+<title>runSGD v2.0.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -141,7 +141,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.0.0</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.0.1</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -156,7 +156,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article class="card aiCard">
-  <div class="head"><div class="title">✨ Ask RunSGD</div><span class="tag">Gemini 2.5 Flash-Lite</span></div>
+  <div class="head"><div class="title">✨ Ask RunSGD</div><span class="tag">Gemini 3.5 Flash-Lite</span></div>
   <div class="sub">Ask about RunSGD live data, commuter knowledge or recent community updates. No external web search in v2.0.</div>
   <div class="aiAskShell"><input id="aiQuestion" class="aiAskInput" maxlength="500" placeholder="e.g. Is Causeway busy? Do I need MDAC?" onkeydown="if(event.key==='Enter')askRunSgd()"><button id="aiAskBtn" class="aiAskBtn" onclick="askRunSgd(this)" aria-label="Ask RunSGD">➤</button></div>
   <div id="aiAnswer" class="aiAnswer"><div id="aiAnswerMain" class="aiAnswerMain"></div><div id="aiAnswerReason" class="aiAnswerReason"></div><div id="aiSources" class="aiSources"></div></div>
@@ -300,7 +300,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v2.0.0</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v2.0.1</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -666,13 +666,13 @@ async function callRunSgdAi(mode,question=''){
 function renderAiSources(id,sources){let e=$(id);if(!e)return;e.innerHTML=(sources||[]).slice(0,5).map(x=>`<span class="aiSource">${esc(x)}</span>`).join('')}
 async function loadAiBrief(force=false,btn=null){
  let {data:{session}}=await sb.auth.getSession();if(!session){txt('aiBriefMeta','Sign in to enable AI · deterministic recommendation shown');return}
- let cached=old('aiBriefV2');if(!force&&cached?.answer&&Date.now()-(cached.saved_at||0)<600000){txt('brief',cached.answer);txt('briefWhy',cached.reason||'');txt('briefExtra',(cached.sources||[]).length?'AI sources: '+cached.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 2.5 Flash-Lite · cached');return}
+ let cached=old('aiBriefV2');if(!force&&cached?.answer&&Date.now()-(cached.saved_at||0)<600000){txt('brief',cached.answer);txt('briefWhy',cached.reason||'');txt('briefExtra',(cached.sources||[]).length?'AI sources: '+cached.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 3.5 Flash-Lite · cached');return}
  setBusy(btn,true);txt('briefStatus','AI…');txt('aiBriefMeta','Analysing current RunSGD signals…');
- try{let j=await callRunSgdAi('brief');txt('brief',j.answer||'No action needed right now.');txt('briefWhy',j.reason||'');txt('briefExtra',(j.sources||[]).length?'AI sources: '+j.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 2.5 Flash-Lite · RunSGD data only');save('aiBriefV2',{...j,saved_at:Date.now()})}catch(e){txt('aiBriefMeta',e.message||'AI unavailable · deterministic recommendation kept');updateBrief()}finally{setBusy(btn,false)}
+ try{let j=await callRunSgdAi('brief');txt('brief',j.answer||'No action needed right now.');txt('briefWhy',j.reason||'');txt('briefExtra',(j.sources||[]).length?'AI sources: '+j.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 3.5 Flash-Lite · RunSGD data only');save('aiBriefV2',{...j,saved_at:Date.now()})}catch(e){txt('aiBriefMeta',e.message||'AI unavailable · deterministic recommendation kept');updateBrief()}finally{setBusy(btn,false)}
 }
 async function askRunSgd(btn=null){
  let q=$('aiQuestion')?.value.trim();if(!q)return txt('aiAskStatus','Type a question first.');setBusy(btn||$('aiAskBtn'),true);txt('aiAskStatus','Searching RunSGD data…');$('aiAnswer')?.classList.remove('show');
- try{let j=await callRunSgdAi('ask',q);txt('aiAnswerMain',j.answer||'');txt('aiAnswerReason',j.reason||'');renderAiSources('aiSources',j.sources||[]);$('aiAnswer')?.classList.add('show');txt('aiAskStatus','Gemini 2.5 Flash-Lite · app data only · no web search')}catch(e){txt('aiAskStatus',e.message||'AI unavailable.')}finally{setBusy(btn||$('aiAskBtn'),false)}
+ try{let j=await callRunSgdAi('ask',q);txt('aiAnswerMain',j.answer||'');txt('aiAnswerReason',j.reason||'');renderAiSources('aiSources',j.sources||[]);$('aiAnswer')?.classList.add('show');txt('aiAskStatus','Gemini 3.5 Flash-Lite · app data only · no web search')}catch(e){txt('aiAskStatus',e.message||'AI unavailable.')}finally{setBusy(btn||$('aiAskBtn'),false)}
 }
 
 function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);if(live.prayer)c.push(['🕌 Prayer',`${live.prayer.label} ${live.prayer.mins==null?'is tomorrow at '+live.prayer.time:'is in about '+live.prayer.mins+' minutes'}.${live.nearby[0]?' Nearest mapped place: '+live.nearby[0].name+'.':''}`]);if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);if(live.rate)c.push(['💱 SGD/MYR',`Reference rate is ${live.rate.toFixed(4)} MYR per SGD.`]);if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);return c}
