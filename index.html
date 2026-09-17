@@ -147,14 +147,14 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 /* v2.1 public transport + journey intent */
 .journeyChoices{display:flex;gap:7px;overflow:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:none}.journeyChoices::-webkit-scrollbar{display:none}.journeyChoice{flex:0 0 auto;border:1px solid #e4e9f3;background:#fff;color:#56647d;border-radius:99px;padding:9px 12px;font-size:12px;font-weight:800}.journeyChoice.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--blue),var(--violet))}.journeyCustom{width:100%;margin-top:9px;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px 13px;color:#17213b}.transitPanel{padding:12px 13px;border-radius:17px;background:linear-gradient(120deg,#f2f8ff,#f8f4ff);margin-top:9px}.transitHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.transitState{font-size:11px;font-weight:850;color:#53627c}.transitStop{padding-top:9px;margin-top:9px;border-top:1px solid #e6ebf4}.transitStop:first-child{border-top:0;margin-top:4px}.busArrivalRow{display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:start;padding:6px 0}.busNo{display:inline-grid;place-items:center;background:#fff;border:1px solid #e4e9f3;border-radius:10px;padding:5px 7px;font-weight:900;font-size:12px}.busTimes{font-weight:800;font-size:13px;color:#263550}.busMeta{font-size:10px;color:#7e899e;margin-top:2px}.transitRefresh{width:100%;margin-top:10px}
 
-/* v2.1.6 journey dropdown */
+/* v2.1.7 journey dropdown */
 .journeySelectWrap{margin-top:12px}.journeySelectLabel{display:block;font-size:11px;font-weight:850;color:#6a7690;margin:0 0 6px 2px}.journeySelect{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:15px;padding:12px 13px;color:#17213b;font-weight:800}.journeyCustom{display:none}.journeyCustom.show{display:block}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.1.6</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.1.7</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -340,7 +340,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.1.6</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.1.7</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -364,7 +364,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.1.6</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.1.7</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -563,7 +563,14 @@ function save(k,v){try{localStorage.setItem('rsg-'+k,JSON.stringify({v,t:Date.no
 function old(k){try{return JSON.parse(localStorage.getItem('rsg-'+k)||'null')?.v||null}catch{return null}}
 function greeting(){let h=new Date().getHours();txt('greeting',(h<12?'Good morning':h<18?'Good afternoon':'Good evening')+' 👋')}
 function restoreLocation(){try{let p=JSON.parse(localStorage.getItem('runsgdLocation')||'null');if(p?.lat){live.location=p;txt('locBtn','📍 '+p.name);txt('prayerLoc',p.name)}}catch{}}
-function classify(lat,lon){let a=Math.hypot(lat-SG.lat,lon-SG.lon),b=Math.hypot(lat-JB.lat,lon-JB.lon);return b<a?{name:'Johor area',lat,lon,method:17}:{name:'Singapore area',lat,lon,method:11}}
+function classify(lat,lon){
+ const inSG=lon>=103.55&&lon<=104.10&&lat>=1.15&&((lon<103.70&&lat<=1.365)||(lon>=103.70&&lat<=1.462));
+ if(!inSG)return {name:'Johor area',area:'Johor',country:'MY',lat,lon,method:17};
+ const towns=[['Woodlands',1.4382,103.7890],['Sembawang',1.4491,103.8185],['Yishun',1.4304,103.8354],['Choa Chu Kang',1.3840,103.7470],['Bukit Panjang',1.3786,103.7626],['Bukit Batok',1.3496,103.7499],['Jurong West',1.3404,103.7090],['Jurong East',1.3329,103.7436],['Clementi',1.3151,103.7650],['Queenstown',1.2942,103.7861],['Bukit Merah',1.2819,103.8239],['Bishan',1.3508,103.8485],['Ang Mo Kio',1.3691,103.8454],['Toa Payoh',1.3343,103.8563],['Kallang',1.3115,103.8714],['Geylang',1.3201,103.8918],['Serangoon',1.3496,103.8737],['Hougang',1.3612,103.8863],['Sengkang',1.3917,103.8950],['Punggol',1.4051,103.9023],['Bedok',1.3236,103.9273],['Tampines',1.3526,103.9446],['Pasir Ris',1.3730,103.9493],['Marine Parade',1.3020,103.9072],['Downtown',1.2838,103.8591]];
+ let town=towns[0],best=Infinity;
+ for(const t of towns){const d=Math.hypot(lat-t[1],lon-t[2]);if(d<best){best=d;town=t}}
+ return {name:town[0]+', SG',area:town[0],country:'SG',lat,lon,method:11};
+}
 function requestLocation(btn){
  if(!navigator.geolocation)return alert('Location is unavailable in this browser.');
  setBusy(btn,true);txt('locBtn','📍 Locating…');
