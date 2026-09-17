@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>runSGD v1.6.8</title>
+<title>runSGD v1.6.9</title>
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--card:#fffffff0}
 *{box-sizing:border-box}
@@ -26,12 +26,34 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .trafficSnap{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:18px;background:linear-gradient(120deg,#eef4ff,#f7f1ff);display:none}.trafficPlaceholder{display:grid;place-items:center;min-height:180px;border-radius:18px;background:linear-gradient(120deg,#eef4ff,#f7f1ff);color:#748097;text-align:center;padding:24px}.trafficControls{display:flex;gap:8px;align-items:center;margin-top:10px}.trafficControls select{flex:1;min-width:0;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:10px 11px;color:#17213b}.trafficMeta{font-size:11px;color:#7b879c;margin-top:8px;line-height:1.45}
 
 .kbGrid{display:flex;flex-direction:column;gap:11px}.kbCard{background:#fffffff2;border:1px solid #fff;border-radius:20px;padding:15px;box-shadow:0 8px 24px #46537d0d}.kbHead{display:flex;align-items:center;gap:12px;cursor:pointer}.kbIcon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-size:21px;background:linear-gradient(120deg,#eef7ff,#f6efff);flex:0 0 auto}.kbMain{min-width:0;flex:1}.kbTitle{font-weight:850;font-size:16px;line-height:1.25}.kbSummary{font-size:12px;color:#748097;line-height:1.4;margin-top:3px}.kbChevron{font-size:17px;color:#8190aa;transition:transform .18s ease}.kbCard.open .kbChevron{transform:rotate(180deg)}.kbBody{display:none;padding:12px 0 1px 54px}.kbCard.open .kbBody{display:block}.kbBody ul{margin:0;padding-left:18px;color:#58647a;font-size:13px;line-height:1.55}.kbBody li+li{margin-top:5px}.kbSource{display:inline-block;margin-top:10px;color:#4965c7;text-decoration:none;font-size:11px;font-weight:800}.kbChecked{font-size:10px;color:#96a0b2;margin-top:7px}.kbIntro{padding:14px 15px;border-radius:18px;background:linear-gradient(120deg,#eef7ff,#f7f1ff,#fff7ef);margin-bottom:12px}.kbIntro strong{font-size:15px}.kbIntro .sub{margin-top:4px}
+
+/* Explore tabs: never clip labels */
+.tabs{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+.chip{flex:0 0 auto;width:max-content;min-width:max-content;max-width:none;white-space:nowrap;font-size:14px;padding:10px 15px;line-height:1.15}
+
+/* Home widget customization */
+.homeCustomizeBar{display:flex;justify-content:flex-end;margin-top:-7px}
+.homeCustomizeBtn{border:0;background:transparent;color:#526bc1;font-size:12px;font-weight:850;padding:7px 4px}
+.widgetManager{display:none;background:#fffffff0;border:1px solid #fff;border-radius:20px;padding:13px;box-shadow:0 8px 24px #46537d0d}
+.widgetManager.open{display:block}
+.widgetManagerTop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
+.widgetManagerList{display:flex;flex-direction:column;gap:7px;margin-top:9px}
+.widgetManageRow{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid #e8edf5;border-radius:14px;background:#fff}
+.widgetManageName{flex:1;min-width:0;font-size:13px;font-weight:800;color:#41506c}
+.widgetManageActions{display:flex;align-items:center;gap:5px}
+.widgetIconBtn{border:0;background:#eef3fb;color:#4c5f82;border-radius:10px;min-width:32px;height:32px;padding:0 8px;font-weight:900}
+.widgetIconBtn:disabled{opacity:.35}
+.widgetToggle{border:0;border-radius:99px;padding:7px 10px;font-size:10px;font-weight:900;background:#edf7f0;color:#34704b}
+.widgetToggle.off{background:#f1f2f5;color:#8993a5}
+.homeWidgetStack{display:flex;flex-direction:column;gap:19px}
+.homeWidget[hidden]{display:none!important}
+
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.6.8</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v1.6.9</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -40,11 +62,18 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <div class="stack">
 <article class="card">
   <div class="head"><div class="title">✦ What should I do?</div><span id="briefStatus" class="tag">Starting</span></div>
-  <div class="soft"><div id="brief" class="briefAction">Checking your latest signals…</div><div id="briefWhy" class="sub briefWhy">Looking at weather, prayer, holidays and current context.</div></div>
+  <div class="soft"><div id="brief" class="briefAction">Checking your latest signals…</div><div id="briefWhy" class="sub briefWhy">Looking at border, weather, holidays and your enabled signals.</div></div>
   <div id="briefExtra" class="actionline">RunSGD only recommends an action when a signal is actually useful.</div>
 </article>
 
-<article class="card">
+<div class="homeCustomizeBar"><button id="homeCustomizeBtn" class="homeCustomizeBtn" onclick="toggleHomeWidgetManager()">⚙ Customize Home</button></div>
+<div id="homeWidgetManager" class="widgetManager">
+  <div class="widgetManagerTop"><div><div class="title">Arrange Home widgets</div><div class="sub">Move or hide anything you do not need.</div></div><button class="miniBtn" onclick="resetHomeWidgets()">Reset</button></div>
+  <div id="homeWidgetManagerList" class="widgetManagerList"></div>
+</div>
+
+<div id="homeWidgetStack" class="homeWidgetStack">
+<article class="card homeWidget" data-widget="traffic">
   <div class="head"><div class="title">🚦 Causeway snapshot</div><span id="trafficBadge" class="tag">Loading</span></div>
   <div id="trafficPlaceholder" class="trafficPlaceholder">Connecting to LTA traffic camera…</div>
   <img id="trafficImage" class="trafficSnap" alt="Latest LTA traffic camera snapshot">
@@ -61,35 +90,36 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
   </div>
 </article>
 
-<article class="card">
+<article class="card homeWidget" data-widget="currency">
   <div class="head"><div class="title">💱 SGD / MYR</div><span id="rateBadge" class="tag">Loading</span></div>
   <div id="rate" class="big">—</div><div class="sub">1 SGD = MYR · reference rate</div>
   <div class="amount"><input id="amount" inputmode="decimal" placeholder="Amount" oninput="convert()"><select id="direction" onchange="convert()"><option value="SGD">SGD → MYR</option><option value="MYR">MYR → SGD</option></select></div>
   <div id="conversion" class="result">Enter an amount to convert.</div><div id="rateStatus" class="status">Connecting…</div>
 </article>
 
-<article class="card">
+<article class="card homeWidget" data-widget="weather">
   <div class="head"><div class="title">🌦 Weather</div><span id="weatherBadge" class="tag">Loading</span></div>
   <div class="grid"><div class="soft"><div class="sub">Singapore</div><div id="sgTemp" class="temp">—°</div><div id="sgRain" class="sub">Loading…</div></div><div class="soft"><div class="sub">Johor Bahru</div><div id="jbTemp" class="temp">—°</div><div id="jbRain" class="sub">Loading…</div></div></div>
   <div id="weatherStatus" class="status">Connecting…</div>
 </article>
 
-<article class="card">
+<article class="card homeWidget" data-widget="air">
   <div class="head"><div class="title">🌫 IPU / Air Quality</div><span id="ipuBadge" class="tag">Location</span></div>
   <div id="ipuValue" class="big">—</div><div id="ipuLevel" class="sub">Enable location to estimate air quality at your current area.</div>
   <div id="ipuMeta" class="status">Uses a 24-hour PM2.5 estimate and Malaysia DOE IPU breakpoints.</div>
 </article>
 
-<article class="card">
+<article class="card homeWidget" data-widget="prayer">
   <div class="head"><div class="title">🕌 Prayer</div><span id="prayerLoc" class="tag">Location</span></div>
   <div class="sub">Next prayer</div><div id="nextPrayer" class="big">—</div><div id="prayerTime" class="sub">Loading…</div>
   <div id="nearestPrayer" class="nearbyBox"><div class="sub">📍 Enable location to find the nearest mosque or surau.</div></div>
   <button id="prayerLocateBtn" class="btn refresh" onclick="requestLocation(this)">📍 Update my location & nearest prayer place</button>
 </article>
 
-<article class="card">
+<article class="card homeWidget" data-widget="holidays">
   <div class="head"><div class="title">📅 Coming up</div><span id="holidayBadge" class="tag">Loading</span></div><div id="holidays" class="sub">Connecting…</div>
 </article>
+</div>
 <button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button>
 </div>
 </section>
@@ -163,7 +193,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="title">RunSGD v1.6.8</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="title">RunSGD v1.6.9</div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -436,7 +466,7 @@ async function loadHolidays(){
 function updateBrief(){
  let r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0),h=new Date().getHours(),action='No action needed right now.',why='No strong signal is asking you to change your plan.',extra='Check again before your next border crossing or trip.';
  if(r>=75){action=h<15?'Bring an umbrella and allow about 15 minutes extra.':'Give your trip a little extra buffer.';why=`Rain chance is up to ${r}% around SG/JB in the next few hours.`;extra='Weather is the strongest signal right now.'}
- else if(live.prayer?.mins!=null&&live.prayer.mins<=45){action=`Plan around ${live.prayer.label}.`;why=`It is about ${live.prayer.mins} minutes away at ${live.prayer.time}.`;extra=live.nearby[0]?`Nearest mapped prayer place: ${live.nearby[0].name}, ${live.nearby[0].d<1?Math.round(live.nearby[0].d*1000)+' m':live.nearby[0].d.toFixed(1)+' km'} away.`:'Use location to find the nearest prayer place.'}
+ else if(homeWidgetEnabled('prayer')&&live.prayer?.mins!=null&&live.prayer.mins<=45){action=`Plan around ${live.prayer.label}.`;why=`It is about ${live.prayer.mins} minutes away at ${live.prayer.time}.`;extra=live.nearby[0]?`Nearest mapped prayer place: ${live.nearby[0].name}, ${live.nearby[0].d<1?Math.round(live.nearby[0].d*1000)+' m':live.nearby[0].d.toFixed(1)+' km'} away.`:'Use location to find the nearest prayer place.'}
  else if(live.holidays[0]){let d=new Date(live.holidays[0].date+'T00:00:00'),t=new Date();t.setHours(0,0,0,0);let days=Math.round((d-t)/86400000);if(days>=0&&days<=2){action='Expect unusual crowd or operating patterns.';why=`${live.holidays[0].name} is ${days===0?'today':days===1?'tomorrow':'in '+days+' days'}.`;extra='Plan shopping, transport and border timing with a little more margin.'}}
  txt('brief',action);txt('briefWhy',why);txt('briefExtra',extra);txt('briefStatus',(live.weather.SG||live.prayer||live.holidays.length)?'Ready':'Limited');if(localStorage.getItem('runsgdPage')==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know')
 }
@@ -452,6 +482,57 @@ const knowledgeBase=[
 ];
 function toggleKb(i){let c=document.querySelector('[data-kb="'+i+'"]');if(c)c.classList.toggle('open')}
 function renderKnowledge(){let f=$('exploreFeed');if(!f)return;let refresh=$('feedRefreshBtn');if(refresh)refresh.style.display='none';txt('feedStatus','Quick guides · checked Sep 2026');f.innerHTML='<div class="kbIntro"><strong>📚 SG ↔ JB commuter knowledge</strong><div class="sub">Short, practical guides. AI search will come later.</div></div><div class="kbGrid">'+knowledgeBase.map((a,i)=>`<article class="kbCard" data-kb="${i}"><div class="kbHead" onclick="toggleKb(${i})"><div class="kbIcon">${a.icon}</div><div class="kbMain"><div class="kbTitle">${esc(a.title)}</div><div class="kbSummary">${esc(a.summary)}</div></div><div class="kbChevron">⌄</div></div><div class="kbBody"><ul>${a.body.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${a.source?`<a class="kbSource" target="_blank" rel="noopener" href="${a.source}">${esc(a.sourceLabel)} ↗</a>`:''}<div class="kbChecked">Quick reference · rules can change</div></div></article>`).join('')+'</div>'}
+
+const HOME_WIDGETS=[
+ {id:'traffic',label:'🚦 Causeway snapshot'},
+ {id:'currency',label:'💱 SGD / MYR'},
+ {id:'weather',label:'🌦 Weather'},
+ {id:'air',label:'🌫 IPU / Air Quality'},
+ {id:'prayer',label:'🕌 Prayer'},
+ {id:'holidays',label:'📅 Coming up'}
+];
+function getHomeWidgetPrefs(){
+ let d={order:HOME_WIDGETS.map(x=>x.id),hidden:[]};
+ try{
+   let p=JSON.parse(localStorage.getItem('runsgdHomeWidgets')||'null');
+   if(p&&Array.isArray(p.order)&&Array.isArray(p.hidden)){
+     let valid=HOME_WIDGETS.map(x=>x.id),order=p.order.filter(x=>valid.includes(x));
+     valid.forEach(x=>{if(!order.includes(x))order.push(x)});
+     d={order,hidden:p.hidden.filter(x=>valid.includes(x))}
+   }
+ }catch{}
+ return d
+}
+function saveHomeWidgetPrefs(p){localStorage.setItem('runsgdHomeWidgets',JSON.stringify(p))}
+function homeWidgetEnabled(id){return !getHomeWidgetPrefs().hidden.includes(id)}
+function applyHomeWidgets(){
+ let box=$('homeWidgetStack');if(!box)return;
+ let p=getHomeWidgetPrefs();
+ p.order.forEach(id=>{let el=box.querySelector('[data-widget="'+id+'"]');if(el){el.hidden=p.hidden.includes(id);box.appendChild(el)}});
+ renderHomeWidgetManager()
+}
+function renderHomeWidgetManager(){
+ let list=$('homeWidgetManagerList');if(!list)return;
+ let p=getHomeWidgetPrefs();
+ list.innerHTML=p.order.map((id,i)=>{
+   let w=HOME_WIDGETS.find(x=>x.id===id),off=p.hidden.includes(id);
+   return `<div class="widgetManageRow"><div class="widgetManageName">${w?.label||id}</div><div class="widgetManageActions"><button class="widgetIconBtn" ${i===0?'disabled':''} onclick="moveHomeWidget('${id}',-1)" aria-label="Move up">↑</button><button class="widgetIconBtn" ${i===p.order.length-1?'disabled':''} onclick="moveHomeWidget('${id}',1)" aria-label="Move down">↓</button><button class="widgetToggle ${off?'off':''}" onclick="toggleHomeWidget('${id}')">${off?'Hidden':'Shown'}</button></div></div>`
+ }).join('')
+}
+function toggleHomeWidgetManager(){
+ let m=$('homeWidgetManager'),b=$('homeCustomizeBtn');if(!m)return;
+ let open=!m.classList.contains('open');m.classList.toggle('open',open);if(b)b.textContent=open?'Done ✓':'⚙ Customize Home';if(open)renderHomeWidgetManager()
+}
+function moveHomeWidget(id,dir){
+ let p=getHomeWidgetPrefs(),i=p.order.indexOf(id),j=i+dir;if(i<0||j<0||j>=p.order.length)return;
+ [p.order[i],p.order[j]]=[p.order[j],p.order[i]];saveHomeWidgetPrefs(p);applyHomeWidgets()
+}
+function toggleHomeWidget(id){
+ let p=getHomeWidgetPrefs(),i=p.hidden.indexOf(id);if(i>=0)p.hidden.splice(i,1);else p.hidden.push(id);
+ saveHomeWidgetPrefs(p);applyHomeWidgets();updateBrief()
+}
+function resetHomeWidgets(){localStorage.removeItem('runsgdHomeWidgets');applyHomeWidgets();updateBrief()}
+
 function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);if(live.prayer)c.push(['🕌 Prayer',`${live.prayer.label} ${live.prayer.mins==null?'is tomorrow at '+live.prayer.time:'is in about '+live.prayer.mins+' minutes'}.${live.nearby[0]?' Nearest mapped place: '+live.nearby[0].name+'.':''}`]);if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);if(live.rate)c.push(['💱 SGD/MYR',`Reference rate is ${live.rate.toFixed(4)} MYR per SGD.`]);if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);return c}
 async function loadDiscover(type){if(type!=='news'&&type!=='events'&&type!=='shopping')return;let feed=$('exploreFeed');feed.innerHTML='<div class="feedcard"><h3>Loading…</h3><div class="sub">Checking current items.</div></div>';let qs={news:'Singapore Johor Malaysia causeway immigration transport',events:'Singapore Johor event festival concert exhibition',shopping:'Singapore Johor shopping sale promotion mall'};try{let q=qs[type],rss='https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=en-SG&gl=SG&ceid=SG:en',j=await get('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rss),9000),items=(j.items||[]).slice(0,7).map(x=>({title:x.title,url:x.link,source:x.author||'Google News',date:x.pubDate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
  try{let q=qs[type],j=await get('https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent(q)+'&mode=artlist&maxrecords=8&format=json&sort=datedesc',9000),items=(j.articles||[]).slice(0,7).map(x=>({title:x.title,url:x.url,source:x.domain,date:x.seendate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
@@ -468,7 +549,7 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){greeting();restoreLocation();loadTwelveKeyField();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();refreshAll();initCommunity();if(live.location){loadNearbyPrayer();loadAir()}}
+async function init(){greeting();restoreLocation();loadTwelveKeyField();applyHomeWidgets();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();refreshAll();initCommunity();if(live.location){loadNearbyPrayer();loadAir()}}
 window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','community','tools','more'].includes(n))showPage(n)});init();
 </script>
 </body>
