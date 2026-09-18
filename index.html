@@ -714,7 +714,45 @@ function renderSgRoutes(){
  let box=$('sgRouteOptions');
  if(!sgRouteResults.length){box.innerHTML='';return}
  box.innerHTML=sgRouteResults.map((r,i)=>{
-  let stats=(r.walk_distance_m?'🚶 '+routeDistance(r.walk_distance_m):'')+(r.transfers!=null?' · '+r.transfers+' transfer'+(r.transfers===1?'':'s'):'')+(r.fare_sgd!=null?' · S
+  let stats=(r.walk_distance_m?'🚶 '+routeDistance(r.walk_distance_m):'')+(r.transfers!=null?' · '+r.transfers+' transfer'+(r.transfers===1?'':'s'):'')+(r.fare_sgd!=null?' · S'+String.fromCharCode(36)+Number(r.fare_sgd).toFixed(2):'');
+  return '<div class="routeOption" id="sgRouteOption'+i+'"><div class="routeOptionTop"><div><div class="routeDuration">'+routeMinutes(r.duration_sec)+'</div><div class="routeSummary">'+esc(sgRouteSummary(r)||'Public transport')+'</div><div class="routeStats">'+esc(stats.replace(/^ · /,''))+'</div></div><span class="tag">Route '+(i+1)+'</span></div><div class="routeActions"><button class="miniBtn" onclick="toggleSgRouteDetails('+i+',this)">View hops</button><button class="miniBtn" onclick="selectSgRoute('+i+')">Choose route</button></div><div id="sgRouteLegs'+i+'" class="routeLegs">'+(r.legs||[]).map((l,n)=>sgLegHtml(l,n,n===(r.legs||[]).length-1)).join('')+'</div></div>';
+ }).join('');
+}
+function toggleSgRouteDetails(i,btn){
+ let el=$('sgRouteLegs'+i);if(!el)return;let open=el.classList.toggle('show');if(btn)btn.textContent=open?'Hide hops':'View hops';
+}
+function selectSgRoute(i){
+ let route=sgRouteResults[i];if(!route||!sgRouteSelection)return;
+ document.querySelectorAll('.routeOption').forEach((x,n)=>x.classList.toggle('selected',n===i));
+ let saved={origin:live.location,destination:sgRouteSelection,route,selected_at:Date.now()};
+ try{localStorage.setItem('runsgdSgSelectedRoute',JSON.stringify(saved))}catch{}
+ let note=$('sgRouteSelectedNote');note.innerHTML='<b>✓ Route '+(i+1)+' selected</b><div style="margin-top:3px">'+esc(routeMinutes(route.duration_sec)+' · '+sgRouteSummary(route))+'</div><div class="sub" style="margin-top:4px">Saved for the next Journey Mode step.</div>';note.classList.add('show');
+ txt('sgRouteStatus','Route '+(i+1)+' selected · OneMap schedule-based estimate.');
+}
+async function planSgRoute(btn){
+ let q=$('sgRouteDestination')?.value.trim()||'';
+ if(q.length<2)return txt('sgRouteStatus','Enter a Singapore destination first.');
+ setBusy(btn,true);txt('sgRouteBadge','Planning');$('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote').classList.remove('show');
+ try{
+  let origin=await plannerGps();
+  if(origin.country!=='SG')throw Error('Singapore Route Planner currently works when your starting point is in Singapore.');
+  if(!sgRouteSelection){
+   txt('sgRouteStatus','Finding destination…');
+   let s=await sgRouteApi({action:'search',q}),items=s.results||[];
+   if(!items.length)throw Error('No Singapore destination found for "'+q+'".');
+   sgRouteSelection=items[0];$('sgRouteDestination').value=sgRouteSelection.name||sgRouteSelection.address||q;
+  }
+  txt('sgRouteStatus','Calculating up to 3 public-transport routes…');
+  let j=await sgRouteApi({action:'route',from:{lat:origin.lat,lon:origin.lon},to:{lat:sgRouteSelection.lat,lon:sgRouteSelection.lon},max_walk_m:1200});
+  sgRouteResults=j.routes||[];
+  if(!sgRouteResults.length)throw Error('No public-transport route returned.');
+  renderSgRoutes();txt('sgRouteBadge','OneMap');txt('sgRouteStatus',sgRouteResults.length+' route option'+(sgRouteResults.length===1?'':'s')+' · schedule-based estimate.');
+ }catch(e){
+  txt('sgRouteBadge','Unavailable');txt('sgRouteStatus',e.message||'Route planning unavailable.');
+ }finally{setBusy(btn,false)}
+}
+
+async function get(u,ms=12000){
  let c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
  try{let r=await fetch(u,{signal:c.signal,cache:'no-store'});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(t)}
 }
