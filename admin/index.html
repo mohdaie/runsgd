@@ -10,6 +10,29 @@
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 3%,#dff2ff 0,transparent 30%),radial-gradient(circle at 92% 8%,#efe5ff 0,transparent 28%),linear-gradient(180deg,#fbfdff,#faf9ff 55%,#fffaf7);min-height:100vh}.app{max-width:620px;margin:auto;padding:24px 18px 54px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;font-size:30px;letter-spacing:-2px;background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;color:transparent}.badge{font-size:10px;font-weight:850;padding:6px 9px;border-radius:99px;background:#ffffffd9;color:#65718a;border:1px solid #fff}.hero{padding:28px 4px 18px}.hero h1{font-size:30px;margin:0 0 7px}.sub,.status,.note{color:var(--muted);font-size:13px;line-height:1.5}.stack{display:flex;flex-direction:column;gap:16px}.card{background:#fffffff0;border:1px solid #fff;border-radius:24px;padding:18px;box-shadow:0 12px 32px #46537d12}.head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.title{font-weight:850}.pill{font-size:10px;font-weight:850;padding:5px 8px;border-radius:99px;background:#eef4ff;color:#5067b4}.pill.ok{background:#eaf8f1;color:#247a55}.field{margin-top:12px}.field label{display:block;font-size:12px;font-weight:800;color:#58647a;margin-bottom:6px}.input,.select{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px 13px;color:var(--ink);outline:none}.input:focus,.select:focus{border-color:#9eb9fb;box-shadow:0 0 0 4px #4b82f510}.row{display:flex;gap:9px;align-items:center}.row .input{flex:1}.btn{border:0;border-radius:14px;padding:11px 14px;font-weight:850;cursor:pointer;transition:transform .14s ease,filter .18s ease,opacity .18s ease}.btn:active{transform:scale(.965);filter:brightness(.97)}.primary{background:linear-gradient(120deg,var(--blue),var(--violet));color:#fff}.soft{background:#edf2fb;color:#2e4369}.danger{background:#fff0f2;color:#a33e53}.full{width:100%;margin-top:12px}.status{margin-top:10px}.services{display:grid;grid-template-columns:1fr 1fr;gap:10px}.service{padding:13px;border-radius:17px;background:linear-gradient(120deg,#f4f8ff,#faf6ff)}.service strong{display:block;font-size:13px}.service span{display:block;font-size:11px;color:var(--muted);margin-top:4px}.back{display:inline-flex;align-items:center;gap:6px;color:#4965c7;text-decoration:none;font-weight:800;font-size:13px}.note{padding:12px 13px;border-radius:15px;background:#fff8e9;color:#806339}.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}.switch input{width:20px;height:20px}.saved{animation:flash .55s ease}@keyframes flash{0%{box-shadow:0 0 0 0 #4b82f533}50%{box-shadow:0 0 0 8px #4b82f510}100%{box-shadow:none}}@media(max-width:520px){.services{grid-template-columns:1fr}}
 
 .adminProfile{display:flex;align-items:center;gap:13px;padding:14px;border-radius:18px;background:linear-gradient(120deg,#f3f8ff,#faf5ff);margin-bottom:16px}.adminAvatar{width:58px;height:58px;border-radius:18px;object-fit:cover;background:#eef3ff;border:1px solid #e2e7f1}.memberList{display:flex;flex-direction:column;gap:10px}.memberRow{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid #edf0f5;border-radius:17px;background:#fff}.memberAvatar{width:45px;height:45px;border-radius:14px;object-fit:cover;background:#eef3ff;flex:0 0 auto}.memberInfo{min-width:0;flex:1}.memberName{font-weight:850;font-size:14px}.memberBio{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.memberTags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}.memberTag{font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 7px;border-radius:99px;background:#eef3ff;color:#5067b4}.memberTag.admin{background:#fff0f2;color:#a33e53}.memberTag.paid{background:#fff7df;color:#8b6b16}
+
+/* Admin monitoring */
+.monitorCard{position:relative;overflow:hidden;background:linear-gradient(145deg,#ffffff 0%,#f5f8ff 48%,#fff5fb 100%);border:1px solid rgba(255,255,255,.96);box-shadow:0 18px 44px rgba(70,83,125,.13)}
+.monitorCard:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-70px;top:-90px;background:radial-gradient(circle,#8b67ef22 0%,#4b82f500 68%);pointer-events:none}
+.monitorHead,.trendHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.monitorHead{margin-bottom:14px}.monitorLive{display:inline-flex;align-items:center;gap:6px}.monitorLive:before{content:"";width:7px;height:7px;border-radius:50%;background:#24ad70;box-shadow:0 0 0 5px #24ad7014}
+.metricGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.metric{min-width:0;padding:13px 11px;border-radius:18px;background:#ffffffd9;border:1px solid #edf0f7;box-shadow:0 7px 18px #42527a0b}
+.metricValue{font-size:26px;font-weight:950;letter-spacing:-1.2px;line-height:1;color:#1d2d51}
+.metricLabel{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.35px;color:#67758e;margin-top:8px}
+.metricSub{font-size:10px;color:#929caf;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trendHead{font-size:11px;font-weight:800;color:#65718a;margin-top:15px}
+.sparkBars{height:78px;display:grid;grid-template-columns:repeat(7,1fr);gap:7px;align-items:end;margin-top:8px}
+.sparkDay{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px}
+.sparkBar{width:100%;max-width:34px;min-height:7px;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,#6d8df5,#8b67ef 58%,#e77da8);box-shadow:0 6px 14px #766de52b;transition:height .25s ease}
+.sparkLabel{font-size:9px;font-weight:800;color:#8c96a9}
+.apiGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.apiItem{display:flex;align-items:flex-start;gap:9px;padding:11px 12px;border-radius:17px;border:1px solid #edf0f5;background:#fff}
+.apiDot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;margin-top:4px;background:#a6afbd;box-shadow:0 0 0 4px #a6afbd17}
+.apiItem.ok .apiDot{background:#20a36a;box-shadow:0 0 0 4px #20a36a16}
+.apiItem.bad .apiDot{background:#e35264;box-shadow:0 0 0 4px #e3526415}
+.apiInfo{min-width:0;flex:1}.apiName{font-size:12px;font-weight:900;color:#33405d;line-height:1.25}.apiDetail{font-size:10px;color:#8590a5;line-height:1.35;margin-top:3px;overflow-wrap:anywhere}.apiLatency{font-size:9px;font-weight:800;color:#a0a8b7;margin-top:4px}
+.pill.bad{background:#fff0f2;color:#b43d55}.healthFooter{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}.healthFooter .status{margin:0;min-width:0}.healthRefresh{white-space:nowrap}
+@media(max-width:520px){.apiGrid{grid-template-columns:1fr}.metric{padding:12px 8px}.metricValue{font-size:23px}.metricLabel{font-size:9px}.metricSub{font-size:9px}}
 </style>
 </head>
 <body>
@@ -22,6 +45,24 @@
   <div><div id="adminName" class="title">Admin</div><div id="adminEmail" class="sub"></div><div class="memberTags"><span class="memberTag admin">Admin</span></div></div>
 </div>
 <div class="stack">
+<article class="card monitorCard" id="monitorCard">
+ <div class="monitorHead"><div><div class="title">📊 RunSGD monitoring</div><div class="sub">Live activity · Singapore time</div></div><span class="pill ok monitorLive">LIVE</span></div>
+ <div class="metricGrid">
+  <div class="metric"><div id="metricTraffic" class="metricValue">—</div><div class="metricLabel">Traffic</div><div id="metricTrafficSub" class="metricSub">Page views today</div></div>
+  <div class="metric"><div id="metricVisitors" class="metricValue">—</div><div class="metricLabel">Visitors</div><div id="metricVisitorsSub" class="metricSub">Unique today</div></div>
+  <div class="metric"><div id="metricMembers" class="metricValue">—</div><div class="metricLabel">Members</div><div id="metricMembersSub" class="metricSub">Registered total</div></div>
+ </div>
+ <div class="trendHead"><span>7-day traffic</span><span id="monitorUpdated">Loading…</span></div>
+ <div id="trafficBars" class="sparkBars" aria-label="7-day traffic chart"></div>
+</article>
+
+<article class="card" id="apiHealthCard">
+ <div class="head"><div class="title">🩺 API health</div><span id="apiHealthSummary" class="pill">Checking…</span></div>
+ <p class="sub">Live checks for the APIs currently used by RunSGD. Green = working, red = needs attention.</p>
+ <div id="apiHealthGrid" class="apiGrid"><div class="sub">Checking services…</div></div>
+ <div class="healthFooter"><div id="apiHealthUpdated" class="status">Running checks…</div><button id="apiHealthBtn" class="btn soft healthRefresh" onclick="loadApiHealth(this)">↻ Check now</button></div>
+</article>
+
 <article class="card">
  <div class="head"><div class="title">👥 Community members</div><span id="memberCount" class="pill">0 members</span></div>
  <p class="sub">Profile photo and community tag shown exactly as members appear in RunSGD chat.</p>
@@ -80,6 +121,8 @@
 const ADMIN_SUPABASE_URL='https://gdycbluljgfezhgslppe.supabase.co';
 const ADMIN_SUPABASE_KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
 const adminSb=window.supabase.createClient(ADMIN_SUPABASE_URL,ADMIN_SUPABASE_KEY);
+const ADMIN_MONITOR_URL=ADMIN_SUPABASE_URL+'/functions/v1/admin-monitor';
+let monitorTimer=null;
 const $=id=>document.getElementById(id);
 function flash(el){el.classList.remove('saved');void el.offsetWidth;el.classList.add('saved')}
 function toggleKey(id,btn){let e=$(id),show=e.type==='password';e.type=show?'text':'password';btn.textContent=show?'Hide':'Show'}
@@ -98,6 +141,72 @@ async function testGemini(){let b=$('geminiTestBtn');b.disabled=true;b.textConte
 async function loadLtaState(){try{let {data,error}=await adminSb.from('app_settings').select('secret_value').eq('key','lta_account_key').maybeSingle();if(error)throw error;let ok=!!data?.secret_value;$('ltaState').textContent=ok?'Configured':'Not configured';$('ltaState').classList.toggle('ok',ok)}catch(e){$('ltaState').textContent='Unavailable'}}
 async function saveLtaKey(){let key=$('ltaKey').value.trim();if(!key)return $('ltaStatus').textContent='Paste your LTA AccountKey first.';$('ltaStatus').textContent='Saving…';let {error}=await adminSb.from('app_settings').update({secret_value:key,updated_at:new Date().toISOString()}).eq('key','lta_account_key');if(error)return $('ltaStatus').textContent='Save failed · '+error.message;$('ltaKey').value='';$('ltaState').textContent='Configured';$('ltaState').classList.add('ok');$('ltaStatus').textContent='Saved in Supabase. Testing Causeway camera…';await testLta()}
 async function testLta(){let b=$('ltaTestBtn');b.disabled=true;b.textContent='Testing…';try{let r=await fetch('https://gdycbluljgfezhgslppe.supabase.co/functions/v1/lta-traffic-snapshot?camera=2701',{cache:'no-store'}),j=await r.json();if(!r.ok||!j.image_url)throw Error(j.error||'No image returned');$('ltaStatus').textContent='✓ Working · '+(j.name||'Causeway camera')+' snapshot available';$('ltaState').textContent='Configured';$('ltaState').classList.add('ok')}catch(e){$('ltaStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test Causeway'}}
+
+function fmtMetric(v){return Number(v||0).toLocaleString('en-SG')}
+function sgTime(v){try{return new Date(v).toLocaleTimeString('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit'})}catch{return ''}}
+async function loadDashboardMetrics(){
+  try{
+    let {data,error}=await adminSb.rpc('admin_dashboard_stats');
+    if(error)throw error;
+    let s=data||{};
+    $('metricTraffic').textContent=fmtMetric(s.views_today);
+    $('metricVisitors').textContent=fmtMetric(s.visitors_today);
+    $('metricMembers').textContent=fmtMetric(s.members);
+    $('metricTrafficSub').textContent=fmtMetric(s.views_7d)+' views · 7 days';
+    $('metricVisitorsSub').textContent=fmtMetric(s.visitors_7d)+' unique · 7 days';
+    $('metricMembersSub').textContent='+'+fmtMetric(s.members_7d)+' joined · 7 days';
+    $('monitorUpdated').textContent='Updated '+sgTime(s.generated_at);
+    let days=Array.isArray(s.daily)?s.daily:[],max=Math.max(1,...days.map(x=>Number(x.views)||0));
+    $('trafficBars').innerHTML=days.map(x=>{
+      let v=Number(x.views)||0,h=Math.max(7,Math.round(v/max*54));
+      let d=new Date(String(x.date)+'T00:00:00+08:00').toLocaleDateString('en-SG',{weekday:'short',timeZone:'Asia/Singapore'}).slice(0,2);
+      return '<div class="sparkDay" title="'+v+' views · '+(Number(x.visitors)||0)+' visitors"><div class="sparkBar" style="height:'+h+'px"></div><div class="sparkLabel">'+d+'</div></div>'
+    }).join('');
+  }catch(e){
+    $('monitorUpdated').textContent='Dashboard unavailable';
+  }
+}
+function renderApiHealth(checks){
+  let list=Array.isArray(checks)?checks:[];
+  $('apiHealthGrid').innerHTML=list.length?list.map(x=>
+    '<div class="apiItem '+(x.ok?'ok':'bad')+'"><span class="apiDot"></span><div class="apiInfo"><div class="apiName">'+esc(x.name)+'</div><div class="apiDetail">'+esc(x.detail||(x.ok?'Working':'Issue detected'))+'</div><div class="apiLatency">'+esc(x.group||'API')+' · '+fmtMetric(x.latency_ms)+' ms</div></div></div>'
+  ).join(''):'<div class="sub">No API checks returned.</div>';
+}
+async function loadApiHealth(btn=null){
+  let b=btn||$('apiHealthBtn'),summary=$('apiHealthSummary');
+  if(b){b.disabled=true;b.textContent='Checking…'}
+  summary.textContent='Checking…';summary.classList.remove('ok','bad');
+  $('apiHealthUpdated').textContent='Running live checks…';
+  try{
+    let {data:{session}}=await adminSb.auth.getSession();
+    if(!session)throw Error('Admin session missing');
+    let twelveKey=localStorage.getItem('runsgdTwelveDataKey')||cfg().twelveDataKey||'';
+    let r=await fetch(ADMIN_MONITOR_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+      body:JSON.stringify({twelve_key:twelveKey})
+    });
+    let j=await r.json();
+    if(!r.ok)throw Error(j.error||'Health check failed');
+    renderApiHealth(j.checks);
+    let healthy=Number(j.healthy)||0,total=Number(j.total)||0,all=total>0&&healthy===total;
+    summary.textContent=healthy+'/'+total+' healthy';
+    summary.classList.toggle('ok',all);
+    summary.classList.toggle('bad',!all);
+    $('apiHealthUpdated').textContent='Last checked '+sgTime(j.checked_at)+(all?' · all systems normal':' · '+(total-healthy)+' issue'+(total-healthy===1?'':'s'));
+  }catch(e){
+    summary.textContent='Monitor issue';summary.classList.add('bad');
+    $('apiHealthGrid').innerHTML='<div class="apiItem bad"><span class="apiDot"></span><div class="apiInfo"><div class="apiName">Health monitor</div><div class="apiDetail">'+esc(e.message||'Could not run checks')+'</div></div></div>';
+    $('apiHealthUpdated').textContent='Could not complete API checks.';
+  }finally{
+    if(b){b.disabled=false;b.textContent='↻ Check now'}
+  }
+}
+async function loadMonitoring(){
+  await Promise.all([loadDashboardMetrics(),loadApiHealth()]);
+  if(monitorTimer)clearInterval(monitorTimer);
+  monitorTimer=setInterval(()=>{loadDashboardMetrics();loadApiHealth()},5*60*1000);
+}
 function clearAll(){if(!confirm('Clear RunSGD local API settings from this browser?'))return;localStorage.removeItem('runsgdTwelveDataKey');localStorage.removeItem('runsgdAdminConfig');load();$('twelveStatus').textContent='Local API settings cleared.'}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function tagLabel(v){return ({newbie:'Newbie',pro:'Pro',oldtimer:'Oldtimer',paid:'Paid'})[v]||'Newbie'}
@@ -125,6 +234,7 @@ async function guardAdmin(){
     document.getElementById('adminAvatar').src=avatar||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2258%22 height=%2258%22%3E%3Crect width=%2258%22 height=%2258%22 rx=%2218%22 fill=%22%23eef3ff%22/%3E%3Ctext x=%2229%22 y=%2237%22 text-anchor=%22middle%22 font-size=%2224%22%3E👤%3C/text%3E%3C/svg%3E';
     load();
     await loadMembers();
+    await loadMonitoring();
   }catch(e){document.getElementById('gateText').textContent='Could not verify admin access.'}
 }
 guardAdmin();
