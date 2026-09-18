@@ -147,14 +147,14 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 /* v2.1 public transport + journey intent */
 .journeyChoices{display:flex;gap:7px;overflow:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:none}.journeyChoices::-webkit-scrollbar{display:none}.journeyChoice{flex:0 0 auto;border:1px solid #e4e9f3;background:#fff;color:#56647d;border-radius:99px;padding:9px 12px;font-size:12px;font-weight:800}.journeyChoice.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--blue),var(--violet))}.journeyCustom{width:100%;margin-top:9px;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px 13px;color:#17213b}.transitPanel{padding:12px 13px;border-radius:17px;background:linear-gradient(120deg,#f2f8ff,#f8f4ff);margin-top:9px}.transitHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.transitState{font-size:11px;font-weight:850;color:#53627c}.transitStop{padding-top:9px;margin-top:9px;border-top:1px solid #e6ebf4}.transitStop:first-child{border-top:0;margin-top:4px}.busArrivalRow{display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:start;padding:6px 0}.busNo{display:inline-grid;place-items:center;background:#fff;border:1px solid #e4e9f3;border-radius:10px;padding:5px 7px;font-weight:900;font-size:12px}.busTimes{font-weight:800;font-size:13px;color:#263550}.busMeta{font-size:10px;color:#7e899e;margin-top:2px}.transitRefresh{width:100%;margin-top:10px}
 
-/* v2.2.2 journey dropdown */
+/* v2.2.3 journey dropdown */
 .journeySelectWrap{margin-top:12px}.journeySelectLabel{display:block;font-size:11px;font-weight:850;color:#6a7690;margin:0 0 6px 2px}.journeySelect{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:15px;padding:12px 13px;color:#17213b;font-weight:800}.journeyCustom{display:none}.journeyCustom.show{display:block}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.2.2</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.2.3</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -344,7 +344,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.2.2</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.2.3</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -368,7 +368,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.2.2</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.2.3</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -376,6 +376,20 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
   <div id="betaFeedbackStatus" class="status">Sign in to submit feedback.</div>
 </article>
 <article class="card toolbox"><div class="title">🔒 Privacy & beta notice</div><p class="sub">See what RunSGD stores, how location and AI are used, and beta limitations.</p><a class="feedcard" style="margin-top:12px;text-align:center;font-weight:800;color:#4965c7" href="./privacy.html">Read notice →</a></article>
+
+<article id="oneMapSetupCard" class="card toolbox" style="display:none">
+  <div class="head"><div class="title">🗺️ OneMap Route Planner</div><span class="tag">Admin only</span></div>
+  <p class="sub">Configure the OneMap account RunSGD will use for Singapore Route Planner. These credentials are saved to RunSGD admin settings and are not stored in this browser.</p>
+  <div class="profileFields">
+    <input id="oneMapEmail" type="email" inputmode="email" autocomplete="off" placeholder="OneMap registered email">
+    <input id="oneMapPassword" type="password" autocomplete="off" placeholder="OneMap password">
+  </div>
+  <div class="toolrow" style="margin-top:10px">
+    <button class="miniBtn" onclick="clearOneMapSetup(this)">Clear</button>
+    <button class="btn refresh" style="margin-top:0;flex:1" onclick="saveOneMapSetup(this)">Save OneMap login</button>
+  </div>
+  <div id="oneMapSetupStatus" class="status">Admin sign-in required.</div>
+</article>
 
 <article id="adminSettingsCard" class="card toolbox" style="display:none"><div class="title">⚙️ Admin settings</div><p class="sub">Admin-only settings and integrations.</p><a class="feedcard" style="margin-top:12px;text-align:center;font-weight:800;color:#4965c7" href="./admin/">Open Admin →</a></article>
 </section>
@@ -556,7 +570,7 @@ async function communityRoleOf(user){
 async function communitySignUp(btn){let email=$('memberEmail')?.value.trim(),password=$('memberPassword')?.value||'',name=$('memberName')?.value.trim();if(!email||password.length<6||!name)return txt('communityAuthStatus','Enter display name, valid email and password of at least 6 characters.');setBusy(btn,true);let {data,error}=await sb.auth.signUp({email,password,options:{data:{display_name:name}}});setBusy(btn,false);if(error)return txt('communityAuthStatus',error.message);txt('communityAuthStatus',data.session?'Account created and signed in.':'Account created. Check your email if confirmation is required.')}
 async function communitySignIn(btn){let email=$('memberEmail')?.value.trim(),password=$('memberPassword')?.value||'';if(!email||!password)return txt('communityAuthStatus','Enter your email and password.');setBusy(btn,true);let {error}=await sb.auth.signInWithPassword({email,password});setBusy(btn,false);txt('communityAuthStatus',error?error.message:'Signed in successfully.')}
 async function communitySignOut(){await sb.auth.signOut();communityUser=null;applyMemberState()}
-async function applyMemberState(){let signed=!!communityUser;$('communityAuthCard').style.display=signed?'none':'block';$('communityComposer').style.display=signed?'flex':'none';$('signOutBtn').style.display=signed?'inline-block':'none';$('communityGuestHint').style.display=signed?'none':'block';let adminCard=$('adminSettingsCard'),profileCard=$('profileCard');if(!signed){communityRole='member';communityProfile=null;if(adminCard)adminCard.style.display='none';if(profileCard)profileCard.style.display='none';txt('memberState','Guest mode');return}let {data:p}=await sb.from('profiles').select('display_name,avatar_url,bio,badge,role').eq('id',communityUser.id).maybeSingle();communityProfile=p||{};let name=communityProfile.display_name||await communityProfileName(communityUser),linked=await communityLinkedStatus(communityUser);communityRole=communityProfile.role||await communityRoleOf(communityUser);if(adminCard)adminCard.style.display=communityRole==='admin'?'block':'none';if(profileCard){profileCard.style.display='block';profileCard.classList.remove('editing');$('profileName').value=name||'';$('profileBio').value=communityProfile.bio||'';txt('profileEmail',communityUser.email||'');txt('profileViewName',name||'Member');txt('profileViewBio','Bio: '+(communityProfile.bio||'—'));let tag=communityRole==='admin'?'admin':(communityProfile.badge||'newbie');$('profileBadge').textContent=tag;$('profileBadge').classList.toggle('admin',communityRole==='admin');let av=communityProfile.avatar_url||communityUser.user_metadata?.avatar_url||communityUser.user_metadata?.picture||'';$('profileAvatar').src=av||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 rx=%2222%22 fill=%22%23eef3ff%22/%3E%3Ctext x=%2235%22 y=%2243%22 text-anchor=%22middle%22 font-size=%2228%22%3E👤%3C/text%3E%3C/svg%3E'}txt('memberState','Signed in as '+name+' · '+(communityRole==='admin'?'Admin':labelBadge(communityProfile.badge||'newbie'))+linked)}
+async function applyMemberState(){let signed=!!communityUser;$('communityAuthCard').style.display=signed?'none':'block';$('communityComposer').style.display=signed?'flex':'none';$('signOutBtn').style.display=signed?'inline-block':'none';$('communityGuestHint').style.display=signed?'none':'block';let adminCard=$('adminSettingsCard'),oneMapCard=$('oneMapSetupCard'),profileCard=$('profileCard');if(!signed){communityRole='member';communityProfile=null;if(adminCard)adminCard.style.display='none';if(oneMapCard)oneMapCard.style.display='none';if(profileCard)profileCard.style.display='none';txt('memberState','Guest mode');return}let {data:p}=await sb.from('profiles').select('display_name,avatar_url,bio,badge,role').eq('id',communityUser.id).maybeSingle();communityProfile=p||{};let name=communityProfile.display_name||await communityProfileName(communityUser),linked=await communityLinkedStatus(communityUser);communityRole=communityProfile.role||await communityRoleOf(communityUser);if(adminCard)adminCard.style.display=communityRole==='admin'?'block':'none';if(oneMapCard)oneMapCard.style.display=communityRole==='admin'?'block':'none';if(communityRole==='admin')loadOneMapSetup();if(profileCard){profileCard.style.display='block';profileCard.classList.remove('editing');$('profileName').value=name||'';$('profileBio').value=communityProfile.bio||'';txt('profileEmail',communityUser.email||'');txt('profileViewName',name||'Member');txt('profileViewBio','Bio: '+(communityProfile.bio||'—'));let tag=communityRole==='admin'?'admin':(communityProfile.badge||'newbie');$('profileBadge').textContent=tag;$('profileBadge').classList.toggle('admin',communityRole==='admin');let av=communityProfile.avatar_url||communityUser.user_metadata?.avatar_url||communityUser.user_metadata?.picture||'';$('profileAvatar').src=av||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 rx=%2222%22 fill=%22%23eef3ff%22/%3E%3Ctext x=%2235%22 y=%2243%22 text-anchor=%22middle%22 font-size=%2228%22%3E👤%3C/text%3E%3C/svg%3E'}txt('memberState','Signed in as '+name+' · '+(communityRole==='admin'?'Admin':labelBadge(communityProfile.badge||'newbie'))+linked)}
 async function loadCommunityRooms(){let {data,error}=await sb.from('community_rooms').select('id,slug,name,description').order('created_at');if(error){txt('chatList','Could not load community rooms.');return}communityRooms=data||[];if(!activeRoom&&communityRooms.length)activeRoom=communityRooms[0].id;renderCommunityRooms()}
 function communityRoomIcon(r){let x=(r.slug||r.name||'').toLowerCase();return x.includes('causeway')?'🚦 ':x.includes('second')||x.includes('tuas')?'🔗 ':'💬 '}
 function renderCommunityRooms(){let el=$('communityRooms');if(!el)return;el.innerHTML=communityRooms.map(r=>`<button class="roomBtn ${r.id===activeRoom?'active':''}" onclick="selectCommunityRoom('${r.id}')">${communityRoomIcon(r)}${esc(r.name)}</button>`).join('')}
@@ -568,6 +582,48 @@ function subscribeCommunity(){if(chatChannel){sb.removeChannel(chatChannel);chat
 function quickChat(starter){let e=$('chatMessage');if(!e)return;let current=e.value.trim();e.value=current?current+' '+starter:starter;e.focus();e.setSelectionRange(e.value.length,e.value.length)}
 async function sendCommunityMessage(btn){if(!communityUser)return txt('communityGuestHint','Please sign in before posting.');let message=$('chatMessage')?.value.trim();if(!message||!activeRoom)return;setBusy(btn,true);let {error}=await sb.from('community_messages').insert({room_id:activeRoom,user_id:communityUser.id,message});setBusy(btn,false);if(error){alert(error.message);return}$('chatMessage').value='';await loadCommunityMessages()}
 async function deleteCommunityMessage(id){if(communityRole!=='admin')return;if(!confirm('Remove this community message?'))return;let {error}=await sb.from('community_messages').delete().eq('id',id);if(error){alert(error.message);return}await loadCommunityMessages()}
+
+async function loadOneMapSetup(){
+ let card=$('oneMapSetupCard');if(!card)return;
+ card.style.display=communityRole==='admin'?'block':'none';
+ if(communityRole!=='admin')return;
+ txt('oneMapSetupStatus','Checking saved OneMap setup…');
+ let {data,error}=await sb.from('app_settings').select('key,secret_value,updated_at').in('key',['onemap_email','onemap_password']);
+ if(error){txt('oneMapSetupStatus','Could not load OneMap setup: '+error.message);return}
+ let map=Object.fromEntries((data||[]).map(x=>[x.key,x]));
+ let email=String(map.onemap_email?.secret_value||'').trim(),hasPassword=!!String(map.onemap_password?.secret_value||'').trim();
+ if($('oneMapEmail'))$('oneMapEmail').value=email;
+ if($('oneMapPassword'))$('oneMapPassword').value='';
+ let stamp=[map.onemap_email?.updated_at,map.onemap_password?.updated_at].filter(Boolean).sort().pop();
+ txt('oneMapSetupStatus',email&&hasPassword?'Configured'+(stamp?' · updated '+new Date(stamp).toLocaleString('en-SG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''):'Enter your OneMap email and password, then save.');
+}
+async function saveOneMapSetup(btn){
+ if(communityRole!=='admin')return txt('oneMapSetupStatus','Admin access required.');
+ let email=$('oneMapEmail')?.value.trim(),password=$('oneMapPassword')?.value||'';
+ if(!email||!email.includes('@'))return txt('oneMapSetupStatus','Enter your registered OneMap email.');
+ if(!password)return txt('oneMapSetupStatus','Enter your OneMap password.');
+ setBusy(btn,true);txt('oneMapSetupStatus','Saving OneMap setup…');
+ let now=new Date().toISOString();
+ let {error}=await sb.from('app_settings').upsert([
+   {key:'onemap_email',secret_value:email,updated_at:now},
+   {key:'onemap_password',secret_value:password,updated_at:now}
+ ],{onConflict:'key'});
+ setBusy(btn,false);
+ if(error)return txt('oneMapSetupStatus','Could not save: '+error.message);
+ if($('oneMapPassword'))$('oneMapPassword').value='';
+ txt('oneMapSetupStatus','Saved. Password cleared from this screen and is not stored in this browser.');
+}
+async function clearOneMapSetup(btn){
+ if(communityRole!=='admin')return txt('oneMapSetupStatus','Admin access required.');
+ if(!confirm('Clear the saved OneMap login from RunSGD?'))return;
+ setBusy(btn,true);txt('oneMapSetupStatus','Clearing OneMap setup…');
+ let {error}=await sb.from('app_settings').delete().in('key',['onemap_email','onemap_password']);
+ setBusy(btn,false);
+ if(error)return txt('oneMapSetupStatus','Could not clear: '+error.message);
+ if($('oneMapEmail'))$('oneMapEmail').value='';
+ if($('oneMapPassword'))$('oneMapPassword').value='';
+ txt('oneMapSetupStatus','OneMap login cleared.');
+}
 
 function toggleProfileEdit(on){let c=$('profileCard');if(!c)return;c.classList.toggle('editing',!!on);if(on){$('profileName')?.focus();txt('profileStatus','Your tag is managed by RunSGD.')}}
 async function saveProfile(btn){if(!communityUser)return;let name=$('profileName')?.value.trim(),bio=$('profileBio')?.value.trim();if(!name||name.length<2)return txt('profileStatus','Display name must be at least 2 characters.');setBusy(btn,true);let {error}=await sb.from('profiles').update({display_name:name,bio}).eq('id',communityUser.id);setBusy(btn,false);if(error)return txt('profileStatus',error.message);txt('profileStatus','Profile saved.');await applyMemberState();toggleProfileEdit(false);if(activeRoom)await loadCommunityMessages()}
