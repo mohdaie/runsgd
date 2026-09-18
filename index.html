@@ -162,12 +162,39 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .journeyBeacon{display:none;margin-top:12px;padding:13px;border-radius:17px;background:linear-gradient(135deg,#f8fffb,#effaf4);border:1px solid #cfe9d8;grid-template-columns:72px 1fr;gap:13px;align-items:center}.journeyBeacon.show{display:grid}.journeyBeaconDial{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid #d7eadf;box-shadow:inset 0 0 0 5px #f2faf5,0 8px 20px #1f8d5212;position:relative}.journeyBeaconDial:before{content:"N";position:absolute;top:5px;font-size:8px;font-weight:950;color:#8aa596}.journeyBeaconArrow{font-size:36px;line-height:1;color:#169455;transform:rotate(0deg);transition:transform .25s ease}.journeyBeaconTitle{font-size:10px;font-weight:950;color:#258255;text-transform:uppercase;letter-spacing:.35px}.journeyBeaconTarget{font-size:15px;font-weight:950;color:#214632;line-height:1.25;margin-top:3px}.journeyBeaconGuide{font-size:12px;font-weight:800;color:#50705e;line-height:1.35;margin-top:4px}.journeyBeaconAddress{font-size:10px;color:#7d9587;line-height:1.35;margin-top:4px}.journeyCompassBtn{display:none;margin-top:7px;border:0;border-radius:10px;padding:7px 9px;background:#e0f4e8;color:#26724c;font-size:10px;font-weight:900}.journeyCompassBtn.show{display:inline-flex}
 .journeyAi{margin-top:12px;padding:12px 13px;border-radius:16px;background:#ffffffc9;border:1px solid #d8efe0;display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start}.journeyAiIcon{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:#dbf7e6}.journeyAiTitle{font-size:10px;font-weight:950;color:#228553;text-transform:uppercase;letter-spacing:.3px}.journeyAiText{font-size:13px;font-weight:800;color:#315a42;line-height:1.45;margin-top:2px}
 .journeyNext{margin-top:10px;padding:10px 12px;border-radius:14px;background:#dff5e8;color:#3c674e;font-size:11px;line-height:1.45}.journeyButtons{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.journeyBtn{border:0;border-radius:12px;padding:9px 11px;background:#fff;color:#286045;font-weight:850;font-size:11px;box-shadow:0 3px 10px #1b754114}.journeyBtn.danger{background:#fff3f3;color:#a24a55}.journeyAllHops{display:none;margin-top:11px;padding-top:8px;border-top:1px solid #cde9d8}.journeyAllHops.show{display:block}.journeyAllHops .routeLeg{opacity:.64}.journeyAllHops .routeLeg.journeyDone{opacity:.42}.journeyAllHops .routeLeg.journeyCurrent{opacity:1;background:#ffffffaa;border-radius:12px;padding:8px}.journeyArrival{background:linear-gradient(145deg,#e8fff2,#f7fffa);border-color:#a8dfbd}.journeyArrival .journeyLivePill{background:#cdf3dc}
+
+/* v2.3.0 destination-first AI journey planner */
+.routePlannerSetup{display:block}
+.routePlannerStep{font-size:10px;font-weight:950;letter-spacing:.35px;text-transform:uppercase;color:#8490a4;margin:13px 2px 6px}
+.routeRegionRow.v23{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+.routeRegionRow.v23 .routeRegionBtn{padding:11px 10px;font-size:12px;border-radius:14px}
+.routeRegionRow.v23 .routeRegionBtn.active{color:#fff;background:linear-gradient(120deg,#4b82f5,#756cf0);border-color:transparent;box-shadow:0 8px 18px #556fe02a}
+.routeRegionRow.v23 .routeRegionBtn.jb.active{background:linear-gradient(120deg,#199861,#39b77b)}
+.routeSearchShell{position:relative}
+.routeSearchShell:before{content:"⌕";position:absolute;left:12px;top:9px;color:#8995aa;font-size:19px;z-index:1}
+.routeSearchShell .toolInput{width:100%;padding-left:38px}
+.routeSearchShell .toolInput:disabled{background:#f5f7fb;color:#a0a8b7}
+.routeDestinationChosen{display:none;margin-top:8px;padding:9px 11px;border-radius:13px;background:#f1f8ff;color:#46617d;font-size:11px;font-weight:800}
+.routeDestinationChosen.show{display:block}
+.routeAiComposer{margin-top:14px}
+.routeAiShell{position:relative;border:1px solid #dfe5f0;background:linear-gradient(145deg,#fff,#fbfaff);border-radius:19px;padding:11px 56px 10px 12px;box-shadow:0 8px 20px #46537d0b}
+.routeAiShell:focus-within{border-color:#9eaff2;box-shadow:0 0 0 4px #6e77e514,0 9px 22px #46537d0c}
+.routeAiShell textarea{width:100%;min-height:78px;max-height:150px;resize:vertical;border:0;outline:0;background:transparent;color:#22304a;font:inherit;font-size:14px;line-height:1.45;padding:2px 0}
+.routeAiShell textarea::placeholder{color:#8e99ac}
+.routeAiExamples{border-top:1px solid #edf0f5;margin-top:5px;padding-top:7px;color:#8d97a8;font-size:10px;line-height:1.48}
+.routeAiExamples b{color:#697791}
+.routeAiSend{position:absolute;right:10px;bottom:11px;width:40px;height:40px;border:0;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#4b82f5,#7769ef);color:#fff;font-size:18px;font-weight:950;box-shadow:0 7px 17px #5c6ee030;padding:0}
+.routeAiSend:disabled{opacity:.42;box-shadow:none}
+.routeAiUnderstood{display:none;margin-top:10px;padding:10px 12px;border-radius:15px;background:linear-gradient(120deg,#eef7ff,#f6f1ff);border:1px solid #e5eafb;color:#4d5c78;font-size:11px;line-height:1.5}
+.routeAiUnderstood.show{display:block}.routeAiUnderstood strong{color:#273650}
+.routePlannerCard.journey-active .routePlannerSetup{display:none!important}
+
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.2.13</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.3.0</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -196,30 +223,35 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article class="card routePlannerCard" id="sgRoutePlannerCard">
-  <div class="head"><div class="title">🧭 Route Planner</div><span id="sgRouteBadge" class="tag">SG / JB Beta</span></div>
-  <div class="sub">Plan a trip in Singapore or Johor Bahru. Public transport keeps the current OneMap / Google flow, while local JB trips can also use Google Maps car or motorcycle routing.</div>
-  <div id="sgRouteOrigin" class="routeOrigin">📍 From: Current location</div>
-  <div class="routeRegionRow">
-    <button id="routeRegionAuto" class="routeRegionBtn active" onclick="setRouteDestinationRegion('auto')">Auto</button>
-    <button id="routeRegionSg" class="routeRegionBtn" onclick="setRouteDestinationRegion('sg')">🇸🇬 Singapore</button>
-    <button id="routeRegionJb" class="routeRegionBtn jb" onclick="setRouteDestinationRegion('jb')">🇲🇾 Johor Bahru</button>
+  <div class="head"><div class="title">✨ AI Journey Planner</div><span id="sgRouteBadge" class="tag">Multimodal Beta</span></div>
+  <div class="sub">Your start point is always your current location. Choose where you are going, then tell RunSGD how you want to travel.</div>
+  <div class="routePlannerSetup">
+    <div id="sgRouteOrigin" class="routeOrigin">📍 From: Current location</div>
+    <div class="routePlannerStep">1 · Destination country</div>
+    <div class="routeRegionRow v23">
+      <button id="routeRegionJb" class="routeRegionBtn jb" onclick="setRouteDestinationRegion('jb')">🇲🇾 Malaysia</button>
+      <button id="routeRegionSg" class="routeRegionBtn" onclick="setRouteDestinationRegion('sg')">🇸🇬 Singapore</button>
+    </div>
+    <div class="routePlannerStep">2 · Destination</div>
+    <div class="routeSearchShell">
+      <input id="sgRouteDestination" class="toolInput" maxlength="120" autocomplete="off" placeholder="Choose a country first" oninput="sgRouteInputChanged()" disabled>
+    </div>
+    <div id="sgRouteSuggestions" class="routeSuggestions"></div>
+    <div id="sgRouteStatus" class="status">Choose Malaysia or Singapore to start searching.</div>
+    <div id="sgRouteProviderNote" class="trafficMeta">Same search experience; RunSGD switches map providers behind the scenes.</div>
+    <div id="routeDestinationChosen" class="routeDestinationChosen"></div>
+    <div class="routeAiComposer">
+      <div class="routePlannerStep">3 · Tell RunSGD how you want to travel</div>
+      <div class="routeAiShell">
+        <textarea id="journeyTravelPrompt" maxlength="500" placeholder="Example: I have a car, but park in JB if it makes sense. KTM is okay if it is easier." oninput="journeyTravelPromptChanged()" disabled></textarea>
+        <div class="routeAiExamples"><b>Try:</b> “I want the easiest way.” · “I have a car but don’t want to drive in SG.” · “Prefer KTM today.” · “I’m riding a motorcycle.”</div>
+        <button id="journeyPlanBtn" class="routeAiSend" onclick="planAiJourney(this)" aria-label="Plan journey" disabled>➤</button>
+      </div>
+      <div id="journeyIntentStatus" class="routeAiUnderstood"></div>
+    </div>
+    <div id="sgRouteOptions" class="routeOptions"></div>
+    <div id="sgRouteSelectedNote" class="routeSelectedNote"></div>
   </div>
-  <div class="routeModeRow" id="routeModeRow">
-    <button id="routeModeTransit" class="routeModeBtn active" onclick="setRouteTravelMode('transit')">🚌 Public transport</button>
-    <button id="routeModeCar" class="routeModeBtn car" onclick="setRouteTravelMode('car')">🚗 Car</button>
-    <button id="routeModeMotorcycle" class="routeModeBtn bike" onclick="setRouteTravelMode('motorcycle')">🏍️ Motorcycle</button>
-  </div>
-  <div id="routeModeWarning" class="routeModeWarning">Car and motorcycle routing is available for local Johor Bahru trips.</div>
-  <div class="routeSearchRow">
-    <input id="sgRouteDestination" class="toolInput" maxlength="120" autocomplete="off" placeholder="Where are you going?" oninput="sgRouteInputChanged()">
-    <button id="sgRouteGo" class="btn refresh routeSearchGo" onclick="planSgRoute(this)">Go</button>
-  </div>
-  <div id="sgRouteSuggestions" class="routeSuggestions"></div>
-  <div id="sgRouteStatus" class="status">Type a destination near your current location.</div>
-  <div id="sgRouteProviderNote" class="trafficMeta">Provider will follow your detected country.</div>
-  <div id="sgRouteOptions" class="routeOptions"></div>
-  <div id="sgRouteSelectedNote" class="routeSelectedNote"></div>
-
   <div id="sgJourneyLiveCard" class="journeyLiveCard">
     <div class="journeyLiveTop">
       <div><span id="sgJourneyPill" class="journeyLivePill">Live journey</span><div id="sgJourneyDestination" class="journeyDest">Destination</div><div id="sgJourneyMeta" class="journeyMeta">Hop 1</div></div>
@@ -251,6 +283,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
     </div>
     <div id="sgJourneyAllHops" class="journeyAllHops"></div>
   </div>
+
 </article>
 
 <div class="homeCustomizeBar"><button id="homeCustomizeBtn" class="homeCustomizeBtn" onclick="toggleHomeWidgetManager()">⚙ Customize Home</button></div>
@@ -648,7 +681,7 @@ async function uploadProfilePhoto(input){if(!communityUser||!input.files?.[0])re
 
 const SG={name:'Singapore',lat:1.3521,lon:103.8198,method:11},JB={name:'Johor Bahru',lat:1.4927,lon:103.7414,method:17};
 const live={rate:null,weather:{},air:null,traffic:null,transport:null,prayer:null,holidays:[],location:null,nearby:[],feeds:{news:[],shopping:[],events:[]}};
-let sgRouteSearchTimer=null,sgRouteSearchSeq=0,sgRouteSelection=null,sgRouteResults=[],sgRouteDestRegion='auto',sgRouteTravelMode=['transit','car','motorcycle'].includes(localStorage.getItem('runsgdRouteTravelMode'))?localStorage.getItem('runsgdRouteTravelMode'):'transit';
+let sgRouteSearchTimer=null,sgRouteSearchSeq=0,sgRouteSelection=null,sgRouteResults=[],sgRouteDestRegion='',sgRouteTravelMode='transit',sgJourneyIntent=null;
 const WOODLANDS_CP={name:'Woodlands Checkpoint',address:'Woodlands Checkpoint, Singapore',lat:1.4459,lon:103.7686};
 const JB_CIQ={name:'JB CIQ',address:'Bangunan Sultan Iskandar, Johor Bahru',lat:1.4637,lon:103.7648};
 let sgJourney=null,sgJourneyWatchId=null,sgJourneyHeading=null,sgJourneyCompassListening=false,sgJourneyCompassPermissionNeeded=false,sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0};
@@ -697,36 +730,14 @@ function routeProviderFor(id){
   : {id:'sg',name:'OneMap',region:'Singapore',url:ROUTE_SG_URL,badge:'OneMap · SG',hint:'Type a Singapore building, road, MRT station or postal code.'};
 }
 function routeProvider(){return routeProviderFor(live.location?.country==='MY'?'jb':'sg')}
-function destinationProvider(){
- if(sgRouteDestRegion==='sg'||sgRouteDestRegion==='jb')return routeProviderFor(sgRouteDestRegion);
- let intent=$('journeyIntentSelect')?.value||'';
- if(intent==='sg-jb')return routeProviderFor('jb');
- if(intent==='jb-sg')return routeProviderFor('sg');
- return routeProvider();
-}
+function destinationProvider(){return sgRouteDestRegion?routeProviderFor(sgRouteDestRegion):null}
 function routeTravelModeInfo(){
  if(sgRouteTravelMode==='car')return {id:'car',api:'DRIVE',label:'Car',icon:'🚗',maps:'driving'};
  if(sgRouteTravelMode==='motorcycle')return {id:'motorcycle',api:'TWO_WHEELER',label:'Motorcycle',icon:'🏍️',maps:'two-wheeler'};
  return {id:'transit',api:'TRANSIT',label:'Public transport',icon:'🚌',maps:'transit'};
 }
-function updateRouteTravelModeUi(){
- ['Transit','Car','Motorcycle'].forEach(k=>$('routeMode'+k)?.classList.toggle('active',k.toLowerCase()===sgRouteTravelMode));
- let w=$('routeModeWarning'),m=routeTravelModeInfo(),from=routeProvider(),to=destinationProvider();
- if(w){
-  if(m.id==='motorcycle'){w.className='routeModeWarning warn';w.textContent='Motorcycle routing is beta. Follow road signs and local traffic rules; Google routes may be incomplete.'}
-  else if(m.id==='car'){w.className='routeModeWarning';w.textContent='Car route uses Google Maps traffic-aware routing for local JB trips.'}
-  else{w.className='routeModeWarning';w.textContent='Public transport keeps the existing SG / JB route flow.'}
-  if(m.id!=='transit'&&(from.id!=='jb'||to.id!=='jb'))w.textContent+=' Select a local JB destination to use this mode.';
- }
-}
-function setRouteTravelMode(v){
- sgRouteTravelMode=['car','motorcycle'].includes(v)?v:'transit';
- localStorage.setItem('runsgdRouteTravelMode',sgRouteTravelMode);
- sgRouteResults=[];$('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote').classList.remove('show');
- updateRouteTravelModeUi();updateSgRouteOrigin();
- let m=routeTravelModeInfo(),p=destinationProvider();
- txt('sgRouteStatus',m.id==='transit'?p.hint:(m.icon+' '+m.label+' · choose a local JB destination.'));
-}
+function updateRouteTravelModeUi(){}
+function setRouteTravelMode(v){sgRouteTravelMode=['car','motorcycle'].includes(v)?v:'transit'}
 function openRoadRouteInGoogleMaps(){
  let from=live.location,to=sgRouteSelection,m=routeTravelModeInfo();
  if(!from||!to||m.id==='transit')return;
@@ -735,21 +746,25 @@ function openRoadRouteInGoogleMaps(){
  window.open(url,'_blank','noopener');
 }
 function setRouteDestinationRegion(v){
- sgRouteDestRegion=['sg','jb'].includes(v)?v:'auto';
- ['Auto','Sg','Jb'].forEach(k=>$('routeRegion'+k)?.classList.toggle('active',k.toLowerCase()===sgRouteDestRegion||(k==='Auto'&&sgRouteDestRegion==='auto')));
- sgRouteSelection=null;sgRouteResults=[];$('sgRouteOptions').innerHTML='';$('sgRouteSuggestions').classList.remove('show');$('sgRouteSuggestions').innerHTML='';
- let p=destinationProvider();txt('sgRouteStatus',p.hint);updateSgRouteOrigin();updateRouteSearchButton();
+ sgRouteDestRegion=['sg','jb'].includes(v)?v:'';
+ $('routeRegionSg')?.classList.toggle('active',sgRouteDestRegion==='sg');
+ $('routeRegionJb')?.classList.toggle('active',sgRouteDestRegion==='jb');
+ sgRouteSelection=null;sgRouteResults=[];sgJourneyIntent=null;
+ $('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote').classList.remove('show');
+ $('sgRouteSuggestions').classList.remove('show');$('sgRouteSuggestions').innerHTML='';
+ $('routeDestinationChosen')?.classList.remove('show');$('journeyIntentStatus')?.classList.remove('show');
+ if($('sgRouteDestination')){$('sgRouteDestination').value='';$('sgRouteDestination').disabled=!sgRouteDestRegion;$('sgRouteDestination').placeholder=sgRouteDestRegion==='jb'?'Search a place in Malaysia / Johor…':'Search a place in Singapore…'}
+ if($('journeyTravelPrompt')){$('journeyTravelPrompt').disabled=true;$('journeyTravelPrompt').value=''}
+ if($('journeyPlanBtn'))$('journeyPlanBtn').disabled=true;
+ let p=destinationProvider();txt('sgRouteStatus',p?p.hint:'Choose Malaysia or Singapore to start searching.');
+ updateSgRouteOrigin();if(p)setTimeout(()=>$('sgRouteDestination')?.focus(),50)
 }
 function updateSgRouteOrigin(){
- let el=$('sgRouteOrigin');if(!el)return;
- let from=routeProvider(),to=destinationProvider(),m=routeTravelModeInfo();
- el.textContent='📍 From: '+(live.location?.name||'Current location');
- let cross=from.id!==to.id;
- if(m.id!=='transit'&&from.id==='jb'&&to.id==='jb')txt('sgRouteProviderNote','🇲🇾 Johor Bahru · Google Maps · '+m.icon+' '+m.label+' · traffic-aware');
- else txt('sgRouteProviderNote',cross?(from.id==='sg'&&to.id==='jb'?'🇸🇬 OneMap → 🛂 Woodlands → 🇲🇾 Google Maps':'Cross-border route'):(to.id==='jb'?'🇲🇾 Johor Bahru · Google Maps route provider':'🇸🇬 Singapore · OneMap route provider'));
- if(!sgJourney&&$('sgRouteStatus')&&!$('sgRouteDestination')?.value)txt('sgRouteStatus',m.id==='transit'?to.hint:(m.icon+' '+m.label+' · choose a local JB destination.'));
- if(!sgJourney)txt('sgRouteBadge',m.id!=='transit'&&from.id==='jb'&&to.id==='jb'?'JB · '+m.label:(cross?(from.id==='sg'&&to.id==='jb'?'SG → JB':'Cross-border'):(to.id==='jb'?'JB Beta':'SG Beta')));
- updateRouteTravelModeUi();updateRouteSearchButton();
+ let el=$('sgRouteOrigin');if(!el)return;el.textContent='📍 From: '+(live.location?.name||'Current location');
+ let to=destinationProvider(),from=routeProvider();
+ if(!to){txt('sgRouteBadge','Choose country');txt('sgRouteProviderNote','Same search experience; RunSGD switches map providers behind the scenes.');return}
+ txt('sgRouteBadge',from.id!==to.id?'Cross-border':to.id==='jb'?'Malaysia':'Singapore');
+ txt('sgRouteProviderNote',to.id==='jb'?'🇲🇾 Malaysia search · Google Maps · suggestions appear automatically':'🇸🇬 Singapore search · OneMap · suggestions appear automatically')
 }
 async function sgRouteApi(payload,provider=null){
  let p=provider||routeProvider();
@@ -758,10 +773,7 @@ async function sgRouteApi(payload,provider=null){
  if(!r.ok)throw Error(j.error||('Route service error '+r.status));
  return {...j,_provider:p};
 }
-function updateRouteSearchButton(){
- let b=$('sgRouteGo'),p=destinationProvider();if(!b)return;
- b.textContent=p.id==='jb'&&!sgRouteSelection?'Search':'Go';
-}
+function updateRouteSearchButton(){}
 function routeSearchOrigin(p){
  if(p?.id==='sg'&&live.location?.country==='SG'&&Number.isFinite(Number(live.location.lat))&&Number.isFinite(Number(live.location.lon)))return {lat:Number(live.location.lat),lon:Number(live.location.lon)};
  if(p?.id==='jb'&&live.location?.country==='MY'&&Number.isFinite(Number(live.location.lat))&&Number.isFinite(Number(live.location.lon)))return {lat:Number(live.location.lat),lon:Number(live.location.lon)};
@@ -774,43 +786,62 @@ function routeSearchDistanceLabel(x,p){
  return routeDistance(d)+' away · ';
 }
 function sgRouteInputChanged(){
- sgRouteSelection=null;sgRouteResults=[];$('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote').classList.remove('show');
- let q=$('sgRouteDestination')?.value.trim()||'',box=$('sgRouteSuggestions'),p=destinationProvider();
- clearTimeout(sgRouteSearchTimer);updateRouteSearchButton();
+ sgRouteSelection=null;sgRouteResults=[];sgJourneyIntent=null;
+ $('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote').classList.remove('show');
+ $('routeDestinationChosen')?.classList.remove('show');$('journeyIntentStatus')?.classList.remove('show');
+ if($('journeyTravelPrompt'))$('journeyTravelPrompt').disabled=true;if($('journeyPlanBtn'))$('journeyPlanBtn').disabled=true;
+ let q=$('sgRouteDestination')?.value.trim()||'',box=$('sgRouteSuggestions'),p=destinationProvider();clearTimeout(sgRouteSearchTimer);
+ if(!p){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','Choose Malaysia or Singapore first.');return}
  if(q.length<2){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus',p.hint);return}
- if(p.id==='jb'){
-  box.classList.remove('show');box.innerHTML='';box.dataset.items='';
-  txt('sgRouteStatus','Tap Search to get up to 4 Johor Bahru suggestions.');
-  return;
- }
- sgRouteSearchTimer=setTimeout(()=>searchSgDestination(q,false),450);
+ txt('sgRouteStatus','Searching '+(p.id==='jb'?'Malaysia':'Singapore')+'…');
+ sgRouteSearchTimer=setTimeout(()=>searchSgDestination(q,false),p.id==='jb'?520:360)
 }
 async function searchSgDestination(q,explicit=false){
- let box=$('sgRouteSuggestions'),seq=++sgRouteSearchSeq,p=destinationProvider();
- if(p.id==='jb'&&!explicit)return [];
- txt('sgRouteStatus','Searching '+p.name+'…');
+ let box=$('sgRouteSuggestions'),seq=++sgRouteSearchSeq,p=destinationProvider();if(!p)return [];
+ txt('sgRouteStatus','Searching '+(p.id==='jb'?'Malaysia':'Singapore')+'…');
  try{
   let origin=routeSearchOrigin(p),j=await sgRouteApi({action:'search',q,from:origin},p);
   if(seq!==sgRouteSearchSeq)return [];
-  let limit=p.id==='jb'?4:7,items=(j.results||[]).slice(0,limit).map(x=>({...x,_provider:p.id}));
-  if(!items.length){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','No '+p.region+' location found. Try another place name or address.');return []}
+  let items=(j.results||[]).slice(0,7).map(x=>({...x,_provider:p.id}));
+  if(!items.length){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','No '+(p.id==='jb'?'Malaysia / Johor':'Singapore')+' place found. Try another name or address.');return []}
   box.innerHTML=items.map((x,i)=>'<button class="routeSuggestion" onclick="chooseSgDestination('+i+')"><b>'+esc(x.name||x.address)+'</b><span>'+esc(routeSearchDistanceLabel(x,p)+(x.address||p.region))+(x.postal?' · '+(p.id==='sg'?'S':'')+esc(x.postal):'')+'</span></button>').join('');
-  box.dataset.items=JSON.stringify(items);
-  box.classList.add('show');
-  txt('sgRouteStatus',p.id==='jb'?'Choose one of these '+items.length+' suggestions · relevant + nearest.':items.length+' '+p.name+' match'+(items.length===1?'':'es')+' · relevant + nearest.');
-  return items;
- }catch(e){
-  if(seq!==sgRouteSearchSeq)return [];
-  box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','Search unavailable · '+(e.message||'Try again.'));
-  return [];
- }
+  box.dataset.items=JSON.stringify(items);box.classList.add('show');txt('sgRouteStatus','Choose a destination from the suggestions.');return items
+ }catch(e){if(seq!==sgRouteSearchSeq)return [];box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','Search unavailable · '+(e.message||'Try again.'));return []}
 }
 function chooseSgDestination(i){
  let box=$('sgRouteSuggestions'),items=[];try{items=JSON.parse(box.dataset.items||'[]')}catch{}
- let x=items[i];if(!x)return;
- sgRouteSelection=x;$('sgRouteDestination').value=x.name||x.address||'';
- box.classList.remove('show');box.innerHTML='';box.dataset.items='';
- txt('sgRouteStatus','Destination selected · '+(x.address||x.name));updateRouteSearchButton();
+ let x=items[i];if(!x)return;sgRouteSelection=x;$('sgRouteDestination').value=x.name||x.address||'';
+ box.classList.remove('show');box.innerHTML='';box.dataset.items='';txt('sgRouteStatus','Destination selected.');
+ let chosen=$('routeDestinationChosen');if(chosen){chosen.textContent='✓ '+(x.name||x.address)+' · '+(destinationProvider()?.id==='jb'?'Malaysia':'Singapore');chosen.classList.add('show')}
+ if($('journeyTravelPrompt'))$('journeyTravelPrompt').disabled=false;journeyTravelPromptChanged();$('journeyTravelPrompt')?.focus()
+}
+function journeyTravelPromptChanged(){
+ let q=$('journeyTravelPrompt')?.value.trim()||'';if($('journeyPlanBtn'))$('journeyPlanBtn').disabled=!sgRouteSelection||q.length<2
+}
+function localJourneyIntent(q){
+ let s=String(q||'').toLowerCase();
+ let hasCar=/\bcar\b|kereta|drive|driving/.test(s),hasMotorcycle=/motor|motorcycle|bike|motosikal/.test(s),preferKtm=/\bktm\b|shuttle tebrau|train/.test(s);
+ let directDrive=/(drive|driving|kereta).*(all the way|direct|terus|into singapore|masuk sg)|direct.*(drive|kereta)/.test(s);
+ let avoidSg=/don't want to drive.*sg|dont want to drive.*sg|avoid.*driv.*sg|park.*jb|parking.*jb|tak nak.*drive.*sg|tak mahu.*drive.*sg/.test(s);
+ let priority=/fastest|quickest|cepat/.test(s)?'fastest':/cheapest|cheap|murah/.test(s)?'cheapest':/easiest|easy|senang|simple/.test(s)?'easiest':'balanced';
+ return {answer:'Got it — I’ll compare the combinations that fit your plan.',priority,has_car:hasCar,has_motorcycle:hasMotorcycle,prefer_ktm:preferKtm,avoid_sg_driving:avoidSg,allow_bus:!/no bus|avoid bus/.test(s),allow_mrt:!/no mrt|avoid mrt/.test(s),allow_cross_border_bus:!/no border bus/.test(s),direct_drive:directDrive,notes:'',ai:false}
+}
+async function interpretJourneyIntent(q,origin,destination){
+ let fallback=localJourneyIntent(q);try{
+  let {data:{session}}=await sb.auth.getSession();if(!session)return fallback;
+  let context={journey_planner:{origin:{name:origin.name,country:origin.country,lat:origin.lat,lon:origin.lon},destination:{name:destination.name,address:destination.address,country:destinationProvider()?.id==='jb'?'MY':'SG',lat:destination.lat,lon:destination.lon}}};
+  let r=await fetch(RUNSGD_AI_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({mode:'journey',question:q,context})});
+  let j=await r.json();if(!r.ok)throw Error(j.error||'AI unavailable');return {...fallback,...j,ai:true}
+ }catch{return fallback}
+}
+function renderJourneyIntent(intent){
+ let el=$('journeyIntentStatus');if(!el)return;let parts=[];
+ if(intent.has_car)parts.push('🚗 car available');if(intent.has_motorcycle)parts.push('🏍️ motorcycle');if(intent.prefer_ktm)parts.push('🚆 prefer KTM');if(intent.avoid_sg_driving)parts.push('🅿️ avoid driving in SG');if(intent.direct_drive)parts.push('🛣️ direct drive');parts.push('🎯 '+(intent.priority||'balanced'));
+ el.innerHTML='<strong>'+(intent.ai?'AI understood':'RunSGD understood')+':</strong> '+esc(intent.answer||'')+'<br>'+esc(parts.join(' · '));el.classList.add('show')
+}
+async function planAiJourney(btn){
+ let q=$('journeyTravelPrompt')?.value.trim()||'';if(!sgRouteSelection)return txt('sgRouteStatus','Choose a destination first.');if(q.length<2)return txt('sgRouteStatus','Tell RunSGD how you want to travel.');
+ setBusy(btn,true);try{let origin=await plannerGps();sgJourneyIntent=await interpretJourneyIntent(q,origin,sgRouteSelection);renderJourneyIntent(sgJourneyIntent);sgRouteTravelMode=sgJourneyIntent.has_motorcycle?'motorcycle':sgJourneyIntent.has_car&&sgRouteDestRegion==='jb'&&routeProvider().id==='jb'?'car':'transit';await planSgRoute(btn)}finally{setBusy(btn,false)}
 }
 function plannerGps(){
  if(live.location?.lat&&live.location?.lon)return Promise.resolve(live.location);
@@ -1568,7 +1599,7 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){if(isGooglePopupReturn){await initCommunity();return}if('scrollRestoration' in history)history.scrollRestoration='manual';scrollPageTop();trackAppVisit();greeting();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();updateRouteTravelModeUi();restoreSgJourney();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);requestAnimationFrame(()=>requestAnimationFrame(scrollPageTop));setTimeout(scrollPageTop,120);setTimeout(scrollPageTop,420);updateBrief();await initCommunity();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
+async function init(){if(isGooglePopupReturn){await initCommunity();return}if('scrollRestoration' in history)history.scrollRestoration='manual';scrollPageTop();trackAppVisit();greeting();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();updateSgRouteOrigin();restoreSgJourney();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);requestAnimationFrame(()=>requestAnimationFrame(scrollPageTop));setTimeout(scrollPageTop,120);setTimeout(scrollPageTop,420);updateBrief();await initCommunity();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
 window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','community','tools','more'].includes(n))showPage(n)});
 document.addEventListener('visibilitychange',()=>{
  if(!sgJourney||sgJourney.status!=='active')return;
