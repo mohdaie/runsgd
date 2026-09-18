@@ -147,11 +147,11 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 /* v2.1 public transport + journey intent */
 .journeyChoices{display:flex;gap:7px;overflow:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:none}.journeyChoices::-webkit-scrollbar{display:none}.journeyChoice{flex:0 0 auto;border:1px solid #e4e9f3;background:#fff;color:#56647d;border-radius:99px;padding:9px 12px;font-size:12px;font-weight:800}.journeyChoice.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--blue),var(--violet))}.journeyCustom{width:100%;margin-top:9px;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px 13px;color:#17213b}.transitPanel{padding:12px 13px;border-radius:17px;background:linear-gradient(120deg,#f2f8ff,#f8f4ff);margin-top:9px}.transitHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.transitState{font-size:11px;font-weight:850;color:#53627c}.transitStop{padding-top:9px;margin-top:9px;border-top:1px solid #e6ebf4}.transitStop:first-child{border-top:0;margin-top:4px}.busArrivalRow{display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:start;padding:6px 0}.busNo{display:inline-grid;place-items:center;background:#fff;border:1px solid #e4e9f3;border-radius:10px;padding:5px 7px;font-weight:900;font-size:12px}.busTimes{font-weight:800;font-size:13px;color:#263550}.busMeta{font-size:10px;color:#7e899e;margin-top:2px}.transitRefresh{width:100%;margin-top:10px}
 
-/* v2.2.7 journey dropdown */
+/* v2.2.8 journey dropdown */
 .journeySelectWrap{margin-top:12px}.journeySelectLabel{display:block;font-size:11px;font-weight:850;color:#6a7690;margin:0 0 6px 2px}.journeySelect{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:15px;padding:12px 13px;color:#17213b;font-weight:800}.journeyCustom{display:none}.journeyCustom.show{display:block}
-/* v2.2.7 Singapore Route Planner */
+/* v2.2.8 Singapore Route Planner */
 .routePlannerCard{position:relative;overflow:visible}.routeOrigin{margin:11px 0 9px;padding:10px 12px;border-radius:14px;background:#f4f7fc;color:#5f6d86;font-size:12px;font-weight:750}.routeSearchRow{display:flex;gap:8px;align-items:center}.routeSearchRow .toolInput{flex:1}.routeSearchGo{margin:0;width:auto;padding-left:18px;padding-right:18px}.routeSuggestions{display:none;margin-top:8px;border:1px solid #e4e9f3;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 12px 28px #46537d16}.routeSuggestions.show{display:block}.routeSuggestion{display:block;width:100%;text-align:left;border:0;background:#fff;padding:11px 12px;color:#283550}.routeSuggestion+.routeSuggestion{border-top:1px solid #edf0f5}.routeSuggestion b{display:block;font-size:13px}.routeSuggestion span{display:block;font-size:10px;color:#8390a5;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.routeOptions{display:flex;flex-direction:column;gap:10px;margin-top:12px}.routeOption{border:1px solid #e7ebf3;border-radius:18px;background:#fff;padding:13px;transition:border-color .18s ease,box-shadow .18s ease}.routeOption.selected{border-color:#9db7fb;box-shadow:0 0 0 4px #4b82f50c}.routeOptionTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.routeDuration{font-size:23px;font-weight:950;letter-spacing:-.8px}.routeSummary{font-size:12px;font-weight:800;color:#52617b;margin-top:5px;line-height:1.45}.routeStats{font-size:10px;color:#8a95a9;margin-top:4px}.routeActions{display:flex;gap:7px;margin-top:10px}.routeLegs{display:none;margin-top:11px;padding-top:9px;border-top:1px solid #edf0f5}.routeLegs.show{display:block}.routeLeg{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:7px 0}.routeLegIcon{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:#f1f5fc;font-size:14px}.routeLegTitle{font-size:12px;font-weight:850;line-height:1.35}.routeLegMeta{font-size:10px;color:#8792a6;margin-top:2px}.routeSelectedNote{display:none;margin-top:11px;padding:11px 12px;border-radius:14px;background:linear-gradient(120deg,#eef7ff,#f6efff);font-size:12px;color:#4d5d79}.routeSelectedNote.show{display:block}
-/* v2.2.7 live journey */
+/* v2.2.8 live journey */
 .routePlannerCard.journey-active #sgRouteOrigin,.routePlannerCard.journey-active .routeSearchRow,.routePlannerCard.journey-active #sgRouteSuggestions,.routePlannerCard.journey-active #sgRouteStatus,.routePlannerCard.journey-active #sgRouteOptions,.routePlannerCard.journey-active #sgRouteSelectedNote{display:none!important}
 .journeyLiveCard{display:none;margin-top:8px;border:1px solid #bfe9cf;border-radius:22px;padding:16px;background:linear-gradient(145deg,#edfff5 0%,#e6f8ee 55%,#f7fffa 100%);box-shadow:0 14px 34px #178a4d18;color:#173d2a;overflow:hidden;position:relative}
 .journeyLiveCard.show{display:block}.journeyLiveCard:before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-65px;top:-70px;background:radial-gradient(circle,#32b56a24,transparent 68%);pointer-events:none}
@@ -166,7 +166,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.2.7</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.2.8</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -195,15 +195,16 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article class="card routePlannerCard" id="sgRoutePlannerCard">
-  <div class="head"><div class="title">🧭 Route Planner</div><span id="sgRouteBadge" class="tag">SG Beta</span></div>
-  <div class="sub">Plan a Singapore public-transport trip from your current location. OneMap provides the route; RunSGD turns it into simple hops.</div>
+  <div class="head"><div class="title">🧭 Route Planner</div><span id="sgRouteBadge" class="tag">SG / JB Beta</span></div>
+  <div class="sub">Plan a public-transport trip in Singapore or Johor Bahru. RunSGD automatically uses OneMap in Singapore and Google Maps in JB, then turns the route into simple live hops.</div>
   <div id="sgRouteOrigin" class="routeOrigin">📍 From: Current location</div>
   <div class="routeSearchRow">
     <input id="sgRouteDestination" class="toolInput" maxlength="120" autocomplete="off" placeholder="Where are you going?" oninput="sgRouteInputChanged()">
     <button id="sgRouteGo" class="btn refresh routeSearchGo" onclick="planSgRoute(this)">Go</button>
   </div>
   <div id="sgRouteSuggestions" class="routeSuggestions"></div>
-  <div id="sgRouteStatus" class="status">Type a Singapore building, road, MRT station or postal code.</div>
+  <div id="sgRouteStatus" class="status">Type a destination near your current location.</div>
+  <div id="sgRouteProviderNote" class="trafficMeta">Provider will follow your detected country.</div>
   <div id="sgRouteOptions" class="routeOptions"></div>
   <div id="sgRouteSelectedNote" class="routeSelectedNote"></div>
 
@@ -392,7 +393,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.2.7</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.2.8</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -416,7 +417,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.2.7</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.2.8</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -457,6 +458,7 @@ const LTA_SNAPSHOT_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/lt
 const LTA_TRANSPORT_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/lta-public-transport';
 const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-ai';
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
+const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 const isGooglePopupReturn=!!sessionStorage.getItem('runsgdGooglePopup')&&new URLSearchParams(location.search).get('auth')==='google';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 function analyticsVisitorId(){
@@ -665,34 +667,44 @@ function requestLocation(btn){
    setBusy(btn,false);
  },{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
 }
+function routeProvider(){
+ return live.location?.country==='MY'
+  ? {id:'jb',name:'Google Maps',region:'Johor Bahru',url:ROUTE_JB_URL,badge:'Google · JB',hint:'Type a JB place, mall, road or landmark.'}
+  : {id:'sg',name:'OneMap',region:'Singapore',url:ROUTE_SG_URL,badge:'OneMap · SG',hint:'Type a Singapore building, road, MRT station or postal code.'};
+}
 function updateSgRouteOrigin(){
  let el=$('sgRouteOrigin');if(!el)return;
+ let p=routeProvider();
  el.textContent='📍 From: '+(live.location?.name||'Current location');
+ txt('sgRouteProviderNote',(p.id==='jb'?'🇲🇾 ':'🇸🇬 ')+p.region+' · '+p.name+' route provider');
+ if(!sgJourney&&$('sgRouteStatus')&&!$('sgRouteDestination')?.value)txt('sgRouteStatus',p.hint);
+ if(!sgJourney)txt('sgRouteBadge',p.id==='jb'?'JB Beta':'SG Beta');
 }
-async function sgRouteApi(payload){
- let r=await fetch(ROUTE_SG_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),cache:'no-store'});
+async function sgRouteApi(payload,provider=null){
+ let p=provider||routeProvider();
+ let r=await fetch(p.url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),cache:'no-store'});
  let j=await r.json().catch(()=>({}));
  if(!r.ok)throw Error(j.error||('Route service error '+r.status));
- return j;
+ return {...j,_provider:p};
 }
 function sgRouteInputChanged(){
  sgRouteSelection=null;sgRouteResults=[];$('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote').classList.remove('show');
- let q=$('sgRouteDestination')?.value.trim()||'',box=$('sgRouteSuggestions');
+ let q=$('sgRouteDestination')?.value.trim()||'',box=$('sgRouteSuggestions'),p=routeProvider();
  clearTimeout(sgRouteSearchTimer);
- if(q.length<2){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','Type a Singapore building, road, MRT station or postal code.');return}
+ if(q.length<2){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus',p.hint);return}
  sgRouteSearchTimer=setTimeout(()=>searchSgDestination(q),450);
 }
 async function searchSgDestination(q){
- let box=$('sgRouteSuggestions'),seq=++sgRouteSearchSeq;
- txt('sgRouteStatus','Searching OneMap…');
+ let box=$('sgRouteSuggestions'),seq=++sgRouteSearchSeq,p=routeProvider();
+ txt('sgRouteStatus','Searching '+p.name+'…');
  try{
-  let j=await sgRouteApi({action:'search',q});
+  let j=await sgRouteApi({action:'search',q},p);
   if(seq!==sgRouteSearchSeq)return;
-  let items=j.results||[];
-  if(!items.length){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','No Singapore location found. Try a building name, road or postal code.');return}
-  box.innerHTML=items.map((x,i)=>'<button class="routeSuggestion" onclick="chooseSgDestination('+i+')"><b>'+esc(x.name||x.address)+'</b><span>'+esc(x.address||'Singapore')+(x.postal?' · S'+esc(x.postal):'')+'</span></button>').join('');
+  let items=(j.results||[]).map(x=>({...x,_provider:p.id}));
+  if(!items.length){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','No '+p.region+' location found. Try another place name or address.');return}
+  box.innerHTML=items.map((x,i)=>'<button class="routeSuggestion" onclick="chooseSgDestination('+i+')"><b>'+esc(x.name||x.address)+'</b><span>'+esc(x.address||p.region)+(x.postal?' · '+(p.id==='sg'?'S':'')+esc(x.postal):'')+'</span></button>').join('');
   box.dataset.items=JSON.stringify(items);
-  box.classList.add('show');txt('sgRouteStatus',items.length+' OneMap match'+(items.length===1?'':'es')+' found.');
+  box.classList.add('show');txt('sgRouteStatus',items.length+' '+p.name+' match'+(items.length===1?'':'es')+' found.');
  }catch(e){
   if(seq!==sgRouteSearchSeq)return;
   box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','Search unavailable · '+(e.message||'Try again.'));
@@ -726,7 +738,9 @@ function routeModeLabel(leg){
  let m=String(leg.mode||'').toUpperCase();
  if(m==='WALK')return 'Walk';
  if(m==='BUS')return 'Bus'+(leg.route?' '+leg.route:'');
- if(m==='SUBWAY'||m==='RAIL'||m==='TRAIN'||m==='TRAM')return 'MRT'+(leg.route?' '+leg.route:'');
+ if(m==='SUBWAY')return 'MRT'+(leg.route?' '+leg.route:'');
+ if(m==='RAIL'||m==='TRAIN')return 'Train'+(leg.route?' '+leg.route:'');
+ if(m==='TRAM')return 'Rail'+(leg.route?' '+leg.route:'');
  return (leg.route?leg.route:m||'Transit');
 }
 function sgRouteSummary(route){
@@ -746,9 +760,11 @@ function sgLegHtml(leg,i,last){
 function renderSgRoutes(){
  let box=$('sgRouteOptions');
  if(!sgRouteResults.length){box.innerHTML='';return}
+ let p=routeProvider();
  box.innerHTML=sgRouteResults.map((r,i)=>{
-  let stats=(r.walk_distance_m?'🚶 '+routeDistance(r.walk_distance_m):'')+(r.transfers!=null?' · '+r.transfers+' transfer'+(r.transfers===1?'':'s'):'')+(r.fare_sgd!=null?' · S'+String.fromCharCode(36)+Number(r.fare_sgd).toFixed(2):'');
-  return '<div class="routeOption" id="sgRouteOption'+i+'"><div class="routeOptionTop"><div><div class="routeDuration">'+routeMinutes(r.duration_sec)+'</div><div class="routeSummary">'+esc(sgRouteSummary(r)||'Public transport')+'</div><div class="routeStats">'+esc(stats.replace(/^ · /,''))+'</div></div><span class="tag">Route '+(i+1)+'</span></div><div class="routeActions"><button class="miniBtn" onclick="toggleSgRouteDetails('+i+',this)">View hops</button><button class="miniBtn" onclick="selectSgRoute('+i+')">Choose route</button></div><div id="sgRouteLegs'+i+'" class="routeLegs">'+(r.legs||[]).map((l,n)=>sgLegHtml(l,n,n===(r.legs||[]).length-1)).join('')+'</div></div>';
+  let fare=r.fare_myr!=null?' · RM '+Number(r.fare_myr).toFixed(2):r.fare_sgd!=null?' · S'+String.fromCharCode(36)+Number(r.fare_sgd).toFixed(2):r.fare_value!=null&&r.fare_currency?' · '+r.fare_currency+' '+Number(r.fare_value).toFixed(2):'';
+  let stats=(r.walk_distance_m?'🚶 '+routeDistance(r.walk_distance_m):'')+(r.transfers!=null?' · '+r.transfers+' transfer'+(r.transfers===1?'':'s'):'')+fare;
+  return '<div class="routeOption" id="sgRouteOption'+i+'"><div class="routeOptionTop"><div><div class="routeDuration">'+routeMinutes(r.duration_sec)+'</div><div class="routeSummary">'+esc(sgRouteSummary(r)||'Public transport')+'</div><div class="routeStats">'+esc(stats.replace(/^ · /,''))+'</div></div><span class="tag">'+esc(p.id==='jb'?'Google · JB':'OneMap · SG')+'</span></div><div class="routeActions"><button class="miniBtn" onclick="toggleSgRouteDetails('+i+',this)">View hops</button><button class="miniBtn" onclick="selectSgRoute('+i+')">Choose route</button></div><div id="sgRouteLegs'+i+'" class="routeLegs">'+(r.legs||[]).map((l,n)=>sgLegHtml(l,n,n===(r.legs||[]).length-1)).join('')+'</div></div>';
  }).join('');
 }
 function toggleSgRouteDetails(i,btn){
@@ -756,7 +772,7 @@ function toggleSgRouteDetails(i,btn){
 }
 function selectSgRoute(i){
  let route=sgRouteResults[i];if(!route||!sgRouteSelection)return;
- sgJourney={origin:live.location,destination:sgRouteSelection,route,selected_route:i,current_hop:0,status:'active',started_at:Date.now(),updated_at:Date.now()};
+ sgJourney={origin:live.location,destination:sgRouteSelection,route,provider:routeProvider().id,selected_route:i,current_hop:0,status:'active',started_at:Date.now(),updated_at:Date.now()};
  try{localStorage.setItem('runsgdSgSelectedRoute',JSON.stringify(sgJourney))}catch{}
  renderSgJourney();startSgJourneyTracking();
 }
@@ -773,7 +789,9 @@ function sgJourneyInstruction(leg){
  let mode=String(leg.mode||'').toUpperCase(),to=leg.to?.name||leg.to?.stopCode||'the next stop';
  if(mode==='WALK')return 'Walk to '+to;
  if(mode==='BUS')return 'Take Bus'+(leg.route?' '+leg.route:'')+' to '+to;
- if(mode==='SUBWAY'||mode==='RAIL'||mode==='TRAIN'||mode==='TRAM')return 'Take MRT'+(leg.route?' '+leg.route:'')+' to '+to;
+ if(mode==='SUBWAY')return 'Take MRT'+(leg.route?' '+leg.route:'')+' to '+to;
+ if(mode==='RAIL'||mode==='TRAIN')return 'Take Train'+(leg.route?' '+leg.route:'')+' to '+to;
+ if(mode==='TRAM')return 'Take Rail'+(leg.route?' '+leg.route:'')+' to '+to;
  return 'Continue to '+to;
 }
 function sgJourneyDefaultCoach(leg,distance){
@@ -782,7 +800,8 @@ function sgJourneyDefaultCoach(leg,distance){
  if(distance!=null&&distance<130)return 'You’re very close to '+to+'. Get ready for the next hop.';
  if(mode==='WALK')return distance!=null?'Keep walking — about '+routeDistance(distance)+' to '+to+'.':'Keep walking towards '+to+'.';
  if(mode==='BUS')return 'Stay on Bus'+(leg.route?' '+leg.route:'')+(leg.headsign?' towards '+leg.headsign:'')+'. I’ll update when you get close to '+to+'.';
- if(mode==='SUBWAY'||mode==='RAIL'||mode==='TRAIN'||mode==='TRAM')return 'Stay on '+(leg.route?'MRT '+leg.route:'the MRT')+(leg.headsign?' towards '+leg.headsign:'')+'. I’ll alert you near '+to+'.';
+ if(mode==='SUBWAY')return 'Stay on '+(leg.route?'MRT '+leg.route:'the MRT')+(leg.headsign?' towards '+leg.headsign:'')+'. I’ll alert you near '+to+'.';
+ if(mode==='RAIL'||mode==='TRAIN'||mode==='TRAM')return 'Stay on '+(leg.route?routeModeLabel(leg):'the train')+(leg.headsign?' towards '+leg.headsign:'')+'. I’ll alert you near '+to+'.';
  return 'Continue towards '+to+'.';
 }
 function persistSgJourney(){
@@ -793,7 +812,7 @@ function renderSgJourney(distance=null){
  let card=$('sgJourneyLiveCard'),planner=$('sgRoutePlannerCard');if(!card||!planner)return;
  if(!sgJourney||sgJourney.status!=='active'){card.classList.remove('show');planner.classList.remove('journey-active');return}
  planner.classList.add('journey-active');card.classList.add('show');card.classList.remove('journeyArrival');
- txt('sgRouteBadge','LIVE');txt('sgJourneyPill','Live journey');
+ txt('sgRouteBadge','LIVE');txt('sgJourneyPill','Live journey');txt('sgRouteProviderNote',(sgJourney.provider==='jb'?'🇲🇾 Google Maps · JB':'🇸🇬 OneMap · Singapore')+' · selected route saved');
  let legs=sgJourney.route?.legs||[],idx=Math.min(Math.max(0,Number(sgJourney.current_hop)||0),Math.max(0,legs.length-1)),leg=legs[idx];
  txt('sgJourneyDestination',sgJourney.destination?.name||sgJourney.destination?.address||'Destination');
  txt('sgJourneyMeta','Hop '+(idx+1)+' of '+Math.max(1,legs.length)+' · started '+new Date(sgJourney.started_at).toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}));
@@ -877,32 +896,34 @@ function toggleSgJourneyHops(btn){
 function endSgJourney(){
  if(!sgJourney)return;if(!confirm('End this active journey?'))return;
  stopSgJourneyTracking();sgJourney=null;localStorage.removeItem('runsgdSgSelectedRoute');
- let planner=$('sgRoutePlannerCard');if(planner)planner.classList.remove('journey-active');$('sgJourneyLiveCard')?.classList.remove('show');txt('sgRouteBadge','SG Beta');txt('sgRouteStatus','Journey ended. Search for a new destination.');$('sgRouteOptions').innerHTML='';sgRouteResults=[];sgRouteSelection=null;if($('sgRouteDestination'))$('sgRouteDestination').value='';
+ let planner=$('sgRoutePlannerCard');if(planner)planner.classList.remove('journey-active');$('sgJourneyLiveCard')?.classList.remove('show');updateSgRouteOrigin();txt('sgRouteStatus','Journey ended. Search for a new destination.');$('sgRouteOptions').innerHTML='';sgRouteResults=[];sgRouteSelection=null;if($('sgRouteDestination'))$('sgRouteDestination').value='';
 }
 function finishSgJourney(){
  if(!sgJourney)return;stopSgJourneyTracking();
  let card=$('sgJourneyLiveCard');if(card){card.classList.add('show','journeyArrival');txt('sgJourneyPill','Arrived');txt('sgJourneyAction','You’ve arrived 🎉');txt('sgJourneyDistance','Journey complete');txt('sgJourneyEta','Done');if($('sgJourneyProgressBar'))$('sgJourneyProgressBar').style.width='100%';txt('sgJourneyAiText','You made it. Route cleared — ready for the next trip.');$('sgJourneyNext').innerHTML='<b>Destination reached:</b> '+esc(sgJourney.destination?.name||sgJourney.destination?.address||'Destination')}
- localStorage.removeItem('runsgdSgSelectedRoute');sgJourney.status='completed';setTimeout(()=>{let planner=$('sgRoutePlannerCard');if(planner)planner.classList.remove('journey-active');txt('sgRouteBadge','SG Beta')},8000);
+ localStorage.removeItem('runsgdSgSelectedRoute');sgJourney.status='completed';setTimeout(()=>{let planner=$('sgRoutePlannerCard');if(planner)planner.classList.remove('journey-active');updateSgRouteOrigin()},8000);
 }
 
 async function planSgRoute(btn){
  let q=$('sgRouteDestination')?.value.trim()||'';
- if(q.length<2)return txt('sgRouteStatus','Enter a Singapore destination first.');
+ let p=routeProvider();
+ if(q.length<2)return txt('sgRouteStatus','Enter a '+p.region+' destination first.');
  setBusy(btn,true);txt('sgRouteBadge','Planning');$('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote').classList.remove('show');
  try{
-  let origin=await plannerGps();
-  if(origin.country!=='SG')throw Error('Singapore Route Planner currently works when your starting point is in Singapore.');
-  if(!sgRouteSelection){
-   txt('sgRouteStatus','Finding destination…');
-   let s=await sgRouteApi({action:'search',q}),items=s.results||[];
-   if(!items.length)throw Error('No Singapore destination found for "'+q+'".');
+  let origin=await plannerGps();p=routeProvider();
+  if(p.id==='sg'&&origin.country!=='SG')throw Error('Singapore routing requires a Singapore starting point.');
+  if(p.id==='jb'&&origin.country!=='MY')throw Error('JB routing requires a Johor starting point.');
+  if(!sgRouteSelection||sgRouteSelection._provider!==p.id){
+   txt('sgRouteStatus','Finding destination with '+p.name+'…');
+   let s=await sgRouteApi({action:'search',q},p),items=(s.results||[]).map(x=>({...x,_provider:p.id}));
+   if(!items.length)throw Error('No '+p.region+' destination found for "'+q+'".');
    sgRouteSelection=items[0];$('sgRouteDestination').value=sgRouteSelection.name||sgRouteSelection.address||q;
   }
   txt('sgRouteStatus','Calculating up to 3 public-transport routes…');
-  let j=await sgRouteApi({action:'route',from:{lat:origin.lat,lon:origin.lon},to:{lat:sgRouteSelection.lat,lon:sgRouteSelection.lon},max_walk_m:1200});
+  let j=await sgRouteApi({action:'route',from:{lat:origin.lat,lon:origin.lon},to:{lat:sgRouteSelection.lat,lon:sgRouteSelection.lon,name:sgRouteSelection.name,address:sgRouteSelection.address},max_walk_m:1200},p);
   sgRouteResults=j.routes||[];
   if(!sgRouteResults.length)throw Error('No public-transport route returned.');
-  renderSgRoutes();txt('sgRouteBadge','OneMap');txt('sgRouteStatus',sgRouteResults.length+' route option'+(sgRouteResults.length===1?'':'s')+' · schedule-based estimate.');
+  renderSgRoutes();txt('sgRouteBadge',p.badge);txt('sgRouteProviderNote',(p.id==='jb'?'🇲🇾 ':'🇸🇬 ')+p.region+' · '+p.name+' · route checked now');txt('sgRouteStatus',sgRouteResults.length+' route option'+(sgRouteResults.length===1?'':'s')+' · '+p.name+' estimate.');
  }catch(e){
   txt('sgRouteBadge','Unavailable');txt('sgRouteStatus',e.message||'Route planning unavailable.');
  }finally{setBusy(btn,false)}
