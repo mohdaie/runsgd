@@ -11,6 +11,17 @@
 
 .adminProfile{display:flex;align-items:center;gap:13px;padding:14px;border-radius:18px;background:linear-gradient(120deg,#f3f8ff,#faf5ff);margin-bottom:16px}.adminAvatar{width:58px;height:58px;border-radius:18px;object-fit:cover;background:#eef3ff;border:1px solid #e2e7f1}.memberList{display:flex;flex-direction:column;gap:10px}.memberRow{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid #edf0f5;border-radius:17px;background:#fff}.memberAvatar{width:45px;height:45px;border-radius:14px;object-fit:cover;background:#eef3ff;flex:0 0 auto}.memberInfo{min-width:0;flex:1}.memberName{font-weight:850;font-size:14px}.memberBio{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.memberTags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}.memberTag{font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 7px;border-radius:99px;background:#eef3ff;color:#5067b4}.memberTag.admin{background:#fff0f2;color:#a33e53}.memberTag.paid{background:#fff7df;color:#8b6b16}
 
+/* RunSGD AI admin console */
+.aiConsoleCard{position:relative;overflow:hidden;background:linear-gradient(145deg,#ffffff 0%,#f6f8ff 52%,#fff4fb 100%);border:1px solid #fff;box-shadow:0 18px 46px #5968a21a}
+.aiConsoleCard:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-80px;top:-90px;background:radial-gradient(circle,#8b67ef24,transparent 67%);pointer-events:none}
+.aiConsoleHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:relative}.aiConsoleTitle{font-size:18px;font-weight:950;letter-spacing:-.3px}.aiConsoleMeta{font-size:10px;color:#8390a8;margin-top:4px}
+.aiQuick{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.aiQuick button{border:1px solid #e5eaf5;background:#fff;border-radius:999px;padding:7px 10px;font-size:10px;font-weight:850;color:#53647f;cursor:pointer}
+.aiChat{min-height:150px;max-height:360px;overflow:auto;padding:10px;border-radius:18px;background:#f8faff;border:1px solid #edf1f8;display:flex;flex-direction:column;gap:9px;scroll-behavior:smooth}
+.aiBubble{max-width:88%;padding:10px 12px;border-radius:15px;font-size:12px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}.aiBubble.bot{align-self:flex-start;background:#fff;border:1px solid #e8edf6;color:#43526d;border-bottom-left-radius:6px}.aiBubble.user{align-self:flex-end;background:linear-gradient(120deg,#4b82f5,#8b67ef);color:#fff;border-bottom-right-radius:6px}.aiBubble.thinking{color:#8a95aa;font-style:italic}.aiBubbleMeta{font-size:9px;color:#98a2b3;margin-top:5px}
+.aiAskRow{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}.aiAskInput{width:100%;border:1px solid #dfe6f2;background:#fff;border-radius:14px;padding:12px 13px;font:inherit;font-size:12px;color:var(--ink);outline:none}.aiAskInput:focus{border-color:#9eb9fb;box-shadow:0 0 0 4px #4b82f510}.aiSendBtn{min-width:72px}
+.aiConsoleFoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px}.aiConsoleFoot .status{margin:0;font-size:10px}.aiClear{border:0;background:transparent;color:#7b879d;font-size:10px;font-weight:850;padding:5px;cursor:pointer}
+@media(max-width:520px){.aiAskRow{grid-template-columns:1fr}.aiSendBtn{width:100%}.aiBubble{max-width:94%}}
+
 /* Admin monitoring */
 .monitorCard{position:relative;overflow:hidden;background:linear-gradient(145deg,#ffffff 0%,#f5f8ff 48%,#fff5fb 100%);border:1px solid rgba(255,255,255,.96);box-shadow:0 18px 44px rgba(70,83,125,.13)}
 .monitorCard:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-70px;top:-90px;background:radial-gradient(circle,#8b67ef22 0%,#4b82f500 68%);pointer-events:none}
@@ -48,6 +59,28 @@
   <div><div id="adminName" class="title">Admin</div><div id="adminEmail" class="sub"></div><div class="memberTags"><span class="memberTag admin">Admin</span></div></div>
 </div>
 <div class="stack">
+<article class="card aiConsoleCard" id="runSgdAiConsole">
+ <div class="aiConsoleHead">
+  <div><div class="aiConsoleTitle">✨ Talk to RunSGD AI</div><div class="aiConsoleMeta">Same AI backend as the app · Admin-only console</div></div>
+  <span class="pill ok">LIVE AI</span>
+ </div>
+ <p class="sub" style="margin:10px 0 0">Ask how RunSGD AI behaves, what data it can use, when it triggers, what it will not guess, or ask it a normal RunSGD question.</p>
+ <div class="aiQuick">
+  <button onclick="askAdminAiPreset('Explain your behavior and rules in RunSGD.')">Your behavior</button>
+  <button onclick="askAdminAiPreset('What data and sources are you allowed to use?')">Your data</button>
+  <button onclick="askAdminAiPreset('When does RunSGD trigger AI during a live journey?')">Journey triggers</button>
+  <button onclick="askAdminAiPreset('What are you not allowed to guess or invent?')">Your limits</button>
+ </div>
+ <div id="adminAiChat" class="aiChat">
+  <div class="aiBubble bot">Hi Admin 👋 Ask me how I work inside RunSGD, what I can see, why I answer a certain way, or test me with a normal commuter question.</div>
+ </div>
+ <div class="aiAskRow">
+  <input id="adminAiInput" class="aiAskInput" maxlength="500" placeholder="Ask RunSGD AI anything…" onkeydown="if(event.key==='Enter'){event.preventDefault();sendAdminAi()}">
+  <button id="adminAiSend" class="btn primary aiSendBtn" onclick="sendAdminAi()">Send</button>
+ </div>
+ <div class="aiConsoleFoot"><div id="adminAiStatus" class="status">Gemini 3.5 Flash-Lite · Web search OFF</div><button class="aiClear" onclick="clearAdminAiChat()">Clear chat</button></div>
+</article>
+
 <article class="card monitorCard" id="monitorCard">
  <div class="monitorHead"><div><div class="title">📊 RunSGD monitoring</div><div class="sub">Live activity · Singapore time</div></div><span class="pill ok monitorLive">LIVE</span></div>
  <div class="metricGrid">
@@ -168,10 +201,91 @@ const ADMIN_SUPABASE_URL='https://gdycbluljgfezhgslppe.supabase.co';
 const ADMIN_SUPABASE_KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
 const adminSb=window.supabase.createClient(ADMIN_SUPABASE_URL,ADMIN_SUPABASE_KEY);
 const ADMIN_MONITOR_URL=ADMIN_SUPABASE_URL+'/functions/v1/admin-monitor';
+const RUNSGD_AI_URL=ADMIN_SUPABASE_URL+'/functions/v1/runsgd-ai';
 let monitorTimer=null;
 const $=id=>document.getElementById(id);
 function flash(el){el.classList.remove('saved');void el.offsetWidth;el.classList.add('saved')}
 function toggleKey(id,btn){let e=$(id),show=e.type==='password';e.type=show?'text':'password';btn.textContent=show?'Hide':'Show'}
+let adminAiChat=[];
+const ADMIN_AI_BEHAVIOR={
+ model:'gemini-3.5-flash-lite',
+ role:'RunSGD Companion for Singapore ↔ Johor commuters',
+ modes:['brief','ask'],
+ web_search:false,
+ allowed_inputs:[
+  'RunSGD live context supplied by the app',
+  'up to 5 relevant active Knowledge articles',
+  'recent Community messages',
+  'Causeway traffic-camera image in brief mode when supplied'
+ ],
+ rules:[
+  'Use only RunSGD data supplied to the request',
+  'Never invent traffic, weather, exchange rates, rules, community reports or missing facts',
+  'Prefer current live signals over static knowledge',
+  'Treat Community posts as unverified unless corroborated',
+  'Reply in the user’s language style and keep answers concise'
+ ],
+ journey_ai:{
+  foreground_only:true,
+  automatic_trigger:'Only when RunSGD detects a likely journey anomaly such as moving away or not progressing',
+  manual_trigger:'User taps “I’m lost”',
+  normal_hop_guidance:'Handled locally without an AI request',
+  background_behavior:'GPS watcher and AI intervention pause while RunSGD is hidden'
+ },
+ daily_limits:{admin:200,member:30},
+ knowledge_retrieval:'Question terms rank active Knowledge; maximum 5 articles are supplied',
+ community_window:'ASK uses recent Community up to about 120 minutes; BRIEF uses about 45 minutes'
+};
+function renderAdminAiBubble(role,text,meta=''){
+ let chat=$('adminAiChat');if(!chat)return;
+ let d=document.createElement('div');d.className='aiBubble '+role;d.textContent=text;
+ if(meta){let m=document.createElement('div');m.className='aiBubbleMeta';m.textContent=meta;d.appendChild(m)}
+ chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d
+}
+function askAdminAiPreset(q){$('adminAiInput').value=q;sendAdminAi()}
+function clearAdminAiChat(){
+ adminAiChat=[];
+ let chat=$('adminAiChat');if(chat)chat.innerHTML='<div class="aiBubble bot">Chat cleared. Ask me about my behavior, data, rules, or test a RunSGD question.</div>';
+ txtAdminAiStatus('Ready · Gemini 3.5 Flash-Lite · Web search OFF')
+}
+function txtAdminAiStatus(v){if($('adminAiStatus'))$('adminAiStatus').textContent=v}
+async function sendAdminAi(){
+ let input=$('adminAiInput'),btn=$('adminAiSend'),q=input?.value.trim()||'';
+ if(!q)return;
+ input.value='';renderAdminAiBubble('user',q);adminAiChat.push({role:'admin',text:q,at:new Date().toISOString()});
+ if(adminAiChat.length>12)adminAiChat=adminAiChat.slice(-12);
+ let thinking=renderAdminAiBubble('bot','Thinking…');thinking?.classList.add('thinking');
+ if(btn){btn.disabled=true;btn.textContent='…'}txtAdminAiStatus('Talking to RunSGD AI…');
+ try{
+  let {data:{session}}=await adminSb.auth.getSession();if(!session)throw Error('Admin session missing');
+  let r=await fetch(RUNSGD_AI_URL,{
+   method:'POST',
+   headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+   body:JSON.stringify({
+    mode:'ask',
+    question:q,
+    context:{
+     admin_console:true,
+     purpose:'Admin is directly testing and inspecting RunSGD AI behavior.',
+     behavior_manifest:ADMIN_AI_BEHAVIOR,
+     recent_admin_chat:adminAiChat.slice(-8)
+    }
+   })
+  }),j=await r.json();
+  if(thinking)thinking.remove();
+  if(!r.ok||!j.answer)throw Error(j.error||'RunSGD AI did not return an answer');
+  let answer=j.answer+(j.reason?'\n\n'+j.reason:'');
+  renderAdminAiBubble('bot',answer,(j.model||ADMIN_AI_BEHAVIOR.model)+(Array.isArray(j.sources)&&j.sources.length?' · '+j.sources.join(' · '):''));
+  adminAiChat.push({role:'runsgd_ai',text:j.answer,at:new Date().toISOString()});
+  if(adminAiChat.length>12)adminAiChat=adminAiChat.slice(-12);
+  txtAdminAiStatus('Ready · '+(j.model||ADMIN_AI_BEHAVIOR.model)+' · Web search OFF');
+ }catch(e){
+  if(thinking)thinking.remove();
+  renderAdminAiBubble('bot','Could not answer · '+(e.message||'RunSGD AI unavailable'));
+  txtAdminAiStatus('AI console issue · '+(e.message||'Unknown error'));
+ }finally{if(btn){btn.disabled=false;btn.textContent='Send'}}
+}
+
 function cfg(){try{return JSON.parse(localStorage.getItem('runsgdAdminConfig')||'{}')}catch{return {}}}
 function saveCfg(next){localStorage.setItem('runsgdAdminConfig',JSON.stringify(next))}
 function maskState(){let key=localStorage.getItem('runsgdTwelveDataKey')||'';$('twelveState').textContent=key?'Configured':'Not configured';$('twelveState').classList.toggle('ok',!!key)}
