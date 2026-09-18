@@ -32,7 +32,9 @@
 .apiItem.bad .apiDot{background:#e35264;box-shadow:0 0 0 4px #e3526415}
 .apiInfo{min-width:0;flex:1}.apiName{font-size:12px;font-weight:900;color:#33405d;line-height:1.25}.apiDetail{font-size:10px;color:#8590a5;line-height:1.35;margin-top:3px;overflow-wrap:anywhere}.apiLatency{font-size:9px;font-weight:800;color:#a0a8b7;margin-top:4px}
 .pill.bad{background:#fff0f2;color:#b43d55}.healthFooter{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}.healthFooter .status{margin:0;min-width:0}.healthRefresh{white-space:nowrap}
-@media(max-width:520px){.apiGrid{grid-template-columns:1fr}.metric{padding:12px 8px}.metricValue{font-size:23px}.metricLabel{font-size:9px}.metricSub{font-size:9px}}
+.apiItem{align-items:center}.apiInfo{align-self:stretch;display:flex;flex-direction:column;justify-content:center}.apiStatusText{font-size:10px;font-weight:900;margin-top:3px;color:#939cad}.apiItem.ok .apiStatusText{color:#24825a}.apiItem.bad .apiStatusText{color:#b54458}.apiActions{display:flex;align-items:center;gap:6px;margin-left:auto}.apiIconBtn{width:32px;height:32px;border:0;border-radius:11px;background:#eef3fb;color:#4d6084;font-weight:950;display:grid;place-items:center;cursor:pointer;padding:0;font-size:15px;flex:0 0 auto}.apiIconBtn:active{transform:scale(.95)}.apiIconBtn:disabled{opacity:.55;cursor:wait}.apiIconBtn.info{border:1px solid #e3e8f2;background:#fff;font-family:Georgia,serif;font-style:italic;font-size:14px}.apiIconBtn.test{font-size:16px}
+.apiInfoOverlay{display:none;position:fixed;inset:0;z-index:50;background:#17213b55;backdrop-filter:blur(5px);padding:22px;align-items:center;justify-content:center}.apiInfoOverlay.open{display:flex}.apiInfoModal{width:min(390px,100%);background:#fff;border:1px solid #eef1f6;border-radius:24px;padding:18px;box-shadow:0 24px 70px #17213b38}.apiInfoTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.apiInfoTitle{font-size:18px;font-weight:900;line-height:1.25}.apiInfoClose{width:32px;height:32px;border:0;border-radius:11px;background:#f0f3f8;color:#56647d;font-weight:900}.apiInfoState{display:inline-flex;margin-top:12px;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:900;background:#f0f2f5;color:#7c879a}.apiInfoState.ok{background:#eaf8f1;color:#247a55}.apiInfoState.bad{background:#fff0f2;color:#b43d55}.apiInfoNote{margin-top:12px;padding:12px 13px;border-radius:15px;background:linear-gradient(120deg,#f4f8ff,#faf6ff);font-size:12px;color:#5c6880;line-height:1.5}.apiInfoResult{margin-top:10px;font-size:12px;color:#68758b;line-height:1.5}
+@media(max-width:520px){.apiGrid{grid-template-columns:1fr}.metric{padding:12px 8px}.metricValue{font-size:23px}.metricLabel{font-size:9px}.metricSub{font-size:9px}.apiIconBtn{width:31px;height:31px}}
 </style>
 </head>
 <body>
@@ -57,10 +59,10 @@
 </article>
 
 <article class="card" id="apiHealthCard">
- <div class="head"><div class="title">🩺 API health</div><span id="apiHealthSummary" class="pill">Checking…</span></div>
- <p class="sub">Live checks for the APIs currently used by RunSGD. Green = working, red = needs attention.</p>
- <div id="apiHealthGrid" class="apiGrid"><div class="sub">Checking services…</div></div>
- <div class="healthFooter"><div id="apiHealthUpdated" class="status">Running checks…</div><button id="apiHealthBtn" class="btn soft healthRefresh" onclick="loadApiHealth(this)">↻ Check now</button></div>
+ <div class="head"><div class="title">🩺 API health</div><span id="apiHealthSummary" class="pill">Manual check</span></div>
+ <p class="sub">No automatic API calls on page load. Press ↻ Refresh all, or test one API individually. Green = healthy, red = issue.</p>
+ <div id="apiHealthGrid" class="apiGrid"><div class="sub">Preparing API list…</div></div>
+ <div class="healthFooter"><div id="apiHealthUpdated" class="status">Not checked yet.</div><button id="apiHealthBtn" class="btn soft healthRefresh" onclick="loadApiHealth(this)">↻ Refresh all</button></div>
 </article>
 
 <article class="card">
@@ -116,6 +118,14 @@
 <a class="back" href="../">← Back to RunSGD</a>
 </div>
 </main>
+<div id="apiInfoOverlay" class="apiInfoOverlay" onclick="if(event.target===this)hideApiInfo()">
+ <div class="apiInfoModal" role="dialog" aria-modal="true" aria-labelledby="apiInfoTitle">
+  <div class="apiInfoTop"><div><div id="apiInfoTitle" class="apiInfoTitle">API status</div><div id="apiInfoGroup" class="sub"></div></div><button class="apiInfoClose" onclick="hideApiInfo()" aria-label="Close">×</button></div>
+  <div id="apiInfoState" class="apiInfoState">Not checked</div>
+  <div id="apiInfoNote" class="apiInfoNote"></div>
+  <div id="apiInfoResult" class="apiInfoResult"></div>
+ </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const ADMIN_SUPABASE_URL='https://gdycbluljgfezhgslppe.supabase.co';
@@ -166,46 +176,115 @@ async function loadDashboardMetrics(){
     $('monitorUpdated').textContent='Dashboard unavailable';
   }
 }
-function renderApiHealth(checks){
-  let list=Array.isArray(checks)?checks:[];
-  $('apiHealthGrid').innerHTML=list.length?list.map(x=>
-    '<div class="apiItem '+(x.ok?'ok':'bad')+'"><span class="apiDot"></span><div class="apiInfo"><div class="apiName">'+esc(x.name)+'</div><div class="apiDetail">'+esc(x.detail||(x.ok?'Working':'Issue detected'))+'</div><div class="apiLatency">'+esc(x.group||'API')+' · '+fmtMetric(x.latency_ms)+' ms</div></div></div>'
-  ).join(''):'<div class="sub">No API checks returned.</div>';
+const API_SERVICES=[
+ {id:'supabase-auth',name:'Supabase Auth',group:'Core',note:'Checks that the current Admin session can be verified by Supabase Auth.'},
+ {id:'supabase-db',name:'Supabase Database',group:'Core',note:'Checks that the RunSGD database/Data API is responding to a simple profiles query.'},
+ {id:'lta-traffic',name:'LTA Traffic Camera',group:'Transport',note:'Checks the server-side LTA integration and confirms a Woodlands Causeway camera snapshot is available.'},
+ {id:'lta-transit',name:'LTA MRT & Bus',group:'Transport',note:'Checks RunSGD public-transport integration and confirms LTA train status can be retrieved.'},
+ {id:'gemini',name:'RunSGD AI · Gemini',group:'AI',note:'Checks the configured Gemini 3.5 Flash-Lite model endpoint using the server-side API key.'},
+ {id:'twelve',name:'Twelve Data FX',group:'Currency',note:'Checks the primary SGD/MYR exchange-rate provider using the Twelve Data key saved on this browser.'},
+ {id:'fawaz',name:'Currency API · Fawaz',group:'Currency',note:'Checks the first free SGD/MYR fallback source used when the primary FX provider is unavailable.'},
+ {id:'er-api',name:'ExchangeRate API',group:'Currency',note:'Checks a free SGD/MYR fallback exchange-rate source.'},
+ {id:'frankfurter',name:'Frankfurter FX',group:'Currency',note:'Checks another free SGD/MYR fallback exchange-rate source.'},
+ {id:'weather',name:'Open-Meteo Weather',group:'Environment',note:'Checks the weather API used for Singapore and Johor forecasts.'},
+ {id:'air',name:'Open-Meteo Air Quality',group:'Environment',note:'Checks the PM2.5 / air-quality API used by RunSGD.'},
+ {id:'prayer',name:'AlAdhan Prayer Times',group:'Utility',note:'Checks the prayer-time service used by the Prayer widget.'},
+ {id:'holidays',name:'Nager Public Holidays',group:'Utility',note:'Checks Singapore public-holiday data used by RunSGD.'},
+ {id:'rss2json',name:'RSS2JSON · Explore',group:'Explore',note:'Checks the primary feed converter used for current Explore news results.'},
+ {id:'gdelt',name:'GDELT · Explore',group:'Explore',note:'Checks the fallback current-news source used by Explore.'},
+ {id:'overpass',name:'OpenStreetMap · Overpass',group:'Location',note:'Checks nearby-place lookup used for mosque, surau and location discovery.'}
+];
+const apiHealthResults={};
+function apiService(id){return API_SERVICES.find(x=>x.id===id)}
+function apiResultStatus(r){return !r?'Not checked':r.ok?'Healthy':'Issue detected'}
+function renderApiHealth(){
+  let tested=API_SERVICES.filter(s=>apiHealthResults[s.id]),healthy=tested.filter(s=>apiHealthResults[s.id]?.ok).length;
+  $('apiHealthGrid').innerHTML=API_SERVICES.map(s=>{
+    let r=apiHealthResults[s.id],state=r?(r.ok?'ok':'bad'):'',detail=r?(r.detail||apiResultStatus(r)):'No test run yet';
+    return '<div class="apiItem '+state+'" id="apiRow-'+s.id+'"><span class="apiDot"></span><div class="apiInfo"><div class="apiName">'+esc(s.name)+'</div><div class="apiStatusText">'+apiResultStatus(r)+'</div><div class="apiDetail">'+esc(detail)+'</div>'+(r?'<div class="apiLatency">'+esc(s.group)+' · '+fmtMetric(r.latency_ms)+' ms</div>':'<div class="apiLatency">'+esc(s.group)+'</div>')+'</div><div class="apiActions"><button class="apiIconBtn test" onclick="testApiHealth(\''+s.id+'\',this)" aria-label="Test '+esc(s.name)+'" title="Test this API">↻</button><button class="apiIconBtn info" onclick="showApiInfo(\''+s.id+'\')" aria-label="Info '+esc(s.name)+'" title="Status notes">i</button></div></div>'
+  }).join('');
+  let summary=$('apiHealthSummary');
+  summary.classList.remove('ok','bad');
+  if(!tested.length){summary.textContent='Manual check'}
+  else if(tested.length===API_SERVICES.length){
+    summary.textContent=healthy+'/'+API_SERVICES.length+' healthy';
+    summary.classList.toggle('ok',healthy===API_SERVICES.length);
+    summary.classList.toggle('bad',healthy!==API_SERVICES.length);
+  }else{
+    summary.textContent=tested.length+' checked';
+    summary.classList.toggle('bad',tested.some(s=>!apiHealthResults[s.id]?.ok));
+  }
+}
+function showApiInfo(id){
+  let s=apiService(id);if(!s)return;
+  let r=apiHealthResults[id],state=$('apiInfoState');
+  $('apiInfoTitle').textContent=s.name;
+  $('apiInfoGroup').textContent=s.group+' API';
+  state.textContent=apiResultStatus(r);
+  state.className='apiInfoState'+(r?(r.ok?' ok':' bad'):'');
+  $('apiInfoNote').textContent=s.note;
+  $('apiInfoResult').textContent=r
+    ? ((r.ok?'Healthy · ':'Issue · ')+(r.detail||'No detail')+' · '+fmtMetric(r.latency_ms)+' ms'+(r.checked_at?' · checked '+sgTime(r.checked_at):''))
+    : 'No test has been run for this API in the current Admin session.';
+  $('apiInfoOverlay').classList.add('open');
+}
+function hideApiInfo(){$('apiInfoOverlay').classList.remove('open')}
+async function apiHealthRequest(checkId=''){
+  let {data:{session}}=await adminSb.auth.getSession();
+  if(!session)throw Error('Admin session missing');
+  let twelveKey=localStorage.getItem('runsgdTwelveDataKey')||cfg().twelveDataKey||'';
+  let payload={twelve_key:twelveKey};
+  if(checkId)payload.check_id=checkId;
+  let r=await fetch(ADMIN_MONITOR_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+    body:JSON.stringify(payload)
+  });
+  let j=await r.json();
+  if(!r.ok)throw Error(j.error||'Health check failed');
+  return j
 }
 async function loadApiHealth(btn=null){
   let b=btn||$('apiHealthBtn'),summary=$('apiHealthSummary');
   if(b){b.disabled=true;b.textContent='Checking…'}
-  summary.textContent='Checking…';summary.classList.remove('ok','bad');
-  $('apiHealthUpdated').textContent='Running live checks…';
+  summary.textContent='Checking all…';summary.classList.remove('ok','bad');
+  $('apiHealthUpdated').textContent='Running manual checks…';
   try{
-    let {data:{session}}=await adminSb.auth.getSession();
-    if(!session)throw Error('Admin session missing');
-    let twelveKey=localStorage.getItem('runsgdTwelveDataKey')||cfg().twelveDataKey||'';
-    let r=await fetch(ADMIN_MONITOR_URL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
-      body:JSON.stringify({twelve_key:twelveKey})
-    });
-    let j=await r.json();
-    if(!r.ok)throw Error(j.error||'Health check failed');
-    renderApiHealth(j.checks);
-    let healthy=Number(j.healthy)||0,total=Number(j.total)||0,all=total>0&&healthy===total;
-    summary.textContent=healthy+'/'+total+' healthy';
-    summary.classList.toggle('ok',all);
-    summary.classList.toggle('bad',!all);
-    $('apiHealthUpdated').textContent='Last checked '+sgTime(j.checked_at)+(all?' · all systems normal':' · '+(total-healthy)+' issue'+(total-healthy===1?'':'s'));
+    let j=await apiHealthRequest();
+    (j.checks||[]).forEach(x=>{apiHealthResults[x.id]={...x,checked_at:j.checked_at}});
+    renderApiHealth();
+    let unhealthy=(j.total||0)-(j.healthy||0);
+    $('apiHealthUpdated').textContent='Last checked '+sgTime(j.checked_at)+(unhealthy?' · '+unhealthy+' issue'+(unhealthy===1?'':'s'):' · all systems healthy');
   }catch(e){
-    summary.textContent='Monitor issue';summary.classList.add('bad');
-    $('apiHealthGrid').innerHTML='<div class="apiItem bad"><span class="apiDot"></span><div class="apiInfo"><div class="apiName">Health monitor</div><div class="apiDetail">'+esc(e.message||'Could not run checks')+'</div></div></div>';
-    $('apiHealthUpdated').textContent='Could not complete API checks.';
+    summary.textContent='Check failed';summary.classList.add('bad');
+    $('apiHealthUpdated').textContent='Could not complete checks · '+(e.message||'Unknown error');
   }finally{
-    if(b){b.disabled=false;b.textContent='↻ Check now'}
+    if(b){b.disabled=false;b.textContent='↻ Refresh all'}
+  }
+}
+async function testApiHealth(id,btn){
+  let s=apiService(id);if(!s)return;
+  let old=btn.textContent;btn.disabled=true;btn.textContent='…';
+  $('apiHealthUpdated').textContent='Testing '+s.name+'…';
+  try{
+    let j=await apiHealthRequest(id),r=j.checks?.[0];
+    if(!r)throw Error('No result returned');
+    apiHealthResults[id]={...r,checked_at:j.checked_at};
+    renderApiHealth();
+    $('apiHealthUpdated').textContent=s.name+' · '+(r.ok?'healthy':'issue detected')+' · '+sgTime(j.checked_at);
+  }catch(e){
+    apiHealthResults[id]={id,name:s.name,group:s.group,ok:false,latency_ms:0,detail:'Test could not run · '+(e.message||'Unknown error'),checked_at:new Date().toISOString()};
+    renderApiHealth();
+    $('apiHealthUpdated').textContent=s.name+' · test failed';
+  }finally{
+    if(btn&&btn.isConnected){btn.disabled=false;btn.textContent=old}
   }
 }
 async function loadMonitoring(){
-  await Promise.all([loadDashboardMetrics(),loadApiHealth()]);
+  renderApiHealth();
+  await loadDashboardMetrics();
   if(monitorTimer)clearInterval(monitorTimer);
-  monitorTimer=setInterval(()=>{loadDashboardMetrics();loadApiHealth()},5*60*1000);
+  monitorTimer=setInterval(loadDashboardMetrics,5*60*1000);
 }
 function clearAll(){if(!confirm('Clear RunSGD local API settings from this browser?'))return;localStorage.removeItem('runsgdTwelveDataKey');localStorage.removeItem('runsgdAdminConfig');load();$('twelveStatus').textContent='Local API settings cleared.'}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
