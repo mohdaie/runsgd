@@ -59,10 +59,10 @@
 </article>
 
 <article class="card" id="apiHealthCard">
- <div class="head"><div class="title">🩺 API health</div><span id="apiHealthSummary" class="pill">Manual check</span></div>
- <p class="sub">No automatic API calls on page load. Press ↻ Refresh all, or test one API individually. Green = healthy, red = issue.</p>
- <div id="apiHealthGrid" class="apiGrid"><div class="sub">Preparing API list…</div></div>
- <div class="healthFooter"><div id="apiHealthUpdated" class="status">Not checked yet.</div><button id="apiHealthBtn" class="btn soft healthRefresh" onclick="loadApiHealth(this)">↻ Refresh all</button></div>
+ <div class="head"><div class="title">🩺 API health</div><span id="apiHealthSummary" class="pill">Loading last scan…</span></div>
+ <p class="sub">Shows the last saved health result when Admin opens. No live API tests run automatically. Press ↻ Refresh all, or test one API individually.</p>
+ <div id="apiHealthGrid" class="apiGrid"><div class="sub">Loading last saved results…</div></div>
+ <div class="healthFooter"><div id="apiHealthUpdated" class="status">Loading last scan…</div><button id="apiHealthBtn" class="btn soft healthRefresh" onclick="loadApiHealth(this)">↻ Refresh all</button></div>
 </article>
 
 <article class="card">
@@ -154,6 +154,7 @@ async function testLta(){let b=$('ltaTestBtn');b.disabled=true;b.textContent='Te
 
 function fmtMetric(v){return Number(v||0).toLocaleString('en-SG')}
 function sgTime(v){try{return new Date(v).toLocaleTimeString('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit'})}catch{return ''}}
+function sgDateTime(v){try{return new Date(v).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}catch{return ''}}
 async function loadDashboardMetrics(){
   try{
     let {data,error}=await adminSb.rpc('admin_dashboard_stats');
@@ -200,19 +201,21 @@ function apiResultStatus(r){return !r?'Not checked':r.ok?'Healthy':'Issue detect
 function renderApiHealth(){
   let tested=API_SERVICES.filter(s=>apiHealthResults[s.id]),healthy=tested.filter(s=>apiHealthResults[s.id]?.ok).length;
   $('apiHealthGrid').innerHTML=API_SERVICES.map(s=>{
-    let r=apiHealthResults[s.id],state=r?(r.ok?'ok':'bad'):'',detail=r?(r.detail||apiResultStatus(r)):'No test run yet';
-    return '<div class="apiItem '+state+'" id="apiRow-'+s.id+'"><span class="apiDot"></span><div class="apiInfo"><div class="apiName">'+esc(s.name)+'</div><div class="apiStatusText">'+apiResultStatus(r)+'</div><div class="apiDetail">'+esc(detail)+'</div>'+(r?'<div class="apiLatency">'+esc(s.group)+' · '+fmtMetric(r.latency_ms)+' ms</div>':'<div class="apiLatency">'+esc(s.group)+'</div>')+'</div><div class="apiActions"><button class="apiIconBtn test" onclick="testApiHealth(\''+s.id+'\',this)" aria-label="Test '+esc(s.name)+'" title="Test this API">↻</button><button class="apiIconBtn info" onclick="showApiInfo(\''+s.id+'\')" aria-label="Info '+esc(s.name)+'" title="Status notes">i</button></div></div>'
+    let r=apiHealthResults[s.id],state=r?(r.ok?'ok':'bad'):'',detail=r?(r.detail||apiResultStatus(r)):'No saved scan yet';
+    let timing=r?.checked_at?('Last check '+sgDateTime(r.checked_at)+' · '+fmtMetric(r.latency_ms)+' ms'):s.group+' · waiting for first manual scan';
+    return '<div class="apiItem '+state+'" id="apiRow-'+s.id+'"><span class="apiDot"></span><div class="apiInfo"><div class="apiName">'+esc(s.name)+'</div><div class="apiStatusText">'+apiResultStatus(r)+'</div><div class="apiDetail">'+esc(detail)+'</div><div class="apiLatency">'+esc(timing)+'</div></div><div class="apiActions"><button class="apiIconBtn test" onclick="testApiHealth(\''+s.id+'\',this)" aria-label="Test '+esc(s.name)+'" title="Test this API">↻</button><button class="apiIconBtn info" onclick="showApiInfo(\''+s.id+'\')" aria-label="Info '+esc(s.name)+'" title="Status notes">i</button></div></div>'
   }).join('');
   let summary=$('apiHealthSummary');
   summary.classList.remove('ok','bad');
-  if(!tested.length){summary.textContent='Manual check'}
+  if(!tested.length){summary.textContent='No saved scan'}
   else if(tested.length===API_SERVICES.length){
     summary.textContent=healthy+'/'+API_SERVICES.length+' healthy';
     summary.classList.toggle('ok',healthy===API_SERVICES.length);
     summary.classList.toggle('bad',healthy!==API_SERVICES.length);
   }else{
-    summary.textContent=tested.length+' checked';
-    summary.classList.toggle('bad',tested.some(s=>!apiHealthResults[s.id]?.ok));
+    summary.textContent=healthy+'/'+tested.length+' healthy';
+    summary.classList.toggle('ok',healthy===tested.length);
+    summary.classList.toggle('bad',healthy!==tested.length);
   }
 }
 function showApiInfo(id){
@@ -224,17 +227,18 @@ function showApiInfo(id){
   state.className='apiInfoState'+(r?(r.ok?' ok':' bad'):'');
   $('apiInfoNote').textContent=s.note;
   $('apiInfoResult').textContent=r
-    ? ((r.ok?'Healthy · ':'Issue · ')+(r.detail||'No detail')+' · '+fmtMetric(r.latency_ms)+' ms'+(r.checked_at?' · checked '+sgTime(r.checked_at):''))
-    : 'No test has been run for this API in the current Admin session.';
+    ? ((r.ok?'Healthy · ':'Issue · ')+(r.detail||'No detail')+' · '+fmtMetric(r.latency_ms)+' ms'+(r.checked_at?' · last checked '+sgDateTime(r.checked_at):''))
+    : 'No saved scan exists for this API yet. Run a manual test once to create the first result.';
   $('apiInfoOverlay').classList.add('open');
 }
 function hideApiInfo(){$('apiInfoOverlay').classList.remove('open')}
-async function apiHealthRequest(checkId=''){
+async function apiHealthRequest(checkId='',action=''){
   let {data:{session}}=await adminSb.auth.getSession();
   if(!session)throw Error('Admin session missing');
   let twelveKey=localStorage.getItem('runsgdTwelveDataKey')||cfg().twelveDataKey||'';
   let payload={twelve_key:twelveKey};
   if(checkId)payload.check_id=checkId;
+  if(action)payload.action=action;
   let r=await fetch(ADMIN_MONITOR_URL,{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
@@ -243,6 +247,25 @@ async function apiHealthRequest(checkId=''){
   let j=await r.json();
   if(!r.ok)throw Error(j.error||'Health check failed');
   return j
+}
+async function loadSavedApiHealth(){
+  $('apiHealthUpdated').textContent='Loading last saved scan…';
+  try{
+    let j=await apiHealthRequest('','last');
+    Object.keys(apiHealthResults).forEach(k=>delete apiHealthResults[k]);
+    (j.checks||[]).forEach(x=>{apiHealthResults[x.id]={...x}});
+    renderApiHealth();
+    if(j.checks?.length){
+      let latest=(j.checks||[]).map(x=>x.checked_at).filter(Boolean).sort().at(-1);
+      let issues=(j.checks||[]).filter(x=>!x.ok).length;
+      $('apiHealthUpdated').textContent='Showing last saved results · latest check '+sgDateTime(latest)+(issues?' · '+issues+' issue'+(issues===1?'':'s'):' · all saved results healthy');
+    }else{
+      $('apiHealthUpdated').textContent='No saved scan yet · press Refresh all once to create it.';
+    }
+  }catch(e){
+    renderApiHealth();
+    $('apiHealthUpdated').textContent='Could not load saved results · '+(e.message||'Unknown error');
+  }
 }
 async function loadApiHealth(btn=null){
   let b=btn||$('apiHealthBtn'),summary=$('apiHealthSummary');
@@ -254,7 +277,7 @@ async function loadApiHealth(btn=null){
     (j.checks||[]).forEach(x=>{apiHealthResults[x.id]={...x,checked_at:j.checked_at}});
     renderApiHealth();
     let unhealthy=(j.total||0)-(j.healthy||0);
-    $('apiHealthUpdated').textContent='Last checked '+sgTime(j.checked_at)+(unhealthy?' · '+unhealthy+' issue'+(unhealthy===1?'':'s'):' · all systems healthy');
+    $('apiHealthUpdated').textContent='Last checked '+sgDateTime(j.checked_at)+(unhealthy?' · '+unhealthy+' issue'+(unhealthy===1?'':'s'):' · all systems healthy');
   }catch(e){
     summary.textContent='Check failed';summary.classList.add('bad');
     $('apiHealthUpdated').textContent='Could not complete checks · '+(e.message||'Unknown error');
@@ -271,7 +294,7 @@ async function testApiHealth(id,btn){
     if(!r)throw Error('No result returned');
     apiHealthResults[id]={...r,checked_at:j.checked_at};
     renderApiHealth();
-    $('apiHealthUpdated').textContent=s.name+' · '+(r.ok?'healthy':'issue detected')+' · '+sgTime(j.checked_at);
+    $('apiHealthUpdated').textContent=s.name+' · '+(r.ok?'healthy':'issue detected')+' · checked '+sgDateTime(j.checked_at);
   }catch(e){
     apiHealthResults[id]={id,name:s.name,group:s.group,ok:false,latency_ms:0,detail:'Test could not run · '+(e.message||'Unknown error'),checked_at:new Date().toISOString()};
     renderApiHealth();
@@ -282,7 +305,7 @@ async function testApiHealth(id,btn){
 }
 async function loadMonitoring(){
   renderApiHealth();
-  await loadDashboardMetrics();
+  await Promise.all([loadDashboardMetrics(),loadSavedApiHealth()]);
   if(monitorTimer)clearInterval(monitorTimer);
   monitorTimer=setInterval(loadDashboardMetrics,5*60*1000);
 }
