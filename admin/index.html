@@ -61,10 +61,10 @@
 <div class="stack">
 <article class="card aiConsoleCard" id="runSgdAiConsole">
  <div class="aiConsoleHead">
-  <div><div class="aiConsoleTitle">✨ Talk to RunSGD AI</div><div class="aiConsoleMeta">Same AI backend as the app · Admin-only console</div></div>
+  <div><div class="aiConsoleTitle">✨ Talk to RunSGD AI</div><div class="aiConsoleMeta">Your RunSGD AI · Admin-only conversation</div></div>
   <span class="pill ok">LIVE AI</span>
  </div>
- <p class="sub" style="margin:10px 0 0">Ask how RunSGD AI behaves, what data it can use, when it triggers, what it will not guess, or ask it a normal RunSGD question.</p>
+ <p class="sub" style="margin:10px 0 0">Talk to RunSGD AI directly. Ask how it thinks about RunSGD data, what it can use, what it avoids guessing, or just chat normally.</p>
  <div class="aiQuick">
   <button onclick="askAdminAiPreset('Explain your behavior and rules in RunSGD.')">Your behavior</button>
   <button onclick="askAdminAiPreset('What data and sources are you allowed to use?')">Your data</button>
@@ -72,7 +72,7 @@
   <button onclick="askAdminAiPreset('What are you not allowed to guess or invent?')">Your limits</button>
  </div>
  <div id="adminAiChat" class="aiChat">
-  <div class="aiBubble bot">Hi Admin 👋 Ask me how I work inside RunSGD, what I can see, why I answer a certain way, or test me with a normal commuter question.</div>
+  <div class="aiBubble bot">Hi 👋 I’m RunSGD AI. Ask me anything about how I work in the app, what I know, what I avoid guessing, or just talk to me normally.</div>
  </div>
  <div class="aiAskRow">
   <input id="adminAiInput" class="aiAskInput" maxlength="500" placeholder="Ask RunSGD AI anything…" onkeydown="if(event.key==='Enter'){event.preventDefault();sendAdminAi()}">
@@ -266,7 +266,7 @@ async function sendAdminAi(){
     question:q,
     context:{
      admin_console:true,
-     purpose:'Admin is directly testing and inspecting RunSGD AI behavior.',
+     purpose:'Admin is talking directly with RunSGD AI. Reply naturally in first person as RunSGD AI, never narrate or analyse the admin’s intent.',
      behavior_manifest:ADMIN_AI_BEHAVIOR,
      recent_admin_chat:adminAiChat.slice(-8)
     }
@@ -274,7 +274,7 @@ async function sendAdminAi(){
   }),j=await r.json();
   if(thinking)thinking.remove();
   if(!r.ok||!j.answer)throw Error(j.error||'RunSGD AI did not return an answer');
-  let answer=j.answer+(j.reason?'\n\n'+j.reason:'');
+  let answer=j.answer;
   renderAdminAiBubble('bot',answer,(j.model||ADMIN_AI_BEHAVIOR.model)+(Array.isArray(j.sources)&&j.sources.length?' · '+j.sources.join(' · '):''));
   adminAiChat.push({role:'runsgd_ai',text:j.answer,at:new Date().toISOString()});
   if(adminAiChat.length>12)adminAiChat=adminAiChat.slice(-12);
