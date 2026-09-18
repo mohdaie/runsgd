@@ -92,7 +92,7 @@
  <p class="sub">Admin-only OneMap account used by the Singapore Route Planner. Credentials are saved in Supabase and are not stored in this browser.</p>
  <div class="field"><label for="oneMapEmail">Registered email</label><input id="oneMapEmail" class="input" type="email" inputmode="email" placeholder="OneMap registered email" autocomplete="off"></div>
  <div class="field"><label for="oneMapPassword">Password</label><div class="row"><input id="oneMapPassword" class="input" type="password" placeholder="OneMap password" autocomplete="off"><button class="btn soft" onclick="toggleKey('oneMapPassword',this)">Show</button></div></div>
- <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveOneMap()">Save securely</button><button class="btn soft" onclick="clearOneMap()">Clear</button></div>
+ <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveOneMap()">Save securely</button><button id="oneMapTestBtn" class="btn soft" onclick="testOneMap()">Test login</button><button class="btn soft" onclick="clearOneMap()">Clear</button></div>
  <div id="oneMapStatus" class="status">Used only for OneMap authentication. Route API connection will be added next.</div>
 </article>
 
@@ -189,6 +189,20 @@ async function saveOneMap(){
  $('oneMapStatus').textContent='Saved in Supabase. Password cleared from this screen.';
  flash($('oneMapCard'));
 }
+async function testOneMap(){
+ let b=$('oneMapTestBtn');if(!b)return;
+ b.disabled=true;b.textContent='Testing…';$('oneMapStatus').textContent='Connecting to OneMap…';
+ try{
+  let r=await fetch(ADMIN_SUPABASE_URL+'/functions/v1/runsgd-route-sg',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'status'}),cache:'no-store'}),j=await r.json();
+  if(!r.ok||!j.connected)throw Error(j.error||'OneMap connection failed');
+  $('oneMapState').textContent='Connected';$('oneMapState').classList.add('ok');
+  $('oneMapStatus').textContent='✓ OneMap login working · token ready for Route Planner';
+ }catch(e){
+  $('oneMapState').textContent='Issue';$('oneMapState').classList.remove('ok');
+  $('oneMapStatus').textContent='Test failed · '+(e.message||'Unknown error');
+ }finally{b.disabled=false;b.textContent='Test login'}
+}
+
 async function clearOneMap(){
  if(!confirm('Clear the saved OneMap login from RunSGD?'))return;
  $('oneMapStatus').textContent='Clearing…';
