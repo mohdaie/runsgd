@@ -87,6 +87,15 @@
  <div id="twelveStatus" class="status">No test run yet.</div>
 </article>
 
+<article class="card" id="oneMapCard">
+ <div class="head"><div class="title">🗺️ OneMap · Route Planner</div><span id="oneMapState" class="pill">Not configured</span></div>
+ <p class="sub">Admin-only OneMap account used by the Singapore Route Planner. Credentials are saved in Supabase and are not stored in this browser.</p>
+ <div class="field"><label for="oneMapEmail">Registered email</label><input id="oneMapEmail" class="input" type="email" inputmode="email" placeholder="OneMap registered email" autocomplete="off"></div>
+ <div class="field"><label for="oneMapPassword">Password</label><div class="row"><input id="oneMapPassword" class="input" type="password" placeholder="OneMap password" autocomplete="off"><button class="btn soft" onclick="toggleKey('oneMapPassword',this)">Show</button></div></div>
+ <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveOneMap()">Save securely</button><button class="btn soft" onclick="clearOneMap()">Clear</button></div>
+ <div id="oneMapStatus" class="status">Used only for OneMap authentication. Route API connection will be added next.</div>
+</article>
+
 <article class="card" id="geminiCard">
  <div class="head"><div class="title">✨ RunSGD AI · Gemini</div><span id="geminiState" class="pill">Not configured</span></div>
  <p class="sub">v2.0 uses Gemini 3.5 Flash-Lite to analyse RunSGD live data, Knowledge and recent Community updates. External web search is OFF.</p>
@@ -139,10 +148,56 @@ function toggleKey(id,btn){let e=$(id),show=e.type==='password';e.type=show?'tex
 function cfg(){try{return JSON.parse(localStorage.getItem('runsgdAdminConfig')||'{}')}catch{return {}}}
 function saveCfg(next){localStorage.setItem('runsgdAdminConfig',JSON.stringify(next))}
 function maskState(){let key=localStorage.getItem('runsgdTwelveDataKey')||'';$('twelveState').textContent=key?'Configured':'Not configured';$('twelveState').classList.toggle('ok',!!key)}
-function load(){let c=cfg(),tk=localStorage.getItem('runsgdTwelveDataKey')||c.twelveDataKey||'';$('twelveKey').value=tk;maskState();loadLtaState();loadGeminiState()}
+function load(){let c=cfg(),tk=localStorage.getItem('runsgdTwelveDataKey')||c.twelveDataKey||'';$('twelveKey').value=tk;maskState();loadLtaState();loadGeminiState();loadOneMapState()}
 function saveTwelve(){let key=$('twelveKey').value.trim(),c=cfg();if(key){localStorage.setItem('runsgdTwelveDataKey',key);c.twelveDataKey=key}else{localStorage.removeItem('runsgdTwelveDataKey');delete c.twelveDataKey}saveCfg(c);maskState();$('twelveStatus').textContent=key?'Saved on this browser.':'Twelve Data key cleared.';flash($('fxCard'))}
 async function testTwelve(){let key=$('twelveKey').value.trim();if(!key)return $('twelveStatus').textContent='Enter a Twelve Data API key first.';let b=$('testBtn');b.disabled=true;b.textContent='Testing…';$('twelveStatus').textContent='Requesting live SGD/MYR…';try{let r=await fetch('https://api.twelvedata.com/exchange_rate?symbol=SGD%2FMYR&apikey='+encodeURIComponent(key),{cache:'no-store'}),j=await r.json();if(!r.ok||!j.rate)throw Error(j.message||('HTTP '+r.status));let rate=Number(j.rate);$('twelveStatus').textContent='✓ Working · 1 SGD = RM '+rate.toFixed(4);saveTwelve()}catch(e){$('twelveStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test SGD/MYR'}}
 function saveLLM(){let c=cfg();c.llmProvider=$('llmProvider').value;c.llmKey=$('llmKey').value.trim();c.llmModel=$('llmModel').value.trim();c.llmEndpoint=$('llmEndpoint').value.trim();saveCfg(c);$('llmStatus').textContent='Saved. Main app integration will use these settings in the LLM release.';flash($('llmStatus').closest('.card'))}
+
+async function loadOneMapState(){
+ try{
+  let {data,error}=await adminSb.from('app_settings').select('key,secret_value,updated_at').in('key',['onemap_email','onemap_password']);
+  if(error)throw error;
+  let map=Object.fromEntries((data||[]).map(x=>[x.key,x]));
+  let email=String(map.onemap_email?.secret_value||'').trim(),hasPassword=!!String(map.onemap_password?.secret_value||'').trim();
+  if($('oneMapEmail'))$('oneMapEmail').value=email;
+  if($('oneMapPassword'))$('oneMapPassword').value='';
+  let ok=!!email&&hasPassword;
+  $('oneMapState').textContent=ok?'Configured':'Not configured';
+  $('oneMapState').classList.toggle('ok',ok);
+  let stamp=[map.onemap_email?.updated_at,map.onemap_password?.updated_at].filter(Boolean).sort().pop();
+  $('oneMapStatus').textContent=ok?'Saved in Supabase'+(stamp?' · updated '+new Date(stamp).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''):'Enter the OneMap account email and password.';
+ }catch(e){
+  $('oneMapState').textContent='Unavailable';
+  $('oneMapStatus').textContent='Could not load OneMap settings.';
+ }
+}
+async function saveOneMap(){
+ let email=$('oneMapEmail').value.trim(),password=$('oneMapPassword').value;
+ if(!email||!email.includes('@'))return $('oneMapStatus').textContent='Enter your registered OneMap email.';
+ if(!password)return $('oneMapStatus').textContent='Enter your OneMap password.';
+ $('oneMapStatus').textContent='Saving securely…';
+ let now=new Date().toISOString();
+ let {error}=await adminSb.from('app_settings').upsert([
+  {key:'onemap_email',secret_value:email,updated_at:now},
+  {key:'onemap_password',secret_value:password,updated_at:now}
+ ],{onConflict:'key'});
+ if(error)return $('oneMapStatus').textContent='Save failed · '+error.message;
+ $('oneMapPassword').value='';
+ $('oneMapPassword').type='password';
+ $('oneMapState').textContent='Configured';
+ $('oneMapState').classList.add('ok');
+ $('oneMapStatus').textContent='Saved in Supabase. Password cleared from this screen.';
+ flash($('oneMapCard'));
+}
+async function clearOneMap(){
+ if(!confirm('Clear the saved OneMap login from RunSGD?'))return;
+ $('oneMapStatus').textContent='Clearing…';
+ let {error}=await adminSb.from('app_settings').delete().in('key',['onemap_email','onemap_password']);
+ if(error)return $('oneMapStatus').textContent='Clear failed · '+error.message;
+ $('oneMapEmail').value='';$('oneMapPassword').value='';$('oneMapPassword').type='password';
+ $('oneMapState').textContent='Not configured';$('oneMapState').classList.remove('ok');
+ $('oneMapStatus').textContent='OneMap login cleared.';
+}
 
 async function loadGeminiState(){try{let {data,error}=await adminSb.from('app_settings').select('secret_value').eq('key','gemini_api_key').maybeSingle();if(error)throw error;let ok=!!data?.secret_value;$('geminiState').textContent=ok?'Configured':'Not configured';$('geminiState').classList.toggle('ok',ok)}catch(e){$('geminiState').textContent='Unavailable'}}
 async function saveGeminiKey(){let key=$('geminiKey').value.trim();if(!key)return $('geminiStatus').textContent='Paste your Gemini API key first.';$('geminiStatus').textContent='Saving securely…';let {error}=await adminSb.from('app_settings').upsert({key:'gemini_api_key',secret_value:key,updated_at:new Date().toISOString()},{onConflict:'key'});if(error)return $('geminiStatus').textContent='Save failed · '+error.message;$('geminiKey').value='';$('geminiState').textContent='Configured';$('geminiState').classList.add('ok');$('geminiStatus').textContent='Saved in Supabase. Testing Gemini 3.5 Flash-Lite…';await testGemini()}
