@@ -738,12 +738,13 @@ function routeTravelModeInfo(){
 }
 function updateRouteTravelModeUi(){}
 function setRouteTravelMode(v){sgRouteTravelMode=['car','motorcycle'].includes(v)?v:'transit'}
-function openRoadRouteInGoogleMaps(){
- let from=live.location,to=sgRouteSelection,m=routeTravelModeInfo();
- if(!from||!to||m.id==='transit')return;
+function openRoadRouteInGoogleMaps(i=null){
+ let from=live.location,to=sgRouteSelection,r=Number.isInteger(i)?sgRouteResults[i]:null;
+ if(!from||!to)return;
+ let mode=String(r?.travel_mode||'DRIVE').toUpperCase()==='TWO_WHEELER'?'two-wheeler':'driving';
  let origin=Number(from.lat)+','+Number(from.lon),destination=Number(to.lat)+','+Number(to.lon);
- let url='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(origin)+'&destination='+encodeURIComponent(destination)+'&travelmode='+encodeURIComponent(m.maps);
- window.open(url,'_blank','noopener');
+ let url='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(origin)+'&destination='+encodeURIComponent(destination)+'&travelmode='+encodeURIComponent(mode);
+ window.open(url,'_blank','noopener')
 }
 function setRouteDestinationRegion(v){
  sgRouteDestRegion=['sg','jb'].includes(v)?v:'';
@@ -839,9 +840,153 @@ function renderJourneyIntent(intent){
  if(intent.has_car)parts.push('🚗 car available');if(intent.has_motorcycle)parts.push('🏍️ motorcycle');if(intent.prefer_ktm)parts.push('🚆 prefer KTM');if(intent.avoid_sg_driving)parts.push('🅿️ avoid driving in SG');if(intent.direct_drive)parts.push('🛣️ direct drive');parts.push('🎯 '+(intent.priority||'balanced'));
  el.innerHTML='<strong>'+(intent.ai?'AI understood':'RunSGD understood')+':</strong> '+esc(intent.answer||'')+'<br>'+esc(parts.join(' · '));el.classList.add('show')
 }
+
+function makeJbToSgBorderHops(){
+ return [
+  {mode:'IMMIGRATION',manual:true,country:'MY',duration_sec:0,distance_m:0,from:{...JB_CIQ},to:{...JB_CIQ},instruction:'Clear Malaysia immigration at JB CIQ'},
+  {mode:'CROSS_BORDER_BUS',manual:true,duration_sec:0,distance_m:2000,from:{...JB_CIQ},to:{...WOODLANDS_CP},instruction:'Take an available cross-border bus to Woodlands Checkpoint'},
+  {mode:'IMMIGRATION',manual:true,country:'SG',duration_sec:0,distance_m:0,from:{...WOODLANDS_CP},to:{...WOODLANDS_CP},instruction:'Clear Singapore immigration at Woodlands Checkpoint'}
+ ]
+}
+async function routeApiSafe(payload,provider){
+ try{return await sgRouteApi(payload,provider)}catch{return null}
+}
+function routeCandidate(base,meta={}){return {...base,...meta}}
+async function resolveRoutePlace(query,provider,from=null){
+ try{
+  let j=await sgRouteApi({action:'search',q:query,from},provider),x=(j.results||[])[0];
+  return x?{...x,_provider:provider.id}:null
+ }catch{return null}
+}
+async function planLocalSmart(origin,destination,provider,intent){
+ let out=[];
+ if(provider.id==='sg'){
+  let j=await routeApiSafe({action:'route',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address},max_walk_m:1200},provider);
+  (j?.routes||[]).slice(0,3).forEach(x=>out.push(routeCandidate(x,{provider:'sg',kind:'transit',label:'Public transport',tag:'OneMap · Singapore',explanation:'Singapore public-transport route.'})));
+  return out
+ }
+ let tasks=[];
+ if(intent.allow_bus!==false)tasks.push({kind:'transit',mode:'TRANSIT',p:routeApiSafe({action:'route',travel_mode:'TRANSIT',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},provider)});
+ if(intent.has_car||intent.direct_drive)tasks.push({kind:'drive',mode:'DRIVE',p:routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},provider)});
+ if(intent.has_motorcycle)tasks.push({kind:'motorcycle',mode:'TWO_WHEELER',p:routeApiSafe({action:'route',travel_mode:'TWO_WHEELER',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},provider)});
+ for(const t of tasks){
+  let j=await t.p;(j?.routes||[]).slice(0,t.kind==='transit'?2:1).forEach(x=>out.push(routeCandidate(x,{provider:'jb',kind:t.kind,travel_mode:t.mode,label:t.kind==='drive'?'Drive':t.kind==='motorcycle'?'Motorcycle':'Public transport',tag:'Google · Malaysia',explanation:t.kind==='transit'?'Local public-transport option.':'Traffic-aware road option.'})))
+ }
+ return out
+}
+async function planSgToJbSmart(origin,destination,intent){
+ let out=[],jbp=routeProviderFor('jb');
+ if(intent.allow_cross_border_bus!==false){
+  try{
+   let r=await planSgToJb(origin,destination);
+   r.slice(0,2).forEach(x=>out.push(routeCandidate(x,{kind:'border_transit',label:'Bus + public transport',tag:'SG → MY',explanation:'Singapore public transport, Woodlands crossing, then Johor public transport.'})))
+  }catch{}
+ }
+ if((intent.has_car&&!intent.avoid_sg_driving)||intent.direct_drive){
+  let j=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},jbp);
+  (j?.routes||[]).slice(0,1).forEach(x=>out.push(routeCandidate(x,{provider:'cross-border-road',kind:'direct_drive',travel_mode:'DRIVE',label:'Direct drive',tag:'Google · Drive',border_variable:true,explanation:'Drive across the border. Road ETA excludes checkpoint and immigration time.'})))
+ }
+ if(intent.has_motorcycle){
+  let j=await routeApiSafe({action:'route',travel_mode:'TWO_WHEELER',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},jbp);
+  (j?.routes||[]).slice(0,1).forEach(x=>out.push(routeCandidate(x,{provider:'cross-border-road',kind:'motorcycle',travel_mode:'TWO_WHEELER',label:'Direct motorcycle',tag:'Google · Motorcycle',border_variable:true,explanation:'Motorcycle road ETA excludes checkpoint and immigration time.'})))
+ }
+ return out
+}
+async function planJbToSgSmart(origin,destination,intent){
+ let out=[],jbp=routeProviderFor('jb'),sgp=routeProviderFor('sg');
+ let sgOnwardPromise=routeApiSafe({action:'route',from:{...WOODLANDS_CP},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address},max_walk_m:1200},sgp);
+
+ if(intent.allow_cross_border_bus!==false){
+  let jbPromise=routeApiSafe({action:'route',travel_mode:'TRANSIT',from:{lat:origin.lat,lon:origin.lon},to:{...JB_CIQ}},jbp);
+  let pair=await Promise.all([jbPromise,sgOnwardPromise]),jb=pair[0],sg=pair[1];
+  if(jb?.routes?.length&&sg?.routes?.length){
+   let a=jb.routes[0],b=sg.routes[0];
+   out.push({provider:'cross-border',kind:'border_transit',label:'Bus + MRT',tag:'MY → SG',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),walk_distance_m:Number(a.walk_distance_m||0)+Number(b.walk_distance_m||0),transfers:Number(a.transfers||0)+Number(b.transfers||0)+1,fare_myr:a.fare_myr??null,fare_sgd:b.fare_sgd??null,border_variable:true,legs:[...(a.legs||[]),...makeJbToSgBorderHops(),...(b.legs||[])],explanation:'Johor public transport to CIQ, cross-border bus, then Singapore public transport.'})
+  }
+ }
+
+ if(intent.has_car&&intent.allow_cross_border_bus!==false){
+  let parkingPoint=await resolveRoutePlace('JB Sentral',jbp,{lat:origin.lat,lon:origin.lon});
+  let target=parkingPoint||JB_CIQ;
+  let pair=await Promise.all([
+   routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:target.lat,lon:target.lon,name:target.name,address:target.address}},jbp),
+   sgOnwardPromise
+  ]),drive=pair[0],sg=pair[1];
+  if(drive?.routes?.length&&sg?.routes?.length){
+   let a=drive.routes[0],b=sg.routes[0];
+   let park={mode:'PARK',manual:true,duration_sec:0,distance_m:0,from:{name:target.name||'JB Sentral / CIQ area',lat:target.lat,lon:target.lon},to:{name:'JB CIQ',lat:JB_CIQ.lat,lon:JB_CIQ.lon},instruction:'Park at a suitable facility near JB Sentral / CIQ, then continue to immigration'};
+   out.push({provider:'cross-border',kind:'drive_then_transit',label:'Drive + bus + MRT',tag:'Car → Transit',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),walk_distance_m:Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,legs:[...(a.legs||[]),park,...makeJbToSgBorderHops(),...(b.legs||[])],explanation:'Drive on the Johor side, park, cross by bus, then continue by Singapore public transport. Confirm a suitable parking facility before departure.'})
+  }
+ }
+
+ if((intent.has_car&&!intent.avoid_sg_driving)||intent.direct_drive){
+  let j=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},jbp);
+  (j?.routes||[]).slice(0,1).forEach(x=>out.push(routeCandidate(x,{provider:'cross-border-road',kind:'direct_drive',travel_mode:'DRIVE',label:'Direct drive',tag:'Google · Drive',border_variable:true,explanation:'Drive all the way into Singapore. Google road ETA excludes checkpoint and immigration time.'})))
+ }
+
+ if(intent.has_motorcycle){
+  let j=await routeApiSafe({action:'route',travel_mode:'TWO_WHEELER',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},jbp);
+  (j?.routes||[]).slice(0,1).forEach(x=>out.push(routeCandidate(x,{provider:'cross-border-road',kind:'motorcycle',travel_mode:'TWO_WHEELER',label:'Direct motorcycle',tag:'Google · Motorcycle',border_variable:true,explanation:'Motorcycle road ETA excludes checkpoint and immigration time.'})))
+ }
+
+ if(intent.prefer_ktm){
+  let sentral=await resolveRoutePlace('JB Sentral',jbp,{lat:origin.lat,lon:origin.lon});
+  let wtc=await resolveRoutePlace('Woodlands Train Checkpoint',sgp,null);
+  if(sentral&&wtc){
+   let firstMode=intent.has_car?'DRIVE':'TRANSIT';
+   let pair=await Promise.all([
+    routeApiSafe({action:'route',travel_mode:firstMode,from:{lat:origin.lat,lon:origin.lon},to:{lat:sentral.lat,lon:sentral.lon,name:sentral.name,address:sentral.address}},jbp),
+    routeApiSafe({action:'route',from:{lat:wtc.lat,lon:wtc.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address},max_walk_m:1200},sgp)
+   ]),first=pair[0],sg=pair[1];
+   if(first?.routes?.length&&sg?.routes?.length){
+    let a=first.routes[0],b=sg.routes[0],extra=[];
+    if(intent.has_car)extra.push({mode:'PARK',manual:true,duration_sec:0,distance_m:0,from:{name:'JB Sentral',lat:sentral.lat,lon:sentral.lon},to:{name:'JB Sentral',lat:sentral.lat,lon:sentral.lon},instruction:'Park at a suitable facility at / near JB Sentral'});
+    extra.push(
+     {mode:'IMMIGRATION',manual:true,duration_sec:0,distance_m:0,from:{name:'JB Sentral',lat:sentral.lat,lon:sentral.lon},to:{name:'JB Sentral',lat:sentral.lat,lon:sentral.lon},instruction:'Complete KTM check-in and Malaysia immigration at JB Sentral'},
+     {mode:'TRAIN',manual:true,duration_sec:0,distance_m:0,route:'KTM Shuttle Tebrau',from:{name:'JB Sentral',lat:sentral.lat,lon:sentral.lon},to:{name:'Woodlands Train Checkpoint',lat:wtc.lat,lon:wtc.lon},instruction:'Take your booked KTM Shuttle Tebrau service'},
+     {mode:'IMMIGRATION',manual:true,duration_sec:0,distance_m:0,from:{name:'Woodlands Train Checkpoint',lat:wtc.lat,lon:wtc.lon},to:{name:'Woodlands Train Checkpoint',lat:wtc.lat,lon:wtc.lon},instruction:'Clear Singapore immigration at Woodlands Train Checkpoint'}
+    );
+    out.push({provider:'ktm-cross-border',kind:'ktm',label:intent.has_car?'Drive + KTM + MRT':'KTM + MRT',tag:'KTM option',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),duration_text:'KTM booking time + '+routeMinutes(Number(a.duration_sec||0)+Number(b.duration_sec||0)),walk_distance_m:Number(a.walk_distance_m||0)+Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,legs:[...(a.legs||[]),...extra,...(b.legs||[])],explanation:'Uses your booked KTM service. RunSGD does not guess KTM availability, check-in or immigration waiting time.'})
+   }
+  }
+ }
+ return out
+}
+function rankJourneyRoutes(routes,intent){
+ function score(r){
+  let s=Number(r.duration_sec||0),k=r.kind||'';
+  if(intent.prefer_ktm)s+=k==='ktm'?-100000:35000;
+  if(intent.direct_drive)s+=k==='direct_drive'?-100000:25000;
+  if(intent.avoid_sg_driving)s+=k==='direct_drive'||k==='motorcycle'?80000:k==='drive_then_transit'?-30000:0;
+  if(intent.priority==='cheapest')s+=k==='border_transit'?-25000:(k==='direct_drive'||k==='motorcycle'?35000:0);
+  if(intent.priority==='easiest')s+=Number(r.transfers||0)*900+Number(r.walk_distance_m||0)*0.4+(k==='direct_drive'?-15000:0);
+  return s
+ }
+ return [...routes].sort((a,b)=>score(a)-score(b))
+}
 async function planAiJourney(btn){
- let q=$('journeyTravelPrompt')?.value.trim()||'';if(!sgRouteSelection)return txt('sgRouteStatus','Choose a destination first.');if(q.length<2)return txt('sgRouteStatus','Tell RunSGD how you want to travel.');
- setBusy(btn,true);try{let origin=await plannerGps();sgJourneyIntent=await interpretJourneyIntent(q,origin,sgRouteSelection);renderJourneyIntent(sgJourneyIntent);sgRouteTravelMode=sgJourneyIntent.has_motorcycle?'motorcycle':sgJourneyIntent.has_car&&sgRouteDestRegion==='jb'&&routeProvider().id==='jb'?'car':'transit';await planSgRoute(btn)}finally{setBusy(btn,false)}
+ let q=$('journeyTravelPrompt')?.value.trim()||'',destP=destinationProvider();
+ if(!destP)return txt('sgRouteStatus','Choose Malaysia or Singapore first.');
+ if(!sgRouteSelection||sgRouteSelection._provider!==destP.id)return txt('sgRouteStatus','Choose your destination from the suggestions first.');
+ if(q.length<2)return txt('sgRouteStatus','Tell RunSGD how you want to travel.');
+ setBusy(btn,true);txt('sgRouteBadge','Planning');$('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote').classList.remove('show');
+ try{
+  let origin=await plannerGps(),originP=routeProvider();
+  txt('sgRouteStatus','Understanding your plan…');
+  sgJourneyIntent=await interpretJourneyIntent(q,origin,sgRouteSelection);renderJourneyIntent(sgJourneyIntent);
+  txt('sgRouteStatus','Comparing transport combinations…');
+  let routes=[];
+  if(originP.id==='jb'&&destP.id==='sg')routes=await planJbToSgSmart(origin,sgRouteSelection,sgJourneyIntent);
+  else if(originP.id==='sg'&&destP.id==='jb')routes=await planSgToJbSmart(origin,sgRouteSelection,sgJourneyIntent);
+  else if(originP.id===destP.id)routes=await planLocalSmart(origin,sgRouteSelection,destP,sgJourneyIntent);
+  routes=rankJourneyRoutes(routes,sgJourneyIntent);
+  if(!routes.length)throw Error('No usable route combination was returned for this plan.');
+  sgRouteResults=routes.slice(0,4);renderSgRoutes();
+  txt('sgRouteBadge',originP.id===destP.id?'Local mix':'Cross-border mix');
+  txt('sgRouteProviderNote','RunSGD combines OneMap and Google Maps where needed. AI interprets your preference; routing APIs calculate the legs.');
+  txt('sgRouteStatus',sgRouteResults.length+' journey combination'+(sgRouteResults.length===1?'':'s')+' found. Checkpoint and immigration time stays separate.')
+ }catch(e){txt('sgRouteBadge','Unavailable');txt('sgRouteStatus',e.message||'Journey planning unavailable.')}
+ finally{setBusy(btn,false)}
 }
 function plannerGps(){
  if(live.location?.lat&&live.location?.lon)return Promise.resolve(live.location);
@@ -859,10 +1004,11 @@ function plannerGps(){
 }
 function routeMinutes(s){let m=Math.max(1,Math.round(Number(s||0)/60));return m>=60?Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m':m+' min'}
 function routeDistance(m){m=Number(m||0);return m>=1000?(m/1000).toFixed(1)+' km':Math.round(m)+' m'}
-function routeModeIcon(m){m=String(m||'').toUpperCase();return m==='IMMIGRATION'?'🛂':m==='CROSS_BORDER_BUS'?'🚌':m==='DRIVE'?'🚗':m==='TWO_WHEELER'?'🏍️':m==='WALK'?'🚶':m==='BUS'?'🚌':(m==='SUBWAY'||m==='RAIL'||m==='TRAIN'||m==='TRAM')?'🚇':'🚍'}
+function routeModeIcon(m){m=String(m||'').toUpperCase();return m==='IMMIGRATION'?'🛂':m==='PARK'?'🅿️':m==='CROSS_BORDER_BUS'?'🚌':m==='DRIVE'?'🚗':m==='TWO_WHEELER'?'🏍️':m==='WALK'?'🚶':m==='BUS'?'🚌':(m==='SUBWAY'||m==='RAIL'||m==='TRAIN'||m==='TRAM')?'🚇':'🚍'}
 function routeModeLabel(leg){
  let m=String(leg.mode||'').toUpperCase();
  if(m==='IMMIGRATION')return 'Immigration';
+ if(m==='PARK')return 'Park';
  if(m==='CROSS_BORDER_BUS')return 'Border bus';
  if(m==='DRIVE')return 'Drive';
  if(m==='TWO_WHEELER')return 'Motorcycle';
@@ -891,18 +1037,24 @@ function sgLegHtml(leg,i,last){
  return '<div class="routeLeg"><div class="routeLegIcon">'+routeModeIcon(mode)+'</div><div><div class="routeLegTitle">'+esc(title)+'</div><div class="routeLegMeta">'+esc(meta)+'</div></div></div>';
 }
 function renderSgRoutes(){
- let box=$('sgRouteOptions');
- if(!sgRouteResults.length){box.innerHTML='';return}
+ let box=$('sgRouteOptions');if(!sgRouteResults.length){box.innerHTML='';return}
  box.innerHTML=sgRouteResults.map((r,i)=>{
-  let road=['DRIVE','TWO_WHEELER'].includes(String(r.travel_mode||'').toUpperCase());
-  let fares=[];if(r.fare_sgd!=null)fares.push('S'+String.fromCharCode(36)+Number(r.fare_sgd).toFixed(2));if(r.fare_myr!=null)fares.push('RM '+Number(r.fare_myr).toFixed(2));if(!fares.length&&r.fare_value!=null&&r.fare_currency)fares.push(r.fare_currency+' '+Number(r.fare_value).toFixed(2));
-  let stats=road?('📍 '+routeDistance(r.distance_m||0)+' · traffic-aware ETA'):((r.walk_distance_m?'🚶 '+routeDistance(r.walk_distance_m):'')+(r.transfers!=null?' · '+r.transfers+' transfer'+(r.transfers===1?'':'s'):'')+(fares.length?' · '+fares.join(' + '):''));
-  let cross=r.provider==='cross-border',duration=routeMinutes(r.duration_sec)+(cross?' + border':'');
-  let tag=cross?'SG → JB':r.travel_mode==='TWO_WHEELER'?'Google · Motorcycle':r.travel_mode==='DRIVE'?'Google · Car':r.provider==='jb'?'Google · JB':'OneMap · SG';
-  let border=cross?'<div class="routeBorderMeta">🛂 Woodlands crossing · immigration/queue time varies</div>':'';
-  let mapsBtn=road?'<button class="miniBtn" onclick="openRoadRouteInGoogleMaps()">Open Google Maps</button>':'';
-  return '<div class="routeOption" id="sgRouteOption'+i+'"><div class="routeOptionTop"><div><div class="routeDuration">'+duration+'</div><div class="routeSummary">'+esc(sgRouteSummary(r)||(road?(r.travel_mode==='TWO_WHEELER'?'Motorcycle':'Drive'):'Public transport'))+'</div><div class="routeStats">'+esc(stats.replace(/^ · /,''))+'</div>'+border+'</div><span class="tag">'+esc(tag)+'</span></div><div class="routeActions"><button class="miniBtn" onclick="toggleSgRouteDetails('+i+',this)">View hops</button>'+mapsBtn+'<button class="miniBtn" onclick="selectSgRoute('+i+')">Choose route</button></div><div id="sgRouteLegs'+i+'" class="routeLegs">'+(r.legs||[]).map((l,n)=>sgLegHtml(l,n,n===(r.legs||[]).length-1)).join('')+'</div></div>';
- }).join('');
+  let road=['DRIVE','TWO_WHEELER'].includes(String(r.travel_mode||'').toUpperCase()),fares=[];
+  if(r.fare_sgd!=null)fares.push('S'+String.fromCharCode(36)+Number(r.fare_sgd).toFixed(2));
+  if(r.fare_myr!=null)fares.push('RM '+Number(r.fare_myr).toFixed(2));
+  if(!fares.length&&r.fare_value!=null&&r.fare_currency)fares.push(r.fare_currency+' '+Number(r.fare_value).toFixed(2));
+  let stats=(r.walk_distance_m?'🚶 '+routeDistance(r.walk_distance_m):'')+(r.transfers!=null?' · '+r.transfers+' transfer'+(r.transfers===1?'':'s'):'')+(fares.length?' · '+fares.join(' + '):'');
+  if(road)stats='📍 '+routeDistance(r.distance_m||0)+' · traffic-aware road ETA';
+  let duration=r.duration_text||routeMinutes(r.duration_sec)+(r.border_variable?' + checkpoint':'');
+  let tag=r.tag||r.label||(r.provider==='jb'?'Google · Malaysia':r.provider==='sg'?'OneMap · Singapore':'Mixed journey');
+  let border=r.border_variable?'<div class="routeBorderMeta">🛂 Checkpoint / immigration time is variable and not included in the ETA.</div>':'';
+  let maps=road?'<button class="miniBtn" onclick="openRoadRouteInGoogleMaps('+i+')">Open Google Maps</button>':'';
+  return '<div class="routeOption '+(i===0?'bestMatch':'')+'" id="sgRouteOption'+i+'">'+
+    (i===0?'<div class="routeOptionLabel">✨ Best match</div>':'')+
+    '<div class="routeOptionTop"><div><div class="routeDuration">'+esc(duration)+'</div><div class="routeSummary">'+esc(sgRouteSummary(r)||r.label||'Journey')+'</div><div class="routeStats">'+esc(stats.replace(/^ · /,''))+'</div>'+
+    (r.explanation?'<div class="routeOptionExplain">'+esc(r.explanation)+'</div>':'')+border+
+    '</div><span class="tag">'+esc(tag)+'</span></div><div class="routeActions"><button class="miniBtn" onclick="toggleSgRouteDetails('+i+',this)">View hops</button>'+maps+'<button class="miniBtn" onclick="selectSgRoute('+i+')">Choose route</button></div><div id="sgRouteLegs'+i+'" class="routeLegs">'+(r.legs||[]).map((l,n)=>sgLegHtml(l,n,n===(r.legs||[]).length-1)).join('')+'</div></div>'
+ }).join('')
 }
 function toggleSgRouteDetails(i,btn){
  let el=$('sgRouteLegs'+i);if(!el)return;let open=el.classList.toggle('show');if(btn)btn.textContent=open?'Hide hops':'View hops';
