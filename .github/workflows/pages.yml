@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -23,70 +23,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Apply RunSGD app patches
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          index = Path('index.html')
-          text = index.read_text()
-
-          old = "function classify(lat,lon){let a=Math.hypot(lat-SG.lat,lon-SG.lon),b=Math.hypot(lat-JB.lat,lon-JB.lon);return b<a?{name:'Johor area',lat,lon,method:17}:{name:'Singapore area',lat,lon,method:11}}"
-          new = "function classify(lat,lon){\n const inSG=lon>=103.55&&lon<=104.10&&lat>=1.15&&((lon<103.70&&lat<=1.365)||(lon>=103.70&&lat<=1.462));\n if(!inSG)return {name:'Johor area',area:'Johor',country:'MY',lat,lon,method:17};\n const towns=[['Woodlands',1.4382,103.7890],['Sembawang',1.4491,103.8185],['Yishun',1.4304,103.8354],['Choa Chu Kang',1.3840,103.7470],['Bukit Panjang',1.3786,103.7626],['Bukit Batok',1.3496,103.7499],['Jurong West',1.3404,103.7090],['Jurong East',1.3329,103.7436],['Clementi',1.3151,103.7650],['Queenstown',1.2942,103.7861],['Bukit Merah',1.2819,103.8239],['Bishan',1.3508,103.8485],['Ang Mo Kio',1.3691,103.8454],['Toa Payoh',1.3343,103.8563],['Kallang',1.3115,103.8714],['Geylang',1.3201,103.8918],['Serangoon',1.3496,103.8737],['Hougang',1.3612,103.8863],['Sengkang',1.3917,103.8950],['Punggol',1.4051,103.9023],['Bedok',1.3236,103.9273],['Tampines',1.3526,103.9446],['Pasir Ris',1.3730,103.9493],['Marine Parade',1.3020,103.9072],['Downtown',1.2838,103.8591]];\n let town=towns[0],best=Infinity;\n for(const t of towns){const d=Math.hypot(lat-t[1],lon-t[2]);if(d<best){best=d;town=t}}\n return {name:town[0]+', SG',area:town[0],country:'SG',lat,lon,method:11};\n}"
-          if old in text:
-              text = text.replace(old, new)
-
-          marker = " if(!inSG)return {name:'Johor area',area:'Johor',country:'MY',lat,lon,method:17};\n const towns="
-          replacement = " if(!inSG)return {name:'Johor area',area:'Johor',country:'MY',lat,lon,method:17};\n if(Math.hypot(lat-1.4459,lon-103.7686)<0.0038)return {name:'Woodlands Checkpoint, SG',area:'Woodlands Checkpoint',country:'SG',lat,lon,method:11};\n const towns="
-          if marker in text and "Woodlands Checkpoint, SG" not in text:
-              text = text.replace(marker, replacement)
-
-          text = text.replace(
-              "if(live.location?.name==='Singapore area')q='?lat='+encodeURIComponent(live.location.lat)+'&lon='+encodeURIComponent(live.location.lon);",
-              "if(live.location?.country==='SG'||live.location?.name==='Singapore area'||String(live.location?.name||'').endsWith(', SG'))q='?lat='+encodeURIComponent(live.location.lat)+'&lon='+encodeURIComponent(live.location.lon);"
-          )
-
-          text = text.replace(
-              "live.location?.name==='Johor area'?'JB → SG':live.location?.name==='Singapore area'?'SG → JB':'Unknown'",
-              "live.location?.country==='MY'?'JB → SG':live.location?.country==='SG'?'SG → JB':'Unknown'"
-          )
-
-          old_empty = "}else if(!stops.length){\n   txt('busStatus','No stop found');box.innerHTML='<div class=\"sub\">No nearby bus stop data is available right now.</div>';"
-          checkpoint_empty = "}else if(!stops.length&&live.location?.area==='Woodlands Checkpoint'){\n   txt('busStatus','Checkpoint stops');\n   box.innerHTML='<div class=\"transitStop\"><b>🛂 Woodlands Checkpoint · Towards Johor</b><div class=\"busMeta\">Stop 46101 · Cross-border boarding after Singapore immigration</div><div class=\"busTimes\">160 · 170 · 170X · 950</div></div><div class=\"transitStop\"><b>🛂 Woodlands Checkpoint · Towards Singapore</b><div class=\"busMeta\">Stop 46109 · Cross-border boarding after Singapore immigration</div><div class=\"busTimes\">160 · 170 · 170X · 950</div></div><div class=\"sub\" style=\"margin-top:8px\">Live predictions are shown automatically when returned by LTA DataMall.</div>';\n }else if(!stops.length){\n   txt('busStatus','No stop found');box.innerHTML='<div class=\"sub\">No nearby bus stop data is available right now.</div>';"
-          if old_empty in text:
-              text = text.replace(old_empty, checkpoint_empty)
-
-          old_johor = " if(!inSG)return {name:'Johor area',area:'Johor',country:'MY',lat,lon,method:17};"
-          new_johor = " if(!inSG){\n  if(Math.hypot(lat-1.4637,lon-103.7648)<0.0040)return {name:'JB CIQ, MY',area:'JB CIQ',country:'MY',lat,lon,method:17};\n  const johorTowns=[['JB City Centre',1.4655,103.7578],['Bukit Chagar',1.4677,103.7647],['Larkin',1.4950,103.7500],['Danga Bay',1.4756,103.7252],['Taman Sentosa',1.4867,103.7695],['Tampoi',1.4997,103.7050],['Kempas',1.5385,103.7147],['Skudai',1.5372,103.6578],['Bukit Indah',1.4828,103.6556],['Iskandar Puteri',1.4200,103.6300],['Gelang Patah',1.4494,103.5988],['Forest City',1.3366,103.5901],['Permas Jaya',1.4971,103.8169],['Taman Molek',1.5290,103.7910],['Tebrau',1.5490,103.7950],['Mount Austin',1.5617,103.7785],['Ulu Tiram',1.6006,103.8165],['Masai',1.4907,103.8835],['Pasir Gudang',1.4620,103.9020],['Senai',1.6006,103.6419],['Kulai',1.6561,103.6032]];\n  let town=johorTowns[0],best=Infinity;\n  for(const t of johorTowns){const d=Math.hypot(lat-t[1],lon-t[2]);if(d<best){best=d;town=t}}\n  return {name:town[0]+', MY',area:town[0],country:'MY',lat,lon,method:17};\n }"
-          if old_johor in text:
-              text = text.replace(old_johor, new_johor, 1)
-
-          text = text.replace(
-              "}else if(live.location.name==='Johor area'){\n   txt('busStatus','Johor detected');\n   box.innerHTML='<div class=\"sub\">You are currently in the Johor area. Singapore nearby-bus arrivals will switch on automatically after RunSGD detects you in Singapore.</div>';",
-              "}else if(live.location?.country==='MY'){\n   txt('busStatus','Johor detected');\n   box.innerHTML='<div class=\"sub\">You are currently around '+esc(live.location.name||'Johor')+'. Singapore LTA nearby-bus arrivals will switch on automatically after RunSGD detects you in Singapore.</div>';"
-          )
-
-          text = text.replace('v2.1.7', 'v2.2.0')
-          text = text.replace('v2.1.8', 'v2.2.0')
-          text = text.replace('v2.1.9', 'v2.2.0')
-          index.write_text(text)
-
-          sw = Path('sw.js')
-          sw_text = sw.read_text().replace('runsgd-shell-v217', 'runsgd-shell-v220').replace('runsgd-shell-v218', 'runsgd-shell-v220').replace('runsgd-shell-v219', 'runsgd-shell-v220').replace('runsgd-shell-v216', 'runsgd-shell-v220')
-          sw.write_text(sw_text)
-          PY
-      - name: Persist app fix
-        shell: bash
-        run: |
-          if git diff --quiet; then
-            echo "RunSGD patches already present."
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add index.html sw.js
-            git commit -m "RunSGD v2.2.0: publish expanded knowledge and AI update"
-            git push
-          fi
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload site
