@@ -406,6 +406,22 @@ const LTA_TRANSPORT_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/l
 const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-ai';
 const isGooglePopupReturn=!!sessionStorage.getItem('runsgdGooglePopup')&&new URLSearchParams(location.search).get('auth')==='google';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+function analyticsVisitorId(){
+  let id=localStorage.getItem('runsgdVisitorId');
+  if(!id){
+    id=(crypto.randomUUID?crypto.randomUUID():('00000000-0000-4000-8000-'+Math.random().toString(16).slice(2).padEnd(12,'0').slice(0,12)));
+    localStorage.setItem('runsgdVisitorId',id);
+  }
+  return id
+}
+async function trackAppVisit(){
+  try{
+    await sb.from('app_page_views').insert({
+      visitor_id:analyticsVisitorId(),
+      path:(location.pathname||'/').slice(0,200)
+    })
+  }catch{}
+}
 let communityUser=null,communityRooms=[],activeRoom=null,chatChannel=null,communityRole='member',communityProfile=null;
 async function submitBetaFeedback(btn){
   let msg=$('betaFeedbackMessage')?.value.trim(),category=$('betaFeedbackCategory')?.value||'feedback';
@@ -959,7 +975,7 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){if(isGooglePopupReturn){await initCommunity();return}greeting();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();await initCommunity();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
+async function init(){if(isGooglePopupReturn){await initCommunity();return}trackAppVisit();greeting();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','community','tools','more'].includes(hash)?hash:['home','explore','community','tools','more'].includes(saved)?saved:'home';showPage(page);updateBrief();await initCommunity();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
 window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','community','tools','more'].includes(n))showPage(n)});init();
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
