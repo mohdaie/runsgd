@@ -677,6 +677,9 @@ function renderPublicTransport(j){
  }else if(!stops.length&&live.location?.area==='Woodlands Checkpoint'){
    txt('busStatus','Checkpoint stops');
    box.innerHTML='<div class="transitStop"><b>🛂 Woodlands Checkpoint · Towards Johor</b><div class="busMeta">Stop 46101 · Cross-border boarding after Singapore immigration</div><div class="busTimes">160 · 170 · 170X · 950</div></div><div class="transitStop"><b>🛂 Woodlands Checkpoint · Towards Singapore</b><div class="busMeta">Stop 46109 · Cross-border boarding after Singapore immigration</div><div class="busTimes">160 · 170 · 170X · 950</div></div><div class="sub" style="margin-top:8px">Live predictions are shown automatically when returned by LTA DataMall.</div>';
+ }else if(!stops.length&&live.location?.area==='Woodlands Checkpoint'){
+   txt('busStatus','Checkpoint stops');
+   box.innerHTML='<div class="transitStop"><b>🛂 Woodlands Checkpoint · Towards Johor</b><div class="busMeta">Stop 46101 · Cross-border boarding after Singapore immigration</div><div class="busTimes">160 · 170 · 170X · 950</div></div><div class="transitStop"><b>🛂 Woodlands Checkpoint · Towards Singapore</b><div class="busMeta">Stop 46109 · Cross-border boarding after Singapore immigration</div><div class="busTimes">160 · 170 · 170X · 950</div></div><div class="sub" style="margin-top:8px">Live predictions are shown automatically when returned by LTA DataMall.</div>';
  }else if(!stops.length){
    txt('busStatus','No stop found');box.innerHTML='<div class="sub">No nearby bus stop data is available right now.</div>';
  }else{
