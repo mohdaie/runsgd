@@ -147,14 +147,14 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 /* v2.1 public transport + journey intent */
 .journeyChoices{display:flex;gap:7px;overflow:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:none}.journeyChoices::-webkit-scrollbar{display:none}.journeyChoice{flex:0 0 auto;border:1px solid #e4e9f3;background:#fff;color:#56647d;border-radius:99px;padding:9px 12px;font-size:12px;font-weight:800}.journeyChoice.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--blue),var(--violet))}.journeyCustom{width:100%;margin-top:9px;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px 13px;color:#17213b}.transitPanel{padding:12px 13px;border-radius:17px;background:linear-gradient(120deg,#f2f8ff,#f8f4ff);margin-top:9px}.transitHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.transitState{font-size:11px;font-weight:850;color:#53627c}.transitStop{padding-top:9px;margin-top:9px;border-top:1px solid #e6ebf4}.transitStop:first-child{border-top:0;margin-top:4px}.busArrivalRow{display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:start;padding:6px 0}.busNo{display:inline-grid;place-items:center;background:#fff;border:1px solid #e4e9f3;border-radius:10px;padding:5px 7px;font-weight:900;font-size:12px}.busTimes{font-weight:800;font-size:13px;color:#263550}.busMeta{font-size:10px;color:#7e899e;margin-top:2px}.transitRefresh{width:100%;margin-top:10px}
 
-/* v2.2.0 journey dropdown */
+/* v2.2.1 journey dropdown */
 .journeySelectWrap{margin-top:12px}.journeySelectLabel{display:block;font-size:11px;font-weight:850;color:#6a7690;margin:0 0 6px 2px}.journeySelect{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:15px;padding:12px 13px;color:#17213b;font-weight:800}.journeyCustom{display:none}.journeyCustom.show{display:block}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.2.0</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.2.1</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -240,7 +240,11 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <article class="card homeWidget" data-widget="prayer">
   <div class="head"><div class="title">🕌 Prayer</div><span id="prayerLoc" class="tag">Location</span></div>
-  <div class="sub">Next prayer</div><div id="nextPrayer" class="big">—</div><div id="prayerTime" class="sub">Loading…</div>
+  <div class="grid">
+    <div class="soft"><div class="sub">Current / previous prayer</div><div id="currentPrayer" class="title">—</div><div id="currentPrayerTime" class="sub">Loading…</div></div>
+    <div class="soft"><div class="sub">Next prayer</div><div id="nextPrayer" class="title">—</div><div id="prayerTime" class="sub">Loading…</div></div>
+  </div>
+  <div id="fridayPrayerNote" class="actionline" hidden></div>
   <div id="nearestPrayer" class="nearbyBox"><div class="sub">📍 Enable location to find the nearest mosque or surau.</div></div>
   <button id="prayerLocateBtn" class="btn refresh" onclick="requestLocation(this)">📍 Update my location & nearest prayer place</button>
 </article>
@@ -340,7 +344,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.2.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.2.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -364,7 +368,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.2.0</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.2.1</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -780,14 +784,53 @@ async function loadAir(){
  updateBrief()
 }
 async function loadPrayer(){
- let p=live.location||SG,d=new Date(),date=`${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
+ let p=live.location||SG,d=new Date(),fmtDate=x=>`${String(x.getDate()).padStart(2,'0')}-${String(x.getMonth()+1).padStart(2,'0')}-${x.getFullYear()}`,
+ names=[['Fajr','Subuh'],['Dhuhr','Zohor'],['Asr','Asar'],['Maghrib','Maghrib'],['Isha','Isyak']],
+ parse=(t,base,isFriday)=>names.map(([key,label])=>{let raw=String(t[key]).match(/\d{1,2}:\d{2}/)?.[0];if(!raw)return null;let [h,m]=raw.split(':').map(Number),x=new Date(base);x.setHours(h,m,0,0);return{key,label:key==='Dhuhr'&&isFriday?'Jumaat / Zohor':label,time:raw,date:x}}).filter(Boolean),
+ span=m=>m<60?`${m} min`:`${Math.floor(m/60)}h ${m%60}m`;
  try{
-   let t=(await get(`https://api.aladhan.com/v1/timings/${date}?latitude=${p.lat}&longitude=${p.lon}&method=${p.method}`)).data.timings,
-   names=[['Fajr','Subuh'],['Dhuhr','Zohor'],['Asr','Asar'],['Maghrib','Maghrib'],['Isha','Isyak']],now=new Date(),n=null;
-   for(let [a,b] of names){let raw=String(t[a]).match(/\d{1,2}:\d{2}/)?.[0];if(!raw)continue;let [h,m]=raw.split(':').map(Number),x=new Date();x.setHours(h,m,0,0);if(x>now){n={label:b,time:raw,mins:Math.round((x-now)/60000)};break}}
-   if(!n)n={label:'Subuh',time:String(t.Fajr).slice(0,5),mins:null};
-   live.prayer=n;txt('prayerLoc',p.name);txt('nextPrayer',n.label);txt('prayerTime',n.mins==null?'Tomorrow · '+n.time:n.time+' · in '+n.mins+' min')
- }catch{txt('prayerTime','Prayer service unavailable.')}
+   let now=new Date(),isFriday=now.getDay()===5,
+   t=(await get(`https://api.aladhan.com/v1/timings/${fmtDate(d)}?latitude=${p.lat}&longitude=${p.lon}&method=${p.method}`)).data.timings,
+   prayers=parse(t,d,isFriday),current=null,next=null;
+   for(let x of prayers){if(x.date<=now)current=x;else if(!next){next=x;break}}
+   if(!current){
+     let yd=new Date(d);yd.setDate(yd.getDate()-1);
+     let yt=(await get(`https://api.aladhan.com/v1/timings/${fmtDate(yd)}?latitude=${p.lat}&longitude=${p.lon}&method=${p.method}`)).data.timings,
+     prev=parse(yt,yd,yd.getDay()===5);current=prev[prev.length-1];if(current)current.day='Yesterday'
+   }
+   if(!next){
+     let td=new Date(d);td.setDate(td.getDate()+1);
+     let tt=(await get(`https://api.aladhan.com/v1/timings/${fmtDate(td)}?latitude=${p.lat}&longitude=${p.lon}&method=${p.method}`)).data.timings,
+     upcoming=parse(tt,td,td.getDay()===5);next=upcoming[0];if(next)next.day='Tomorrow'
+   }
+   if(!current||!next)throw Error('Incomplete prayer timings');
+   let currentMinsAgo=Math.max(0,Math.floor((now-current.date)/60000)),
+   nextMins=Math.max(0,Math.ceil((next.date-now)/60000)),
+   fridayZohor=isFriday?prayers.find(x=>x.key==='Dhuhr'):null,
+   fridayMinsFromStart=fridayZohor?Math.round((now-fridayZohor.date)/60000):null;
+   live.prayer={
+     label:next.label,time:next.time,mins:nextMins,nextDay:next.day||'Today',
+     currentLabel:current.label,currentTime:current.time,currentMinsAgo,currentDay:current.day||'Today',
+     friday:isFriday,fridayZohorTime:fridayZohor?.time||null,fridayMinsFromStart
+   };
+   txt('prayerLoc',p.name);
+   txt('currentPrayer',current.label);
+   txt('currentPrayerTime',`${current.day==='Yesterday'?'Yesterday · ':''}${current.time} · started ${span(currentMinsAgo)} ago`);
+   txt('nextPrayer',next.label);
+   txt('prayerTime',`${next.day==='Tomorrow'?'Tomorrow · ':''}${next.time} · in ${span(nextMins)}`);
+   let note=$('fridayPrayerNote');
+   if(note){
+     note.hidden=!isFriday;
+     if(isFriday&&fridayZohor){
+       let ref=fridayMinsFromStart>=0?`Zohor start was ${span(fridayMinsFromStart)} ago at ${fridayZohor.time}.`:`Zohor starts in ${span(Math.abs(fridayMinsFromStart))} at ${fridayZohor.time}.`;
+       note.textContent=`🕌 Friday · ${ref} Jumu’ah congregation / khutbah times can differ by mosque, so check the mosque schedule if you need to know whether its session has passed.`
+     }
+   }
+ }catch{
+   txt('currentPrayerTime','Prayer service unavailable.');
+   txt('prayerTime','Prayer service unavailable.');
+   let note=$('fridayPrayerNote');if(note)note.hidden=true
+ }
  updateBrief()
 }
 function hav(a,b,c,d){let R=6371,r=x=>x*Math.PI/180,da=r(c-a),db=r(d-b),h=Math.sin(da/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(db/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
@@ -949,7 +992,7 @@ function aiContext(){
  if(enabled.includes('currency')&&live.rate)c.currency={sgd_myr:Number(live.rate.toFixed(4))};
  if(enabled.includes('weather'))c.weather={SG:live.weather.SG||null,JB:live.weather.JB||null};
  if(enabled.includes('air')&&live.air)c.air_quality=live.air;
- if(enabled.includes('prayer')&&live.prayer)c.prayer={label:live.prayer.label,time:live.prayer.time,mins:live.prayer.mins,nearest:live.nearby?.[0]?.name||null};
+ if(enabled.includes('prayer')&&live.prayer)c.prayer={current:{label:live.prayer.currentLabel,time:live.prayer.currentTime,mins_since_start:live.prayer.currentMinsAgo,day:live.prayer.currentDay},next:{label:live.prayer.label,time:live.prayer.time,mins_until:live.prayer.mins,day:live.prayer.nextDay},friday:live.prayer.friday,friday_zohor_reference:live.prayer.fridayZohorTime,nearest:live.nearby?.[0]?.name||null};
  if(enabled.includes('holidays'))c.holidays=(live.holidays||[]).slice(0,3).map(x=>({name:x.name||x.localName,date:x.date}));
  return c
 }
@@ -971,7 +1014,7 @@ async function askRunSgd(btn=null){
  try{let j=await callRunSgdAi('ask',q);txt('aiAnswerMain',j.answer||'');txt('aiAnswerReason',j.reason||'');renderAiSources('aiSources',j.sources||[]);$('aiAnswer')?.classList.add('show');txt('aiAskStatus','Gemini 3.5 Flash-Lite · app data only · no web search')}catch(e){txt('aiAskStatus',e.message||'AI unavailable.')}finally{setBusy(btn||$('aiAskBtn'),false)}
 }
 
-function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);if(live.prayer)c.push(['🕌 Prayer',`${live.prayer.label} ${live.prayer.mins==null?'is tomorrow at '+live.prayer.time:'is in about '+live.prayer.mins+' minutes'}.${live.nearby[0]?' Nearest mapped place: '+live.nearby[0].name+'.':''}`]);if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);if(live.rate)c.push(['💱 SGD/MYR',`Reference rate is ${live.rate.toFixed(4)} MYR per SGD.`]);if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);return c}
+function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);if(live.prayer)c.push(['🕌 Prayer',`Current / previous: ${live.prayer.currentLabel} started at ${live.prayer.currentTime} (${live.prayer.currentMinsAgo} min ago). Next: ${live.prayer.label} at ${live.prayer.time} in about ${live.prayer.mins} min.${live.prayer.friday&&live.prayer.fridayZohorTime?' Friday Zohor reference: '+live.prayer.fridayZohorTime+'; mosque Jumu’ah session time may differ.':''}${live.nearby[0]?' Nearest mapped place: '+live.nearby[0].name+'.':''}`]);if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);if(live.rate)c.push(['💱 SGD/MYR',`Reference rate is ${live.rate.toFixed(4)} MYR per SGD.`]);if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);return c}
 async function loadDiscover(type){if(type!=='news'&&type!=='events'&&type!=='shopping')return;let feed=$('exploreFeed');feed.innerHTML='<div class="feedcard"><h3>Loading…</h3><div class="sub">Checking current items.</div></div>';let qs={news:'Singapore Johor Malaysia causeway immigration transport',events:'Singapore Johor event festival concert exhibition',shopping:'Singapore Johor shopping sale promotion mall'};try{let q=qs[type],rss='https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=en-SG&gl=SG&ceid=SG:en',j=await get('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rss),9000),items=(j.items||[]).slice(0,7).map(x=>({title:x.title,url:x.link,source:x.author||'Google News',date:x.pubDate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
  try{let q=qs[type],j=await get('https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent(q)+'&mode=artlist&maxrecords=8&format=json&sort=datedesc',9000),items=(j.articles||[]).slice(0,7).map(x=>({title:x.title,url:x.url,source:x.domain,date:x.seendate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
  let cached=old('feed-'+type);if(cached?.length){live.feeds[type]=cached;renderFeed(type,cached,'Saved');return}renderFeed(type,[], 'Search')}
