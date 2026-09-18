@@ -21,6 +21,7 @@
 .metricLabel{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.35px;color:#67758e;margin-top:8px}
 .metricSub{font-size:10px;color:#929caf;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .trendHead{font-size:11px;font-weight:800;color:#65718a;margin-top:15px}
+.billingGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.billingMetric{padding:12px 10px;border:1px solid #edf0f6;border-radius:16px;background:#fff}.billingMetric strong{display:block;font-size:22px;line-height:1;color:#1f3155}.billingMetric span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.3px;color:#7f8aa0;margin-top:7px;font-weight:900}.billingPanel{margin-top:12px;padding:13px 14px;border-radius:16px;background:linear-gradient(120deg,#f2f8ff,#f7f3ff);border:1px solid #e7ecf7}.billingTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.billingCost{font-size:22px;font-weight:950;color:#28395d}.billingNote{font-size:10px;color:#7b879e;margin-top:5px;line-height:1.45}@media(max-width:520px){.billingGrid{grid-template-columns:1fr 1fr}}
 .sparkBars{height:78px;display:grid;grid-template-columns:repeat(7,1fr);gap:7px;align-items:end;margin-top:8px}
 .sparkDay{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px}
 .sparkBar{width:100%;max-width:34px;min-height:7px;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,#6d8df5,#8b67ef 58%,#e77da8);box-shadow:0 6px 14px #766de52b;transition:height .25s ease}
@@ -56,6 +57,22 @@
  </div>
  <div class="trendHead"><span>7-day traffic</span><span id="monitorUpdated">Loading…</span></div>
  <div id="trafficBars" class="sparkBars" aria-label="7-day traffic chart"></div>
+</article>
+
+<article class="card" id="googleBillingCard">
+ <div class="head"><div class="title">💳 Google Maps usage & billing</div><span id="googleBillingState" class="pill">Usage tracking</span></div>
+ <p class="sub">RunSGD counts Google Places and Routes calls internally. Actual Google Cloud cost will appear here after Cloud Billing export is connected to BigQuery.</p>
+ <div class="billingGrid">
+  <div class="billingMetric"><strong id="gmTodayTotal">—</strong><span>Calls today</span></div>
+  <div class="billingMetric"><strong id="gmMonthTotal">—</strong><span>Calls this month</span></div>
+  <div class="billingMetric"><strong id="gmMonthPlaces">—</strong><span>Places searches</span></div>
+  <div class="billingMetric"><strong id="gmMonthRoutes">—</strong><span>Route requests</span></div>
+ </div>
+ <div class="billingPanel">
+  <div class="billingTop"><div><div class="sub">Google Cloud billed cost</div><div id="gmActualCost" class="billingCost">Not connected</div></div><span id="gmBillingSource" class="pill">BigQuery</span></div>
+  <div id="gmBillingNote" class="billingNote">Waiting for Cloud Billing export setup. Internal call counting is already active.</div>
+ </div>
+ <div class="healthFooter"><div id="gmUsageUpdated" class="status">Loading usage…</div><button id="gmUsageBtn" class="btn soft healthRefresh" onclick="loadGoogleMapsUsage(this)">↻ Refresh usage</button></div>
 </article>
 
 <article class="card" id="apiHealthCard">
@@ -417,9 +434,32 @@ async function testApiHealth(id,btn){
     if(btn&&btn.isConnected){btn.disabled=false;btn.textContent=old}
   }
 }
+async function loadGoogleMapsUsage(btn=null){
+  let b=btn||$('gmUsageBtn');if(b){b.disabled=true;b.textContent='Refreshing…'}
+  try{
+    let j=await apiHealthRequest('','google_maps_usage');
+    $('gmTodayTotal').textContent=fmtMetric(j.today?.total);
+    $('gmMonthTotal').textContent=fmtMetric(j.month?.total);
+    $('gmMonthPlaces').textContent=fmtMetric(j.month?.places);
+    $('gmMonthRoutes').textContent=fmtMetric(j.month?.routes);
+    $('gmUsageUpdated').textContent='Updated '+sgDateTime(j.generated_at)+' · '+fmtMetric(j.month?.admin_tests)+' admin test call'+(Number(j.month?.admin_tests||0)===1?'':'s')+' excluded';
+    if(j.billing?.connected){
+      $('gmBillingState').textContent='Billing connected';$('gmBillingState').classList.add('ok');
+      $('gmActualCost').textContent=j.billing.formatted_cost||'Connected';
+      $('gmBillingNote').textContent=j.billing.note||'Google Cloud Billing export connected.';
+    }else{
+      $('gmBillingState').textContent='Usage tracking';$('gmBillingState').classList.remove('ok');
+      $('gmActualCost').textContent='Not connected';
+      $('gmBillingNote').textContent='Waiting for Cloud Billing export setup. Internal call counting is already active.';
+    }
+  }catch(e){
+    $('gmUsageUpdated').textContent='Usage unavailable · '+(e.message||'Unknown error');
+  }finally{if(b){b.disabled=false;b.textContent='↻ Refresh usage'}}
+}
+
 async function loadMonitoring(){
   renderApiHealth();
-  await Promise.all([loadDashboardMetrics(),loadSavedApiHealth()]);
+  await Promise.all([loadDashboardMetrics(),loadSavedApiHealth(),loadGoogleMapsUsage()]);
   if(monitorTimer)clearInterval(monitorTimer);
   monitorTimer=setInterval(loadDashboardMetrics,5*60*1000);
 }
