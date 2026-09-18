@@ -60,8 +60,8 @@
 </article>
 
 <article class="card" id="googleBillingCard">
- <div class="head"><div class="title">💳 Google Maps usage & billing</div><span id="googleBillingState" class="pill">Usage tracking</span></div>
- <p class="sub">RunSGD counts Google Places and Routes calls internally. Actual Google Cloud cost will appear here after Cloud Billing export is connected to BigQuery.</p>
+ <div class="head"><div class="title">📈 Google Maps query monitor</div><span id="googleBillingState" class="pill ok">Tracking</span></div>
+ <p class="sub">RunSGD counts Google Places and Routes queries internally. Free caps are tracked separately because Google bills each SKU independently.</p>
  <div class="billingGrid">
   <div class="billingMetric"><strong id="gmTodayTotal">—</strong><span>Calls today</span></div>
   <div class="billingMetric"><strong id="gmMonthTotal">—</strong><span>Calls this month</span></div>
@@ -69,8 +69,10 @@
   <div class="billingMetric"><strong id="gmMonthRoutes">—</strong><span>Route requests</span></div>
  </div>
  <div class="billingPanel">
-  <div class="billingTop"><div><div class="sub">Google Cloud billed cost</div><div id="gmActualCost" class="billingCost">Not connected</div></div><span id="gmBillingSource" class="pill">BigQuery</span></div>
-  <div id="gmBillingNote" class="billingNote">Waiting for Cloud Billing export setup. Internal call counting is already active.</div>
+  <div class="billingTop"><div><div class="sub">Free-tier threshold monitor</div><div id="gmThresholdState" class="billingCost">Checking…</div></div><span id="gmThresholdPill" class="pill ok">Safe</span></div>
+  <div id="gmPlacesThreshold" class="billingNote">Places Text Search Pro: — / 5,000 free monthly</div>
+  <div id="gmRoutesThreshold" class="billingNote">Compute Routes Essentials: — / 10,000 free monthly</div>
+  <div class="billingNote">RunSGD warns at 70%, 85% and 95%. Admin API tests are excluded from these counters.</div>
  </div>
  <div class="healthFooter"><div id="gmUsageUpdated" class="status">Loading usage…</div><button id="gmUsageBtn" class="btn soft healthRefresh" onclick="loadGoogleMapsUsage(this)">↻ Refresh usage</button></div>
 </article>
@@ -437,21 +439,26 @@ async function testApiHealth(id,btn){
 async function loadGoogleMapsUsage(btn=null){
   let b=btn||$('gmUsageBtn');if(b){b.disabled=true;b.textContent='Refreshing…'}
   try{
-    let j=await apiHealthRequest('','google_maps_usage');
+    let j=await apiHealthRequest('','google_maps_usage'),places=Number(j.month?.places||0),routes=Number(j.month?.routes||0);
+    const placesCap=5000,routesCap=10000,pp=places/placesCap*100,rp=routes/routesCap*100,maxp=Math.max(pp,rp);
     $('gmTodayTotal').textContent=fmtMetric(j.today?.total);
     $('gmMonthTotal').textContent=fmtMetric(j.month?.total);
-    $('gmMonthPlaces').textContent=fmtMetric(j.month?.places);
-    $('gmMonthRoutes').textContent=fmtMetric(j.month?.routes);
+    $('gmMonthPlaces').textContent=fmtMetric(places);
+    $('gmMonthRoutes').textContent=fmtMetric(routes);
+    $('gmPlacesThreshold').textContent='Places Text Search Pro: '+fmtMetric(places)+' / '+fmtMetric(placesCap)+' free monthly · '+Math.min(999,Math.round(pp))+'%';
+    $('gmRoutesThreshold').textContent='Compute Routes Essentials: '+fmtMetric(routes)+' / '+fmtMetric(routesCap)+' free monthly · '+Math.min(999,Math.round(rp))+'%';
+    let state='Safe',note='Well within free caps';
+    if(maxp>=95){state='Critical';note='Very near a free cap — check Google Cloud Billing now'}
+    else if(maxp>=85){state='High';note='Approaching a free cap — review Google Cloud usage soon'}
+    else if(maxp>=70){state='Watch';note='Usage has passed 70% of a monthly free cap'}
+    $('gmThresholdState').textContent=note;
+    $('gmThresholdPill').textContent=state;
+    $('gmThresholdPill').classList.toggle('ok',maxp<70);
+    $('gmThresholdPill').classList.toggle('bad',maxp>=85);
+    $('googleBillingState').textContent=maxp>=85?'Check usage':maxp>=70?'Watch usage':'Tracking';
+    $('googleBillingState').classList.toggle('ok',maxp<70);
+    $('googleBillingState').classList.toggle('bad',maxp>=85);
     $('gmUsageUpdated').textContent='Updated '+sgDateTime(j.generated_at)+' · '+fmtMetric(j.month?.admin_tests)+' admin test call'+(Number(j.month?.admin_tests||0)===1?'':'s')+' excluded';
-    if(j.billing?.connected){
-      $('gmBillingState').textContent='Billing connected';$('gmBillingState').classList.add('ok');
-      $('gmActualCost').textContent=j.billing.formatted_cost||'Connected';
-      $('gmBillingNote').textContent=j.billing.note||'Google Cloud Billing export connected.';
-    }else{
-      $('gmBillingState').textContent='Usage tracking';$('gmBillingState').classList.remove('ok');
-      $('gmActualCost').textContent='Not connected';
-      $('gmBillingNote').textContent='Waiting for Cloud Billing export setup. Internal call counting is already active.';
-    }
   }catch(e){
     $('gmUsageUpdated').textContent='Usage unavailable · '+(e.message||'Unknown error');
   }finally{if(b){b.disabled=false;b.textContent='↻ Refresh usage'}}
