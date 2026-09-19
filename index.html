@@ -200,7 +200,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.8.1 dedicated Journey experience */
+/* v2.8.2 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
@@ -216,19 +216,21 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 @media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
 
 
-/* v2.8 community — simple Threads-style feed */
-.communityV28Head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.communityV28Head .pageTitle{margin-bottom:5px}.communityBrowseBtn{border:0;background:transparent;color:#4d63b8;font-size:12px;font-weight:900;padding:8px 4px}.communitySignInStrip{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 8px;padding:13px 14px;border:1px solid #e8ebf2;background:#ffffffb8;border-radius:18px}.communitySignInStrip .sub{font-size:11px;margin-top:2px}
-.threadComposerLauncher{width:100%;display:flex;align-items:center;gap:11px;border:0;border-bottom:1px solid #e8ebf1;background:transparent;padding:15px 3px;text-align:left}.threadAvatar{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#eef2fb;display:grid;place-items:center;flex:0 0 auto}.threadAvatarPlaceholder{font-size:17px}.threadComposerText{flex:1;color:#8a93a5;font-size:14px}.threadPostMini{font-size:11px;font-weight:900;color:#526bd6;border:1px solid #dfe5f5;border-radius:999px;padding:7px 11px;background:#fff}
-.communityComposerPanel{padding:15px 3px 17px;border-bottom:1px solid #e8ebf1}.communityComposerTop,.communityPostToRow,.communityComposerActions,.communitySubHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.threadIdentity{display:flex;align-items:center;gap:10px;min-width:0}.threadMeta{font-size:10px;color:#939bab;margin-top:2px}.communityComposerPanel textarea,.communityReplyComposer textarea,.communityTopicCreator input,.communityTopicCreator textarea{width:100%;border:0;background:transparent;color:#17213b;outline:0;resize:none}.communityComposerPanel>textarea{min-height:105px;font-size:16px;padding:15px 1px}.communityPostToRow{border-top:1px solid #edf0f5;padding-top:10px}.communityPostToRow select{max-width:58%;border:0;background:#f1f4fa;color:#56637a;border-radius:999px;padding:8px 10px;font-size:11px;font-weight:850}.threadTextBtn{border:0;background:transparent;color:#5268b4;font-size:11px;font-weight:900;padding:7px 2px}.threadPrimaryBtn{border:0;background:#17213b;color:#fff;border-radius:999px;padding:9px 16px;font-size:11px;font-weight:900}.threadPrimaryBtn.small{padding:8px 12px}.communityComposerActions{margin-top:10px}.communityComposerActions .status{margin:0;flex:1}
-.threadFeed{margin-top:3px}.threadPost{padding:16px 2px 13px;border-bottom:1px solid #e8ebf1}.threadPostHeader{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:start}.threadPostMain{min-width:0}.threadNameLine{display:flex;align-items:center;gap:6px;min-width:0}.threadName{font-size:13px;font-weight:900;color:#202a42;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.threadBadge{font-size:8px;font-weight:950;text-transform:uppercase;color:#65729a;background:#eef2fb;border-radius:999px;padding:2px 5px}.threadBadge.admin{color:#9d4155;background:#fff0f2}.threadContext{font-size:10px;color:#8d96a8;margin-top:1px}.threadTopicLink{border:0;background:transparent;color:#5268b4;font:inherit;font-weight:850;padding:0}.threadMore{border:0;background:transparent;color:#8a93a5;font-size:18px;line-height:1;padding:5px}.threadContent{font-size:14px;line-height:1.5;color:#263149;white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 8px 48px}.threadActions{display:flex;align-items:center;gap:22px;margin-left:48px}.threadAction{border:0;background:transparent;color:#68748b;font-size:12px;font-weight:800;padding:4px 0;display:flex;align-items:center;gap:6px}.threadAction.loved{color:#dd496d}.threadActionIcon{font-size:17px}.threadEmpty{padding:32px 10px;text-align:center;color:#8b94a6;font-size:13px}.communityFeedScope{margin:12px 0 2px;padding:10px 12px;background:#eff4ff;border-radius:14px;color:#52617c;font-size:12px;font-weight:850}.communityFeedScope button{border:0;background:transparent;color:#5268b4;font-weight:900;float:right}
-.communityTopicsIntro{padding:10px 2px 12px}.communityTopicsIntro h3{margin:0 0 3px;font-size:20px}.communityTopicCreator{padding:15px;border:1px solid #e7eaf2;border-radius:18px;background:#ffffffc9;margin-bottom:10px}.communityTopicCreator input{font-size:16px;font-weight:850;border-bottom:1px solid #edf0f4;border-radius:0;padding:8px 0}.communityTopicCreator textarea{min-height:72px;padding:11px 0}.communityTopicCard{display:flex;justify-content:space-between;gap:12px;padding:15px 2px;border-bottom:1px solid #e8ebf1}.communityTopicCard button{border:0;background:transparent;padding:0;text-align:left;flex:1}.communityTopicTitle{font-size:14px;font-weight:900;color:#202a42}.communityTopicDesc{font-size:11px;color:#7d879b;line-height:1.45;margin-top:4px}.communityTopicCount{font-size:10px;color:#9aa2b2;white-space:nowrap}.threadRepliesTitle{font-size:12px;font-weight:950;color:#59647a;padding:17px 2px 8px}.threadReply{padding:13px 2px 12px 48px;border-bottom:1px solid #edf0f4}.threadReplyHeader{display:flex;align-items:center;justify-content:space-between;gap:8px}.threadReplyName{font-size:12px;font-weight:900}.threadReplyMeta{font-size:9px;color:#929bae}.threadReplyText{font-size:13px;line-height:1.48;white-space:pre-wrap;margin-top:5px}.threadReplyActions{display:flex;gap:18px;margin-top:7px}.communityReplyComposer{display:flex;gap:9px;align-items:flex-end;padding:14px 0}.communityReplyComposer textarea{min-height:48px;max-height:130px;border:1px solid #e3e7ef;border-radius:16px;padding:12px;background:#fff}.communitySubHead{padding:11px 0 5px}
-
+/* v2.8.2 community — Threads-inspired dark feed */
+.communityV28Head{display:block}.communityV28Head .pageTitle{margin-bottom:5px}.communityThreadsShell{margin:18px -18px -106px;padding:0 18px 122px;background:#0b0b0c;color:#f5f5f5;min-height:66vh;border-radius:24px 24px 0 0;overflow:hidden}
+.communitySignInStrip{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 -2px;padding:14px 2px;border:0;border-bottom:1px solid #242426;background:transparent;border-radius:0;color:#f3f3f3}.communitySignInStrip .sub{font-size:11px;margin-top:2px;color:#8f8f95}.communitySignInStrip .miniBtn{background:#1c1c1f;border-color:#2e2e32;color:#fff}
+.threadComposerLauncher{width:100%;display:flex;align-items:center;gap:11px;border:0;border-bottom:1px solid #242426;background:transparent;padding:12px 1px;text-align:left;color:#fff}.threadAvatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#202024;display:grid;place-items:center;flex:0 0 auto}.threadAvatarPlaceholder{font-size:16px;color:#cfcfd4}.threadComposerText{flex:1;color:#84848a;font-size:14px}.threadPostMini{font-size:11px;font-weight:900;color:#f2f2f4;border:1px solid #343439;border-radius:999px;padding:7px 12px;background:#161619}
+.communityComposerPanel{padding:0 0 13px;border-bottom:1px solid #242426;color:#f4f4f4}.communityComposerHeader{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;padding:12px 0;border-bottom:1px solid #242426}.composerCloseBtn{border:0;background:transparent;color:#fff;font-size:30px;font-weight:300;line-height:1;padding:0;text-align:left}.communityComposerTitle{text-align:center;font-size:17px;font-weight:900}.communityComposerSpacer{width:36px}.communityComposerIdentityRow{display:grid;grid-template-columns:42px 1fr;gap:11px;padding:14px 0 8px}.communityComposerIdentityMain{min-width:0}.composerNameRow{display:flex;align-items:center;gap:5px;min-width:0}.composerNameRow b{font-size:14px;white-space:nowrap}.composerChevron{color:#73737a;font-size:20px;line-height:1}.composerTopicBtn{border:0;background:transparent;color:#7e7e85;font-size:14px;padding:2px 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}.communityComposerIdentityMain textarea{width:100%;min-height:88px;border:0;background:transparent;color:#f5f5f5;outline:0;resize:none;font-size:16px;line-height:1.45;padding:8px 0}.communityComposerIdentityMain textarea::placeholder{color:#6f6f75}
+.communityTopicPicker{margin:2px 0 9px 53px;border:1px solid #2a2a2e;border-radius:16px;background:#151517;overflow:hidden}.communityTopicPick,.communityCreateFromPostBtn{width:100%;display:flex;flex-direction:column;align-items:flex-start;border:0;border-bottom:1px solid #252529;background:transparent;color:#efeff2;padding:11px 13px;text-align:left}.communityTopicPick:last-child{border-bottom:0}.communityTopicPick span{font-size:13px;font-weight:850}.communityTopicPick small{font-size:10px;color:#85858c;margin-top:2px}.communityTopicPick.active{background:#1e1e22}.communityCreateFromPostBtn{display:block;color:#7f9cff;font-size:12px;font-weight:900;border-bottom:0}.communityTopicCreator{padding:12px;border-top:1px solid #252529;background:#111113}.communityTopicCreator input,.communityTopicCreator textarea{width:100%;border:0;border-bottom:1px solid #29292d;background:transparent;color:#fff;outline:0;border-radius:0;padding:9px 0}.communityTopicCreator textarea{min-height:62px;resize:none}.communityTopicCreator input::placeholder,.communityTopicCreator textarea::placeholder{color:#66666d}
+.communityComposerActions,.communitySubHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.composerPostActions{margin-left:53px;padding-top:4px}.communityComposerActions .status{margin:0;flex:1;color:#8c8c92}.threadTextBtn{border:0;background:transparent;color:#8da7ff;font-size:11px;font-weight:900;padding:7px 2px}.threadPrimaryBtn{border:0;background:#fff;color:#101012;border-radius:999px;padding:9px 16px;font-size:11px;font-weight:950}.threadPrimaryBtn.small{padding:8px 12px}
+.threadFeed{margin-top:0}.threadPost{padding:11px 1px 10px;border-bottom:1px solid #242426;background:#0b0b0c}.threadPostHeader{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:start}.threadPostMain{min-width:0}.threadNameLine{display:flex;align-items:center;gap:6px;min-width:0}.threadName{font-size:14px;font-weight:900;color:#f4f4f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.threadBadge{font-size:8px;font-weight:950;text-transform:uppercase;color:#b7c4ff;background:#222432;border-radius:999px;padding:2px 5px}.threadBadge.admin{color:#ffc1cf;background:#321e23}.threadContext{font-size:11px;color:#77777e;margin-top:1px}.threadTopicLink{border:0;background:transparent;color:#1d9bf0;font:inherit;font-weight:850;padding:0}.threadMore{border:0;background:transparent;color:#77777e;font-size:19px;line-height:1;padding:3px 2px}.threadContent{font-size:14px;line-height:1.46;color:#f0f0f2;white-space:pre-wrap;overflow-wrap:anywhere;margin:3px 0 6px 52px}.threadActions{display:flex;align-items:center;gap:24px;margin-left:52px}.threadAction{border:0;background:transparent;color:#b1b1b6;font-size:12px;font-weight:700;padding:2px 0;display:flex;align-items:center;gap:6px}.threadAction.loved{color:#ff5a7f}.threadActionIcon{font-size:19px}.threadEmpty{padding:28px 10px;text-align:center;color:#7f7f86;font-size:13px}.communityFeedScope{margin:0 -18px;padding:10px 18px;background:#151517;color:#d7d7dc;font-size:12px;font-weight:850;border-bottom:1px solid #242426}.communityFeedScope button{border:0;background:transparent;color:#8da7ff;font-weight:900;float:right}
+.threadRepliesTitle{font-size:12px;font-weight:950;color:#929299;padding:14px 1px 7px;border-bottom:1px solid #242426}.threadReply{padding:10px 1px 9px 52px;border-bottom:1px solid #242426}.threadReplyHeader{display:flex;align-items:center;justify-content:space-between;gap:8px}.threadReplyName{font-size:12px;font-weight:900;color:#f0f0f2}.threadReplyMeta{font-size:9px;color:#73737a}.threadReplyText{font-size:13px;line-height:1.45;white-space:pre-wrap;margin-top:4px;color:#e7e7ea}.threadReplyActions{display:flex;gap:18px;margin-top:5px}.communityReplyComposer{display:flex;gap:9px;align-items:flex-end;padding:12px 0}.communityReplyComposer textarea{min-height:46px;max-height:130px;border:1px solid #2c2c31;border-radius:16px;padding:11px;background:#151517;color:#fff;resize:none}.communityReplyComposer textarea::placeholder{color:#6e6e75}.communitySubHead{padding:10px 0 3px}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.8.1</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.8.2</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -503,68 +505,86 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <section id="community" class="page communityV28">
   <div class="communityV28Head">
     <div><h2 class="pageTitle">Community</h2><p class="sub">Posts and conversations shaped by commuters.</p></div>
-    <button class="communityBrowseBtn" onclick="showCommunityTopics()">Communities</button>
   </div>
 
-  <article id="communityAuthCard" class="communitySignInStrip">
-    <div><b>Join the conversation</b><div class="sub">Read freely. Sign in to post, love and reply.</div></div>
-    <button class="miniBtn" onclick="openSignIn('community','community')">Sign in</button>
-    <div id="communityAuthStatus" class="status" style="display:none"></div>
-  </article>
+  <div class="communityThreadsShell">
+    <article id="communityAuthCard" class="communitySignInStrip">
+      <div><b>Join the conversation</b><div class="sub">Read freely. Sign in to post, love and reply.</div></div>
+      <button class="miniBtn" onclick="openSignIn('community','community')">Sign in</button>
+      <div id="communityAuthStatus" class="status" style="display:none"></div>
+    </article>
 
-  <div id="communityFeedView">
-    <div id="communityFeedScope" class="communityFeedScope" style="display:none"></div>
+    <div id="communityFeedView">
+      <div id="communityFeedScope" class="communityFeedScope" style="display:none"></div>
 
-    <button id="communityStartPost" class="threadComposerLauncher" onclick="openCommunityComposer()" style="display:none">
-      <span id="communityComposerAvatar" class="threadAvatar threadAvatarPlaceholder">👤</span>
-      <span class="threadComposerText">Start a post…</span>
-      <span class="threadPostMini">Post</span>
-    </button>
+      <button id="communityStartPost" class="threadComposerLauncher" onclick="openCommunityComposer()" style="display:none">
+        <span id="communityComposerAvatar" class="threadAvatar threadAvatarPlaceholder">👤</span>
+        <span class="threadComposerText">What's new?</span>
+        <span class="threadPostMini">Post</span>
+      </button>
 
-    <div id="communityComposerPanel" class="communityComposerPanel" style="display:none">
-      <div class="communityComposerTop">
-        <div class="threadIdentity"><span id="communityComposerAvatar2" class="threadAvatar threadAvatarPlaceholder">👤</span><div><b id="communityComposerName">Commuter</b><div class="threadMeta">New post</div></div></div>
-        <button class="threadTextBtn" onclick="closeCommunityComposer()">Cancel</button>
+      <div id="communityComposerPanel" class="communityComposerPanel" style="display:none">
+        <div class="communityComposerHeader">
+          <button class="composerCloseBtn" onclick="closeCommunityComposer()" aria-label="Close">×</button>
+          <div class="communityComposerTitle">New post</div>
+          <div class="communityComposerSpacer"></div>
+        </div>
+
+        <div class="communityComposerIdentityRow">
+          <span id="communityComposerAvatar2" class="threadAvatar threadAvatarPlaceholder">👤</span>
+          <div class="communityComposerIdentityMain">
+            <div class="composerNameRow">
+              <b id="communityComposerName">Commuter</b>
+              <span class="composerChevron">›</span>
+              <button id="communityTopicPickerBtn" class="composerTopicBtn" onclick="toggleCommunityTopicPicker()">Community or topic</button>
+            </div>
+            <textarea id="communityPostText" maxlength="1000" placeholder="What's new?"></textarea>
+          </div>
+        </div>
+
+        <select id="communityPostTopic" aria-label="Post to community" style="display:none"><option value="">General feed</option></select>
+
+        <div id="communityTopicPicker" class="communityTopicPicker" style="display:none">
+          <button class="communityTopicPick active" data-topic="" onclick="selectCommunityPostTopic('', 'General feed')">
+            <span>General feed</span><small>Post without a community</small>
+          </button>
+          <div id="communityTopicPickerList"></div>
+          <button class="communityCreateFromPostBtn" onclick="showCommunityTopicCreator(true)">+ Create a community</button>
+
+          <div id="communityTopicCreator" class="communityTopicCreator" style="display:none">
+            <input id="communityTopicTitle" maxlength="50" placeholder="Community name">
+            <textarea id="communityTopicDescription" maxlength="180" placeholder="Short description"></textarea>
+            <div class="communityComposerActions"><button class="threadTextBtn" onclick="showCommunityTopicCreator(false)">Cancel</button><button class="threadPrimaryBtn" onclick="createCommunityTopic(this)">Create</button></div>
+            <div id="communityTopicStatus" class="status"></div>
+          </div>
+        </div>
+
+        <div class="communityComposerActions composerPostActions">
+          <span id="communityPostStatus" class="status"></span>
+          <button class="threadPrimaryBtn" onclick="createCommunityPost(this)">Post</button>
+        </div>
       </div>
-      <textarea id="communityPostText" maxlength="1000" placeholder="What's happening?"></textarea>
-      <div class="communityPostToRow">
-        <select id="communityPostTopic" aria-label="Post to community"><option value="">General feed</option></select>
-        <button class="threadTextBtn" onclick="showCommunityTopicCreator(true)">+ New community</button>
+
+      <div id="communityFeed" class="threadFeed"><div class="threadEmpty">Loading community…</div></div>
+    </div>
+
+    <div id="communityThreadView" style="display:none">
+      <div class="communitySubHead"><button class="threadTextBtn" onclick="closeCommunityThread()">← Community</button></div>
+      <div id="communityThreadPost"></div>
+      <div class="threadRepliesTitle">Replies</div>
+      <div id="communityReplyList" class="threadReplyList"></div>
+      <div id="communityReplyComposer" class="communityReplyComposer" style="display:none">
+        <textarea id="communityReplyText" maxlength="700" placeholder="Reply…"></textarea>
+        <button class="threadPrimaryBtn" onclick="createCommunityReply(this)">Reply</button>
       </div>
-      <div class="communityComposerActions"><span id="communityPostStatus" class="status"></span><button class="threadPrimaryBtn" onclick="createCommunityPost(this)">Post</button></div>
+      <div id="communityReplyGuest" class="status">Sign in to reply.</div>
     </div>
-
-    <div id="communityFeed" class="threadFeed"><div class="threadEmpty">Loading community…</div></div>
-  </div>
-
-  <div id="communityTopicsView" style="display:none">
-    <div class="communitySubHead"><button class="threadTextBtn" onclick="showCommunityFeed()">← Posts</button><button id="communityCreateTopicBtn" class="threadPrimaryBtn small" onclick="showCommunityTopicCreator(true)" style="display:none">Create community</button></div>
-    <div class="communityTopicsIntro"><h3>Communities</h3><p class="sub">No fixed categories. Commuters create the spaces they need.</p></div>
-    <div id="communityTopicCreator" class="communityTopicCreator" style="display:none">
-      <input id="communityTopicTitle" maxlength="50" placeholder="Community name">
-      <textarea id="communityTopicDescription" maxlength="180" placeholder="Short description"></textarea>
-      <div class="communityComposerActions"><button class="threadTextBtn" onclick="showCommunityTopicCreator(false)">Cancel</button><button class="threadPrimaryBtn" onclick="createCommunityTopic(this)">Create</button></div>
-      <div id="communityTopicStatus" class="status"></div>
-    </div>
-    <div id="communityTopicList" class="communityTopicList"><div class="threadEmpty">No communities yet.</div></div>
-  </div>
-
-  <div id="communityThreadView" style="display:none">
-    <div class="communitySubHead"><button class="threadTextBtn" onclick="closeCommunityThread()">← Community</button></div>
-    <div id="communityThreadPost"></div>
-    <div class="threadRepliesTitle">Replies</div>
-    <div id="communityReplyList" class="threadReplyList"></div>
-    <div id="communityReplyComposer" class="communityReplyComposer" style="display:none">
-      <textarea id="communityReplyText" maxlength="700" placeholder="Reply…"></textarea>
-      <button class="threadPrimaryBtn" onclick="createCommunityReply(this)">Reply</button>
-    </div>
-    <div id="communityReplyGuest" class="status">Sign in to reply.</div>
   </div>
 </section>
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.8.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.8.2</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -617,7 +637,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.8.1</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.8.2</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -717,7 +737,7 @@ function normalizeMobileViewport(){
  if(bad&&!sessionStorage.getItem('runsgdViewportRetry')){
   sessionStorage.setItem('runsgdViewportRetry','1');
   let target=location.hash||'#'+(localStorage.getItem('runsgdPage')||'home');
-  location.replace('/?mobile=1&v=2810&t='+Date.now()+target);return false
+  location.replace('/?mobile=1&v=2820&t='+Date.now()+target);return false
  }
  if(!bad)sessionStorage.removeItem('runsgdViewportRetry');
  return true
@@ -763,7 +783,7 @@ async function initCommunity(){
       localStorage.setItem('runsgdAuthReturn',target);localStorage.setItem('runsgdAuthClient',client);
       localStorage.removeItem('runsgdGoogleAttempt');localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleReturnTarget');
       sessionStorage.setItem('runsgdPostAuth','1');
-      location.replace('/?resume='+encodeURIComponent(client)+'&v=2810&t='+Date.now()+'#'+target);
+      location.replace('/?resume='+encodeURIComponent(client)+'&v=2820&t='+Date.now()+'#'+target);
       return
     }
 
@@ -800,7 +820,7 @@ async function signInWithGoogle(btn){
  // Desktop web keeps RunSGD open and uses a popup.
  if(ctx.type!=='desktop-web'){
   try{
-   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2810';
+   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2820';
    let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
    if(error)throw error
   }catch(e){setBusy(btn,false);authStatus(e.message||'Could not open Google sign-in.')}
@@ -829,7 +849,7 @@ async function signInWithGoogle(btn){
  window.addEventListener('storage',check);window.addEventListener('focus',check);googleLoginTimer=setInterval(check,800);
  try{channel=new BroadcastChannel('runsgd-auth');channel.onmessage=e=>{if(e.data?.type==='google-signed-in'&&e.data?.attempt===attempt)check()}}catch{}
  try{
-  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2810';
+  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2820';
   const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo,skipBrowserRedirect:true}});
   if(error)throw error;if(!data?.url)throw Error('Google sign-in is unavailable.');popup.location.replace(data.url)
  }catch(e){cleanup();try{popup.close()}catch{}authStatus(e.message||'Could not open Google sign-in.')}
@@ -878,8 +898,8 @@ async function communitySignOut(){
  setJourneyPlannerState('plan');await applyMemberState();if(active==='journey')showPage('journey')
 }
 async function applyMemberState(){
- let signed=!!communityUser,auth=$('communityAuthCard'),start=$('communityStartPost'),createTopic=$('communityCreateTopicBtn'),reply=$('communityReplyComposer'),replyGuest=$('communityReplyGuest');
- if(auth)auth.style.display=signed?'none':'flex';if(start)start.style.display=signed?'flex':'none';if(createTopic)createTopic.style.display=signed?'inline-block':'none';if(reply)reply.style.display=signed&&communityThreadPostId?'flex':'none';if(replyGuest)replyGuest.style.display=signed?'none':'block';
+ let signed=!!communityUser,auth=$('communityAuthCard'),start=$('communityStartPost'),reply=$('communityReplyComposer'),replyGuest=$('communityReplyGuest');
+ if(auth)auth.style.display=signed?'none':'flex';if(start)start.style.display=signed?'flex':'none';if(reply)reply.style.display=signed&&communityThreadPostId?'flex':'none';if(replyGuest)replyGuest.style.display=signed?'none':'block';
  let adminCard=$('adminSettingsCard'),profileCard=$('profileCard'),journeyProfileCard=$('journeyProfileCard');
  if(!signed){
   communityRole='member';communityProfile=null;if(adminCard)adminCard.style.display='none';if(profileCard)profileCard.style.display='none';if(journeyProfileCard)journeyProfileCard.style.display='none';updateHeaderProfile();applyJourneyAuthState();renderCommunityComposerIdentity();return
@@ -918,22 +938,38 @@ async function loadCommunityTopics(){
  }catch(e){console.warn('RunSGD Community topics',e);let el=$('communityTopicList');if(el)el.innerHTML='<div class="threadEmpty">Could not load communities. Pull to refresh and try again.</div>'}
 }
 function renderCommunityTopicOptions(){
- let s=$('communityPostTopic');if(!s)return;let current=s.value;s.innerHTML='<option value="">General feed</option>'+communityTopics.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.title)+'</option>').join('');if([...s.options].some(o=>o.value===current))s.value=current
+ let s=$('communityPostTopic'),list=$('communityTopicPickerList');if(!s)return;let current=s.value;
+ s.innerHTML='<option value="">General feed</option>'+communityTopics.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.title)+'</option>').join('');
+ if([...s.options].some(o=>o.value===current))s.value=current;
+ if(list)list.innerHTML=communityTopics.map(t=>'<button class="communityTopicPick '+(String(current)===String(t.id)?'active':'')+'" data-topic="'+esc(t.id)+'" onclick="selectCommunityPostTopic(\''+esc(t.id)+'\', this.dataset.title)" data-title="'+esc(t.title)+'"><span>'+esc(t.title)+'</span><small>'+esc(t.description||'Community-created space')+'</small></button>').join('')
 }
 function renderCommunityTopics(){
  let el=$('communityTopicList');if(!el)return;
  if(!communityTopics.length){el.innerHTML='<div class="threadEmpty">No communities yet.<br>Be the first to create one.</div>';return}
  el.innerHTML=communityTopics.map(t=>{let count=Number(t.post_count||0),can=communityUser&&(t.created_by===communityUser.id||communityRole==='admin');return '<div class="communityTopicCard"><button onclick="openCommunityTopic(\''+esc(t.id)+'\')"><div class="communityTopicTitle">'+esc(t.title)+'</div><div class="communityTopicDesc">'+esc(t.description||'Community-created space')+'</div></button><div><div class="communityTopicCount">'+count+' post'+(count===1?'':'s')+'</div>'+(can?'<button class="threadTextBtn" onclick="deleteCommunityTopic(\''+esc(t.id)+'\')">Delete</button>':'')+'</div></div>'}).join('')
 }
-function showCommunityFeed(){communityThreadPostId=null;$('communityTopicsView').style.display='none';$('communityThreadView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed()}
-function showCommunityTopics(){$('communityFeedView').style.display='none';$('communityThreadView').style.display='none';$('communityTopicsView').style.display='block';loadCommunityTopics()}
+function showCommunityFeed(){communityThreadPostId=null;$('communityThreadView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed()}
 function showCommunityTopicCreator(on){if(!communityUser){openSignIn('community','community');return}let el=$('communityTopicCreator');if(el)el.style.display=on?'block':'none';if(on)setTimeout(()=>$('communityTopicTitle')?.focus(),50)}
-function openCommunityComposer(){if(!communityUser){openSignIn('community','community');return}$('communityComposerPanel').style.display='block';$('communityStartPost').style.display='none';loadCommunityTopics();setTimeout(()=>$('communityPostText')?.focus(),40)}
-function closeCommunityComposer(){if($('communityComposerPanel'))$('communityComposerPanel').style.display='none';if($('communityStartPost'))$('communityStartPost').style.display=communityUser?'flex':'none';txt('communityPostStatus','')}
+function toggleCommunityTopicPicker(){
+ if(!communityUser)return openSignIn('community','community');
+ let el=$('communityTopicPicker');if(!el)return;let open=el.style.display!=='none';el.style.display=open?'none':'block';if(!open)loadCommunityTopics()
+}
+function selectCommunityPostTopic(id,label='General feed'){
+ let s=$('communityPostTopic'),btn=$('communityTopicPickerBtn');if(s)s.value=id||'';if(btn)btn.textContent=label||'General feed';
+ document.querySelectorAll('.communityTopicPick').forEach(x=>x.classList.toggle('active',String(x.dataset.topic||'')===String(id||'')));
+ let picker=$('communityTopicPicker');if(picker)picker.style.display='none';showCommunityTopicCreator(false)
+}
+function openCommunityComposer(){
+ if(!communityUser){openSignIn('community','community');return}
+ $('communityComposerPanel').style.display='block';$('communityStartPost').style.display='none';loadCommunityTopics();
+ let s=$('communityPostTopic');if(s)s.value='';let b=$('communityTopicPickerBtn');if(b)b.textContent='Community or topic';let p=$('communityTopicPicker');if(p)p.style.display='none';showCommunityTopicCreator(false);
+ setTimeout(()=>$('communityPostText')?.focus(),40)
+}
+function closeCommunityComposer(){if($('communityComposerPanel'))$('communityComposerPanel').style.display='none';if($('communityStartPost'))$('communityStartPost').style.display=communityUser?'flex':'none';let p=$('communityTopicPicker');if(p)p.style.display='none';showCommunityTopicCreator(false);txt('communityPostStatus','')}
 async function createCommunityTopic(btn){
  if(!communityUser)return openSignIn('community','community');let title=$('communityTopicTitle')?.value.trim(),description=$('communityTopicDescription')?.value.trim()||'';
  if(!title||title.length<2)return txt('communityTopicStatus','Give the community a name.');setBusy(btn,true);
- try{let {data,error}=await sb.from('community_topics').insert({title,description,created_by:communityUser.id}).select('id,title').single();if(error)throw error;$('communityTopicTitle').value='';$('communityTopicDescription').value='';showCommunityTopicCreator(false);await loadCommunityTopics();if(data?.id&&$('communityPostTopic'))$('communityPostTopic').value=data.id}
+ try{let {data,error}=await sb.from('community_topics').insert({title,description,created_by:communityUser.id}).select('id,title').single();if(error)throw error;$('communityTopicTitle').value='';$('communityTopicDescription').value='';await loadCommunityTopics();if(data?.id)selectCommunityPostTopic(data.id,data.title||title)}
  catch(e){txt('communityTopicStatus',String(e.message||'Could not create community.').includes('duplicate')?'That community name already exists.':(e.message||'Could not create community.'))}finally{setBusy(btn,false)}
 }
 async function deleteCommunityTopic(id){if(!communityUser||!confirm('Delete this community? Its posts will stay in the general feed.'))return;let {error}=await sb.from('community_topics').delete().eq('id',id);if(error)return alert(error.message);if(communityTopicFilter===id){communityTopicFilter=null;showCommunityFeed()}else loadCommunityTopics()}
@@ -977,7 +1013,7 @@ function renderCommunityPost(p,thread=false){
 }
 function renderCommunityFeed(){let el=$('communityFeed');if(!el)return;let scope=$('communityFeedScope'),topic=communityTopics.find(t=>t.id===communityTopicFilter);if(topic){scope.style.display='block';scope.innerHTML=esc(topic.title)+'<button onclick="clearCommunityTopicFilter()">All posts</button>'}else scope.style.display='none';el.innerHTML=communityFeed.length?communityFeed.map(p=>renderCommunityPost(p)).join(''):'<div class="threadEmpty">'+(communityTopicFilter?'No posts here yet.':'No posts yet. Start the first conversation.')+'</div>'}
 function clearCommunityTopicFilter(){communityTopicFilter=null;loadCommunityFeed()}
-function openCommunityTopic(id){communityTopicFilter=id;$('communityTopicsView').style.display='none';$('communityThreadView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed();scrollPageTop()}
+function openCommunityTopic(id){communityTopicFilter=id;$('communityThreadView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed();scrollPageTop()}
 async function deleteCommunityPost(id){let p=communityFeed.find(x=>Number(x.id)===Number(id));if(!communityUser||!p||(p.user_id!==communityUser.id&&communityRole!=='admin'))return;if(!confirm('Delete this post?'))return;let {error}=await sb.from('community_posts').delete().eq('id',id);if(error)return alert(error.message);if(communityThreadPostId===id){communityThreadPostId=null;showCommunityFeed()}else loadCommunityFeed()}
 async function toggleCommunityPostLike(id){
  if(!communityUser)return openSignIn('community','community');
@@ -985,8 +1021,8 @@ async function toggleCommunityPostLike(id){
  let r=data?await sb.from('community_post_likes').delete().eq('post_id',id).eq('user_id',communityUser.id):await sb.from('community_post_likes').insert({post_id:id,user_id:communityUser.id});
  if(r.error)return;communityThreadPostId?loadCommunityThread(communityThreadPostId):loadCommunityFeed()
 }
-async function openCommunityThread(id){communityThreadPostId=Number(id);$('communityFeedView').style.display='none';$('communityTopicsView').style.display='none';$('communityThreadView').style.display='block';await applyMemberState();await loadCommunityThread(id);scrollPageTop()}
-function closeCommunityThread(){communityThreadPostId=null;$('communityThreadView').style.display='none';$('communityTopicsView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed();scrollPageTop()}
+async function openCommunityThread(id){communityThreadPostId=Number(id);$('communityFeedView').style.display='none';$('communityThreadView').style.display='block';await applyMemberState();await loadCommunityThread(id);scrollPageTop()}
+function closeCommunityThread(){communityThreadPostId=null;$('communityThreadView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed();scrollPageTop()}
 async function loadCommunityThread(id){
  try{
   let {data:p,error}=await sb.from('community_posts').select('id,topic_id,user_id,content,created_at,updated_at').eq('id',id).single();if(error)throw error;
