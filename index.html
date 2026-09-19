@@ -200,7 +200,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.10.5 dedicated Journey experience */
+/* v2.10.6 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
@@ -216,7 +216,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 @media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
 
 
-/* v2.10.5 community — full-height Threads-inspired dark page */
+/* v2.10.6 community — full-height Threads-inspired dark page */
 body.communityMode .hello{display:none}
 body.communityMode{background:#0b0b0c;color:#f5f5f5}
 body.communityMode .app{background:#0b0b0c}
@@ -241,7 +241,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.5</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.6</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -574,7 +574,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.5</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.6</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -627,7 +627,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.5</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.6</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -727,7 +727,7 @@ function normalizeMobileViewport(){
  if(bad&&!sessionStorage.getItem('runsgdViewportRetry')){
   sessionStorage.setItem('runsgdViewportRetry','1');
   let target=location.hash||'#'+(localStorage.getItem('runsgdPage')||'home');
-  location.replace('/?mobile=1&v=2105&t='+Date.now()+target);return false
+  location.replace('/?mobile=1&v=2106&t='+Date.now()+target);return false
  }
  if(!bad)sessionStorage.removeItem('runsgdViewportRetry');
  return true
@@ -773,7 +773,7 @@ async function initCommunity(){
       localStorage.setItem('runsgdAuthReturn',target);localStorage.setItem('runsgdAuthClient',client);
       localStorage.removeItem('runsgdGoogleAttempt');localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleReturnTarget');
       sessionStorage.setItem('runsgdPostAuth','1');
-      location.replace('/?resume='+encodeURIComponent(client)+'&v=2105&t='+Date.now()+'#'+target);
+      location.replace('/?resume='+encodeURIComponent(client)+'&v=2106&t='+Date.now()+'#'+target);
       return
     }
 
@@ -810,7 +810,7 @@ async function signInWithGoogle(btn){
  // Desktop web keeps RunSGD open and uses a popup.
  if(ctx.type!=='desktop-web'){
   try{
-   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2105';
+   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2106';
    let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
    if(error)throw error
   }catch(e){setBusy(btn,false);authStatus(e.message||'Could not open Google sign-in.')}
@@ -839,7 +839,7 @@ async function signInWithGoogle(btn){
  window.addEventListener('storage',check);window.addEventListener('focus',check);googleLoginTimer=setInterval(check,800);
  try{channel=new BroadcastChannel('runsgd-auth');channel.onmessage=e=>{if(e.data?.type==='google-signed-in'&&e.data?.attempt===attempt)check()}}catch{}
  try{
-  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2105';
+  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2106';
   const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo,skipBrowserRedirect:true}});
   if(error)throw error;if(!data?.url)throw Error('Google sign-in is unavailable.');popup.location.replace(data.url)
  }catch(e){cleanup();try{popup.close()}catch{}authStatus(e.message||'Could not open Google sign-in.')}
@@ -1469,6 +1469,27 @@ async function routeApiSafe(payload,provider){
  try{return await sgRouteApi(payload,provider)}catch{return null}
 }
 function routeCandidate(base,meta={}){return {...base,...meta}}
+function sgLocalTimeInfo(){
+ let parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+ let p=Object.fromEntries(parts.map(x=>[x.type,x.value])),hour=Number(p.hour),minute=Number(p.minute);
+ if(hour===24)hour=0;
+ let mins=hour*60+minute,display=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Singapore',hour:'numeric',minute:'2-digit',hour12:true}).format(new Date());
+ return {hour,minute,mins,display}
+}
+function journeyLateNightWindow(){
+ let t=sgLocalTimeInfo();
+ return {active:t.mins>=30&&t.mins<330,...t}
+}
+async function planLateNightDriving(origin,destination){
+ let jbp=routeProviderFor('jb');
+ let j=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},jbp);
+ return (j?.routes||[]).slice(0,2).map((x,i)=>routeCandidate(x,{
+  provider:'late-night-road',kind:'direct_drive',travel_mode:'DRIVE',
+  label:i===0?'Late-night driving route':'Driving alternative',
+  tag:'Late night · Google Drive',
+  explanation:'Regular public-transport planning is not available in RunSGD after 12:30 AM. Showing the best available road route for driving, taxi or ride-hail instead.'
+ }))
+}
 async function resolveRoutePlace(query,provider,from=null){
  try{
   let j=await sgRouteApi({action:'search',q:query,from},provider),x=(j.results||[])[0];
@@ -1642,6 +1663,27 @@ async function planAiJourney(btn){
   let origin=await plannerGps(),originP=routeProvider();
   txt('sgRouteStatus','Understanding your plan…');
   sgJourneyIntent=await interpretJourneyIntent(q,origin,sgRouteSelection);renderJourneyIntent(sgJourneyIntent);
+
+  // Overnight policy: after 12:30 AM Singapore time, stop pretending a normal
+  // MRT/bus itinerary is available. Give the user a clear explanation and a
+  // usable road route instead. Normal multimodal planning resumes after 5:30 AM.
+  let late=journeyLateNightWindow(),touchesSingapore=originP.id==='sg'||destP.id==='sg';
+  if(late.active&&touchesSingapore){
+   txt('sgRouteStatus','Late-night travel · checking the best driving route…');
+   let notice=$('journeyIntentStatus');
+   if(notice){notice.innerHTML='<strong>Late-night adjustment:</strong> It’s '+esc(late.display)+' in Singapore. Regular MRT services have ended and public transport is very limited at this hour, so RunSGD is showing the best available driving route instead.';notice.classList.add('show')}
+   let routes=await planLateNightDriving(origin,sgRouteSelection);
+   if(!routes.length)throw Error('It is after 12:30 AM and RunSGD could not find a usable late-night driving route.');
+   sgRouteResults=routes;renderSgRoutes();
+   txt('journeyCompareRoute',(origin.name||'Current location')+' → '+(sgRouteSelection.name||sgRouteSelection.address||'Destination'));
+   txt('journeyCompareIntent','🌙 Late-night route · 🚗 Driving');
+   journeyPlanResultsOpen=true;setJourneyPlannerState('plan');
+   txt('sgRouteBadge','Late night');
+   txt('sgRouteProviderNote','🌙 After 12:30 AM · regular MRT service has ended · showing Google driving routes');
+   txt('sgRouteStatus','It’s '+late.display+' in Singapore. Public transport is very limited now, so RunSGD is showing the best driving route available. Normal multimodal planning resumes in the morning.');
+   return
+  }
+
   txt('sgRouteStatus','Comparing transport combinations…');
   let routes=[];
   if(originP.id==='jb'&&destP.id==='sg')routes=await planJbToSgSmart(origin,sgRouteSelection,sgJourneyIntent);
