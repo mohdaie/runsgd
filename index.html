@@ -1475,7 +1475,10 @@ function updateJourneyMapLens(road,leg,idx,force=false){
  if(!googleRoad||!Number.isFinite(lat)||!Number.isFinite(lon)){box.classList.remove('show');return}
  box.classList.add('show');txt('sgJourneyMapArea',live.location?.name||'Current area');
  let weak=!Number.isFinite(acc)||acc>65,stepRemain=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null,zoom=journeyMapZoom(stepRemain);
- if(weak){txt('sgJourneyMapStatus','GPS weak · holding last good map position');$('sgJourneyMapStatus')?.classList.add('journeyMapHold');return}
+ if(weak){
+  if(!frame.getAttribute('src')){box.classList.remove('show');return}
+  txt('sgJourneyMapStatus','GPS weak · holding last good map position');$('sgJourneyMapStatus')?.classList.add('journeyMapHold');return
+ }
  $('sgJourneyMapStatus')?.classList.remove('journeyMapHold');
  let moved=sgJourneyMapState.lat==null?Infinity:journeyMeters(sgJourneyMapState.lat,sgJourneyMapState.lon,lat,lon),due=Date.now()-Number(sgJourneyMapState.at||0)>20000,hopChanged=sgJourneyMapState.hop!==idx,zoomChanged=sgJourneyMapState.zoom!==zoom;
  if(force||moved>160||due||hopChanged||zoomChanged||!frame.src){
@@ -1617,7 +1620,7 @@ function endSgJourney(){
  let planner=$('sgRoutePlannerCard');if(planner)planner.classList.remove('journey-active');$('sgJourneyLiveCard')?.classList.remove('show');$('sgJourneyBeacon')?.classList.remove('show');$('sgJourneyDriveFocus')?.classList.remove('show');$('sgJourneyMapLens')?.classList.remove('show');let mf=$('sgJourneyMapFrame');if(mf)mf.removeAttribute('src');updateSgRouteOrigin();txt('sgRouteStatus','Journey ended. Search for a new destination.');$('sgRouteOptions').innerHTML='';sgRouteResults=[];sgRouteSelection=null;if($('sgRouteDestination'))$('sgRouteDestination').value='';updateRouteSearchButton();
 }
 function finishSgJourney(){
- if(!sgJourney)return;stopSgJourneyTracking();setJourneyTurnState('✓ Journey complete','good');let gps=$('sgJourneyGpsHealth');if(gps){gps.className='journeyGpsChip good';gps.textContent='● GPS tracking complete'}
+ if(!sgJourney)return;stopSgJourneyTracking();setJourneyTurnState('✓ Journey complete','good');$('sgJourneyDriveFocus')?.classList.remove('show');$('sgJourneyMapLens')?.classList.remove('show');let mf=$('sgJourneyMapFrame');if(mf)mf.removeAttribute('src');let gps=$('sgJourneyGpsHealth');if(gps){gps.className='journeyGpsChip good';gps.textContent='● GPS tracking complete'}
  let card=$('sgJourneyLiveCard');if(card){card.classList.add('show','journeyArrival');txt('sgJourneyPill','Arrived');txt('sgJourneyAction','You’ve arrived 🎉');txt('sgJourneyDistance','Journey complete');txt('sgJourneyEta','Done');if($('sgJourneyProgressBar'))$('sgJourneyProgressBar').style.width='100%';txt('sgJourneyAiText','You made it. Route cleared — ready for the next trip.');$('sgJourneyNext').innerHTML='<b>Destination reached:</b> '+esc(sgJourney.destination?.name||sgJourney.destination?.address||'Destination')}
  localStorage.removeItem('runsgdSgSelectedRoute');sgJourney.status='completed';setTimeout(()=>{let planner=$('sgRoutePlannerCard');if(planner)planner.classList.remove('journey-active');updateSgRouteOrigin()},8000);
 }
