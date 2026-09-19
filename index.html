@@ -1191,7 +1191,7 @@ function roadPassMargin(coords){
 function updateJourneyGpsHealth(){
  let el=$('sgJourneyGpsHealth');if(!el)return;
  if(!sgJourney||sgJourney.status!=='active'){el.className='journeyGpsChip';el.textContent='● GPS inactive';return}
- let age=sgJourneyRuntime.gpsUpdatedAt?Math.max(0,Math.round((Date.now()-sgJourneyRuntime.gpsUpdatedAt)/1000)):null,acc=Number(sgJourneyRuntime.gpsAccuracy),cls='fair',label='GPS acquiring…';
+ let age=sgJourneyRuntime.gpsUpdatedAt?Math.max(0,Math.round((Date.now()-sgJourneyRuntime.gpsUpdatedAt)/1000)):null,acc=Number.isFinite(sgJourneyRuntime.gpsAccuracy)?sgJourneyRuntime.gpsAccuracy:null,cls='fair',label='GPS acquiring…';
  if(sgJourneyRuntime.gpsError&&age==null){cls='weak';label='GPS unavailable'}
  else if(age==null){cls='fair';label='GPS acquiring…'}
  else if(age>12){cls='stale';label='GPS stale · last update '+age+'s ago'}
