@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v2630';
+const CACHE='runsgd-shell-v2700';
 const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg','/privacy.html'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
@@ -14,8 +14,9 @@ self.addEventListener('fetch',event=>{
   // Auth callbacks must reach the app unchanged and must never be cached.
   if(url.searchParams.has('auth')||url.searchParams.has('code')||url.searchParams.has('error'))return;
   if(req.mode==='navigate'){
-    event.respondWith(fetch(req).then(res=>{
-      if(res.ok){const copy=res.clone();caches.open(CACHE).then(c=>c.put('/',copy));}
+    // Always ask the network for the latest HTML. The cache is offline fallback only.
+    event.respondWith(fetch(req,{cache:'no-store'}).then(res=>{
+      if(res.ok&&!url.searchParams.has('auth')){const copy=res.clone();caches.open(CACHE).then(c=>c.put('/',copy));}
       return res;
     }).catch(()=>caches.match('/')));
     return;
