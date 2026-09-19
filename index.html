@@ -200,7 +200,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.6.3 dedicated Journey experience */
+/* v2.7.0 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0 16px}.journeyStage{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 6px;border-radius:13px;background:#f1f3f8;color:#929aab;font-size:10px;font-weight:900}.journeyStage span{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca}.journeyStage.active span{background:#5976e7;color:#fff}
@@ -210,12 +210,17 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 #journey.journey-state-compare .journeyPrePlan,#journey.journey-state-live .journeyPrePlan{display:none}.moreSectionTitle{font-size:14px;font-weight:900;color:#52617b;margin:20px 4px 2px}.moreUtilities{display:flex;flex-direction:column;gap:0}.moreUtilities .toolbox{margin-top:12px}
 .journeyNavBtn{position:relative}.journeyNavBtn .journeyNavDot{display:none;position:absolute;right:13px;top:4px;width:7px;height:7px;border-radius:50%;background:#20b768;box-shadow:0 0 0 4px #20b76818}.journeyNavBtn.hasActive .journeyNavDot{display:block}.journeyNavBtn.active{font-weight:900}
 
+
+/* v2.7 authentication shell */
+.signinPage{padding-top:20px}.signinBack{border:0;background:transparent;color:#5a69a2;font-weight:850;padding:5px 3px 12px}.signinCard{max-width:410px;margin:0 auto;padding:24px}.signinLogo{font-size:28px;font-weight:950;letter-spacing:-1.8px;background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;color:transparent}.signinCard h2{font-size:27px;margin:8px 0 7px}.signinClientBadge{display:inline-flex;margin:10px 0 2px;padding:7px 10px;border-radius:999px;background:#eef3ff;color:#5469af;font-size:10px;font-weight:900}.signinGoogle{margin-top:15px}.signinDivider{display:flex;align-items:center;gap:10px;color:#9aa3b4;font-size:10px;font-weight:800;margin:16px 0}.signinDivider:before,.signinDivider:after{content:"";height:1px;background:#e8ebf2;flex:1}.signinFields{display:flex;flex-direction:column;gap:9px}.signinFields input{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px;font-size:14px;color:#17213b}.signinActions{display:flex;gap:8px;align-items:center;margin-top:11px}.signinActions .refresh{margin-top:0;flex:1}.signinActions .miniBtn{padding:11px 13px}.signinMode .hello,.signinMode .nav{display:none}.signinMode .headerUser{visibility:hidden}.signinMode .app{padding-bottom:42px}
+@media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
+
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.6.3</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.7.0</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -225,6 +230,28 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
   </div>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
+
+<section id="signin" class="page signinPage">
+  <button class="signinBack" onclick="closeSignIn()">← Back to RunSGD</button>
+  <article class="card signinCard">
+    <div class="signinLogo">runSGD</div>
+    <h2>Sign in to RunSGD</h2>
+    <p class="sub">One account for Journey history, personalised planning, Community and your profile.</p>
+    <div id="signinClientBadge" class="signinClientBadge">Checking this device…</div>
+    <button id="signinGoogleBtn" class="googleBtn signinGoogle" onclick="signInWithGoogle(this)"><span class="googleMark">G</span><span>Continue with Google</span></button>
+    <div class="signinDivider"><span>or</span></div>
+    <div class="signinFields">
+      <input id="signinName" maxlength="40" placeholder="Display name (for new account)">
+      <input id="signinEmail" type="email" autocomplete="email" placeholder="Email">
+      <input id="signinPassword" type="password" autocomplete="current-password" placeholder="Password (6+ characters)">
+    </div>
+    <div class="signinActions">
+      <button class="btn refresh" onclick="signInWithEmail(this)">Sign in</button>
+      <button class="miniBtn" onclick="signUpWithEmail(this)">Create account</button>
+    </div>
+    <div id="signinStatus" class="status">You’ll return to the page where you started.</div>
+  </article>
+</section>
 
 <section id="home" class="page">
 <div class="stack">
@@ -336,9 +363,8 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
     <div class="journeyGateIcon">➤</div>
     <div class="title">Sign in to use AI Journey Planner</div>
     <p class="sub">Your recent journeys can be saved to your profile so RunSGD can personalise future route suggestions.</p>
-    <button class="googleBtn" onclick="communityGoogle(this)"><span class="googleMark">G</span><span>Continue with Google</span></button>
-    <button class="emailLink" onclick="openJourneyEmailSignIn()">Use email instead</button>
-    <div id="journeyAuthStatus" class="status">Sign in once and your Journey tab follows your profile.</div>
+    <button class="googleBtn" onclick="openSignIn('journey','journey')"><span class="googleMark">G</span><span>Sign in to continue</span></button>
+    <div id="journeyAuthStatus" class="status">You’ll return here after sign-in.</div>
   </article>
 
   <div id="journeyMemberShell" style="display:none">
@@ -471,19 +497,9 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <p class="sub">Basic SG ↔ JB commuter chat. Read freely, sign in to post.</p>
 <article id="communityAuthCard" class="card">
   <div class="title">👤 Join RunSGD</div>
-  <p class="sub">Join the commuter community in one tap.</p>
-  <div class="communityAuth">
-    <button class="googleBtn" onclick="communityGoogle(this)"><span class="googleMark">G</span><span>Continue with Google</span></button>
-    <div class="status authNote">Your Google name is used automatically. You can change it later.</div>
-    <button id="emailToggle" class="emailLink" onclick="toggleEmailAuth()">Use email instead</button>
-    <div id="emailAuthForm" class="emailAuthForm" style="display:none">
-      <input id="memberName" placeholder="Display name">
-      <input id="memberEmail" type="email" placeholder="Email">
-      <input id="memberPassword" type="password" placeholder="Password (6+ characters)">
-      <div class="toolrow"><button class="miniBtn" onclick="communitySignUp(this)">Create account</button><button class="miniBtn" onclick="communitySignIn(this)">Sign in</button></div>
-    </div>
-    <div id="communityAuthStatus" class="status">You can read community messages without signing in.</div>
-  </div>
+  <p class="sub">Read freely. Sign in when you want to post or keep a commuter profile.</p>
+  <button class="googleBtn" onclick="openSignIn('community','community')"><span class="googleMark">G</span><span>Sign in to RunSGD</span></button>
+  <div id="communityAuthStatus" class="status">You’ll return to Community after sign-in.</div>
 </article>
 <article id="communityChatCard" class="card" style="margin-top:16px">
   <div class="memberBar"><div><div class="communityTitleLine"><span class="communityLiveDot"></span><div class="title">💬 Live community</div></div><div id="memberState" class="sub">Guest mode</div></div><button id="signOutBtn" class="miniBtn" onclick="communitySignOut()" style="display:none">Sign out</button></div>
@@ -509,7 +525,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.6.3</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.7.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -562,7 +578,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.6.3</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.7.0</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -640,7 +656,47 @@ async function submitBetaFeedback(btn){
   }catch(e){txt('betaFeedbackStatus','Could not send · '+(e.message||'try again later'))}
   finally{setBusy(btn,false)}
 }
-function authStatus(v){txt('communityAuthStatus',v);txt('journeyAuthStatus',v)}
+function authStatus(v){txt('communityAuthStatus',v);txt('journeyAuthStatus',v);txt('signinStatus',v)}
+let authReturnTarget='home',authEntrySource='header';
+function detectRunSgdClient(){
+ let ua=navigator.userAgent||'',mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(ua)||(navigator.maxTouchPoints>1&&Math.min(screen.width||9999,screen.height||9999)<900);
+ let standalone=window.matchMedia?.('(display-mode: standalone)')?.matches||navigator.standalone===true||document.referrer.startsWith('android-app://');
+ let type=mobile?(standalone?'mobile-app':'mobile-web'):'desktop-web';
+ let os=/Android/i.test(ua)?'Android':/iPhone|iPad|iPod/i.test(ua)?'iOS':/Windows/i.test(ua)?'Windows':/Macintosh|Mac OS/i.test(ua)?'macOS':'Web';
+ return {type,mobile,standalone,os}
+}
+function clientLabel(){
+ let c=detectRunSgdClient();
+ return c.type==='mobile-app'?'RunSGD app · '+c.os:c.type==='mobile-web'?'Mobile web · '+c.os:'Desktop web · '+c.os
+}
+function normalizeMobileViewport(){
+ let ctx=detectRunSgdClient(),vp=document.querySelector('meta[name="viewport"]');
+ if(ctx.mobile&&vp)vp.setAttribute('content','width=device-width,initial-scale=1,viewport-fit=cover');
+ // Android occasionally resumes OAuth with a desktop-width layout viewport. If the physical
+ // screen is phone-sized but the layout viewport is suspiciously wide, force a second clean load once.
+ let sw=Number(screen.width||0),iw=Number(window.innerWidth||0),bad=ctx.mobile&&sw>0&&sw<700&&iw>Math.max(720,sw*1.55);
+ if(bad&&!sessionStorage.getItem('runsgdViewportRetry')){
+  sessionStorage.setItem('runsgdViewportRetry','1');
+  let target=location.hash||'#'+(localStorage.getItem('runsgdPage')||'home');
+  location.replace('/?mobile=1&v=2700&t='+Date.now()+target);return false
+ }
+ if(!bad)sessionStorage.removeItem('runsgdViewportRetry');
+ return true
+}
+function openSignIn(returnTo=null,source='header'){
+ if(communityUser){if(returnTo)showPage(returnTo);return}
+ let active=document.querySelector('.page.active')?.id||'home';
+ authReturnTarget=['home','explore','journey','community','more'].includes(returnTo)?returnTo:(['home','explore','journey','community','more'].includes(active)?active:'home');
+ authEntrySource=source;localStorage.setItem('runsgdAuthReturn',authReturnTarget);localStorage.setItem('runsgdAuthSource',source);
+ showPage('signin');renderSignInContext()
+}
+function closeSignIn(){let t=localStorage.getItem('runsgdAuthReturn')||authReturnTarget||'home';showPage(['home','explore','journey','community','more'].includes(t)?t:'home')}
+function renderSignInContext(){txt('signinClientBadge',clientLabel());txt('signinStatus','Sign in securely · return to '+(authReturnTarget==='journey'?'AI Journey Planner':authReturnTarget.charAt(0).toUpperCase()+authReturnTarget.slice(1)))}
+function returnAfterSignIn(){
+ let t=localStorage.getItem('runsgdAuthReturn')||authReturnTarget||'home';
+ if(!['home','explore','journey','community','more'].includes(t))t='home';
+ localStorage.removeItem('runsgdAuthSource');history.replaceState(null,'',location.pathname+'#'+t);showPage(t)
+}
 async function initCommunity(){
   try{
     let {data:{session}}=await sb.auth.getSession();
@@ -660,17 +716,15 @@ async function initCommunity(){
       return;
     }
 
-    // Mobile / installed-PWA Google auth returns through the same RunSGD window.
-    // Do a clean app reload after OAuth instead of rendering inside the callback document.
-    // Android can otherwise keep the auth/custom-tab viewport scale, making RunSGD look like a tiny desktop page.
+    // Mobile/app callback: never keep rendering the OAuth callback document.
+    // Re-enter RunSGD through a fresh, cache-busted document so Android cannot retain a desktop-width auth viewport.
     if(isGoogleAuthReturn&&communityUser&&!isGooglePopupReturn){
-      let target=['journey','community','more'].includes(googleReturnTarget)?googleReturnTarget:'journey';
-      localStorage.removeItem('runsgdGoogleAttempt');
-      localStorage.removeItem('runsgdGoogleDone');
-      localStorage.removeItem('runsgdGoogleReturnTarget');
-      localStorage.removeItem('runsgdAuthReturn');
+      let target=['home','explore','journey','community','more'].includes(googleReturnTarget)?googleReturnTarget:(localStorage.getItem('runsgdAuthReturn')||'home');
+      let client=runsgdAuthParams.get('client')||localStorage.getItem('runsgdAuthClient')||detectRunSgdClient().type;
+      localStorage.setItem('runsgdAuthReturn',target);localStorage.setItem('runsgdAuthClient',client);
+      localStorage.removeItem('runsgdGoogleAttempt');localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleReturnTarget');
       sessionStorage.setItem('runsgdPostAuth','1');
-      location.replace('/#'+target);
+      location.replace('/?resume='+encodeURIComponent(client)+'&v=2700&t='+Date.now()+'#'+target);
       return
     }
 
@@ -693,72 +747,56 @@ async function initCommunity(){
       if(!communityUser&&sgJourney){stopSgJourneyTracking();sgJourney=null;localStorage.removeItem('runsgdSgSelectedRoute');setJourneyPlannerState('plan')}
       await applyMemberState();
       if(activeRoom)await loadCommunityMessages();
-      if(event==='SIGNED_IN'&&communityUser){
-        let returnTo=localStorage.getItem('runsgdAuthReturn')||localStorage.getItem('runsgdGoogleReturnTarget');
-        if(returnTo==='journey'){localStorage.removeItem('runsgdAuthReturn');localStorage.removeItem('runsgdGoogleReturnTarget');history.replaceState(null,'',location.pathname+'#journey');showPage('journey')}
-        else if(returnTo==='community'){localStorage.removeItem('runsgdAuthReturn');localStorage.removeItem('runsgdGoogleReturnTarget');history.replaceState(null,'',location.pathname+'#community');showPage('community')}
-      }
+      if(event==='SIGNED_IN'&&communityUser&&document.querySelector('.page.active')?.id==='signin')returnAfterSignIn()
     },0)})
   }catch(e){authStatus('Community connection unavailable.')}
 }
 let googleLoginWindow=null,googleLoginTimer=null;
-async function communityGoogle(btn){
-  let active=document.querySelector('.page.active')?.id,returnTo=active==='journey'?'journey':active==='community'?'community':(localStorage.getItem('runsgdAuthReturn')||'journey');
-  if(!['journey','community'].includes(returnTo))returnTo='journey';
-  localStorage.setItem('runsgdAuthReturn',returnTo);
+async function signInWithGoogle(btn){
+ let target=localStorage.getItem('runsgdAuthReturn')||authReturnTarget||'home';
+ if(!['home','explore','journey','community','more'].includes(target))target='home';
+ let ctx=detectRunSgdClient();localStorage.setItem('runsgdAuthReturn',target);localStorage.setItem('runsgdAuthClient',ctx.type);
+ setBusy(btn,true);authStatus('Opening Google sign-in…');
 
-  // On phones and installed PWAs, keep OAuth in the same app window. Opening a popup
-  // creates an Android Custom Tab that can remain visible after Google redirects back.
-  let mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent),standalone=window.matchMedia?.('(display-mode: standalone)')?.matches||navigator.standalone===true;
-  if(mobile||standalone){
-    setBusy(btn,true);authStatus('Opening Google sign-in…');
-    try{
-      let redirectTo='https://runsgd.site/?auth=google&popup=0&return='+encodeURIComponent(returnTo);
-      let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
-      if(error)throw error
-    }catch(e){setBusy(btn,false);authStatus(e.message||'Could not open Google sign-in.')}
-    return
-  }
-
-  if(googleLoginWindow){try{googleLoginWindow.focus()}catch{}return}
-  const popup=window.open('about:blank','runsgd-google-login','popup,width=480,height=720');
-  if(!popup){authStatus('Allow pop-ups for RunSGD, then tap Google sign-in again.');return}
-  googleLoginWindow=popup;
-  const attempt=crypto.randomUUID();
-  localStorage.setItem('runsgdGoogleAttempt',attempt);
-  localStorage.setItem('runsgdGoogleReturnTarget',returnTo);
-  try{popup.sessionStorage.setItem('runsgdGooglePopup',attempt)}catch{}
-  setBusy(btn,true);authStatus('Complete Google sign-in in the small window. RunSGD will resume automatically.');
-  const started=Date.now();let checking=false,channel=null;
-  const cleanup=()=>{
-    clearInterval(googleLoginTimer);googleLoginTimer=null;
-    window.removeEventListener('storage',check);window.removeEventListener('focus',check);
-    try{channel?.close()}catch{}googleLoginWindow=null;setBusy(btn,false)
-  };
-  const check=async()=>{
-    if(checking)return;checking=true;
-    try{
-      if(localStorage.getItem('runsgdGoogleDone')===attempt){
-        const {data:{session}}=await sb.auth.getSession();
-        if(session){
-          cleanup();localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleAttempt');
-          communityUser=session.user;await applyMemberState();if(activeRoom)await loadCommunityMessages();
-          let target=localStorage.getItem('runsgdGoogleReturnTarget')||returnTo;localStorage.removeItem('runsgdGoogleReturnTarget');
-          history.replaceState(null,'',location.pathname+'#'+target);showPage(target);authStatus('Signed in with Google.');
-          try{popup.close();window.focus()}catch{}return
-        }
-      }
-      if(Date.now()-started>300000){cleanup();authStatus('Sign-in timed out. You can try again.')}
-    }catch{}finally{checking=false}
-  };
-  window.addEventListener('storage',check);window.addEventListener('focus',check);googleLoginTimer=setInterval(check,800);
-  try{channel=new BroadcastChannel('runsgd-auth');channel.onmessage=e=>{if(e.data?.type==='google-signed-in'&&e.data?.attempt===attempt)check()}}catch{}
+ // Mobile app and mobile web deliberately use a full-window OAuth flow.
+ // Desktop web keeps RunSGD open and uses a popup.
+ if(ctx.type!=='desktop-web'){
   try{
-    const redirectTo='https://runsgd.site/?auth=google&popup=1&return='+encodeURIComponent(returnTo)+'&attempt='+encodeURIComponent(attempt);
-    const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo,skipBrowserRedirect:true}});
-    if(error)throw error;if(!data?.url)throw Error('Google sign-in is unavailable.');popup.location.replace(data.url)
-  }catch(e){cleanup();try{popup.close()}catch{}authStatus(e.message||'Could not open Google sign-in.')}
+   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2700';
+   let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
+   if(error)throw error
+  }catch(e){setBusy(btn,false);authStatus(e.message||'Could not open Google sign-in.')}
+  return
+ }
+
+ if(googleLoginWindow){try{googleLoginWindow.focus()}catch{}setBusy(btn,false);return}
+ const popup=window.open('about:blank','runsgd-google-login','popup,width=480,height=720');
+ if(!popup){setBusy(btn,false);authStatus('Allow pop-ups for RunSGD, then try again.');return}
+ googleLoginWindow=popup;const attempt=crypto.randomUUID();
+ localStorage.setItem('runsgdGoogleAttempt',attempt);localStorage.setItem('runsgdGoogleReturnTarget',target);
+ try{popup.sessionStorage.setItem('runsgdGooglePopup',attempt)}catch{}
+ authStatus('Complete Google sign-in in the small window. RunSGD will resume automatically.');
+ const started=Date.now();let checking=false,channel=null;
+ const cleanup=()=>{clearInterval(googleLoginTimer);googleLoginTimer=null;window.removeEventListener('storage',check);window.removeEventListener('focus',check);try{channel?.close()}catch{}googleLoginWindow=null;setBusy(btn,false)};
+ const check=async()=>{
+  if(checking)return;checking=true;
+  try{
+   if(localStorage.getItem('runsgdGoogleDone')===attempt){
+    const {data:{session}}=await sb.auth.getSession();
+    if(session){cleanup();localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleAttempt');communityUser=session.user;await applyMemberState();if(activeRoom)await loadCommunityMessages();let t=localStorage.getItem('runsgdGoogleReturnTarget')||target;localStorage.removeItem('runsgdGoogleReturnTarget');localStorage.setItem('runsgdAuthReturn',t);returnAfterSignIn();authStatus('Signed in with Google.');try{popup.close();window.focus()}catch{}return}
+   }
+   if(Date.now()-started>300000){cleanup();authStatus('Sign-in timed out. You can try again.')}
+  }catch{}finally{checking=false}
+ };
+ window.addEventListener('storage',check);window.addEventListener('focus',check);googleLoginTimer=setInterval(check,800);
+ try{channel=new BroadcastChannel('runsgd-auth');channel.onmessage=e=>{if(e.data?.type==='google-signed-in'&&e.data?.attempt===attempt)check()}}catch{}
+ try{
+  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2700';
+  const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo,skipBrowserRedirect:true}});
+  if(error)throw error;if(!data?.url)throw Error('Google sign-in is unavailable.');popup.location.replace(data.url)
+ }catch(e){cleanup();try{popup.close()}catch{}authStatus(e.message||'Could not open Google sign-in.')}
 }
+function communityGoogle(btn){return signInWithGoogle(btn)}
 function toggleEmailAuth(){
   let f=$('emailAuthForm'),b=$('emailToggle');
   if(!f||!b)return;
@@ -781,6 +819,19 @@ async function communityRoleOf(user){
   try{let {data}=await sb.from('profiles').select('role').eq('id',user.id).maybeSingle();return data?.role||'member'}catch{return 'member'}
 }
 async function communitySignUp(btn){let email=$('memberEmail')?.value.trim(),password=$('memberPassword')?.value||'',name=$('memberName')?.value.trim();if(!email||password.length<6||!name)return authStatus('Enter display name, valid email and password of at least 6 characters.');setBusy(btn,true);let {data,error}=await sb.auth.signUp({email,password,options:{data:{display_name:name}}});setBusy(btn,false);if(error)return authStatus(error.message);authStatus(data.session?'Account created and signed in.':'Account created. Check your email if confirmation is required.')}
+async function signInWithEmail(btn){
+ let email=$('signinEmail')?.value.trim(),password=$('signinPassword')?.value||'';
+ if(!email||!password)return authStatus('Enter your email and password.');
+ setBusy(btn,true);let {data,error}=await sb.auth.signInWithPassword({email,password});setBusy(btn,false);
+ if(error)return authStatus(error.message);communityUser=data.user||data.session?.user||communityUser;authStatus('Signed in successfully.');await applyMemberState();returnAfterSignIn()
+}
+async function signUpWithEmail(btn){
+ let email=$('signinEmail')?.value.trim(),password=$('signinPassword')?.value||'',name=$('signinName')?.value.trim();
+ if(!email||password.length<6||!name||name.length<2)return authStatus('Enter display name, valid email and password of at least 6 characters.');
+ setBusy(btn,true);let {data,error}=await sb.auth.signUp({email,password,options:{data:{display_name:name}}});setBusy(btn,false);
+ if(error)return authStatus(error.message);
+ if(data.session){communityUser=data.user;await applyMemberState();authStatus('Account created.');returnAfterSignIn()}else authStatus('Account created. Check your email if confirmation is required.')
+}
 async function communitySignIn(btn){let email=$('memberEmail')?.value.trim(),password=$('memberPassword')?.value||'';if(!email||!password)return authStatus('Enter your email and password.');setBusy(btn,true);let {error}=await sb.auth.signInWithPassword({email,password});setBusy(btn,false);authStatus(error?error.message:'Signed in successfully.')}
 async function communitySignOut(){
  if(!communityUser)return;let active=document.querySelector('.page.active')?.id;
@@ -823,7 +874,7 @@ async function saveProfile(btn){if(!communityUser)return;let name=$('profileName
 async function uploadProfilePhoto(input){if(!communityUser||!input.files?.[0])return;let file=input.files[0];if(file.size>2097152){txt('profileStatus','Photo must be 2 MB or smaller.');input.value='';return}txt('profileStatus','Uploading photo…');let path=communityUser.id+'/avatar',r=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type||'image/jpeg'});if(r.error){txt('profileStatus',r.error.message);input.value='';return}let url=sb.storage.from('avatars').getPublicUrl(path).data.publicUrl+'?v='+Date.now();let {error}=await sb.from('profiles').update({avatar_url:url}).eq('id',communityUser.id);input.value='';if(error)return txt('profileStatus',error.message);txt('profileStatus','Profile photo updated.');await applyMemberState();if(activeRoom)await loadCommunityMessages()}
 
 let journeyRecentCache=[],journeyPlannerState='plan';
-function openJourneyEmailSignIn(){localStorage.setItem('runsgdAuthReturn','journey');showPage('community');let f=$('emailAuthForm');if(f&&f.style.display==='none')toggleEmailAuth();setTimeout(()=>$('memberEmail')?.focus(),80)}
+function openJourneyEmailSignIn(){openSignIn('journey','journey')}
 function applyJourneyAuthState(){
  let signed=!!communityUser,gate=$('journeyAuthGate'),shell=$('journeyMemberShell');
  if(gate)gate.style.display=signed?'none':'block';if(shell)shell.style.display=signed?'block':'none';
@@ -925,7 +976,7 @@ function updateHeaderProfile(){
  }
  greeting()
 }
-function headerAccountAction(){if(communityUser)showPage('more');else showPage('community')}
+function headerAccountAction(){if(communityUser)showPage('more');else{let active=document.querySelector('.page.active')?.id||'home';openSignIn(['home','explore','journey','community','more'].includes(active)?active:'home','header')}}
 function restoreLocation(){try{let p=JSON.parse(localStorage.getItem('runsgdLocation')||'null');if(p?.lat){live.location=p;txt('locBtn','📍 '+p.name);txt('prayerLoc',p.name);updateSgRouteOrigin()}}catch{}}
 function classify(lat,lon){
  const inSG=lon>=103.55&&lon<=104.10&&lat>=1.15&&((lon<103.70&&lat<=1.365)||(lon>=103.70&&lat<=1.462));
@@ -2173,7 +2224,19 @@ function updateBrief(fallback=false){
 }
 async function refreshAll(btn){setBusy(btn,true);txt('briefStatus','Updating');await Promise.allSettled([loadTrafficSnapshot(),loadPublicTransport(),loadRate(),loadWeather(),loadPrayer(),loadHolidays(),live.location?loadNearbyPrayer():Promise.resolve(),live.location?loadAir():Promise.resolve()]);updateBrief();setBusy(btn,false)}
 function scrollPageTop(){document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0)}
-function showPage(n){if(!['home','explore','journey','community','more'].includes(n))n='home';document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===n));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===n));localStorage.setItem('runsgdPage',n);history.replaceState(null,'','#'+n);if(n==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know');if(n==='journey'){applyJourneyAuthState();if(communityUser)loadJourneyProfileData()}if(n==='community'&&activeRoom)loadCommunityMessages();scrollPageTop()}
+function showPage(n){
+ if(!['home','explore','journey','community','more','signin'].includes(n))n='home';
+ document.body.classList.toggle('signinMode',n==='signin');
+ document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===n));
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===n));
+ if(n!=='signin')localStorage.setItem('runsgdPage',n);
+ history.replaceState(null,'','#'+n);
+ if(n==='signin')renderSignInContext();
+ if(n==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know');
+ if(n==='journey'){applyJourneyAuthState();if(communityUser)loadJourneyProfileData()}
+ if(n==='community'&&activeRoom)loadCommunityMessages();
+ scrollPageTop()
+}
 const knowledgeBase=[
  {icon:'🚦',title:'Crossing timing & queue',summary:'When should I cross Woodlands or Tuas?',body:['There is no fixed “best time” — queues change quickly with peak hours, weekends and holidays.','Check the RunSGD Causeway snapshot before leaving and add buffer when traffic looks heavy.','For time-sensitive trips, compare both Woodlands and Tuas before committing.'],source:'https://www.ica.gov.sg/news-and-publications/newsroom/media-release/105',sourceLabel:'ICA travel tips'},
  {icon:'🚌',title:'Bus, train or car?',summary:'Pick the option that matches your trip.',body:['Bus is the most flexible option and serves both First Link and Second Link.','Train can avoid road congestion but depends on ticket availability and fixed departure times.','Driving gives flexibility, but you need vehicle-entry requirements, toll/payment readiness and parking.'],source:'https://www.causewaylink.com.my/cross-border-travel-guide/',sourceLabel:'Causeway Link guide'},
@@ -2345,8 +2408,17 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){if(isGooglePopupReturn){await initCommunity();return}if('scrollRestoration' in history)history.scrollRestoration='manual';if(sessionStorage.getItem('runsgdPostAuth')){sessionStorage.removeItem('runsgdPostAuth');let vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1,viewport-fit=cover')}scrollPageTop();trackAppVisit();greeting();updateHeaderProfile();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();updateSgRouteOrigin();await initCommunity();restoreSgJourney();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','journey','community','more'].includes(hash)?hash:['home','explore','journey','community','more'].includes(saved)?saved:'home';showPage(page);requestAnimationFrame(()=>requestAnimationFrame(scrollPageTop));setTimeout(scrollPageTop,120);setTimeout(scrollPageTop,420);updateBrief();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
-window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','journey','community','more'].includes(n))showPage(n)});
+async function init(){
+ if(isGooglePopupReturn){await initCommunity();return}
+ if('scrollRestoration' in history)history.scrollRestoration='manual';
+ if(!normalizeMobileViewport())return;
+ scrollPageTop();trackAppVisit();greeting();updateHeaderProfile();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();updateSgRouteOrigin();
+ await initCommunity();restoreSgJourney();
+ let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','journey','community','more','signin'].includes(hash)?hash:['home','explore','journey','community','more'].includes(saved)?saved:'home';
+ if(communityUser&&page==='signin')page=localStorage.getItem('runsgdAuthReturn')||'home';
+ showPage(page);requestAnimationFrame(()=>requestAnimationFrame(scrollPageTop));setTimeout(scrollPageTop,120);setTimeout(scrollPageTop,420);updateBrief();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}
+}
+window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','journey','community','more','signin'].includes(n))showPage(n)});
 document.addEventListener('visibilitychange',()=>{
  if(!sgJourney||sgJourney.status!=='active')return;
  if(document.hidden){
@@ -2362,7 +2434,7 @@ document.addEventListener('visibilitychange',()=>{
 init();
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('RunSGD service worker',e));
+    navigator.serviceWorker.register('/sw.js',{scope:'/',updateViaCache:'none'}).then(reg=>{reg.update().catch(()=>{});let reloading=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloading)return;reloading=true;location.reload()})}).catch(e=>console.warn('RunSGD service worker',e));
   });
 }
 
