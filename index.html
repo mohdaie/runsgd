@@ -1194,7 +1194,7 @@ function roadFixQuality(p,now=Date.now()){
 }
 function acceptRoadProjection(proj,lat,lon,quality,now){
  if(!proj||!quality?.good)return false;
- let prev=Number(sgJourneyRuntime.lastAcceptedRouteProgressM),prevAt=Number(sgJourneyRuntime.lastAcceptedRouteAt),delta=Number.isFinite(prev)?proj.progress_m-prev:0;
+ let prev=Number.isFinite(sgJourneyRuntime.lastAcceptedRouteProgressM)?sgJourneyRuntime.lastAcceptedRouteProgressM:null,prevAt=Number(sgJourneyRuntime.lastAcceptedRouteAt),delta=Number.isFinite(prev)?proj.progress_m-prev:0;
  if(Number.isFinite(prev)&&prevAt){
   let dt=Math.max(.1,(now-prevAt)/1000),physical=journeyMeters(Number(sgJourneyRuntime.lastAcceptedLat),Number(sgJourneyRuntime.lastAcceptedLon),lat,lon);
   let speed=Number(sgJourneyRuntime.gpsSpeed),expected=Math.max(Number.isFinite(physical)?physical:0,Number.isFinite(speed)?speed*dt:0);
@@ -1456,7 +1456,7 @@ function renderSgJourney(distance=null){
  let road=journeyRoadMode(leg?.mode),distText=distance!=null?routeDistance(distance)+' from next hop':'Waiting for live GPS…',pct=legs.length?Math.min(100,Math.round((idx/legs.length)*100)):0;
  if(road&&Number.isFinite(sgJourneyRuntime.routeProgressM)&&Number.isFinite(sgJourneyRuntime.routeTotalM)&&sgJourneyRuntime.routeTotalM>0){
   let remain=Math.max(0,sgJourneyRuntime.routeTotalM-sgJourneyRuntime.routeProgressM),finalRoad=idx===legs.length-1;
-  let stepRemain=Number(sgJourneyRuntime.currentStepRemainingM),stepPct=Number(sgJourneyRuntime.currentStepProgressPct),off=Number(sgJourneyRuntime.offRouteM);
+  let stepRemain=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null,stepPct=Number.isFinite(sgJourneyRuntime.currentStepProgressPct)?sgJourneyRuntime.currentStepProgressPct:null,off=Number.isFinite(sgJourneyRuntime.offRouteM)?sgJourneyRuntime.offRouteM:null;
   let turn=finalRoad&&Number.isFinite(sgJourneyRuntime.lastArrivalDistanceM)?'Destination '+routeDistance(sgJourneyRuntime.lastArrivalDistanceM):Number.isFinite(stepRemain)?'Current step '+(Number.isFinite(stepPct)?Math.round(stepPct)+'% · ':'')+(finalRoad?'destination in ':'turn in ')+routeDistance(stepRemain):distance!=null?'Next manoeuvre '+routeDistance(distance):'Next manoeuvre tracking';
   let match=Number.isFinite(off)&&off>120?' · checking route match':'';
   distText=turn+' · '+routeDistance(remain)+' route remaining'+match;
