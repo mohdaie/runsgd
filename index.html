@@ -200,7 +200,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.10.3 dedicated Journey experience */
+/* v2.10.4 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
@@ -216,7 +216,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 @media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
 
 
-/* v2.10.3 community — full-height Threads-inspired dark page */
+/* v2.10.4 community — full-height Threads-inspired dark page */
 body.communityMode .hello{display:none}
 body.communityMode{background:#0b0b0c;color:#f5f5f5}
 body.communityMode .app{background:#0b0b0c}
@@ -241,7 +241,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.3</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.4</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -574,7 +574,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.3</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.4</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -627,7 +627,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.3</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.4</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -727,7 +727,7 @@ function normalizeMobileViewport(){
  if(bad&&!sessionStorage.getItem('runsgdViewportRetry')){
   sessionStorage.setItem('runsgdViewportRetry','1');
   let target=location.hash||'#'+(localStorage.getItem('runsgdPage')||'home');
-  location.replace('/?mobile=1&v=2103&t='+Date.now()+target);return false
+  location.replace('/?mobile=1&v=2104&t='+Date.now()+target);return false
  }
  if(!bad)sessionStorage.removeItem('runsgdViewportRetry');
  return true
@@ -773,7 +773,7 @@ async function initCommunity(){
       localStorage.setItem('runsgdAuthReturn',target);localStorage.setItem('runsgdAuthClient',client);
       localStorage.removeItem('runsgdGoogleAttempt');localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleReturnTarget');
       sessionStorage.setItem('runsgdPostAuth','1');
-      location.replace('/?resume='+encodeURIComponent(client)+'&v=2103&t='+Date.now()+'#'+target);
+      location.replace('/?resume='+encodeURIComponent(client)+'&v=2104&t='+Date.now()+'#'+target);
       return
     }
 
@@ -810,7 +810,7 @@ async function signInWithGoogle(btn){
  // Desktop web keeps RunSGD open and uses a popup.
  if(ctx.type!=='desktop-web'){
   try{
-   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2103';
+   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2104';
    let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
    if(error)throw error
   }catch(e){setBusy(btn,false);authStatus(e.message||'Could not open Google sign-in.')}
@@ -839,7 +839,7 @@ async function signInWithGoogle(btn){
  window.addEventListener('storage',check);window.addEventListener('focus',check);googleLoginTimer=setInterval(check,800);
  try{channel=new BroadcastChannel('runsgd-auth');channel.onmessage=e=>{if(e.data?.type==='google-signed-in'&&e.data?.attempt===attempt)check()}}catch{}
  try{
-  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2103';
+  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2104';
   const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo,skipBrowserRedirect:true}});
   if(error)throw error;if(!data?.url)throw Error('Google sign-in is unavailable.');popup.location.replace(data.url)
  }catch(e){cleanup();try{popup.close()}catch{}authStatus(e.message||'Could not open Google sign-in.')}
@@ -1511,28 +1511,63 @@ async function planSgToJbSmart(origin,destination,intent){
 }
 async function planJbToSgSmart(origin,destination,intent){
  let out=[],jbp=routeProviderFor('jb'),sgp=routeProviderFor('sg');
- let sgOnwardPromise=routeApiSafe({action:'route',from:{...WOODLANDS_CP},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address},max_walk_m:1200},sgp);
+ let sgOnward=await routeApiSafe({action:'route',from:{...WOODLANDS_CP},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address},max_walk_m:1200},sgp);
 
- if(intent.allow_cross_border_bus!==false){
-  let jbPromise=routeApiSafe({action:'route',travel_mode:'TRANSIT',from:{lat:origin.lat,lon:origin.lon},to:{...JB_CIQ}},jbp);
-  let pair=await Promise.all([jbPromise,sgOnwardPromise]),jb=pair[0],sg=pair[1];
-  if(jb?.routes?.length&&sg?.routes?.length){
-   let a=jb.routes[0],b=sg.routes[0];
-   out.push({provider:'cross-border',kind:'border_transit',label:'Bus + MRT',tag:'MY → SG',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),walk_distance_m:Number(a.walk_distance_m||0)+Number(b.walk_distance_m||0),transfers:Number(a.transfers||0)+Number(b.transfers||0)+1,fare_myr:a.fare_myr??null,fare_sgd:b.fare_sgd??null,border_variable:true,legs:[...(a.legs||[]),...makeJbToSgBorderHops(),...(b.legs||[])],explanation:'Johor public transport to CIQ, cross-border bus, then Singapore public transport.'})
+ if(intent.allow_cross_border_bus!==false&&sgOnward?.routes?.length){
+  let jb=await routeApiSafe({action:'route',travel_mode:'TRANSIT',from:{lat:origin.lat,lon:origin.lon},to:{...JB_CIQ}},jbp);
+  let approach=jb?.routes?.[0]||null,approachFallback=false,approachNote='Johor public transport to CIQ';
+
+  // Google transit sometimes cannot resolve the final JB-CIQ stop from outer Johor.
+  // Retry via the major JB Sentral hub before giving up the entire public-transport option.
+  if(!approach){
+   let sentral=await resolveRoutePlace('JB Sentral',jbp,{lat:origin.lat,lon:origin.lon});
+   if(sentral){
+    let via=await routeApiSafe({action:'route',travel_mode:'TRANSIT',from:{lat:origin.lat,lon:origin.lon},to:{lat:sentral.lat,lon:sentral.lon,name:sentral.name,address:sentral.address}},jbp);
+    if(via?.routes?.length){
+     let a=via.routes[0];
+     let connector={mode:'LOCAL_TRANSFER',manual:true,duration_sec:0,distance_m:0,from:{name:sentral.name||'JB Sentral',lat:sentral.lat,lon:sentral.lon},to:{...JB_CIQ},instruction:'Continue from JB Sentral to JB CIQ / immigration. Follow terminal signs; this short local transfer time is not included.'};
+     approach={...a,legs:[...(a.legs||[]),connector]};
+     approachNote='Johor public transport via JB Sentral'
+    }
+   }
   }
+
+  // Never throw away the useful Singapore MRT/bus route just because Google cannot
+  // calculate the Johor feeder leg from the exact current street.
+  if(!approach){
+   approachFallback=true;
+   approachNote='Local Johor connection to JB CIQ';
+   approach={duration_sec:0,walk_distance_m:0,transfers:0,fare_myr:null,legs:[
+    {mode:'LOCAL_TRANSFER',manual:true,duration_sec:0,distance_m:0,from:{name:origin.name||'Current location',lat:origin.lat,lon:origin.lon},to:{...JB_CIQ},instruction:'Make your way to JB CIQ for the Causeway crossing. RunSGD could not verify the local Johor transit leg from this exact location, so that feeder time is not included.'}
+   ]}
+  }
+
+  sgOnward.routes.slice(0,2).forEach((b,idx)=>{
+   let a=approach,border=makeJbToSgBorderHops(),borderStart=(a.legs||[]).length;
+   out.push({
+    provider:'cross-border',kind:'border_transit',label:approachFallback?'Border bus + MRT (from CIQ)':'Bus + MRT',tag:'MY → SG',
+    duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),
+    duration_text:approachFallback?('Local connection + '+routeMinutes(Number(b.duration_sec||0))+' + checkpoint'):null,
+    walk_distance_m:Number(a.walk_distance_m||0)+Number(b.walk_distance_m||0),
+    transfers:Number(a.transfers||0)+Number(b.transfers||0)+1,
+    fare_myr:a.fare_myr??null,fare_sgd:b.fare_sgd??null,border_variable:true,
+    border_start_index:borderStart,border_end_index:borderStart+2,estimate_incomplete:approachFallback,
+    legs:[...(a.legs||[]),...border,...(b.legs||[])],
+    explanation:approachFallback
+     ? 'Public-transport route is preserved from JB CIQ onward: Causeway bus, then Singapore bus/MRT. The local Johor feeder to CIQ could not be verified, so its time is shown separately.'
+     : approachNote+', cross-border bus, then Singapore public transport.'
+   })
+  })
  }
 
- if(intent.has_car&&intent.allow_cross_border_bus!==false){
+ if(intent.has_car&&intent.allow_cross_border_bus!==false&&sgOnward?.routes?.length){
   let parkingPoint=await resolveRoutePlace('JB Sentral',jbp,{lat:origin.lat,lon:origin.lon});
   let target=parkingPoint||JB_CIQ;
-  let pair=await Promise.all([
-   routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:target.lat,lon:target.lon,name:target.name,address:target.address}},jbp),
-   sgOnwardPromise
-  ]),drive=pair[0],sg=pair[1];
-  if(drive?.routes?.length&&sg?.routes?.length){
-   let a=drive.routes[0],b=sg.routes[0];
+  let drive=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:target.lat,lon:target.lon,name:target.name,address:target.address}},jbp);
+  if(drive?.routes?.length){
+   let a=drive.routes[0],b=sgOnward.routes[0],borderStart=(a.legs||[]).length+1;
    let park={mode:'PARK',manual:true,duration_sec:0,distance_m:0,from:{name:target.name||'JB Sentral / CIQ area',lat:target.lat,lon:target.lon},to:{name:'JB CIQ',lat:JB_CIQ.lat,lon:JB_CIQ.lon},instruction:'Park at a suitable facility near JB Sentral / CIQ, then continue to immigration'};
-   out.push({provider:'cross-border',kind:'drive_then_transit',label:'Drive + bus + MRT',tag:'Car → Transit',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),walk_distance_m:Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,polyline:a.polyline||'',road_leg_count:(a.legs||[]).length,legs:[...(a.legs||[]),park,...makeJbToSgBorderHops(),...(b.legs||[])],explanation:'Drive on the Johor side, park, cross by bus, then continue by Singapore public transport. Confirm a suitable parking facility before departure.'})
+   out.push({provider:'cross-border',kind:'drive_then_transit',label:'Drive + bus + MRT',tag:'Car → Transit',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),walk_distance_m:Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,border_start_index:borderStart,border_end_index:borderStart+2,polyline:a.polyline||'',road_leg_count:(a.legs||[]).length,legs:[...(a.legs||[]),park,...makeJbToSgBorderHops(),...(b.legs||[])],explanation:'Drive on the Johor side, park, cross by bus, then continue by Singapore public transport. Confirm a suitable parking facility before departure.'})
   }
  }
 
@@ -1573,6 +1608,7 @@ function rankJourneyRoutes(routes,intent){
  function score(r){
   let s=Number(r.duration_sec||0),k=r.kind||'',mode=String(r.travel_mode||'').toUpperCase();
   let roadOnly=k==='direct_drive'||k==='motorcycle'||mode==='DRIVE'||mode==='TWO_WHEELER';
+  if(r.estimate_incomplete)s+=3600;
   if(intent.prefer_ktm)s+=k==='ktm'?-100000:35000;
   if(intent.direct_drive)s+=k==='direct_drive'?-100000:25000;
   else if(roadOnly)s+=r.border_variable?120000:(intent.priority==='fastest'&&intent.has_car?0:30000);
@@ -1583,6 +1619,15 @@ function rankJourneyRoutes(routes,intent){
   return s
  }
  return [...routes].sort((a,b)=>score(a)-score(b))
+}
+function chooseJourneyRouteSet(routes,intent,limit=4){
+ let ranked=rankJourneyRoutes(routes,intent),picked=ranked.slice(0,limit);
+ let publicRoute=ranked.find(r=>r.kind==='border_transit'||r.kind==='transit');
+ if(publicRoute&&!picked.includes(publicRoute)){
+  if(picked.length<limit)picked.push(publicRoute);
+  else picked[picked.length-1]=publicRoute
+ }
+ return picked
 }
 async function planAiJourney(btn){
  if(!communityUser){applyJourneyAuthState();authStatus('Sign in to use AI Journey Planner.');return}
@@ -1600,9 +1645,9 @@ async function planAiJourney(btn){
   if(originP.id==='jb'&&destP.id==='sg')routes=await planJbToSgSmart(origin,sgRouteSelection,sgJourneyIntent);
   else if(originP.id==='sg'&&destP.id==='jb')routes=await planSgToJbSmart(origin,sgRouteSelection,sgJourneyIntent);
   else if(originP.id===destP.id)routes=await planLocalSmart(origin,sgRouteSelection,destP,sgJourneyIntent);
-  routes=rankJourneyRoutes(routes,sgJourneyIntent);
+  routes=chooseJourneyRouteSet(routes,sgJourneyIntent,4);
   if(!routes.length)throw Error('No usable route combination was returned for this plan.');
-  sgRouteResults=routes.slice(0,4);renderSgRoutes();
+  sgRouteResults=routes;renderSgRoutes();
   txt('journeyCompareRoute',(origin.name||'Current location')+' → '+(sgRouteSelection.name||sgRouteSelection.address||'Destination'));let tags=journeyHistoryTags(sgJourneyIntent).map(journeyTagLabel);txt('journeyCompareIntent',tags.join(' · '));journeyPlanResultsOpen=true;setJourneyPlannerState('plan');
   txt('sgRouteBadge',originP.id===destP.id?'Local mix':'Cross-border mix');
   txt('sgRouteProviderNote','RunSGD combines OneMap and Google Maps where needed. AI interprets your preference; routing APIs calculate the legs.');
@@ -1632,11 +1677,12 @@ function plannerGps(){
 }
 function routeMinutes(s){let m=Math.max(1,Math.round(Number(s||0)/60));return m>=60?Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m':m+' min'}
 function routeDistance(m){m=Number(m||0);return m>=1000?(m/1000).toFixed(1)+' km':Math.round(m)+' m'}
-function routeModeIcon(m){m=String(m||'').toUpperCase();return m==='IMMIGRATION'?'🛂':m==='PARK'?'🅿️':m==='CROSS_BORDER_BUS'?'🚌':m==='DRIVE'?'🚗':m==='TWO_WHEELER'?'🏍️':m==='WALK'?'🚶':m==='BUS'?'🚌':(m==='SUBWAY'||m==='RAIL'||m==='TRAIN'||m==='TRAM')?'🚇':'🚍'}
+function routeModeIcon(m){m=String(m||'').toUpperCase();return m==='IMMIGRATION'?'🛂':m==='PARK'?'🅿️':m==='LOCAL_TRANSFER'?'🚏':m==='CROSS_BORDER_BUS'?'🚌':m==='DRIVE'?'🚗':m==='TWO_WHEELER'?'🏍️':m==='WALK'?'🚶':m==='BUS'?'🚌':(m==='SUBWAY'||m==='RAIL'||m==='TRAIN'||m==='TRAM')?'🚇':'🚍'}
 function routeModeLabel(leg){
  let m=String(leg.mode||'').toUpperCase();
  if(m==='IMMIGRATION')return 'Immigration';
  if(m==='PARK')return 'Park';
+ if(m==='LOCAL_TRANSFER')return 'Local connection';
  if(m==='CROSS_BORDER_BUS')return 'Border bus';
  if(m==='DRIVE')return 'Drive';
  if(m==='TWO_WHEELER')return 'Motorcycle';
@@ -1959,6 +2005,7 @@ function sgJourneyInstruction(leg){
  let mode=String(leg.mode||'').toUpperCase(),to=leg.to?.name||leg.to?.stopCode||'the next stop';
  if(leg.instruction)return leg.instruction;
  if(mode==='IMMIGRATION')return 'Clear immigration';
+ if(mode==='LOCAL_TRANSFER')return 'Continue to '+to;
  if(mode==='CROSS_BORDER_BUS')return 'Take a cross-border bus to '+to;
  if(mode==='WALK')return 'Walk to '+to;
  if(mode==='DRIVE')return 'Drive to '+to;
@@ -1973,7 +2020,8 @@ function sgJourneyDefaultCoach(leg,distance){
  if(!leg)return 'You’ve reached your destination. Nice one 👌';
  let mode=String(leg.mode||'').toUpperCase(),to=leg.to?.name||leg.to?.stopCode||'the next hop';
  if(mode==='IMMIGRATION')return (leg.country==='SG'?'Clear Singapore immigration at your own pace.':'Clear Malaysia immigration at your own pace.')+' When you are through, tap “Cleared immigration”.';
- if(mode==='CROSS_BORDER_BUS')return 'Take an available cross-border bus to JB CIQ after Singapore immigration. Border queue time can vary, so RunSGD does not guess it.';
+ if(mode==='LOCAL_TRANSFER')return 'Complete this local connection to '+to+'. RunSGD will continue with the verified border bus and Singapore public-transport legs after that.';
+ if(mode==='CROSS_BORDER_BUS')return 'Take an available cross-border bus to '+to+'. Border queue time can vary, so RunSGD does not guess it.';
  if(distance!=null&&distance<130)return 'You’re very close to '+to+'. Get ready for the next hop.';
  if(mode==='WALK')return distance!=null?'Keep walking — about '+routeDistance(distance)+' to '+to+'.':'Keep walking towards '+to+'.';
  if(mode==='DRIVE')return 'Continue driving towards '+to+'. RunSGD is matching your GPS against the planned road route automatically.';
@@ -2225,7 +2273,7 @@ function renderSgJourney(distance=null){
  renderJourneyBeacon(distance);
  if($('sgJourneyProgressBar'))$('sgJourneyProgressBar').style.width=pct+'%';
  if(!$('sgJourneyAiText')?.dataset.aiLock)txt('sgJourneyAiText',sgJourneyDefaultCoach(leg,distance));
- let next=legs[idx+1];$('sgJourneyNext').innerHTML=road?journeyRichNextHtml(legs,idx,Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null):(next?'<b>Next:</b> '+esc(sgJourneyInstruction(next)):'<b>Final hop:</b> Keep going until you reach '+esc(sgJourney.destination?.name||'your destination')+'.');let doneBtn=$('sgJourneyHopDoneBtn');if(doneBtn)doneBtn.textContent=leg?.manual?'Cleared immigration':road&&idx===legs.length-1?'I have arrived':'Hop done';
+ let next=legs[idx+1];$('sgJourneyNext').innerHTML=road?journeyRichNextHtml(legs,idx,Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null):(next?'<b>Next:</b> '+esc(sgJourneyInstruction(next)):'<b>Final hop:</b> Keep going until you reach '+esc(sgJourney.destination?.name||'your destination')+'.');let doneBtn=$('sgJourneyHopDoneBtn');if(doneBtn){let manualMode=String(leg?.mode||'').toUpperCase();doneBtn.textContent=manualMode==='IMMIGRATION'?'Cleared immigration':manualMode==='LOCAL_TRANSFER'?'At JB CIQ':manualMode==='CROSS_BORDER_BUS'?'At checkpoint':road&&idx===legs.length-1?'I have arrived':'Hop done'}
  $('sgJourneyAllHops').innerHTML=legs.map((l,n)=>'<div class="routeLeg '+(n<idx?'journeyDone':n===idx?'journeyCurrent':'')+'"><div class="routeLegIcon">'+routeModeIcon(l.mode)+'</div><div><div class="routeLegTitle">'+esc(sgJourneyInstruction(l))+'</div><div class="routeLegMeta">'+esc(routeMinutes(l.duration_sec)+(l.distance_m?' · '+routeDistance(l.distance_m):''))+'</div></div></div>').join('');
 }
 function restoreSgJourney(){
