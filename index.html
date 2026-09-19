@@ -155,7 +155,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routePlannerCard.journey-active #sgRouteOrigin,.routePlannerCard.journey-active .routeSearchRow,.routePlannerCard.journey-active #sgRouteSuggestions,.routePlannerCard.journey-active #sgRouteStatus,.routePlannerCard.journey-active #sgRouteOptions,.routePlannerCard.journey-active #sgRouteSelectedNote{display:none!important}
 .journeyLiveCard{display:none;margin-top:8px;border:1px solid #bfe9cf;border-radius:22px;padding:16px;background:linear-gradient(145deg,#edfff5 0%,#e6f8ee 55%,#f7fffa 100%);box-shadow:0 14px 34px #178a4d18;color:#173d2a;overflow:hidden;position:relative}
 .journeyLiveCard.show{display:block}.journeyLiveCard:before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-65px;top:-70px;background:radial-gradient(circle,#32b56a24,transparent 68%);pointer-events:none}
-.journeyLiveTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:relative}.journeyLivePill{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border-radius:999px;background:#d8f6e4;color:#177743;font-size:10px;font-weight:900;letter-spacing:.3px;text-transform:uppercase}.journeyLivePill:before{content:"";width:7px;height:7px;border-radius:50%;background:#1faa60;box-shadow:0 0 0 5px #1faa6018;animation:journeyPulse 1.7s ease infinite}@keyframes journeyPulse{50%{box-shadow:0 0 0 9px #1faa6004}}
+.journeyLiveBack{border:0;background:transparent;color:#47785c;font-size:10px;font-weight:900;padding:0 0 9px}.journeyLiveTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:relative}.journeyLivePill{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border-radius:999px;background:#d8f6e4;color:#177743;font-size:10px;font-weight:900;letter-spacing:.3px;text-transform:uppercase}.journeyLivePill:before{content:"";width:7px;height:7px;border-radius:50%;background:#1faa60;box-shadow:0 0 0 5px #1faa6018;animation:journeyPulse 1.7s ease infinite}@keyframes journeyPulse{50%{box-shadow:0 0 0 9px #1faa6004}}
 .journeyDest{font-size:18px;font-weight:950;letter-spacing:-.35px;margin-top:10px;padding-right:24px}.journeyMeta{font-size:11px;color:#5b7a68;margin-top:3px;font-weight:750}
 .journeyNow{margin-top:14px;padding:14px;border-radius:18px;background:#fffdf;border:1px solid #d9f1e2}.journeyNowLabel{font-size:9px;font-weight:950;letter-spacing:.55px;color:#228553;text-transform:uppercase}.journeyAction{font-size:19px;font-weight:950;line-height:1.25;margin-top:5px;color:#173d2a}.journeyDistance{font-size:12px;color:#62806d;margin-top:5px;font-weight:750}
 .journeyGpsBar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:10px}.journeyGpsChip{display:inline-flex;align-items:center;gap:5px;padding:6px 8px;border-radius:999px;background:#edf4f0;color:#5c7465;font-size:9px;font-weight:900;line-height:1.2}.journeyGpsChip.good{background:#dcf7e7;color:#177644}.journeyGpsChip.fair{background:#fff3d7;color:#93651d}.journeyGpsChip.weak,.journeyGpsChip.stale{background:#ffe5e6;color:#a14851}.journeyGpsChip.turn{background:#e7efff;color:#3c61a9}.journeyGpsChip.confirm{background:#f3eaff;color:#7650a7}
@@ -200,14 +200,14 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.7.0 dedicated Journey experience */
+/* v2.7.1 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
-.journeyStageBar{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0 16px}.journeyStage{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 6px;border-radius:13px;background:#f1f3f8;color:#929aab;font-size:10px;font-weight:900}.journeyStage span{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca}.journeyStage.active span{background:#5976e7;color:#fff}
+.journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
 .journeyPrePlan{display:flex;flex-direction:column;gap:12px;margin-bottom:14px}.journeyPersonalCard,.journeyRecentCard{padding:15px}.journeyRecentList{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}.journeyRecentList::-webkit-scrollbar{display:none}.journeyRecentItem{flex:0 0 210px;text-align:left;border:1px solid #e7ebf3;background:#fff;border-radius:15px;padding:11px;color:#2e3a54}.journeyRecentItem b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.journeyRecentMeta{font-size:10px;color:#8792a5;margin-top:4px;line-height:1.35}.journeyRecentTags{font-size:9px;color:#5d6f8c;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .journeyCompareSummary{display:none;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;margin:10px 0;border-radius:15px;background:linear-gradient(120deg,#edf6ff,#f4efff)}.routePlannerCard.compare .journeyCompareSummary{display:flex}.journeyCompareRoute{font-size:13px;font-weight:900;color:#30415d}.journeyCompareIntent{font-size:10px;color:#718099;margin-top:3px}
 .routePlannerCard.compare .routeOrigin,.routePlannerCard.compare>.sub,.routePlannerCard.compare .routePlannerStep,.routePlannerCard.compare .routeRegionRow,.routePlannerCard.compare .routeSearchShell,.routePlannerCard.compare #sgRouteSuggestions,.routePlannerCard.compare #sgRouteStatus,.routePlannerCard.compare #sgRouteProviderNote,.routePlannerCard.compare #routeDestinationChosen,.routePlannerCard.compare .routeAiComposer{display:none!important}
-#journey.journey-state-compare .journeyPrePlan,#journey.journey-state-live .journeyPrePlan{display:none}.moreSectionTitle{font-size:14px;font-weight:900;color:#52617b;margin:20px 4px 2px}.moreUtilities{display:flex;flex-direction:column;gap:0}.moreUtilities .toolbox{margin-top:12px}
+#journey.journey-has-results .journeyPrePlan,#journey.journey-state-live .journeyPrePlan{display:none}.moreSectionTitle{font-size:14px;font-weight:900;color:#52617b;margin:20px 4px 2px}.moreUtilities{display:flex;flex-direction:column;gap:0}.moreUtilities .toolbox{margin-top:12px}
 .journeyNavBtn{position:relative}.journeyNavBtn .journeyNavDot{display:none;position:absolute;right:13px;top:4px;width:7px;height:7px;border-radius:50%;background:#20b768;box-shadow:0 0 0 4px #20b76818}.journeyNavBtn.hasActive .journeyNavDot{display:block}.journeyNavBtn.active{font-weight:900}
 
 
@@ -220,7 +220,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.7.0</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.7.1</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -369,9 +369,8 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
   <div id="journeyMemberShell" style="display:none">
     <div class="journeyStageBar">
-      <div id="journeyStagePlan" class="journeyStage active"><span>1</span>Plan</div>
-      <div id="journeyStageCompare" class="journeyStage"><span>2</span>Choose</div>
-      <div id="journeyStageLive" class="journeyStage"><span>3</span>Travel</div>
+      <button id="journeyStagePlan" class="journeyStage active" onclick="goJourneyStage('plan')"><span>1</span>Plan & routes</button>
+      <button id="journeyStageLive" class="journeyStage" onclick="goJourneyStage('live')" disabled><span>2</span>Travel</button>
     </div>
 
     <div id="journeyPrePlan" class="journeyPrePlan">
@@ -421,6 +420,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
     <div id="sgRouteSelectedNote" class="routeSelectedNote"></div>
   </div>
   <div id="sgJourneyLiveCard" class="journeyLiveCard">
+    <button class="journeyLiveBack" onclick="goJourneyStage('plan')">← Back to plan & routes</button>
     <div class="journeyLiveTop">
       <div><span id="sgJourneyPill" class="journeyLivePill">Live journey</span><div id="sgJourneyDestination" class="journeyDest">Destination</div><div id="sgJourneyMeta" class="journeyMeta">Hop 1</div></div>
       <span id="sgJourneyEta" class="tag">—</span>
@@ -525,7 +525,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.7.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.7.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -578,7 +578,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.7.0</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.7.1</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -873,7 +873,7 @@ function toggleProfileEdit(on){let c=$('profileCard');if(!c)return;c.classList.t
 async function saveProfile(btn){if(!communityUser)return;let name=$('profileName')?.value.trim(),bio=$('profileBio')?.value.trim();if(!name||name.length<2)return txt('profileStatus','Display name must be at least 2 characters.');setBusy(btn,true);let {error}=await sb.from('profiles').update({display_name:name,bio}).eq('id',communityUser.id);setBusy(btn,false);if(error)return txt('profileStatus',error.message);txt('profileStatus','Profile saved.');await applyMemberState();toggleProfileEdit(false);if(activeRoom)await loadCommunityMessages()}
 async function uploadProfilePhoto(input){if(!communityUser||!input.files?.[0])return;let file=input.files[0];if(file.size>2097152){txt('profileStatus','Photo must be 2 MB or smaller.');input.value='';return}txt('profileStatus','Uploading photo…');let path=communityUser.id+'/avatar',r=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type||'image/jpeg'});if(r.error){txt('profileStatus',r.error.message);input.value='';return}let url=sb.storage.from('avatars').getPublicUrl(path).data.publicUrl+'?v='+Date.now();let {error}=await sb.from('profiles').update({avatar_url:url}).eq('id',communityUser.id);input.value='';if(error)return txt('profileStatus',error.message);txt('profileStatus','Profile photo updated.');await applyMemberState();if(activeRoom)await loadCommunityMessages()}
 
-let journeyRecentCache=[],journeyPlannerState='plan';
+let journeyRecentCache=[],journeyPlannerState='plan',journeyPlanResultsOpen=false;
 function openJourneyEmailSignIn(){openSignIn('journey','journey')}
 function applyJourneyAuthState(){
  let signed=!!communityUser,gate=$('journeyAuthGate'),shell=$('journeyMemberShell');
@@ -881,13 +881,32 @@ function applyJourneyAuthState(){
  if(!signed){setJourneyPlannerState('plan');txt('journeyAuthStatus','Sign in to use AI Journey Planner and save recent journeys.')}
 }
 function setJourneyPlannerState(state='plan'){
- if(!['plan','compare','live'].includes(state))state='plan';
- if(sgJourney?.status==='active')state='live';
- journeyPlannerState=state;let page=$('journey'),planner=$('sgRoutePlannerCard');
- if(page){page.classList.remove('journey-state-plan','journey-state-compare','journey-state-live');page.classList.add('journey-state-'+state)}
- if(planner)planner.classList.toggle('compare',state==='compare');
- ['Plan','Compare','Live'].forEach(x=>$('journeyStage'+x)?.classList.toggle('active',state===x.toLowerCase()));
+ if(!['plan','live'].includes(state))state='plan';
+ if(state==='live'&&!(sgJourney?.status==='active'))state='plan';
+ journeyPlannerState=state;
+ let page=$('journey'),planner=$('sgRoutePlannerCard'),card=$('sgJourneyLiveCard'),active=!!sgJourney&&sgJourney.status==='active';
+ if(page){
+  page.classList.remove('journey-state-plan','journey-state-live');
+  page.classList.add('journey-state-'+state);
+  page.classList.toggle('journey-has-results',state==='plan'&&journeyPlanResultsOpen)
+ }
+ if(planner){
+  planner.classList.toggle('compare',state==='plan'&&journeyPlanResultsOpen);
+  planner.classList.toggle('journey-active',state==='live'&&active)
+ }
+ if(card)card.classList.toggle('show',state==='live'&&active);
+ $('journeyStagePlan')?.classList.toggle('active',state==='plan');
+ let travel=$('journeyStageLive');if(travel){travel.classList.toggle('active',state==='live');travel.disabled=!active}
  updateJourneyNavState()
+}
+function goJourneyStage(state,pushHistory=false){
+ if(state==='live'){
+  if(!(sgJourney?.status==='active')){txt('sgRouteStatus','Choose a route first, then Travel becomes available.');setJourneyPlannerState('plan');return}
+  setJourneyPlannerState('live');renderSgJourney();
+  if(pushHistory)try{history.pushState({runsgdJourneyStage:'live'},'',location.href)}catch{}
+  scrollPageTop();return
+ }
+ setJourneyPlannerState('plan');scrollPageTop()
 }
 function updateJourneyNavState(){$('.journeyNavBtn')?.classList.toggle('hasActive',!!sgJourney&&sgJourney.status==='active')}
 function journeyTagLabel(t){return ({car:'🚗 Car','motorcycle':'🏍️ Motorcycle','prefer-ktm':'🚆 KTM','avoid-sg-driving':'🅿️ Avoid SG driving','direct-drive':'🛣️ Direct drive','priority-fastest':'⚡ Fastest','priority-cheapest':'💰 Cheapest','priority-easiest':'✨ Easiest','priority-balanced':'⚖️ Balanced'})[t]||t}
@@ -914,7 +933,7 @@ function renderJourneyPersonalization(){
 }
 function reuseJourneyHistory(id){
  let r=journeyRecentCache.find(x=>Number(x.id)===Number(id));if(!r)return;
- setJourneyPlannerState('plan');let region=r.destination_country==='MY'?'jb':'sg';setRouteDestinationRegion(region);
+ journeyPlanResultsOpen=false;setJourneyPlannerState('plan');let region=r.destination_country==='MY'?'jb':'sg';setRouteDestinationRegion(region);
  sgRouteSelection={name:r.destination_name,address:r.destination_address||'',lat:Number(r.destination_lat),lon:Number(r.destination_lon),_provider:region};
  if($('sgRouteDestination'))$('sgRouteDestination').value=r.destination_name||r.destination_address||'';
  let chosen=$('routeDestinationChosen');if(chosen){chosen.textContent='✓ '+(r.destination_name||r.destination_address)+' · '+(region==='jb'?'Malaysia':'Singapore');chosen.classList.add('show')}
@@ -922,7 +941,7 @@ function reuseJourneyHistory(id){
  journeyTravelPromptChanged();txt('sgRouteStatus','Recent destination loaded. Adjust your travel preference or plan again.');$('journeyTravelPrompt')?.focus()
 }
 function resetJourneyPlanner(){
- setJourneyPlannerState('plan');sgRouteResults=[];$('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote')?.classList.remove('show');txt('sgRouteStatus',sgRouteSelection?'Destination selected. Adjust how you want to travel.':'Choose a destination to start.')
+ journeyPlanResultsOpen=false;setJourneyPlannerState('plan');sgRouteResults=[];$('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote')?.classList.remove('show');txt('sgRouteStatus',sgRouteSelection?'Destination selected. Adjust how you want to travel.':'Choose a destination to start.')
 }
 async function saveJourneyHistory(route){
  if(!communityUser||!sgRouteSelection)return null;
@@ -1288,7 +1307,7 @@ async function planAiJourney(btn){
   routes=rankJourneyRoutes(routes,sgJourneyIntent);
   if(!routes.length)throw Error('No usable route combination was returned for this plan.');
   sgRouteResults=routes.slice(0,4);renderSgRoutes();
-  txt('journeyCompareRoute',(origin.name||'Current location')+' → '+(sgRouteSelection.name||sgRouteSelection.address||'Destination'));let tags=journeyHistoryTags(sgJourneyIntent).map(journeyTagLabel);txt('journeyCompareIntent',tags.join(' · '));setJourneyPlannerState('compare');
+  txt('journeyCompareRoute',(origin.name||'Current location')+' → '+(sgRouteSelection.name||sgRouteSelection.address||'Destination'));let tags=journeyHistoryTags(sgJourneyIntent).map(journeyTagLabel);txt('journeyCompareIntent',tags.join(' · '));journeyPlanResultsOpen=true;setJourneyPlannerState('plan');
   txt('sgRouteBadge',originP.id===destP.id?'Local mix':'Cross-border mix');
   txt('sgRouteProviderNote','RunSGD combines OneMap and Google Maps where needed. AI interprets your preference; routing APIs calculate the legs.');
   txt('sgRouteStatus',sgRouteResults.length+' journey combination'+(sgRouteResults.length===1?'':'s')+' found. Checkpoint and immigration time stays separate.')
@@ -1370,7 +1389,7 @@ function selectSgRoute(i){
  let route=sgRouteResults[i];if(!route||!sgRouteSelection)return;if(!communityUser){applyJourneyAuthState();return}
  sgJourney={user_id:communityUser.id,origin:live.location,destination:sgRouteSelection,route,provider:route.provider||routeProvider().id,selected_route:i,current_hop:0,status:'active',started_at:Date.now(),updated_at:Date.now(),history_id:null};
  try{localStorage.setItem('runsgdSgSelectedRoute',JSON.stringify(sgJourney))}catch{}
- setJourneyPlannerState('live');renderSgJourney();startSgJourneyTracking();
+ journeyPlanResultsOpen=true;setJourneyPlannerState('live');renderSgJourney();try{history.pushState({runsgdJourneyStage:'live'},'',location.href)}catch{}startSgJourneyTracking();
  saveJourneyHistory(route).then(id=>{if(id&&sgJourney?.status==='active'){sgJourney.history_id=id;persistSgJourney()}})
 }
 function journeyMeters(a,b,c,d){
@@ -1778,9 +1797,9 @@ function renderJourneyDriveFocus(road,leg,idx,legs){
  txt('sgJourneyStepRemaining',Number.isFinite(stepRemain)?routeDistance(stepRemain)+' remaining in this hop':'Tracking this road segment…')
 }
 function renderSgJourney(distance=null){
- let card=$('sgJourneyLiveCard'),planner=$('sgRoutePlannerCard');if(!card||!planner)return;setJourneyPlannerState(sgJourney?.status==='active'?'live':journeyPlannerState);
- if(!sgJourney||sgJourney.status!=='active'){card.classList.remove('show');planner.classList.remove('journey-active');return}
- planner.classList.add('journey-active');card.classList.add('show');card.classList.remove('journeyArrival');
+ let card=$('sgJourneyLiveCard'),planner=$('sgRoutePlannerCard');if(!card||!planner)return;
+ if(!sgJourney||sgJourney.status!=='active'){card.classList.remove('show');planner.classList.remove('journey-active');setJourneyPlannerState('plan');return}
+ planner.classList.toggle('journey-active',journeyPlannerState==='live');card.classList.toggle('show',journeyPlannerState==='live');card.classList.remove('journeyArrival');
  txt('sgRouteBadge','LIVE');txt('sgJourneyPill','Live journey');txt('sgRouteProviderNote',(sgJourney.provider==='cross-border'?'🇸🇬 OneMap → 🛂 Woodlands → 🇲🇾 Google Maps':sgJourney.provider==='jb'?'🇲🇾 Google Maps · JB':'🇸🇬 OneMap · Singapore')+' · selected route saved');
  let legs=sgJourney.route?.legs||[],idx=Math.min(Math.max(0,Number(sgJourney.current_hop)||0),Math.max(0,legs.length-1)),leg=legs[idx];
  txt('sgJourneyDestination',sgJourney.destination?.name||sgJourney.destination?.address||'Destination');
@@ -1817,7 +1836,7 @@ function restoreSgJourney(){
   let j=JSON.parse(localStorage.getItem('runsgdSgSelectedRoute')||'null');if(!communityUser||!j?.route?.legs?.length||!j?.destination||j?.status==='completed')return;
   if(j.user_id&&j.user_id!==communityUser.id)return;
   if(!j.user_id)j.user_id=communityUser.id;
-  sgJourney={...j,status:'active',current_hop:Number(j.current_hop||0)};sgRouteSelection=j.destination;setJourneyPlannerState('live');renderSgJourney();startSgJourneyTracking()
+  sgJourney={...j,status:'active',current_hop:Number(j.current_hop||0)};sgRouteSelection=j.destination;journeyPlanResultsOpen=true;setJourneyPlannerState('live');renderSgJourney();startSgJourneyTracking()
  }catch{}
 }
 function startSgJourneyTracking(){
@@ -1897,13 +1916,13 @@ function toggleSgJourneyHops(btn){
 }
 function endSgJourney(){
  if(!sgJourney)return;if(!confirm('End this active journey?'))return;
- let historyId=sgJourney.history_id;stopSgJourneyTracking();sgJourney=null;localStorage.removeItem('runsgdSgSelectedRoute');if(historyId)updateJourneyHistoryStatus(historyId,'ended');setJourneyPlannerState('plan');
+ let historyId=sgJourney.history_id;stopSgJourneyTracking();sgJourney=null;localStorage.removeItem('runsgdSgSelectedRoute');if(historyId)updateJourneyHistoryStatus(historyId,'ended');journeyPlanResultsOpen=false;setJourneyPlannerState('plan');
  let planner=$('sgRoutePlannerCard');if(planner)planner.classList.remove('journey-active');$('sgJourneyLiveCard')?.classList.remove('show');$('sgJourneyBeacon')?.classList.remove('show');$('sgJourneyDriveFocus')?.classList.remove('show');updateSgRouteOrigin();txt('sgRouteStatus','Journey ended. Search for a new destination.');$('sgRouteOptions').innerHTML='';sgRouteResults=[];sgRouteSelection=null;if($('sgRouteDestination'))$('sgRouteDestination').value='';updateRouteSearchButton();
 }
 function finishSgJourney(){
  if(!sgJourney)return;let historyId=sgJourney.history_id;stopSgJourneyTracking();if(historyId)updateJourneyHistoryStatus(historyId,'completed');setJourneyTurnState('✓ Journey complete','good');$('sgJourneyDriveFocus')?.classList.remove('show');let gps=$('sgJourneyGpsHealth');if(gps){gps.className='journeyGpsChip good';gps.textContent='● GPS tracking complete'}
  let card=$('sgJourneyLiveCard');if(card){card.classList.add('show','journeyArrival');txt('sgJourneyPill','Arrived');txt('sgJourneyAction','You’ve arrived 🎉');txt('sgJourneyDistance','Journey complete');txt('sgJourneyEta','Done');if($('sgJourneyProgressBar'))$('sgJourneyProgressBar').style.width='100%';txt('sgJourneyAiText','You made it. Route cleared — ready for the next trip.');$('sgJourneyNext').innerHTML='<b>Destination reached:</b> '+esc(sgJourney.destination?.name||sgJourney.destination?.address||'Destination')}
- localStorage.removeItem('runsgdSgSelectedRoute');sgJourney.status='completed';setTimeout(()=>{let planner=$('sgRoutePlannerCard');if(planner)planner.classList.remove('journey-active');$('sgJourneyLiveCard')?.classList.remove('show');setJourneyPlannerState('plan');updateSgRouteOrigin();loadJourneyProfileData()},8000);
+ localStorage.removeItem('runsgdSgSelectedRoute');sgJourney.status='completed';setTimeout(()=>{let planner=$('sgRoutePlannerCard');if(planner)planner.classList.remove('journey-active');$('sgJourneyLiveCard')?.classList.remove('show');journeyPlanResultsOpen=false;setJourneyPlannerState('plan');updateSgRouteOrigin();loadJourneyProfileData()},8000);
 }
 
 function makeBorderHops(){
@@ -2419,6 +2438,7 @@ async function init(){
  showPage(page);requestAnimationFrame(()=>requestAnimationFrame(scrollPageTop));setTimeout(scrollPageTop,120);setTimeout(scrollPageTop,420);updateBrief();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}
 }
 window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','journey','community','more','signin'].includes(n))showPage(n)});
+window.addEventListener('popstate',()=>{if(document.querySelector('.page.active')?.id==='journey'&&sgJourney?.status==='active'&&journeyPlannerState==='live'){setJourneyPlannerState('plan');scrollPageTop()}});
 document.addEventListener('visibilitychange',()=>{
  if(!sgJourney||sgJourney.status!=='active')return;
  if(document.hidden){
