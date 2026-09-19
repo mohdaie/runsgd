@@ -717,7 +717,7 @@ function normalizeMobileViewport(){
  if(bad&&!sessionStorage.getItem('runsgdViewportRetry')){
   sessionStorage.setItem('runsgdViewportRetry','1');
   let target=location.hash||'#'+(localStorage.getItem('runsgdPage')||'home');
-  location.replace('/?mobile=1&v=2700&t='+Date.now()+target);return false
+  location.replace('/?mobile=1&v=2800&t='+Date.now()+target);return false
  }
  if(!bad)sessionStorage.removeItem('runsgdViewportRetry');
  return true
@@ -763,7 +763,7 @@ async function initCommunity(){
       localStorage.setItem('runsgdAuthReturn',target);localStorage.setItem('runsgdAuthClient',client);
       localStorage.removeItem('runsgdGoogleAttempt');localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleReturnTarget');
       sessionStorage.setItem('runsgdPostAuth','1');
-      location.replace('/?resume='+encodeURIComponent(client)+'&v=2700&t='+Date.now()+'#'+target);
+      location.replace('/?resume='+encodeURIComponent(client)+'&v=2800&t='+Date.now()+'#'+target);
       return
     }
 
@@ -800,7 +800,7 @@ async function signInWithGoogle(btn){
  // Desktop web keeps RunSGD open and uses a popup.
  if(ctx.type!=='desktop-web'){
   try{
-   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2700';
+   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2800';
    let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
    if(error)throw error
   }catch(e){setBusy(btn,false);authStatus(e.message||'Could not open Google sign-in.')}
@@ -829,7 +829,7 @@ async function signInWithGoogle(btn){
  window.addEventListener('storage',check);window.addEventListener('focus',check);googleLoginTimer=setInterval(check,800);
  try{channel=new BroadcastChannel('runsgd-auth');channel.onmessage=e=>{if(e.data?.type==='google-signed-in'&&e.data?.attempt===attempt)check()}}catch{}
  try{
-  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2700';
+  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2800';
   const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo,skipBrowserRedirect:true}});
   if(error)throw error;if(!data?.url)throw Error('Google sign-in is unavailable.');popup.location.replace(data.url)
  }catch(e){cleanup();try{popup.close()}catch{}authStatus(e.message||'Could not open Google sign-in.')}
@@ -917,7 +917,7 @@ function renderCommunityTopicOptions(){
 function renderCommunityTopics(){
  let el=$('communityTopicList');if(!el)return;
  if(!communityTopics.length){el.innerHTML='<div class="threadEmpty">No communities yet.<br>Be the first to create one.</div>';return}
- el.innerHTML=communityTopics.map(t=>{let count=Number(t.community_posts?.[0]?.count||0),can=communityUser&&(t.created_by===communityUser.id||communityRole==='admin');return '<div class="communityTopicCard"><button onclick="openCommunityTopic(\''+esc(t.id)+'\',\''+esc(t.title).replace(/'/g,"&#39;")+'\')"><div class="communityTopicTitle">'+esc(t.title)+'</div><div class="communityTopicDesc">'+esc(t.description||'Community-created space')+'</div></button><div><div class="communityTopicCount">'+count+' post'+(count===1?'':'s')+'</div>'+(can?'<button class="threadTextBtn" onclick="deleteCommunityTopic(\''+esc(t.id)+'\')">Delete</button>':'')+'</div></div>'}).join('')
+ el.innerHTML=communityTopics.map(t=>{let count=Number(t.community_posts?.[0]?.count||0),can=communityUser&&(t.created_by===communityUser.id||communityRole==='admin');return '<div class="communityTopicCard"><button onclick="openCommunityTopic(\''+esc(t.id)+'\')"><div class="communityTopicTitle">'+esc(t.title)+'</div><div class="communityTopicDesc">'+esc(t.description||'Community-created space')+'</div></button><div><div class="communityTopicCount">'+count+' post'+(count===1?'':'s')+'</div>'+(can?'<button class="threadTextBtn" onclick="deleteCommunityTopic(\''+esc(t.id)+'\')">Delete</button>':'')+'</div></div>'}).join('')
 }
 function showCommunityFeed(){communityThreadPostId=null;$('communityTopicsView').style.display='none';$('communityThreadView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed()}
 function showCommunityTopics(){$('communityFeedView').style.display='none';$('communityThreadView').style.display='none';$('communityTopicsView').style.display='block';loadCommunityTopics()}
@@ -949,16 +949,18 @@ function postTopicTitle(p){return p.community_topics?.title||''}
 function renderCommunityPost(p,thread=false){
  let prof=p.profiles||{},mine=p.user_id===communityUser?.id,admin=communityRole==='admin',loved=!!communityUser&&(p.community_post_likes||[]).some(x=>x.user_id===communityUser.id),likes=(p.community_post_likes||[]).length,replies=(p.community_replies||[]).length,topic=postTopicTitle(p),badge=prof.role==='admin'?'Admin':(prof.badge&&prof.badge!=='newbie'?labelBadge(prof.badge):''),menu=(mine||admin)?'<button class="threadMore" onclick="deleteCommunityPost('+Number(p.id)+')" aria-label="Delete post">⋯</button>':'';
  return '<article class="threadPost">'+
- '<div class="threadPostHeader">'+communityAvatarHtml(prof)+'<div class="threadPostMain"><div class="threadNameLine"><span class="threadName">'+esc(prof.display_name||'Commuter')+'</span>'+(badge?'<span class="threadBadge '+(prof.role==='admin'?'admin':'')+'">'+esc(badge)+'</span>':'')+'</div><div class="threadContext">'+communityTimeAgo(p.created_at)+(topic?' · in <button class="threadTopicLink" onclick="openCommunityTopic(\''+esc(p.topic_id)+'\',\''+esc(topic).replace(/'/g,"&#39;")+'\')">'+esc(topic)+'</button>':'')+'</div></div>'+menu+'</div>'+
+ '<div class="threadPostHeader">'+communityAvatarHtml(prof)+'<div class="threadPostMain"><div class="threadNameLine"><span class="threadName">'+esc(prof.display_name||'Commuter')+'</span>'+(badge?'<span class="threadBadge '+(prof.role==='admin'?'admin':'')+'">'+esc(badge)+'</span>':'')+'</div><div class="threadContext">'+communityTimeAgo(p.created_at)+(topic?' · in <button class="threadTopicLink" onclick="openCommunityTopic(\''+esc(p.topic_id)+'\')">'+esc(topic)+'</button>':'')+'</div></div>'+menu+'</div>'+
  '<div class="threadContent">'+esc(p.content)+'</div><div class="threadActions"><button class="threadAction '+(loved?'loved':'')+'" onclick="toggleCommunityPostLike('+Number(p.id)+')"><span class="threadActionIcon">'+(loved?'♥':'♡')+'</span><span>'+likes+'</span></button><button class="threadAction" onclick="openCommunityThread('+Number(p.id)+')"><span class="threadActionIcon">💬</span><span>'+replies+'</span></button></div></article>'
 }
 function renderCommunityFeed(){let el=$('communityFeed');if(!el)return;let scope=$('communityFeedScope'),topic=communityTopics.find(t=>t.id===communityTopicFilter);if(topic){scope.style.display='block';scope.innerHTML=esc(topic.title)+'<button onclick="clearCommunityTopicFilter()">All posts</button>'}else scope.style.display='none';el.innerHTML=communityFeed.length?communityFeed.map(p=>renderCommunityPost(p)).join(''):'<div class="threadEmpty">'+(communityTopicFilter?'No posts here yet.':'No posts yet. Start the first conversation.')+'</div>'}
 function clearCommunityTopicFilter(){communityTopicFilter=null;loadCommunityFeed()}
-function openCommunityTopic(id,title=''){communityTopicFilter=id;$('communityTopicsView').style.display='none';$('communityThreadView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed();scrollPageTop()}
+function openCommunityTopic(id){communityTopicFilter=id;$('communityTopicsView').style.display='none';$('communityThreadView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed();scrollPageTop()}
 async function deleteCommunityPost(id){let p=communityFeed.find(x=>Number(x.id)===Number(id));if(!communityUser||!p||(p.user_id!==communityUser.id&&communityRole!=='admin'))return;if(!confirm('Delete this post?'))return;let {error}=await sb.from('community_posts').delete().eq('id',id);if(error)return alert(error.message);if(communityThreadPostId===id){communityThreadPostId=null;showCommunityFeed()}else loadCommunityFeed()}
 async function toggleCommunityPostLike(id){
- if(!communityUser)return openSignIn('community','community');let p=communityFeed.find(x=>Number(x.id)===Number(id)),loved=(p?.community_post_likes||[]).some(x=>x.user_id===communityUser.id);
- let r=loved?await sb.from('community_post_likes').delete().eq('post_id',id).eq('user_id',communityUser.id):await sb.from('community_post_likes').insert({post_id:id,user_id:communityUser.id});if(r.error)return;communityThreadPostId?loadCommunityThread(communityThreadPostId):loadCommunityFeed()
+ if(!communityUser)return openSignIn('community','community');
+ let {data}=await sb.from('community_post_likes').select('post_id').eq('post_id',id).eq('user_id',communityUser.id).maybeSingle();
+ let r=data?await sb.from('community_post_likes').delete().eq('post_id',id).eq('user_id',communityUser.id):await sb.from('community_post_likes').insert({post_id:id,user_id:communityUser.id});
+ if(r.error)return;communityThreadPostId?loadCommunityThread(communityThreadPostId):loadCommunityFeed()
 }
 async function openCommunityThread(id){communityThreadPostId=Number(id);$('communityFeedView').style.display='none';$('communityTopicsView').style.display='none';$('communityThreadView').style.display='block';await applyMemberState();await loadCommunityThread(id);scrollPageTop()}
 function closeCommunityThread(){communityThreadPostId=null;$('communityThreadView').style.display='none';$('communityTopicsView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed();scrollPageTop()}
