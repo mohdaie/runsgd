@@ -661,10 +661,10 @@ async function initCommunity(){
       if(!communityUser&&sgJourney){stopSgJourneyTracking();sgJourney=null;localStorage.removeItem('runsgdSgSelectedRoute');setJourneyPlannerState('plan')}
       await applyMemberState();
       if(activeRoom)await loadCommunityMessages();
-      if(event==='SIGNED_IN'&&communityUser&&localStorage.getItem('runsgdAuthReturn')==='community'){
-        localStorage.removeItem('runsgdAuthReturn');
-        history.replaceState(null,'',location.pathname+'#community');
-        showPage('community');
+      if(event==='SIGNED_IN'&&communityUser){
+        let returnTo=localStorage.getItem('runsgdAuthReturn');
+        if(returnTo==='journey'){localStorage.removeItem('runsgdAuthReturn');history.replaceState(null,'',location.pathname+'#journey');showPage('journey')}
+        else if(returnTo==='community'){localStorage.removeItem('runsgdAuthReturn');history.replaceState(null,'',location.pathname+'#community');showPage('community')}
       }
     },0)})
   }catch(e){authStatus('Community connection unavailable.')}
@@ -746,7 +746,7 @@ async function communityRoleOf(user){
 }
 async function communitySignUp(btn){let email=$('memberEmail')?.value.trim(),password=$('memberPassword')?.value||'',name=$('memberName')?.value.trim();if(!email||password.length<6||!name)return authStatus('Enter display name, valid email and password of at least 6 characters.');setBusy(btn,true);let {data,error}=await sb.auth.signUp({email,password,options:{data:{display_name:name}}});setBusy(btn,false);if(error)return authStatus(error.message);authStatus(data.session?'Account created and signed in.':'Account created. Check your email if confirmation is required.')}
 async function communitySignIn(btn){let email=$('memberEmail')?.value.trim(),password=$('memberPassword')?.value||'';if(!email||!password)return authStatus('Enter your email and password.');setBusy(btn,true);let {error}=await sb.auth.signInWithPassword({email,password});setBusy(btn,false);authStatus(error?error.message:'Signed in successfully.')}
-async function communitySignOut(){await sb.auth.signOut();communityUser=null;applyMemberState()}
+async function communitySignOut(){await sb.auth.signOut();communityUser=null;if(sgJourney){stopSgJourneyTracking();sgJourney=null;localStorage.removeItem('runsgdSgSelectedRoute')}setJourneyPlannerState('plan');applyMemberState()}
 async function applyMemberState(){
  let signed=!!communityUser;
  $('communityAuthCard').style.display=signed?'none':'block';$('communityComposer').style.display=signed?'flex':'none';$('signOutBtn').style.display=signed?'inline-block':'none';$('communityGuestHint').style.display=signed?'none':'block';
@@ -782,11 +782,11 @@ async function saveProfile(btn){if(!communityUser)return;let name=$('profileName
 async function uploadProfilePhoto(input){if(!communityUser||!input.files?.[0])return;let file=input.files[0];if(file.size>2097152){txt('profileStatus','Photo must be 2 MB or smaller.');input.value='';return}txt('profileStatus','Uploading photo…');let path=communityUser.id+'/avatar',r=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type||'image/jpeg'});if(r.error){txt('profileStatus',r.error.message);input.value='';return}let url=sb.storage.from('avatars').getPublicUrl(path).data.publicUrl+'?v='+Date.now();let {error}=await sb.from('profiles').update({avatar_url:url}).eq('id',communityUser.id);input.value='';if(error)return txt('profileStatus',error.message);txt('profileStatus','Profile photo updated.');await applyMemberState();if(activeRoom)await loadCommunityMessages()}
 
 let journeyRecentCache=[],journeyPlannerState='plan';
-function openJourneyEmailSignIn(){showPage('community');let f=$('emailAuthForm');if(f&&f.style.display==='none')toggleEmailAuth();setTimeout(()=>$('memberEmail')?.focus(),80)}
+function openJourneyEmailSignIn(){localStorage.setItem('runsgdAuthReturn','journey');showPage('community');let f=$('emailAuthForm');if(f&&f.style.display==='none')toggleEmailAuth();setTimeout(()=>$('memberEmail')?.focus(),80)}
 function applyJourneyAuthState(){
  let signed=!!communityUser,gate=$('journeyAuthGate'),shell=$('journeyMemberShell');
  if(gate)gate.style.display=signed?'none':'block';if(shell)shell.style.display=signed?'block':'none';
- if(!signed){setJourneyPlannerState('plan');authStatus('Sign in to use AI Journey Planner and save recent journeys.')}
+ if(!signed){setJourneyPlannerState('plan');txt('journeyAuthStatus','Sign in to use AI Journey Planner and save recent journeys.')}
 }
 function setJourneyPlannerState(state='plan'){
  if(!['plan','compare','live'].includes(state))state='plan';
