@@ -200,7 +200,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.9.0 dedicated Journey experience */
+/* v2.9.1 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
@@ -216,7 +216,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 @media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
 
 
-/* v2.9.0 community — Threads-inspired dark feed */
+/* v2.9.1 community — Threads-inspired dark feed */
 .communityV28Head{display:block}.communityV28Head .pageTitle{margin-bottom:5px}.communityThreadsShell{margin:18px -18px -106px;padding:0 18px 122px;background:#0b0b0c;color:#f5f5f5;min-height:66vh;border-radius:24px 24px 0 0;overflow:hidden}
 .communitySignInStrip{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 -2px;padding:14px 2px;border:0;border-bottom:1px solid #242426;background:transparent;border-radius:0;color:#f3f3f3}.communitySignInStrip .sub{font-size:11px;margin-top:2px;color:#8f8f95}.communitySignInStrip .miniBtn{background:#1c1c1f;border-color:#2e2e32;color:#fff}
 .threadComposerLauncher{width:100%;display:flex;align-items:center;gap:11px;border:0;border-bottom:1px solid #242426;background:transparent;padding:12px 1px;text-align:left;color:#fff}.threadAvatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#202024;display:grid;place-items:center;flex:0 0 auto}.threadAvatarPlaceholder{font-size:16px;color:#cfcfd4}.threadComposerText{flex:1;color:#84848a;font-size:14px}.threadPostMini{font-size:11px;font-weight:900;color:#f2f2f4;border:1px solid #343439;border-radius:999px;padding:7px 12px;background:#161619}
@@ -230,7 +230,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.9.0</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.9.1</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -584,7 +584,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.9.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.9.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -637,7 +637,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.9.0</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.9.1</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -737,7 +737,7 @@ function normalizeMobileViewport(){
  if(bad&&!sessionStorage.getItem('runsgdViewportRetry')){
   sessionStorage.setItem('runsgdViewportRetry','1');
   let target=location.hash||'#'+(localStorage.getItem('runsgdPage')||'home');
-  location.replace('/?mobile=1&v=2900&t='+Date.now()+target);return false
+  location.replace('/?mobile=1&v=2910&t='+Date.now()+target);return false
  }
  if(!bad)sessionStorage.removeItem('runsgdViewportRetry');
  return true
@@ -783,7 +783,7 @@ async function initCommunity(){
       localStorage.setItem('runsgdAuthReturn',target);localStorage.setItem('runsgdAuthClient',client);
       localStorage.removeItem('runsgdGoogleAttempt');localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleReturnTarget');
       sessionStorage.setItem('runsgdPostAuth','1');
-      location.replace('/?resume='+encodeURIComponent(client)+'&v=2900&t='+Date.now()+'#'+target);
+      location.replace('/?resume='+encodeURIComponent(client)+'&v=2910&t='+Date.now()+'#'+target);
       return
     }
 
@@ -820,7 +820,7 @@ async function signInWithGoogle(btn){
  // Desktop web keeps RunSGD open and uses a popup.
  if(ctx.type!=='desktop-web'){
   try{
-   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2900';
+   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2910';
    let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
    if(error)throw error
   }catch(e){setBusy(btn,false);authStatus(e.message||'Could not open Google sign-in.')}
@@ -849,7 +849,7 @@ async function signInWithGoogle(btn){
  window.addEventListener('storage',check);window.addEventListener('focus',check);googleLoginTimer=setInterval(check,800);
  try{channel=new BroadcastChannel('runsgd-auth');channel.onmessage=e=>{if(e.data?.type==='google-signed-in'&&e.data?.attempt===attempt)check()}}catch{}
  try{
-  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2900';
+  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2910';
   const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo,skipBrowserRedirect:true}});
   if(error)throw error;if(!data?.url)throw Error('Google sign-in is unavailable.');popup.location.replace(data.url)
  }catch(e){cleanup();try{popup.close()}catch{}authStatus(e.message||'Could not open Google sign-in.')}
@@ -1945,35 +1945,73 @@ function journeyCurrentRoadName(leg){
  let s=String(leg?.instruction||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim(),m=s.match(/\bonto\s+(.+)$/i);
  return m?.[1]?.replace(/[.]+$/,'').trim()||''
 }
-function journeyManeuverCue(leg){
+function stepGeometrySide(currentLeg,nextLeg){
+ let a=makePolylineCache(currentLeg?.polyline||''),b=makePolylineCache(nextLeg?.polyline||'');if(!a||!b)return '';
+ let ah=journeyBearing(a.points[Math.max(0,a.points.length-3)].lat,a.points[Math.max(0,a.points.length-3)].lon,a.points[a.points.length-1].lat,a.points[a.points.length-1].lon);
+ let bh=journeyBearing(b.points[0].lat,b.points[0].lon,b.points[Math.min(b.points.length-1,2)].lat,b.points[Math.min(b.points.length-1,2)].lon);
+ if(!Number.isFinite(ah)||!Number.isFinite(bh))return '';
+ let d=((bh-ah+540)%360)-180;if(Math.abs(d)<8)return '';return d>0?'right':'left'
+}
+function journeyManeuverCue(leg,currentLeg=null){
  let detail=String(leg?.instruction||sgJourneyInstruction(leg)||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
- let s=detail.toLowerCase(),action='NEXT TURN';
- if(/u[- ]?turn/.test(s))action='MAKE U-TURN';
- else if(/slight left/.test(s))action='SLIGHT LEFT';
- else if(/slight right/.test(s))action='SLIGHT RIGHT';
- else if(/turn left/.test(s))action='TURN LEFT';
- else if(/turn right/.test(s))action='TURN RIGHT';
- else if(/keep left/.test(s))action='KEEP LEFT';
- else if(/keep right/.test(s))action='KEEP RIGHT';
- else if(/merge/.test(s))action='MERGE';
- else if(/exit/.test(s))action='TAKE EXIT';
- else if(/continue straight|head straight|go straight/.test(s))action='CONTINUE STRAIGHT';
+ let s=detail.toLowerCase(),raw=String(leg?.maneuver||'').toUpperCase(),side=raw.includes('LEFT')?'left':raw.includes('RIGHT')?'right':'';
+ if(!side){if(/\bleft\b/.test(s))side='left';else if(/\bright\b/.test(s))side='right';else side=stepGeometrySide(currentLeg,leg)}
+ let isExit=/exit|ramp/.test(s)||/RAMP|EXIT/.test(raw),isFork=/fork/.test(s)||raw.includes('FORK'),isFlyover=/flyover|overpass|viaduct/.test(s),isMerge=/merge/.test(s)||raw.includes('MERGE');
+ let action='NEXT TURN';
+ if(/UTURN/.test(raw)||/u[- ]?turn/.test(s))action='MAKE U-TURN'+(side?' '+side.toUpperCase():'');
+ else if(isExit)action='TAKE '+(side?side.toUpperCase()+' ':'')+'EXIT';
+ else if(isFork)action='KEEP '+(side?side.toUpperCase():'TO THE FORK');
+ else if(/TURN_SHARP_LEFT/.test(raw)||/sharp left/.test(s))action='SHARP LEFT';
+ else if(/TURN_SHARP_RIGHT/.test(raw)||/sharp right/.test(s))action='SHARP RIGHT';
+ else if(/TURN_SLIGHT_LEFT/.test(raw)||/slight left/.test(s))action='SLIGHT LEFT';
+ else if(/TURN_SLIGHT_RIGHT/.test(raw)||/slight right/.test(s))action='SLIGHT RIGHT';
+ else if(/TURN_LEFT/.test(raw)||/turn left/.test(s))action='TURN LEFT';
+ else if(/TURN_RIGHT/.test(raw)||/turn right/.test(s))action='TURN RIGHT';
+ else if(/KEEP_LEFT/.test(raw)||/keep left/.test(s))action='KEEP LEFT';
+ else if(/KEEP_RIGHT/.test(raw)||/keep right/.test(s))action='KEEP RIGHT';
+ else if(isMerge)action='MERGE'+(side?' '+side.toUpperCase():'');
+ else if(/ROUNDABOUT/.test(raw)||/roundabout/.test(s))action='ENTER ROUNDABOUT'+(side?' · '+side.toUpperCase():'');
+ else if(/STRAIGHT/.test(raw)||/continue straight|head straight|go straight/.test(s))action='CONTINUE STRAIGHT';
  else if(String(leg?.mode||'').toUpperCase()==='PARK')action='PREPARE TO PARK';
- return {action,detail}
+ let risk=(isExit||isFork||isFlyover||isMerge||/SHARP|UTURN|ROUNDABOUT/.test(raw)||/sharp|u[- ]?turn|roundabout/.test(s))?'high':
+          (/SLIGHT|TURN_|KEEP_/.test(raw)||/slight|turn|keep/.test(s))?'medium':'normal';
+ return {action,detail,side,raw,risk,isExit,isFork,isFlyover,isMerge}
+}
+function journeyWarningBands(cue,speed){
+ speed=Number(speed);let fast=Number.isFinite(speed)?Math.max(0,speed):0;
+ if(cue?.risk==='high')return {early:Math.max(2200,fast*95),prepare:Math.max(1400,fast*62),urgent:Math.max(650,fast*30),now:220};
+ if(cue?.risk==='medium')return {early:Math.max(1500,fast*70),prepare:Math.max(900,fast*44),urgent:Math.max(450,fast*23),now:170};
+ return {early:1000,prepare:650,urgent:320,now:130}
+}
+function journeyThenPreview(legs,idx){
+ let first=legs[idx+1],second=legs[idx+2];if(!first||!second||!journeyRoadMode(first.mode)||!journeyRoadMode(second.mode))return null;
+ let cue=journeyManeuverCue(second,first),gap=Number(first.distance_m||0);
+ if(cue.risk==='normal'&&gap>900)return null;
+ return {cue,gap}
+}
+function journeyRichNextHtml(legs,idx,stepRemain){
+ let next=legs[idx+1];if(!next)return '<b>Final road segment:</b> Continue to '+esc(sgJourney?.destination?.name||'your destination')+'.';
+ let cue=journeyManeuverCue(next,legs[idx]),d=Number.isFinite(stepRemain)?routeDistance(stepRemain):'ahead',then=journeyThenPreview(legs,idx);
+ let html='<b>Next in '+esc(d)+':</b> '+esc(cue.action)+(cue.detail?' · '+esc(cue.detail):'');
+ if(then){html+='<br><b>Then'+(then.gap? ' about '+esc(routeDistance(then.gap))+' later':'')+':</b> '+esc(then.cue.action)+(then.cue.detail?' · '+esc(then.cue.detail):'')}
+ return html
 }
 function renderJourneyDriveFocus(road,leg,idx,legs){
  let box=$('sgJourneyDriveFocus');if(!box)return;
  if(!road){box.classList.remove('show');return}
  box.classList.add('show');
  let finalRoad=idx===legs.length-1,next=legs[idx+1],stepRemain=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?Math.max(0,sgJourneyRuntime.currentStepRemainingM):null,stepPct=Number.isFinite(sgJourneyRuntime.currentStepProgressPct)?Math.min(100,Math.max(0,Math.round(sgJourneyRuntime.currentStepProgressPct))):0;
- let destRemain=Number.isFinite(sgJourneyRuntime.lastArrivalDistanceM)?sgJourneyRuntime.lastArrivalDistanceM:stepRemain,cue=journeyManeuverCue(next),command='KEEP STRAIGHT',until='until next turn';
- if(finalRoad){command='CONTINUE TO DESTINATION';until='to destination'}
- else if(next){
-  // Early in a hop: reassure. Mid-hop: start preparing. Final third / short distance: show the actual turn prominently.
-  let urgent=stepPct>=68||(Number.isFinite(stepRemain)&&stepRemain<=450),prepare=stepPct>=38||(Number.isFinite(stepRemain)&&stepRemain<=900);
-  if(urgent){command=cue.action;until=cue.detail||'next manoeuvre'}
-  else if(prepare){command='PREPARE · '+cue.action;until=cue.detail||'next manoeuvre'}
- }
+ let destRemain=Number.isFinite(sgJourneyRuntime.lastArrivalDistanceM)?sgJourneyRuntime.lastArrivalDistanceM:stepRemain,cue=journeyManeuverCue(next,leg),bands=journeyWarningBands(cue,sgJourneyRuntime.gpsSpeed),command='KEEP STRAIGHT',until='Continue on this road';
+ if(finalRoad){command='CONTINUE TO DESTINATION';until='Stay on this road to your destination'}
+ else if(next&&Number.isFinite(stepRemain)){
+  if(stepRemain<=bands.now)command=cue.action;
+  else if(stepRemain<=bands.urgent)command='NOW PREPARE · '+cue.action;
+  else if(stepRemain<=bands.prepare)command='GET READY · '+cue.action;
+  else if(stepRemain<=bands.early&&cue.risk==='high')command='AHEAD · '+cue.action;
+  else command='KEEP STRAIGHT';
+  until='Next: '+cue.action+(cue.detail?' · '+cue.detail:'');
+  let then=journeyThenPreview(legs,idx);if(then)until+=' · THEN '+(then.gap?routeDistance(then.gap)+' later · ':'')+then.cue.action
+ }else if(next){until='Next: '+cue.action+(cue.detail?' · '+cue.detail:'')}
  txt('sgJourneyDriveCommand',command);
  txt('sgJourneyDriveDistance',Number.isFinite(finalRoad?destRemain:stepRemain)?routeDistance(finalRoad?destRemain:stepRemain):'—');
  txt('sgJourneyDriveUntil',until);
@@ -1992,8 +2030,16 @@ function renderSgJourney(distance=null){
  let remaining=legs.slice(idx).reduce((n,x)=>n+Number(x.duration_sec||0),0),borderPending=!!sgJourney.route?.border_variable&&idx<=Number(sgJourney.route?.border_end_index??-1);txt('sgJourneyEta',remaining?(routeMinutes(remaining)+(borderPending?' + border':'')+' left'):'Live');
  let road=journeyRoadMode(leg?.mode);
  if(road){
-  let nextRoad=legs[idx+1],sp=Number.isFinite(sgJourneyRuntime.currentStepProgressPct)?sgJourneyRuntime.currentStepProgressPct:0,sr=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null,cue=journeyManeuverCue(nextRoad);
-  txt('sgJourneyAction',idx===legs.length-1?'Continue to '+(sgJourney.destination?.name||'your destination'):(sp>=68||(Number.isFinite(sr)&&sr<=450))?cue.action:(sp>=38||(Number.isFinite(sr)&&sr<=900))?'Prepare for '+cue.action.toLowerCase():'Keep straight');
+  let nextRoad=legs[idx+1],sr=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null,cue=journeyManeuverCue(nextRoad,leg),bands=journeyWarningBands(cue,sgJourneyRuntime.gpsSpeed),label='Keep straight';
+  if(idx===legs.length-1)label='Continue to '+(sgJourney.destination?.name||'your destination');
+  else if(nextRoad&&Number.isFinite(sr)){
+   if(sr<=bands.now)label=cue.action;
+   else if(sr<=bands.urgent)label='Prepare now · '+cue.action;
+   else if(sr<=bands.prepare)label='Get ready · '+cue.action;
+   else if(sr<=bands.early&&cue.risk==='high')label=cue.action+' ahead';
+   else label='Keep straight · next '+cue.action.toLowerCase()+' in '+routeDistance(sr)
+  }
+  txt('sgJourneyAction',label);
  }else txt('sgJourneyAction',sgJourneyInstruction(leg));
  let distText=distance!=null?routeDistance(distance)+' from next hop':'Waiting for live GPS…',pct=legs.length?Math.min(100,Math.round((idx/legs.length)*100)):0;
  if(road&&Number.isFinite(sgJourneyRuntime.routeProgressM)&&Number.isFinite(sgJourneyRuntime.routeTotalM)&&sgJourneyRuntime.routeTotalM>0){
@@ -2008,12 +2054,18 @@ function renderSgJourney(distance=null){
  updateJourneyGpsHealth();renderJourneyDriveFocus(road,leg,idx,legs);
  if(road&&Date.now()-Number(sgJourneyRuntime.lastTurnDetectedAt||0)>4000&&!sgJourneyRuntime.turnConfirmCount&&!sgJourneyRuntime.arrivalConfirmCount){
   let age=sgJourneyRuntime.gpsUpdatedAt?Date.now()-sgJourneyRuntime.gpsUpdatedAt:Infinity,acc=Number(sgJourneyRuntime.gpsAccuracy);
-  if(age<9000&&Number.isFinite(acc)&&acc<=65){let off=Number(sgJourneyRuntime.offRouteM),lost=Number.isFinite(off)&&off>120;setJourneyTurnState(lost?'Off route · tap Reroute':'On route · watching next turn',lost?'fair':'turn');$('sgJourneyRerouteBtn')?.classList.toggle('offroute',lost)}
+  if(age<9000&&Number.isFinite(acc)&&acc<=65){
+   let off=Number(sgJourneyRuntime.offRouteM),lost=Number.isFinite(off)&&off>120,up=legs[idx+1],sr=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null,cue=journeyManeuverCue(up,leg),bands=journeyWarningBands(cue,sgJourneyRuntime.gpsSpeed);
+   if(lost)setJourneyTurnState('Off route · tap Reroute','fair');
+   else if(up&&cue.risk==='high'&&Number.isFinite(sr)&&sr<=bands.early)setJourneyTurnState('Early warning · '+cue.action+' in '+routeDistance(sr),'confirm');
+   else setJourneyTurnState('On route · next '+(up?cue.action.toLowerCase():'destination'),'turn');
+   $('sgJourneyRerouteBtn')?.classList.toggle('offroute',lost)
+  }
  }
  renderJourneyBeacon(distance);
  if($('sgJourneyProgressBar'))$('sgJourneyProgressBar').style.width=pct+'%';
  if(!$('sgJourneyAiText')?.dataset.aiLock)txt('sgJourneyAiText',sgJourneyDefaultCoach(leg,distance));
- let next=legs[idx+1];$('sgJourneyNext').innerHTML=next?'<b>'+(road?'Next turn:':'Next:')+'</b> '+esc(sgJourneyInstruction(next)):'<b>Final hop:</b> Keep going until you reach '+esc(sgJourney.destination?.name||'your destination')+'.';let doneBtn=$('sgJourneyHopDoneBtn');if(doneBtn)doneBtn.textContent=leg?.manual?'Cleared immigration':road&&idx===legs.length-1?'I have arrived':'Hop done';
+ let next=legs[idx+1];$('sgJourneyNext').innerHTML=road?journeyRichNextHtml(legs,idx,Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null):(next?'<b>Next:</b> '+esc(sgJourneyInstruction(next)):'<b>Final hop:</b> Keep going until you reach '+esc(sgJourney.destination?.name||'your destination')+'.');let doneBtn=$('sgJourneyHopDoneBtn');if(doneBtn)doneBtn.textContent=leg?.manual?'Cleared immigration':road&&idx===legs.length-1?'I have arrived':'Hop done';
  $('sgJourneyAllHops').innerHTML=legs.map((l,n)=>'<div class="routeLeg '+(n<idx?'journeyDone':n===idx?'journeyCurrent':'')+'"><div class="routeLegIcon">'+routeModeIcon(l.mode)+'</div><div><div class="routeLegTitle">'+esc(sgJourneyInstruction(l))+'</div><div class="routeLegMeta">'+esc(routeMinutes(l.duration_sec)+(l.distance_m?' · '+routeDistance(l.distance_m):''))+'</div></div></div>').join('');
 }
 function restoreSgJourney(){
