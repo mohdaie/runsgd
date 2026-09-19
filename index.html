@@ -200,7 +200,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.10.1 dedicated Journey experience */
+/* v2.10.2 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
@@ -216,7 +216,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 @media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
 
 
-/* v2.10.1 community — full-height Threads-inspired dark page */
+/* v2.10.2 community — full-height Threads-inspired dark page */
 body.communityMode .hello{display:none}
 body.communityMode{background:#0b0b0c;color:#f5f5f5}
 body.communityMode .app{background:#0b0b0c}
@@ -241,7 +241,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.1</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.2</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -574,7 +574,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.2</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -627,7 +627,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.1</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.2</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -727,7 +727,7 @@ function normalizeMobileViewport(){
  if(bad&&!sessionStorage.getItem('runsgdViewportRetry')){
   sessionStorage.setItem('runsgdViewportRetry','1');
   let target=location.hash||'#'+(localStorage.getItem('runsgdPage')||'home');
-  location.replace('/?mobile=1&v=2101&t='+Date.now()+target);return false
+  location.replace('/?mobile=1&v=2102&t='+Date.now()+target);return false
  }
  if(!bad)sessionStorage.removeItem('runsgdViewportRetry');
  return true
@@ -773,7 +773,7 @@ async function initCommunity(){
       localStorage.setItem('runsgdAuthReturn',target);localStorage.setItem('runsgdAuthClient',client);
       localStorage.removeItem('runsgdGoogleAttempt');localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleReturnTarget');
       sessionStorage.setItem('runsgdPostAuth','1');
-      location.replace('/?resume='+encodeURIComponent(client)+'&v=2101&t='+Date.now()+'#'+target);
+      location.replace('/?resume='+encodeURIComponent(client)+'&v=2102&t='+Date.now()+'#'+target);
       return
     }
 
@@ -810,7 +810,7 @@ async function signInWithGoogle(btn){
  // Desktop web keeps RunSGD open and uses a popup.
  if(ctx.type!=='desktop-web'){
   try{
-   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2101';
+   let redirectTo='https://runsgd.site/?auth=google&popup=0&client='+encodeURIComponent(ctx.type)+'&return='+encodeURIComponent(target)+'&v=2102';
    let {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
    if(error)throw error
   }catch(e){setBusy(btn,false);authStatus(e.message||'Could not open Google sign-in.')}
@@ -839,7 +839,7 @@ async function signInWithGoogle(btn){
  window.addEventListener('storage',check);window.addEventListener('focus',check);googleLoginTimer=setInterval(check,800);
  try{channel=new BroadcastChannel('runsgd-auth');channel.onmessage=e=>{if(e.data?.type==='google-signed-in'&&e.data?.attempt===attempt)check()}}catch{}
  try{
-  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2101';
+  const redirectTo='https://runsgd.site/?auth=google&popup=1&client=desktop-web&return='+encodeURIComponent(target)+'&attempt='+encodeURIComponent(attempt)+'&v=2102';
   const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo,skipBrowserRedirect:true}});
   if(error)throw error;if(!data?.url)throw Error('Google sign-in is unavailable.');popup.location.replace(data.url)
  }catch(e){cleanup();try{popup.close()}catch{}authStatus(e.message||'Could not open Google sign-in.')}
@@ -1892,12 +1892,16 @@ function reconcileRoadProgress(p,lat,lon,leg,distance,moved,now){
   let nextEntered=!!nextProj&&nextProj.progress_m>=entryNeed,nextClose=!!nextProj&&nextProj.distance_m<=Math.min(precision?45:70,tol);
   let nearTurn=curRemain<=Math.max(precision?70:95,Math.min(precision?115:160,threshold*(precision?.55:.75)))||distance!=null&&distance<=(precision?85:120);
   let nextClearlyBetter=!!curProj&&!!nextProj&&nextProj.distance_m+(precision?18:12)<curProj.distance_m;
-  let precisionGps=!precision||(!Number.isFinite(acc)||acc<=35);
+  let precisionGps=!precision||(!Number.isFinite(acc)||acc<=35),nextCue=journeyManeuverCue(nextLeg,legs[idx]);
+  let continuation=nextCue.kind==='continue';
+  if(continuation&&precisionGps&&nextClose&&nextEntered&&(curRemain<=30||sgJourneyRuntime.currentStepProgressPct>=99)){
+   setJourneyTurnState(nextCue.action,'good');advanceSgJourneyTo(nextIdx,'turn');return true
+  }
   let confirm=precisionGps&&nextClose&&nextEntered&&headingOk&&(nearTurn||nextClearlyBetter);
   if(confirm){
    if(sgJourneyRuntime.turnConfirmHop===nextIdx)sgJourneyRuntime.turnConfirmCount++;
    else{sgJourneyRuntime.turnConfirmHop=nextIdx;sgJourneyRuntime.turnConfirmCount=1}
-   let need=quality.excellent?2:3;setJourneyTurnState('Confirming turn · '+Math.min(need,sgJourneyRuntime.turnConfirmCount)+'/'+need+' GPS fixes','confirm');
+   let need=quality.excellent?2:3;setJourneyTurnState('Confirming '+nextCue.action.toLowerCase()+' · '+Math.min(need,sgJourneyRuntime.turnConfirmCount)+'/'+need+' GPS fixes','confirm');
    if(sgJourneyRuntime.turnConfirmCount>=need){advanceSgJourneyTo(nextIdx,'turn');return true}
   }else if(sgJourneyRuntime.turnConfirmHop===nextIdx){
    sgJourneyRuntime.turnConfirmCount=Math.max(0,sgJourneyRuntime.turnConfirmCount-1);
@@ -2053,37 +2057,49 @@ function journeyCurrentRoadName(leg){
  let s=String(leg?.instruction||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim(),m=s.match(/\bonto\s+(.+)$/i);
  return m?.[1]?.replace(/[.]+$/,'').trim()||''
 }
-function stepGeometrySide(currentLeg,nextLeg){
- let a=makePolylineCache(currentLeg?.polyline||''),b=makePolylineCache(nextLeg?.polyline||'');if(!a||!b)return '';
+function stepGeometryTurn(currentLeg,nextLeg){
+ let a=makePolylineCache(currentLeg?.polyline||''),b=makePolylineCache(nextLeg?.polyline||'');if(!a||!b)return {side:'',delta:null};
  let ah=journeyBearing(a.points[Math.max(0,a.points.length-3)].lat,a.points[Math.max(0,a.points.length-3)].lon,a.points[a.points.length-1].lat,a.points[a.points.length-1].lon);
  let bh=journeyBearing(b.points[0].lat,b.points[0].lon,b.points[Math.min(b.points.length-1,2)].lat,b.points[Math.min(b.points.length-1,2)].lon);
- if(!Number.isFinite(ah)||!Number.isFinite(bh))return '';
- let d=((bh-ah+540)%360)-180;if(Math.abs(d)<8)return '';return d>0?'right':'left'
+ if(!Number.isFinite(ah)||!Number.isFinite(bh))return {side:'',delta:null};
+ let delta=((bh-ah+540)%360)-180,abs=Math.abs(delta);
+ return {side:abs<8?'':delta>0?'right':'left',delta}
+}
+function stepGeometrySide(currentLeg,nextLeg){return stepGeometryTurn(currentLeg,nextLeg).side}
+function journeyContinueRoad(detail){
+ let d=String(detail||'').trim(),m=d.match(/^continue(?:\s+straight)?\s+(?:onto|on|along)\s+(.+?)(?:\s+toward\s+|$)/i);
+ if(!m)m=d.match(/^stay\s+on\s+(.+?)(?:\s+toward\s+|$)/i);
+ let road=String(m?.[1]||'').replace(/[.,;:]+$/,'').trim();
+ return road
 }
 function journeyManeuverCue(leg,currentLeg=null){
  let detail=String(leg?.instruction||sgJourneyInstruction(leg)||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
- let s=detail.toLowerCase(),raw=String(leg?.maneuver||'').toUpperCase(),side=raw.includes('LEFT')?'left':raw.includes('RIGHT')?'right':'';
- if(!side){if(/\bleft\b/.test(s))side='left';else if(/\bright\b/.test(s))side='right';else side=stepGeometrySide(currentLeg,leg)}
- let isExit=/exit|ramp/.test(s)||/RAMP|EXIT/.test(raw),isFork=/fork/.test(s)||raw.includes('FORK'),isFlyover=/flyover|overpass|viaduct/.test(s),isMerge=/merge/.test(s)||raw.includes('MERGE');
- let action='NEXT TURN';
- if(/UTURN/.test(raw)||/u[- ]?turn/.test(s))action='MAKE U-TURN'+(side?' '+side.toUpperCase():'');
- else if(isExit)action='TAKE '+(side?side.toUpperCase()+' ':'')+'EXIT';
- else if(isFork)action='KEEP '+(side?side.toUpperCase():'TO THE FORK');
- else if(/TURN_SHARP_LEFT/.test(raw)||/sharp left/.test(s))action='SHARP LEFT';
- else if(/TURN_SHARP_RIGHT/.test(raw)||/sharp right/.test(s))action='SHARP RIGHT';
- else if(/TURN_SLIGHT_LEFT/.test(raw)||/slight left/.test(s))action='SLIGHT LEFT';
- else if(/TURN_SLIGHT_RIGHT/.test(raw)||/slight right/.test(s))action='SLIGHT RIGHT';
- else if(/TURN_LEFT/.test(raw)||/turn left/.test(s))action='TURN LEFT';
- else if(/TURN_RIGHT/.test(raw)||/turn right/.test(s))action='TURN RIGHT';
- else if(/KEEP_LEFT/.test(raw)||/keep left/.test(s))action='KEEP LEFT';
- else if(/KEEP_RIGHT/.test(raw)||/keep right/.test(s))action='KEEP RIGHT';
- else if(isMerge)action='MERGE'+(side?' '+side.toUpperCase():'');
- else if(/ROUNDABOUT/.test(raw)||/roundabout/.test(s))action='ENTER ROUNDABOUT'+(side?' · '+side.toUpperCase():'');
- else if(/STRAIGHT/.test(raw)||/continue straight|head straight|go straight/.test(s))action='CONTINUE STRAIGHT';
- else if(String(leg?.mode||'').toUpperCase()==='PARK')action='PREPARE TO PARK';
+ let s=detail.toLowerCase(),raw=String(leg?.maneuver||'').toUpperCase(),geom=stepGeometryTurn(currentLeg,leg),side=raw.includes('LEFT')?'left':raw.includes('RIGHT')?'right':'';
+ if(!side){if(/\bleft\b/.test(s))side='left';else if(/\bright\b/.test(s))side='right';else side=geom.side}
+ let isExit=/exit|ramp/.test(s)||/RAMP|EXIT/.test(raw),isFork=/fork/.test(s)||raw.includes('FORK'),isFlyover=/flyover|overpass|viaduct/.test(s),isMerge=/merge/.test(s)||raw.includes('MERGE'),continueRoad=journeyContinueRoad(detail);
+ let action='',kind='continue';
+ if(/UTURN/.test(raw)||/u[- ]?turn/.test(s)){action='MAKE U-TURN'+(side?' '+side.toUpperCase():'');kind='turn'}
+ else if(isExit){action='TAKE '+(side?side.toUpperCase()+' ':'')+'EXIT';kind='exit'}
+ else if(isFork){action='KEEP '+(side?side.toUpperCase():'TO THE FORK');kind='fork'}
+ else if(/TURN_SHARP_LEFT/.test(raw)||/sharp left/.test(s)){action='SHARP LEFT';kind='turn'}
+ else if(/TURN_SHARP_RIGHT/.test(raw)||/sharp right/.test(s)){action='SHARP RIGHT';kind='turn'}
+ else if(/TURN_SLIGHT_LEFT/.test(raw)||/slight left/.test(s)){action='SLIGHT LEFT';kind='turn'}
+ else if(/TURN_SLIGHT_RIGHT/.test(raw)||/slight right/.test(s)){action='SLIGHT RIGHT';kind='turn'}
+ else if(/TURN_LEFT/.test(raw)||/turn left/.test(s)){action='TURN LEFT';kind='turn'}
+ else if(/TURN_RIGHT/.test(raw)||/turn right/.test(s)){action='TURN RIGHT';kind='turn'}
+ else if(/KEEP_LEFT/.test(raw)||/keep left/.test(s)){action='KEEP LEFT';kind='turn'}
+ else if(/KEEP_RIGHT/.test(raw)||/keep right/.test(s)){action='KEEP RIGHT';kind='turn'}
+ else if(isMerge){action='MERGE'+(side?' '+side.toUpperCase():'');kind='merge'}
+ else if(/ROUNDABOUT/.test(raw)||/roundabout/.test(s)){action='ENTER ROUNDABOUT'+(side?' · '+side.toUpperCase():'');kind='roundabout'}
+ else if(continueRoad){action='CONTINUE ONTO '+continueRoad.toUpperCase();kind='continue'}
+ else if(/STRAIGHT/.test(raw)||/continue straight|head straight|go straight|keep straight/.test(s)){action='CONTINUE STRAIGHT';kind='continue'}
+ else if(String(leg?.mode||'').toUpperCase()==='PARK'){action='PREPARE TO PARK';kind='park'}
+ else if(Number.isFinite(geom.delta)&&Math.abs(geom.delta)>=50){action='TURN '+(geom.delta>0?'RIGHT':'LEFT');side=geom.delta>0?'right':'left';kind='turn'}
+ else if(Number.isFinite(geom.delta)&&Math.abs(geom.delta)>=16){action='SLIGHT '+(geom.delta>0?'RIGHT':'LEFT');side=geom.delta>0?'right':'left';kind='turn'}
+ else{action=detail?'CONTINUE':'KEEP STRAIGHT';kind='continue'}
  let risk=(isExit||isFork||isFlyover||isMerge||/SHARP|UTURN|ROUNDABOUT/.test(raw)||/sharp|u[- ]?turn|roundabout/.test(s))?'high':
-          (/SLIGHT|TURN_|KEEP_/.test(raw)||/slight|turn|keep/.test(s))?'medium':'normal';
- return {action,detail,side,raw,risk,isExit,isFork,isFlyover,isMerge}
+          (kind==='turn'||/SLIGHT|TURN_|KEEP_/.test(raw)||/slight|turn|keep/.test(s))?'medium':'normal';
+ return {action,detail,side,raw,risk,kind,isExit,isFork,isFlyover,isMerge}
 }
 function journeyWarningBands(cue,speed){
  speed=Number(speed);let fast=Number.isFinite(speed)?Math.max(0,speed):0;
@@ -2101,7 +2117,7 @@ function journeyPrecisionZone(lat=Number(sgJourneyRuntime.lastLat),lon=Number(sg
 }
 function journeyCurrentEntryCue(leg,idx,legs){
  let cue=journeyManeuverCue(leg,idx>0?legs[idx-1]:null),pct=Number.isFinite(sgJourneyRuntime.currentStepProgressPct)?sgJourneyRuntime.currentStepProgressPct:0;
- let significant=cue.action!=='NEXT TURN'&&cue.action!=='CONTINUE STRAIGHT'&&cue.risk!=='normal';
+ let significant=cue.kind!=='continue'&&cue.risk!=='normal';
  let active=significant&&!sgJourneyRuntime.hopEntryConfirmed&&pct<=35;
  return active?cue:null
 }
@@ -2133,12 +2149,13 @@ function renderJourneyDriveFocus(road,leg,idx,legs){
   if(entryCue){command='NOW · '+entryCue.action;until=(entryCue.detail||entryCue.action)+' · then continue to destination'}
   else{command='CONTINUE TO DESTINATION';until='Stay on this road to your destination'}
  }else if(next&&Number.isFinite(stepRemain)){
-  if(stepRemain<=bands.now)command=cue.action;
+  if(cue.kind==='continue')command=stepRemain<=Math.max(140,bands.now)?cue.action:'KEEP STRAIGHT';
+  else if(stepRemain<=bands.now)command=cue.action;
   else if(stepRemain<=bands.urgent)command='NOW PREPARE · '+cue.action;
   else if(stepRemain<=bands.prepare)command='GET READY · '+cue.action;
   else if(stepRemain<=bands.early&&cue.risk==='high')command='AHEAD · '+cue.action;
   else command='KEEP STRAIGHT';
-  until='Next: '+cue.action+(cue.detail?' · '+cue.detail:'');
+  until='Next: '+cue.action+(cue.detail&&cue.action==='CONTINUE'?' · '+cue.detail:cue.detail&&cue.kind!=='continue'?' · '+cue.detail:'');
   let then=journeyThenPreview(legs,idx);if(then)until+=' · THEN '+(then.gap?routeDistance(then.gap)+' later · ':'')+then.cue.action
  }else if(next){until='Next: '+cue.action+(cue.detail?' · '+cue.detail:'')}
  txt('sgJourneyDriveCommand',command);
@@ -2162,7 +2179,8 @@ function renderSgJourney(distance=null){
   let nextRoad=legs[idx+1],sr=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null,cue=journeyManeuverCue(nextRoad,leg),entryCue=journeyCurrentEntryCue(leg,idx,legs),bands=journeyWarningBands(cue,sgJourneyRuntime.gpsSpeed),label='Keep straight';
   if(idx===legs.length-1)label=entryCue?entryCue.action:'Continue to '+(sgJourney.destination?.name||'your destination');
   else if(nextRoad&&Number.isFinite(sr)){
-   if(sr<=bands.now)label=cue.action;
+   if(cue.kind==='continue')label=sr<=Math.max(140,bands.now)?cue.action:'Keep straight · '+cue.action.toLowerCase()+' in '+routeDistance(sr);
+   else if(sr<=bands.now)label=cue.action;
    else if(sr<=bands.urgent)label='Prepare now · '+cue.action;
    else if(sr<=bands.prepare)label='Get ready · '+cue.action;
    else if(sr<=bands.early&&cue.risk==='high')label=cue.action+' ahead';
@@ -2174,7 +2192,8 @@ function renderSgJourney(distance=null){
  if(road&&Number.isFinite(sgJourneyRuntime.routeProgressM)&&Number.isFinite(sgJourneyRuntime.routeTotalM)&&sgJourneyRuntime.routeTotalM>0){
   let remain=Math.max(0,sgJourneyRuntime.routeTotalM-sgJourneyRuntime.routeProgressM),finalRoad=idx===legs.length-1;
   let stepRemain=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null,stepPct=Number.isFinite(sgJourneyRuntime.currentStepProgressPct)?sgJourneyRuntime.currentStepProgressPct:null,off=Number.isFinite(sgJourneyRuntime.offRouteM)?sgJourneyRuntime.offRouteM:null;
-  let turn=finalRoad&&Number.isFinite(sgJourneyRuntime.lastArrivalDistanceM)?'Destination '+routeDistance(sgJourneyRuntime.lastArrivalDistanceM):Number.isFinite(stepRemain)?'Current step '+(Number.isFinite(stepPct)?Math.round(stepPct)+'% · ':'')+(finalRoad?'destination in ':'turn in ')+routeDistance(stepRemain):distance!=null?'Next manoeuvre '+routeDistance(distance):'Next manoeuvre tracking';
+  let upcomingCue=!finalRoad?journeyManeuverCue(legs[idx+1],leg):null,stepLabel=upcomingCue?.kind==='continue'?'continue in ':'turn in ';
+  let turn=finalRoad&&Number.isFinite(sgJourneyRuntime.lastArrivalDistanceM)?'Destination '+routeDistance(sgJourneyRuntime.lastArrivalDistanceM):Number.isFinite(stepRemain)?'Current step '+(Number.isFinite(stepPct)?Math.round(stepPct)+'% · ':'')+(finalRoad?'destination in ':stepLabel)+routeDistance(stepRemain):distance!=null?'Next instruction '+routeDistance(distance):'Next instruction tracking';
   let match=Number.isFinite(off)&&off>120?' · off route — use Reroute':'';
   distText=turn+' · '+routeDistance(remain)+' route remaining'+match;
   pct=Math.min(100,Math.max(0,Math.round(sgJourneyRuntime.routeProgressM/sgJourneyRuntime.routeTotalM*100)))
@@ -2187,7 +2206,7 @@ function renderSgJourney(distance=null){
    let off=Number(sgJourneyRuntime.offRouteM),lost=Number.isFinite(off)&&off>120,up=legs[idx+1],sr=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null,cue=journeyManeuverCue(up,leg),bands=journeyWarningBands(cue,sgJourneyRuntime.gpsSpeed);
    if(lost)setJourneyTurnState('Off route · tap Reroute','fair');
    else if(up&&cue.risk==='high'&&Number.isFinite(sr)&&sr<=bands.early)setJourneyTurnState('Early warning · '+cue.action+' in '+routeDistance(sr),'confirm');
-   else setJourneyTurnState('On route · next '+(up?cue.action.toLowerCase():'destination'),'turn');
+   else setJourneyTurnState(up?(cue.kind==='continue'?'On route · '+cue.action.toLowerCase():'On route · next '+cue.action.toLowerCase()):'On route · destination ahead','turn');
    $('sgJourneyRerouteBtn')?.classList.toggle('offroute',lost)
   }
  }
