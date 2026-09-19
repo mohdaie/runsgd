@@ -170,10 +170,12 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeRegionRow.v23 .routeRegionBtn{padding:11px 10px;font-size:12px;border-radius:14px}
 .routeRegionRow.v23 .routeRegionBtn.active{color:#fff;background:linear-gradient(120deg,#4b82f5,#756cf0);border-color:transparent;box-shadow:0 8px 18px #556fe02a}
 .routeRegionRow.v23 .routeRegionBtn.jb.active{background:linear-gradient(120deg,#199861,#39b77b)}
-.routeSearchShell{position:relative}
+.routeSearchShell{position:relative;display:flex;gap:8px;align-items:center}
 .routeSearchShell:before{content:"⌕";position:absolute;left:12px;top:9px;color:#8995aa;font-size:19px;z-index:1}
-.routeSearchShell .toolInput{width:100%;padding-left:38px}
+.routeSearchShell .toolInput{flex:1;min-width:0;width:100%;padding-left:38px}
 .routeSearchShell .toolInput:disabled{background:#f5f7fb;color:#a0a8b7}
+.routeSearchShell .routeSearchGo{display:none;flex:0 0 auto;margin:0;padding:11px 15px;border-radius:13px}
+.routeSearchShell .routeSearchGo.show{display:inline-flex}
 .routeDestinationChosen{display:none;margin-top:8px;padding:9px 11px;border-radius:13px;background:#f1f8ff;color:#46617d;font-size:11px;font-weight:800}
 .routeDestinationChosen.show{display:block}
 .routeAiComposer{margin-top:14px}
@@ -200,7 +202,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.3.0</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.3.1</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -241,6 +243,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
     <div class="routePlannerStep">2 · Destination</div>
     <div class="routeSearchShell">
       <input id="sgRouteDestination" class="toolInput" maxlength="120" autocomplete="off" placeholder="Choose a country first" oninput="sgRouteInputChanged()" disabled>
+      <button id="sgRouteGo" class="miniBtn routeSearchGo" onclick="searchRouteDestinationNow(this)" disabled>Search</button>
     </div>
     <div id="sgRouteSuggestions" class="routeSuggestions"></div>
     <div id="sgRouteStatus" class="status">Choose Malaysia or Singapore to start searching.</div>
@@ -454,7 +457,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.2.12</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.3.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -478,7 +481,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.2.12</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.3.1</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -771,7 +774,8 @@ function updateSgRouteOrigin(){
  let to=destinationProvider(),from=routeProvider();
  if(!to){txt('sgRouteBadge','Choose country');txt('sgRouteProviderNote','Same search experience; RunSGD switches map providers behind the scenes.');return}
  txt('sgRouteBadge',from.id!==to.id?'Cross-border':to.id==='jb'?'Malaysia':'Singapore');
- txt('sgRouteProviderNote',to.id==='jb'?'🇲🇾 Malaysia search · Google Maps · suggestions appear automatically':'🇸🇬 Singapore search · OneMap · suggestions appear automatically')
+ txt('sgRouteProviderNote',to.id==='jb'?'🇲🇾 Malaysia search · Google Maps · tap Search for up to 4 ranked suggestions':'🇸🇬 Singapore search · OneMap · suggestions appear automatically');
+ updateRouteSearchButton()
 }
 async function sgRouteApi(payload,provider=null){
  let p=provider||routeProvider();
@@ -780,7 +784,17 @@ async function sgRouteApi(payload,provider=null){
  if(!r.ok)throw Error(j.error||('Route service error '+r.status));
  return {...j,_provider:p};
 }
-function updateRouteSearchButton(){}
+function updateRouteSearchButton(){
+ let b=$('sgRouteGo'),p=destinationProvider();if(!b)return;
+ let q=$('sgRouteDestination')?.value.trim()||'',show=p?.id==='jb';
+ b.classList.toggle('show',show);b.disabled=!show||q.length<2;b.textContent='Search'
+}
+async function searchRouteDestinationNow(btn){
+ let p=destinationProvider(),q=$('sgRouteDestination')?.value.trim()||'';
+ if(p?.id!=='jb'||q.length<2)return;
+ clearTimeout(sgRouteSearchTimer);setBusy(btn,true);
+ try{await searchSgDestination(q,true)}finally{setBusy(btn,false)}
+}
 function routeSearchOrigin(p){
  if(p?.id==='sg'&&live.location?.country==='SG'&&Number.isFinite(Number(live.location.lat))&&Number.isFinite(Number(live.location.lon)))return {lat:Number(live.location.lat),lon:Number(live.location.lon)};
  if(p?.id==='jb'&&live.location?.country==='MY'&&Number.isFinite(Number(live.location.lat))&&Number.isFinite(Number(live.location.lon)))return {lat:Number(live.location.lat),lon:Number(live.location.lon)};
@@ -797,22 +811,30 @@ function sgRouteInputChanged(){
  $('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote').classList.remove('show');
  $('routeDestinationChosen')?.classList.remove('show');$('journeyIntentStatus')?.classList.remove('show');
  if($('journeyTravelPrompt'))$('journeyTravelPrompt').disabled=true;if($('journeyPlanBtn'))$('journeyPlanBtn').disabled=true;
- let q=$('sgRouteDestination')?.value.trim()||'',box=$('sgRouteSuggestions'),p=destinationProvider();clearTimeout(sgRouteSearchTimer);
+ let q=$('sgRouteDestination')?.value.trim()||'',box=$('sgRouteSuggestions'),p=destinationProvider();clearTimeout(sgRouteSearchTimer);updateRouteSearchButton();
  if(!p){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','Choose Malaysia or Singapore first.');return}
  if(q.length<2){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus',p.hint);return}
- txt('sgRouteStatus','Searching '+(p.id==='jb'?'Malaysia':'Singapore')+'…');
- sgRouteSearchTimer=setTimeout(()=>searchSgDestination(q,false),p.id==='jb'?520:360)
+ if(p.id==='jb'){
+  box.classList.remove('show');box.innerHTML='';box.dataset.items='';
+  txt('sgRouteStatus','Tap Search to see up to 4 Malaysia suggestions ranked by relevance and distance.');
+  return
+ }
+ txt('sgRouteStatus','Searching Singapore…');
+ sgRouteSearchTimer=setTimeout(()=>searchSgDestination(q,false),360)
 }
 async function searchSgDestination(q,explicit=false){
  let box=$('sgRouteSuggestions'),seq=++sgRouteSearchSeq,p=destinationProvider();if(!p)return [];
+ if(p.id==='jb'&&!explicit)return [];
  txt('sgRouteStatus','Searching '+(p.id==='jb'?'Malaysia':'Singapore')+'…');
  try{
   let origin=routeSearchOrigin(p),j=await sgRouteApi({action:'search',q,from:origin},p);
   if(seq!==sgRouteSearchSeq)return [];
-  let items=(j.results||[]).slice(0,7).map(x=>({...x,_provider:p.id}));
+  let limit=p.id==='jb'?4:7,items=(j.results||[]).slice(0,limit).map(x=>({...x,_provider:p.id}));
   if(!items.length){box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','No '+(p.id==='jb'?'Malaysia / Johor':'Singapore')+' place found. Try another name or address.');return []}
   box.innerHTML=items.map((x,i)=>'<button class="routeSuggestion" onclick="chooseSgDestination('+i+')"><b>'+esc(x.name||x.address)+'</b><span>'+esc(routeSearchDistanceLabel(x,p)+(x.address||p.region))+(x.postal?' · '+(p.id==='sg'?'S':'')+esc(x.postal):'')+'</span></button>').join('');
-  box.dataset.items=JSON.stringify(items);box.classList.add('show');txt('sgRouteStatus','Choose a destination from the suggestions.');return items
+  box.dataset.items=JSON.stringify(items);box.classList.add('show');
+  txt('sgRouteStatus',p.id==='jb'?'Choose one of these '+items.length+' suggestions · relevant + nearest.':'Choose a destination from the suggestions.');
+  return items
  }catch(e){if(seq!==sgRouteSearchSeq)return [];box.classList.remove('show');box.innerHTML='';txt('sgRouteStatus','Search unavailable · '+(e.message||'Try again.'));return []}
 }
 function chooseSgDestination(i){
