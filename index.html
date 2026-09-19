@@ -620,7 +620,7 @@ async function submitBetaFeedback(btn){
   let msg=$('betaFeedbackMessage')?.value.trim(),category=$('betaFeedbackCategory')?.value||'feedback';
   if(!msg)return txt('betaFeedbackStatus','Write a short note first.');
   let {data:{session}}=await sb.auth.getSession();
-  if(!session)return txt('betaFeedbackStatus','Sign in from Community first, then come back here to submit.');
+  if(!session)return txt('betaFeedbackStatus','Sign in to RunSGD first, then come back here to submit.');
   setBusy(btn,true);txt('betaFeedbackStatus','Sending…');
   try{
     let {error}=await sb.from('beta_feedback').insert({user_id:session.user.id,category,message:msg});
@@ -630,7 +630,7 @@ async function submitBetaFeedback(btn){
   }catch(e){txt('betaFeedbackStatus','Could not send · '+(e.message||'try again later'))}
   finally{setBusy(btn,false)}
 }
-function authStatus(v){authStatus(v);txt('journeyAuthStatus',v)}
+function authStatus(v){txt('communityAuthStatus',v);txt('journeyAuthStatus',v)}
 async function initCommunity(){
   try{
     let {data:{session}}=await sb.auth.getSession();
