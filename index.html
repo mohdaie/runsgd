@@ -202,7 +202,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.4.0</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.4.1</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -211,7 +211,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <div class="stack">
 <article class="card">
   <div class="head"><div class="title">✦ What should I do?</div><span id="briefStatus" class="tag">Ready</span></div>
-  <div class="sub">Tell RunSGD what you are trying to do. It will check only the app data that matters for that trip.</div>
+  <div class="sub">Choose your journey. RunSGD checks your location, traffic, transport, weather and recent commuter signals — then shows only what matters now.</div>
   <div class="journeySelectWrap">
     <label class="journeySelectLabel" for="journeyIntentSelect">My journey</label>
     <select id="journeyIntentSelect" class="journeySelect" onchange="journeyIntentChanged()">
@@ -457,7 +457,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.4.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.4.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -481,7 +481,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.4.0</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.4.1</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -1737,7 +1737,7 @@ async function loadHolidays(){
 function updateBrief(fallback=false){
  if(!fallback){
    txt('brief','Tap “Check my journey” for a current recommendation.');
-   txt('briefWhy','RunSGD will analyse traffic, weather, community and only your enabled widgets.');
+   txt('briefWhy','It weighs journey direction, current location, traffic, transport, weather and recent commuter updates by relevance and freshness.');
    txt('briefExtra','No background AI calls — you decide when to check.');
    txt('briefStatus','Ready');
    return
@@ -1848,20 +1848,44 @@ function restoreJourneyIntent(){
 }
 
 function aiContext(){
- let p=getHomeWidgetPrefs(),enabled=p.order.filter(x=>!p.hidden.includes(x)),journey=getJourneyIntent(),c={
-   time:new Date().toLocaleString('en-SG',{timeZone:'Asia/Singapore',weekday:'short',hour:'2-digit',minute:'2-digit'}),
+ let p=getHomeWidgetPrefs(),enabled=p.order.filter(x=>!p.hidden.includes(x)),journey=getJourneyIntent(),journeyId=$('journeyIntentSelect')?.value||'',now=new Date();
+ let direction=journeyId==='sg-jb'?'SG → JB (user selected)':journeyId==='jb-sg'?'JB → SG (user selected)':journeyId==='within-sg'?'Within Singapore (user selected)':live.location?.country==='MY'?'JB → SG (location-based fallback)':live.location?.country==='SG'?'SG → JB (location-based fallback)':'Unknown';
+ let originCountry=direction.startsWith('SG →')?'SG':direction.startsWith('JB →')?'MY':direction.startsWith('Within Singapore')?'SG':null;
+ let destinationCountry=direction.startsWith('SG →')?'MY':direction.startsWith('JB →')?'SG':direction.startsWith('Within Singapore')?'SG':null;
+ let currentCountry=live.location?.country||null,tripStage='unknown';
+ if(originCountry&&currentCountry===originCountry)tripStage='origin_side';
+ else if(destinationCountry&&currentCountry===destinationCountry)tripStage='destination_side';
+ let c={
+   time:now.toLocaleString('en-SG',{timeZone:'Asia/Singapore',weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),
+   local_hour:Number(new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',hour12:false}).format(now)),
+   weekday:new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long'}).format(now),
+   is_weekend:[0,6].includes(now.getDay()),
    location:live.location?.name||'Not provided',
+   location_detail:live.location?{name:live.location.name,area:live.location.area||null,country:currentCountry,detected_at:live.location.detected_at||null}:null,
+   journey_id:journeyId||null,
    journey_intent:journey,
-   likely_direction:journey.includes('JB from Singapore')?'SG → JB (user selected)':journey.includes('Singapore from JB')?'JB → SG (user selected)':journey.includes('within Singapore')?'Within Singapore (user selected)':live.location?.country==='MY'?'JB → SG':live.location?.country==='SG'?'SG → JB':'Unknown',
+   likely_direction:direction,
+   origin_country:originCountry,
+   destination_country:destinationCountry,
+   trip_stage:tripStage,
    enabled_widgets:enabled
  };
- if(enabled.includes('traffic')&&live.traffic)c.causeway=live.traffic;
- if(enabled.includes('transport')&&live.transport)c.public_transport={train:live.transport.train||null,nearest_mrt:live.transport.nearest_mrt||null,nearby_bus_stops:(live.transport.nearby_bus_stops||[]).slice(0,2).map(x=>({code:x.code,description:x.description,distance_m:x.distance_m,services:(x.services||[]).slice(0,6)}))};
- if(enabled.includes('currency')&&live.rate)c.currency={sgd_myr:Number(live.rate.toFixed(4))};
- if(enabled.includes('weather'))c.weather={SG:live.weather.SG||null,JB:live.weather.JB||null};
- if(enabled.includes('air')&&live.air)c.air_quality=live.air;
- if(enabled.includes('prayer')&&live.prayer)c.prayer={current:{label:live.prayer.currentLabel,time:live.prayer.currentTime,mins_since_start:live.prayer.currentMinsAgo,day:live.prayer.currentDay},next:{label:live.prayer.label,time:live.prayer.time,mins_until:live.prayer.mins,day:live.prayer.nextDay},friday:live.prayer.friday,friday_zohor_reference:live.prayer.fridayZohorTime,nearest:live.nearby?.[0]?.name||null};
- if(enabled.includes('holidays'))c.holidays=(live.holidays||[]).slice(0,3).map(x=>({name:x.name||x.localName,date:x.date}));
+ if(enabled.includes('traffic')&&live.traffic)c.causeway={...live.traffic,source:'LTA DataMall traffic camera'};
+ if(enabled.includes('transport')&&live.transport)c.public_transport={source:'LTA DataMall',fetched_at:live.transport.fetched_at||null,train:live.transport.train||null,nearest_mrt:live.transport.nearest_mrt||null,nearby_bus_stops:(live.transport.nearby_bus_stops||[]).slice(0,3).map(x=>({code:x.code,description:x.description,distance_m:x.distance_m,services:(x.services||[]).slice(0,6)}))};
+ if(enabled.includes('currency')&&live.rate)c.currency={source:'RunSGD FX feed',sgd_myr:Number(live.rate.toFixed(4))};
+ if(enabled.includes('weather'))c.weather={source:'Open-Meteo',SG:live.weather.SG||null,JB:live.weather.JB||null};
+ if(enabled.includes('air')&&live.air)c.air_quality={...live.air,source:'Open-Meteo air quality'};
+ if(enabled.includes('prayer')&&live.prayer)c.prayer={source:'Aladhan timings',current:{label:live.prayer.currentLabel,time:live.prayer.currentTime,mins_since_start:live.prayer.currentMinsAgo,day:live.prayer.currentDay},next:{label:live.prayer.label,time:live.prayer.time,mins_until:live.prayer.mins,day:live.prayer.nextDay},friday:live.prayer.friday,friday_zohor_reference:live.prayer.fridayZohorTime,nearest:live.nearby?.[0]?.name||null};
+ if(enabled.includes('holidays'))c.holidays={source:'Singapore public holiday feed',items:(live.holidays||[]).slice(0,3).map(x=>({name:x.name||x.localName,date:x.date}))};
+ c.signal_inventory={
+   causeway_camera:!!c.causeway,
+   public_transport:!!c.public_transport,
+   weather:!!c.weather,
+   prayer:!!c.prayer,
+   holidays:!!c.holidays,
+   air_quality:!!c.air_quality,
+   currency:!!c.currency
+ };
  return c
 }
 async function callRunSgdAi(mode,question=''){
@@ -1873,9 +1897,9 @@ async function callRunSgdAi(mode,question=''){
 function renderAiSources(id,sources){let e=$(id);if(!e)return;e.innerHTML=(sources||[]).slice(0,5).map(x=>`<span class="aiSource">${esc(x)}</span>`).join('')}
 async function loadAiBrief(force=false,btn=null){
  let {data:{session}}=await sb.auth.getSession();if(!session){txt('aiBriefMeta','Sign in to enable AI · deterministic recommendation shown');return}
- let cached=old('aiBriefV2');if(!force&&cached?.answer&&Date.now()-(cached.saved_at||0)<600000){txt('brief',cached.answer);txt('briefWhy',cached.reason||'');txt('briefExtra',(cached.sources||[]).length?'AI sources: '+cached.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 3.5 Flash-Lite · cached');return}
- setBusy(btn,true);txt('briefStatus','AI…');txt('aiBriefMeta','Analysing current RunSGD signals…');
- try{let j=await callRunSgdAi('brief',getJourneyIntent());txt('brief',j.answer||'No action needed right now.');txt('briefWhy',j.reason||'');txt('briefExtra',(j.sources||[]).length?'AI sources: '+j.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 3.5 Flash-Lite · RunSGD data only');save('aiBriefV2',{...j,saved_at:Date.now()})}catch(e){txt('aiBriefMeta',e.message||'AI unavailable · using simple fallback');updateBrief(true)}finally{setBusy(btn,false)}
+ let cached=old('aiBriefV3');if(!force&&cached?.answer&&Date.now()-(cached.saved_at||0)<600000){txt('brief',cached.answer);txt('briefWhy',cached.reason||'');txt('briefExtra',(cached.sources||[]).length?'AI sources: '+cached.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 3.5 Flash-Lite · cached');return}
+ setBusy(btn,true);txt('briefStatus','AI…');txt('aiBriefMeta','Checking direction, location and current RunSGD signals…');
+ try{let j=await callRunSgdAi('brief',getJourneyIntent());txt('brief',j.answer||'No action needed right now.');txt('briefWhy',j.reason||'');txt('briefExtra',(j.sources||[]).length?'AI sources: '+j.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta','Gemini 3.5 Flash-Lite · RunSGD data only');save('aiBriefV3',{...j,saved_at:Date.now()})}catch(e){txt('aiBriefMeta',e.message||'AI unavailable · using simple fallback');updateBrief(true)}finally{setBusy(btn,false)}
 }
 async function askRunSgd(btn=null){
  let q=$('aiQuestion')?.value.trim();if(!q)return txt('aiAskStatus','Type a question first.');setBusy(btn||$('aiAskBtn'),true);txt('aiAskStatus','Searching RunSGD data…');$('aiAnswer')?.classList.remove('show');
