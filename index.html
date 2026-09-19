@@ -200,7 +200,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.7.1 dedicated Journey experience */
+/* v2.8.0 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
@@ -215,12 +215,20 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .signinPage{padding-top:20px}.signinBack{border:0;background:transparent;color:#5a69a2;font-weight:850;padding:5px 3px 12px}.signinCard{max-width:410px;margin:0 auto;padding:24px}.signinLogo{font-size:28px;font-weight:950;letter-spacing:-1.8px;background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;color:transparent}.signinCard h2{font-size:27px;margin:8px 0 7px}.signinClientBadge{display:inline-flex;margin:10px 0 2px;padding:7px 10px;border-radius:999px;background:#eef3ff;color:#5469af;font-size:10px;font-weight:900}.signinGoogle{margin-top:15px}.signinDivider{display:flex;align-items:center;gap:10px;color:#9aa3b4;font-size:10px;font-weight:800;margin:16px 0}.signinDivider:before,.signinDivider:after{content:"";height:1px;background:#e8ebf2;flex:1}.signinFields{display:flex;flex-direction:column;gap:9px}.signinFields input{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px;font-size:14px;color:#17213b}.signinActions{display:flex;gap:8px;align-items:center;margin-top:11px}.signinActions .refresh{margin-top:0;flex:1}.signinActions .miniBtn{padding:11px 13px}.signinMode .hello,.signinMode .nav{display:none}.signinMode .headerUser{visibility:hidden}.signinMode .app{padding-bottom:42px}
 @media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
 
+
+/* v2.8 community — simple Threads-style feed */
+.communityV28Head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.communityV28Head .pageTitle{margin-bottom:5px}.communityBrowseBtn{border:0;background:transparent;color:#4d63b8;font-size:12px;font-weight:900;padding:8px 4px}.communitySignInStrip{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 8px;padding:13px 14px;border:1px solid #e8ebf2;background:#ffffffb8;border-radius:18px}.communitySignInStrip .sub{font-size:11px;margin-top:2px}
+.threadComposerLauncher{width:100%;display:flex;align-items:center;gap:11px;border:0;border-bottom:1px solid #e8ebf1;background:transparent;padding:15px 3px;text-align:left}.threadAvatar{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#eef2fb;display:grid;place-items:center;flex:0 0 auto}.threadAvatarPlaceholder{font-size:17px}.threadComposerText{flex:1;color:#8a93a5;font-size:14px}.threadPostMini{font-size:11px;font-weight:900;color:#526bd6;border:1px solid #dfe5f5;border-radius:999px;padding:7px 11px;background:#fff}
+.communityComposerPanel{padding:15px 3px 17px;border-bottom:1px solid #e8ebf1}.communityComposerTop,.communityPostToRow,.communityComposerActions,.communitySubHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.threadIdentity{display:flex;align-items:center;gap:10px;min-width:0}.threadMeta{font-size:10px;color:#939bab;margin-top:2px}.communityComposerPanel textarea,.communityReplyComposer textarea,.communityTopicCreator input,.communityTopicCreator textarea{width:100%;border:0;background:transparent;color:#17213b;outline:0;resize:none}.communityComposerPanel>textarea{min-height:105px;font-size:16px;padding:15px 1px}.communityPostToRow{border-top:1px solid #edf0f5;padding-top:10px}.communityPostToRow select{max-width:58%;border:0;background:#f1f4fa;color:#56637a;border-radius:999px;padding:8px 10px;font-size:11px;font-weight:850}.threadTextBtn{border:0;background:transparent;color:#5268b4;font-size:11px;font-weight:900;padding:7px 2px}.threadPrimaryBtn{border:0;background:#17213b;color:#fff;border-radius:999px;padding:9px 16px;font-size:11px;font-weight:900}.threadPrimaryBtn.small{padding:8px 12px}.communityComposerActions{margin-top:10px}.communityComposerActions .status{margin:0;flex:1}
+.threadFeed{margin-top:3px}.threadPost{padding:16px 2px 13px;border-bottom:1px solid #e8ebf1}.threadPostHeader{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:start}.threadPostMain{min-width:0}.threadNameLine{display:flex;align-items:center;gap:6px;min-width:0}.threadName{font-size:13px;font-weight:900;color:#202a42;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.threadBadge{font-size:8px;font-weight:950;text-transform:uppercase;color:#65729a;background:#eef2fb;border-radius:999px;padding:2px 5px}.threadBadge.admin{color:#9d4155;background:#fff0f2}.threadContext{font-size:10px;color:#8d96a8;margin-top:1px}.threadTopicLink{border:0;background:transparent;color:#5268b4;font:inherit;font-weight:850;padding:0}.threadMore{border:0;background:transparent;color:#8a93a5;font-size:18px;line-height:1;padding:5px}.threadContent{font-size:14px;line-height:1.5;color:#263149;white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 8px 48px}.threadActions{display:flex;align-items:center;gap:22px;margin-left:48px}.threadAction{border:0;background:transparent;color:#68748b;font-size:12px;font-weight:800;padding:4px 0;display:flex;align-items:center;gap:6px}.threadAction.loved{color:#dd496d}.threadActionIcon{font-size:17px}.threadEmpty{padding:32px 10px;text-align:center;color:#8b94a6;font-size:13px}.communityFeedScope{margin:12px 0 2px;padding:10px 12px;background:#eff4ff;border-radius:14px;color:#52617c;font-size:12px;font-weight:850}.communityFeedScope button{border:0;background:transparent;color:#5268b4;font-weight:900;float:right}
+.communityTopicsIntro{padding:10px 2px 12px}.communityTopicsIntro h3{margin:0 0 3px;font-size:20px}.communityTopicCreator{padding:15px;border:1px solid #e7eaf2;border-radius:18px;background:#ffffffc9;margin-bottom:10px}.communityTopicCreator input{font-size:16px;font-weight:850;border-bottom:1px solid #edf0f4;border-radius:0;padding:8px 0}.communityTopicCreator textarea{min-height:72px;padding:11px 0}.communityTopicCard{display:flex;justify-content:space-between;gap:12px;padding:15px 2px;border-bottom:1px solid #e8ebf1}.communityTopicCard button{border:0;background:transparent;padding:0;text-align:left;flex:1}.communityTopicTitle{font-size:14px;font-weight:900;color:#202a42}.communityTopicDesc{font-size:11px;color:#7d879b;line-height:1.45;margin-top:4px}.communityTopicCount{font-size:10px;color:#9aa2b2;white-space:nowrap}.threadRepliesTitle{font-size:12px;font-weight:950;color:#59647a;padding:17px 2px 8px}.threadReply{padding:13px 2px 12px 48px;border-bottom:1px solid #edf0f4}.threadReplyHeader{display:flex;align-items:center;justify-content:space-between;gap:8px}.threadReplyName{font-size:12px;font-weight:900}.threadReplyMeta{font-size:9px;color:#929bae}.threadReplyText{font-size:13px;line-height:1.48;white-space:pre-wrap;margin-top:5px}.threadReplyActions{display:flex;gap:18px;margin-top:7px}.communityReplyComposer{display:flex;gap:9px;align-items:flex-end;padding:14px 0}.communityReplyComposer textarea{min-height:48px;max-height:130px;border:1px solid #e3e7ef;border-radius:16px;padding:12px;background:#fff}.communitySubHead{padding:11px 0 5px}
+
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.7.1</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.8.0</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -492,40 +500,71 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </section>
 
 
-<section id="community" class="page">
-<h2 class="pageTitle">Community</h2>
-<p class="sub">Basic SG ↔ JB commuter chat. Read freely, sign in to post.</p>
-<article id="communityAuthCard" class="card">
-  <div class="title">👤 Join RunSGD</div>
-  <p class="sub">Read freely. Sign in when you want to post or keep a commuter profile.</p>
-  <button class="googleBtn" onclick="openSignIn('community','community')"><span class="googleMark">G</span><span>Sign in to RunSGD</span></button>
-  <div id="communityAuthStatus" class="status">You’ll return to Community after sign-in.</div>
-</article>
-<article id="communityChatCard" class="card" style="margin-top:16px">
-  <div class="memberBar"><div><div class="communityTitleLine"><span class="communityLiveDot"></span><div class="title">💬 Live community</div></div><div id="memberState" class="sub">Guest mode</div></div><button id="signOutBtn" class="miniBtn" onclick="communitySignOut()" style="display:none">Sign out</button></div>
-  <div id="communityRooms" class="communityRooms"></div>
-  <div id="chatList" class="chatList"><div class="sub">Loading messages…</div></div>
-  <div id="communityComposer" class="communityComposer" style="display:none">
-    <div class="quickChatChips" aria-label="Quick update starters">
-      <button class="quickChatChip" onclick="quickChat('🚦 Heavy traffic — ')">🚦 Jam</button>
-      <button class="quickChatChip" onclick="quickChat('✅ Traffic moving smoothly — ')">✅ Smooth</button>
-      <button class="quickChatChip" onclick="quickChat('🌧 Heavy rain around ')">🌧 Rain</button>
-      <button class="quickChatChip" onclick="quickChat('🚌 Bus delay — ')">🚌 Delay</button>
-      <button class="quickChatChip" onclick="quickChat('📍 Checkpoint update — ')">📍 Checkpoint</button>
-    </div>
-    <div class="composerShell">
-      <textarea id="chatMessage" maxlength="500" placeholder="Share what’s happening…"></textarea>
-      <button class="communitySendBtn" onclick="sendCommunityMessage(this)" aria-label="Send message">➤</button>
-    </div>
-    <div class="communityHint">Useful updates help everyone cross smarter ✨</div>
+<section id="community" class="page communityV28">
+  <div class="communityV28Head">
+    <div><h2 class="pageTitle">Community</h2><p class="sub">Posts and conversations shaped by commuters.</p></div>
+    <button class="communityBrowseBtn" onclick="showCommunityTopics()">Communities</button>
   </div>
-  <div id="communityGuestHint" class="status">Sign in to post. Keep updates short, useful and respectful.</div>
-</article>
+
+  <article id="communityAuthCard" class="communitySignInStrip">
+    <div><b>Join the conversation</b><div class="sub">Read freely. Sign in to post, love and reply.</div></div>
+    <button class="miniBtn" onclick="openSignIn('community','community')">Sign in</button>
+    <div id="communityAuthStatus" class="status" style="display:none"></div>
+  </article>
+
+  <div id="communityFeedView">
+    <div id="communityFeedScope" class="communityFeedScope" style="display:none"></div>
+
+    <button id="communityStartPost" class="threadComposerLauncher" onclick="openCommunityComposer()" style="display:none">
+      <span id="communityComposerAvatar" class="threadAvatar threadAvatarPlaceholder">👤</span>
+      <span class="threadComposerText">Start a post…</span>
+      <span class="threadPostMini">Post</span>
+    </button>
+
+    <div id="communityComposerPanel" class="communityComposerPanel" style="display:none">
+      <div class="communityComposerTop">
+        <div class="threadIdentity"><span id="communityComposerAvatar2" class="threadAvatar threadAvatarPlaceholder">👤</span><div><b id="communityComposerName">Commuter</b><div class="threadMeta">New post</div></div></div>
+        <button class="threadTextBtn" onclick="closeCommunityComposer()">Cancel</button>
+      </div>
+      <textarea id="communityPostText" maxlength="1000" placeholder="What's happening?"></textarea>
+      <div class="communityPostToRow">
+        <select id="communityPostTopic" aria-label="Post to community"><option value="">General feed</option></select>
+        <button class="threadTextBtn" onclick="showCommunityTopicCreator(true)">+ New community</button>
+      </div>
+      <div class="communityComposerActions"><span id="communityPostStatus" class="status"></span><button class="threadPrimaryBtn" onclick="createCommunityPost(this)">Post</button></div>
+    </div>
+
+    <div id="communityFeed" class="threadFeed"><div class="threadEmpty">Loading community…</div></div>
+  </div>
+
+  <div id="communityTopicsView" style="display:none">
+    <div class="communitySubHead"><button class="threadTextBtn" onclick="showCommunityFeed()">← Posts</button><button id="communityCreateTopicBtn" class="threadPrimaryBtn small" onclick="showCommunityTopicCreator(true)" style="display:none">Create community</button></div>
+    <div class="communityTopicsIntro"><h3>Communities</h3><p class="sub">No fixed categories. Commuters create the spaces they need.</p></div>
+    <div id="communityTopicCreator" class="communityTopicCreator" style="display:none">
+      <input id="communityTopicTitle" maxlength="50" placeholder="Community name">
+      <textarea id="communityTopicDescription" maxlength="180" placeholder="Short description"></textarea>
+      <div class="communityComposerActions"><button class="threadTextBtn" onclick="showCommunityTopicCreator(false)">Cancel</button><button class="threadPrimaryBtn" onclick="createCommunityTopic(this)">Create</button></div>
+      <div id="communityTopicStatus" class="status"></div>
+    </div>
+    <div id="communityTopicList" class="communityTopicList"><div class="threadEmpty">No communities yet.</div></div>
+  </div>
+
+  <div id="communityThreadView" style="display:none">
+    <div class="communitySubHead"><button class="threadTextBtn" onclick="closeCommunityThread()">← Community</button></div>
+    <div id="communityThreadPost"></div>
+    <div class="threadRepliesTitle">Replies</div>
+    <div id="communityReplyList" class="threadReplyList"></div>
+    <div id="communityReplyComposer" class="communityReplyComposer" style="display:none">
+      <textarea id="communityReplyText" maxlength="700" placeholder="Reply…"></textarea>
+      <button class="threadPrimaryBtn" onclick="createCommunityReply(this)">Reply</button>
+    </div>
+    <div id="communityReplyGuest" class="status">Sign in to reply.</div>
+  </div>
 </section>
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.7.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.8.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -578,7 +617,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.7.1</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.8.0</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -641,7 +680,7 @@ async function trackAppVisit(){
     })
   }catch{}
 }
-let communityUser=null,communityRooms=[],activeRoom=null,chatChannel=null,communityRole='member',communityProfile=null;
+let communityUser=null,communityRole='member',communityProfile=null,communityTopics=[],communityFeed=[],communityThreadPostId=null,communityTopicFilter=null,communityChannel=null;
 async function submitBetaFeedback(btn){
   let msg=$('betaFeedbackMessage')?.value.trim(),category=$('betaFeedbackCategory')?.value||'feedback';
   if(!msg)return txt('betaFeedbackStatus','Write a short note first.');
@@ -728,9 +767,8 @@ async function initCommunity(){
       return
     }
 
-    await loadCommunityRooms();
     await applyMemberState();
-    if(activeRoom)await loadCommunityMessages();
+    await loadCommunityFeed();
 
     let returned=isGoogleAuthReturn||localStorage.getItem('runsgdAuthReturn')==='community'||localStorage.getItem('runsgdAuthReturn')==='journey';
     if(communityUser&&returned&&!isGooglePopupReturn){
@@ -746,7 +784,7 @@ async function initCommunity(){
       communityUser=session?.user||null;
       if(!communityUser&&sgJourney){stopSgJourneyTracking();sgJourney=null;localStorage.removeItem('runsgdSgSelectedRoute');setJourneyPlannerState('plan')}
       await applyMemberState();
-      if(activeRoom)await loadCommunityMessages();
+      if(document.querySelector('.page.active')?.id==='community')await loadCommunityFeed();
       if(event==='SIGNED_IN'&&communityUser&&document.querySelector('.page.active')?.id==='signin')returnAfterSignIn()
     },0)})
   }catch(e){authStatus('Community connection unavailable.')}
@@ -783,7 +821,7 @@ async function signInWithGoogle(btn){
   try{
    if(localStorage.getItem('runsgdGoogleDone')===attempt){
     const {data:{session}}=await sb.auth.getSession();
-    if(session){cleanup();localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleAttempt');communityUser=session.user;await applyMemberState();if(activeRoom)await loadCommunityMessages();let t=localStorage.getItem('runsgdGoogleReturnTarget')||target;localStorage.removeItem('runsgdGoogleReturnTarget');localStorage.setItem('runsgdAuthReturn',t);returnAfterSignIn();authStatus('Signed in with Google.');try{popup.close();window.focus()}catch{}return}
+    if(session){cleanup();localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleAttempt');communityUser=session.user;await applyMemberState();if(document.querySelector('.page.active')?.id==='community')await loadCommunityFeed();let t=localStorage.getItem('runsgdGoogleReturnTarget')||target;localStorage.removeItem('runsgdGoogleReturnTarget');localStorage.setItem('runsgdAuthReturn',t);returnAfterSignIn();authStatus('Signed in with Google.');try{popup.close();window.focus()}catch{}return}
    }
    if(Date.now()-started>300000){cleanup();authStatus('Sign-in timed out. You can try again.')}
   }catch{}finally{checking=false}
@@ -840,38 +878,109 @@ async function communitySignOut(){
  setJourneyPlannerState('plan');await applyMemberState();if(active==='journey')showPage('journey')
 }
 async function applyMemberState(){
- let signed=!!communityUser;
- $('communityAuthCard').style.display=signed?'none':'block';$('communityComposer').style.display=signed?'flex':'none';$('signOutBtn').style.display=signed?'inline-block':'none';$('communityGuestHint').style.display=signed?'none':'block';
+ let signed=!!communityUser,auth=$('communityAuthCard'),start=$('communityStartPost'),createTopic=$('communityCreateTopicBtn'),reply=$('communityReplyComposer'),replyGuest=$('communityReplyGuest');
+ if(auth)auth.style.display=signed?'none':'flex';if(start)start.style.display=signed?'flex':'none';if(createTopic)createTopic.style.display=signed?'inline-block':'none';if(reply)reply.style.display=signed&&communityThreadPostId?'flex':'none';if(replyGuest)replyGuest.style.display=signed?'none':'block';
  let adminCard=$('adminSettingsCard'),profileCard=$('profileCard'),journeyProfileCard=$('journeyProfileCard');
  if(!signed){
-  communityRole='member';communityProfile=null;if(adminCard)adminCard.style.display='none';if(profileCard)profileCard.style.display='none';if(journeyProfileCard)journeyProfileCard.style.display='none';txt('memberState','Guest mode');updateHeaderProfile();applyJourneyAuthState();return
+  communityRole='member';communityProfile=null;if(adminCard)adminCard.style.display='none';if(profileCard)profileCard.style.display='none';if(journeyProfileCard)journeyProfileCard.style.display='none';updateHeaderProfile();applyJourneyAuthState();renderCommunityComposerIdentity();return
  }
  let {data:p}=await sb.from('profiles').select('display_name,avatar_url,bio,badge,role').eq('id',communityUser.id).maybeSingle();
- communityProfile=p||{};let name=communityProfile.display_name||await communityProfileName(communityUser),linked=await communityLinkedStatus(communityUser);communityRole=communityProfile.role||await communityRoleOf(communityUser);
- if(adminCard)adminCard.style.display=communityRole==='admin'?'block':'none';
- if(journeyProfileCard)journeyProfileCard.style.display='block';
+ communityProfile=p||{};let name=communityProfile.display_name||await communityProfileName(communityUser);communityRole=communityProfile.role||await communityRoleOf(communityUser);
+ if(adminCard)adminCard.style.display=communityRole==='admin'?'block':'none';if(journeyProfileCard)journeyProfileCard.style.display='block';
  if(profileCard){
   profileCard.style.display='block';profileCard.classList.remove('editing');$('profileName').value=name||'';$('profileBio').value=communityProfile.bio||'';txt('profileEmail',communityUser.email||'');txt('profileViewName',name||'Member');txt('profileViewBio','Bio: '+(communityProfile.bio||'—'));
   let tag=communityRole==='admin'?'admin':(communityProfile.badge||'newbie');$('profileBadge').textContent=tag;$('profileBadge').classList.toggle('admin',communityRole==='admin');let av=communityProfile.avatar_url||communityUser.user_metadata?.avatar_url||communityUser.user_metadata?.picture||'';$('profileAvatar').src=av||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 rx=%2222%22 fill=%22%23eef3ff%22/%3E%3Ctext x=%2235%22 y=%2243%22 text-anchor=%22middle%22 font-size=%2228%22%3E👤%3C/text%3E%3C/svg%3E'
  }
- txt('memberState','Signed in as '+name+' · '+(communityRole==='admin'?'Admin':labelBadge(communityProfile.badge||'newbie'))+linked);
- updateHeaderProfile();applyJourneyAuthState();await loadJourneyProfileData()
+ updateHeaderProfile();applyJourneyAuthState();renderCommunityComposerIdentity();await loadJourneyProfileData()
 }
-async function loadCommunityRooms(){let {data,error}=await sb.from('community_rooms').select('id,slug,name,description').order('created_at');if(error){txt('chatList','Could not load community rooms.');return}communityRooms=data||[];if(!activeRoom&&communityRooms.length)activeRoom=communityRooms[0].id;renderCommunityRooms()}
-function communityRoomIcon(r){let x=(r.slug||r.name||'').toLowerCase();return x.includes('causeway')?'🚦 ':x.includes('second')||x.includes('tuas')?'🔗 ':'💬 '}
-function renderCommunityRooms(){let el=$('communityRooms');if(!el)return;el.innerHTML=communityRooms.map(r=>`<button class="roomBtn ${r.id===activeRoom?'active':''}" onclick="selectCommunityRoom('${r.id}')">${communityRoomIcon(r)}${esc(r.name)}</button>`).join('')}
-async function selectCommunityRoom(id){activeRoom=id;renderCommunityRooms();await loadCommunityMessages()}
-async function loadCommunityMessages(){if(!activeRoom)return;let {data,error}=await sb.from('community_messages').select('id,message,created_at,user_id,profiles(display_name,avatar_url,badge,role)').eq('room_id',activeRoom).order('created_at',{ascending:false}).limit(60);if(error){$('chatList').innerHTML='<div class="sub">Could not load messages.</div>';return}renderCommunityMessages((data||[]).reverse());subscribeCommunity()}
 function labelBadge(v){return ({newbie:'Newbie',pro:'Pro',oldtimer:'Oldtimer',paid:'Paid'})[v]||'Newbie'}
-function renderCommunityMessages(items){let el=$('chatList');if(!el)return;if(!items.length){el.innerHTML='<div class="sub" style="padding:12px">No messages yet. Be the first commuter to say hello 👋</div>';return}el.innerHTML=items.map(m=>{let p=m.profiles||{},n=p.display_name||'Commuter',d=new Date(m.created_at).toLocaleString('en-SG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),mine=m.user_id===communityUser?.id,remove=communityRole==='admin'?`<button class="moderateBtn" onclick="deleteCommunityMessage(${Number(m.id)})">Remove</button>`:'',tag=p.role==='admin'?'Admin':labelBadge(p.badge||'newbie'),av=p.avatar_url||'';return `<div class="chatMsg ${mine?'mine':''}"><div class="chatMeta"><span class="chatIdentity">${av?`<img class="chatAvatar" src="${esc(av)}" alt="">`:''}<span class="chatName">${esc(n)}</span><span class="chatBadge ${p.role==='admin'?'admin':''}">${esc(tag)}</span></span><span>${esc(d)}${remove}</span></div><div class="chatText">${esc(m.message)}</div></div>`}).join('');el.scrollTop=el.scrollHeight}
-function subscribeCommunity(){if(chatChannel){sb.removeChannel(chatChannel);chatChannel=null}if(!activeRoom)return;chatChannel=sb.channel('community-'+activeRoom).on('postgres_changes',{event:'*',schema:'public',table:'community_messages',filter:'room_id=eq.'+activeRoom},()=>loadCommunityMessages()).subscribe()}
-function quickChat(starter){let e=$('chatMessage');if(!e)return;let current=e.value.trim();e.value=current?current+' '+starter:starter;e.focus();e.setSelectionRange(e.value.length,e.value.length)}
-async function sendCommunityMessage(btn){if(!communityUser)return txt('communityGuestHint','Please sign in before posting.');let message=$('chatMessage')?.value.trim();if(!message||!activeRoom)return;setBusy(btn,true);let {error}=await sb.from('community_messages').insert({room_id:activeRoom,user_id:communityUser.id,message});setBusy(btn,false);if(error){alert(error.message);return}$('chatMessage').value='';await loadCommunityMessages()}
-async function deleteCommunityMessage(id){if(communityRole!=='admin')return;if(!confirm('Remove this community message?'))return;let {error}=await sb.from('community_messages').delete().eq('id',id);if(error){alert(error.message);return}await loadCommunityMessages()}
+function communityTimeAgo(v){
+ let s=Math.max(0,Math.floor((Date.now()-new Date(v).getTime())/1000));if(s<60)return 'now';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';if(s<604800)return Math.floor(s/86400)+'d';return new Date(v).toLocaleDateString('en-SG',{day:'numeric',month:'short'})
+}
+function communityAvatarHtml(p={},cls='threadAvatar'){
+ let av=p.avatar_url||'',name=p.display_name||'Commuter',initial=esc(name.charAt(0).toUpperCase()||'👤');
+ return av?'<img class="'+cls+'" src="'+esc(av)+'" alt="">':'<span class="'+cls+' threadAvatarPlaceholder">'+initial+'</span>'
+}
+function renderCommunityComposerIdentity(){
+ let p=communityProfile||{},name=p.display_name||profileFirstName()||'Commuter',av=p.avatar_url||communityUser?.user_metadata?.avatar_url||communityUser?.user_metadata?.picture||'';
+ txt('communityComposerName',name);['communityComposerAvatar','communityComposerAvatar2'].forEach(id=>{let el=$(id);if(!el)return;if(av){let img=document.createElement('img');img.id=id;img.className='threadAvatar';img.src=av;img.alt='';el.replaceWith(img)}else if(el.tagName==='IMG'){let sp=document.createElement('span');sp.id=id;sp.className='threadAvatar threadAvatarPlaceholder';sp.textContent=(name[0]||'👤').toUpperCase();el.replaceWith(sp)}else el.textContent=(name[0]||'👤').toUpperCase()})
+}
+async function loadCommunityTopics(){
+ try{
+  let {data,error}=await sb.from('community_topics').select('id,title,description,created_by,created_at,community_posts(count)').order('created_at',{ascending:false}).limit(100);
+  if(error)throw error;communityTopics=data||[];renderCommunityTopicOptions();renderCommunityTopics()
+ }catch(e){let el=$('communityTopicList');if(el)el.innerHTML='<div class="threadEmpty">Could not load communities.</div>'}
+}
+function renderCommunityTopicOptions(){
+ let s=$('communityPostTopic');if(!s)return;let current=s.value;s.innerHTML='<option value="">General feed</option>'+communityTopics.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.title)+'</option>').join('');if([...s.options].some(o=>o.value===current))s.value=current
+}
+function renderCommunityTopics(){
+ let el=$('communityTopicList');if(!el)return;
+ if(!communityTopics.length){el.innerHTML='<div class="threadEmpty">No communities yet.<br>Be the first to create one.</div>';return}
+ el.innerHTML=communityTopics.map(t=>{let count=Number(t.community_posts?.[0]?.count||0),can=communityUser&&(t.created_by===communityUser.id||communityRole==='admin');return '<div class="communityTopicCard"><button onclick="openCommunityTopic(\''+esc(t.id)+'\',\''+esc(t.title).replace(/'/g,"&#39;")+'\')"><div class="communityTopicTitle">'+esc(t.title)+'</div><div class="communityTopicDesc">'+esc(t.description||'Community-created space')+'</div></button><div><div class="communityTopicCount">'+count+' post'+(count===1?'':'s')+'</div>'+(can?'<button class="threadTextBtn" onclick="deleteCommunityTopic(\''+esc(t.id)+'\')">Delete</button>':'')+'</div></div>'}).join('')
+}
+function showCommunityFeed(){communityThreadPostId=null;$('communityTopicsView').style.display='none';$('communityThreadView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed()}
+function showCommunityTopics(){$('communityFeedView').style.display='none';$('communityThreadView').style.display='none';$('communityTopicsView').style.display='block';loadCommunityTopics()}
+function showCommunityTopicCreator(on){if(!communityUser){openSignIn('community','community');return}let el=$('communityTopicCreator');if(el)el.style.display=on?'block':'none';if(on)setTimeout(()=>$('communityTopicTitle')?.focus(),50)}
+function openCommunityComposer(){if(!communityUser){openSignIn('community','community');return}$('communityComposerPanel').style.display='block';$('communityStartPost').style.display='none';loadCommunityTopics();setTimeout(()=>$('communityPostText')?.focus(),40)}
+function closeCommunityComposer(){if($('communityComposerPanel'))$('communityComposerPanel').style.display='none';if($('communityStartPost'))$('communityStartPost').style.display=communityUser?'flex':'none';txt('communityPostStatus','')}
+async function createCommunityTopic(btn){
+ if(!communityUser)return openSignIn('community','community');let title=$('communityTopicTitle')?.value.trim(),description=$('communityTopicDescription')?.value.trim()||'';
+ if(!title||title.length<2)return txt('communityTopicStatus','Give the community a name.');setBusy(btn,true);
+ try{let {data,error}=await sb.from('community_topics').insert({title,description,created_by:communityUser.id}).select('id,title').single();if(error)throw error;$('communityTopicTitle').value='';$('communityTopicDescription').value='';showCommunityTopicCreator(false);await loadCommunityTopics();if(data?.id&&$('communityPostTopic'))$('communityPostTopic').value=data.id}
+ catch(e){txt('communityTopicStatus',String(e.message||'Could not create community.').includes('duplicate')?'That community name already exists.':(e.message||'Could not create community.'))}finally{setBusy(btn,false)}
+}
+async function deleteCommunityTopic(id){if(!communityUser||!confirm('Delete this community? Its posts will stay in the general feed.'))return;let {error}=await sb.from('community_topics').delete().eq('id',id);if(error)return alert(error.message);if(communityTopicFilter===id){communityTopicFilter=null;showCommunityFeed()}else loadCommunityTopics()}
+async function createCommunityPost(btn){
+ if(!communityUser)return openSignIn('community','community');let content=$('communityPostText')?.value.trim(),topic=$('communityPostTopic')?.value||null;
+ if(!content)return txt('communityPostStatus','Write something first.');setBusy(btn,true);
+ try{let {error}=await sb.from('community_posts').insert({user_id:communityUser.id,topic_id:topic||null,content});if(error)throw error;$('communityPostText').value='';closeCommunityComposer();communityTopicFilter=null;await loadCommunityFeed()}
+ catch(e){txt('communityPostStatus',e.message||'Could not post.')}finally{setBusy(btn,false)}
+}
+async function loadCommunityFeed(){
+ if(!$('communityFeed'))return;await loadCommunityTopics();
+ try{
+  let q=sb.from('community_posts').select('id,topic_id,user_id,content,created_at,updated_at,profiles(display_name,avatar_url,badge,role),community_topics(id,title),community_post_likes(user_id),community_replies(id)').order('created_at',{ascending:false}).limit(60);
+  if(communityTopicFilter)q=q.eq('topic_id',communityTopicFilter);
+  let {data,error}=await q;if(error)throw error;communityFeed=data||[];renderCommunityFeed();subscribeCommunityFeed()
+ }catch(e){$('communityFeed').innerHTML='<div class="threadEmpty">Could not load Community right now.</div>'}
+}
+function postTopicTitle(p){return p.community_topics?.title||''}
+function renderCommunityPost(p,thread=false){
+ let prof=p.profiles||{},mine=p.user_id===communityUser?.id,admin=communityRole==='admin',loved=!!communityUser&&(p.community_post_likes||[]).some(x=>x.user_id===communityUser.id),likes=(p.community_post_likes||[]).length,replies=(p.community_replies||[]).length,topic=postTopicTitle(p),badge=prof.role==='admin'?'Admin':(prof.badge&&prof.badge!=='newbie'?labelBadge(prof.badge):''),menu=(mine||admin)?'<button class="threadMore" onclick="deleteCommunityPost('+Number(p.id)+')" aria-label="Delete post">⋯</button>':'';
+ return '<article class="threadPost">'+
+ '<div class="threadPostHeader">'+communityAvatarHtml(prof)+'<div class="threadPostMain"><div class="threadNameLine"><span class="threadName">'+esc(prof.display_name||'Commuter')+'</span>'+(badge?'<span class="threadBadge '+(prof.role==='admin'?'admin':'')+'">'+esc(badge)+'</span>':'')+'</div><div class="threadContext">'+communityTimeAgo(p.created_at)+(topic?' · in <button class="threadTopicLink" onclick="openCommunityTopic(\''+esc(p.topic_id)+'\',\''+esc(topic).replace(/'/g,"&#39;")+'\')">'+esc(topic)+'</button>':'')+'</div></div>'+menu+'</div>'+
+ '<div class="threadContent">'+esc(p.content)+'</div><div class="threadActions"><button class="threadAction '+(loved?'loved':'')+'" onclick="toggleCommunityPostLike('+Number(p.id)+')"><span class="threadActionIcon">'+(loved?'♥':'♡')+'</span><span>'+likes+'</span></button><button class="threadAction" onclick="openCommunityThread('+Number(p.id)+')"><span class="threadActionIcon">💬</span><span>'+replies+'</span></button></div></article>'
+}
+function renderCommunityFeed(){let el=$('communityFeed');if(!el)return;let scope=$('communityFeedScope'),topic=communityTopics.find(t=>t.id===communityTopicFilter);if(topic){scope.style.display='block';scope.innerHTML=esc(topic.title)+'<button onclick="clearCommunityTopicFilter()">All posts</button>'}else scope.style.display='none';el.innerHTML=communityFeed.length?communityFeed.map(p=>renderCommunityPost(p)).join(''):'<div class="threadEmpty">'+(communityTopicFilter?'No posts here yet.':'No posts yet. Start the first conversation.')+'</div>'}
+function clearCommunityTopicFilter(){communityTopicFilter=null;loadCommunityFeed()}
+function openCommunityTopic(id,title=''){communityTopicFilter=id;$('communityTopicsView').style.display='none';$('communityThreadView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed();scrollPageTop()}
+async function deleteCommunityPost(id){let p=communityFeed.find(x=>Number(x.id)===Number(id));if(!communityUser||!p||(p.user_id!==communityUser.id&&communityRole!=='admin'))return;if(!confirm('Delete this post?'))return;let {error}=await sb.from('community_posts').delete().eq('id',id);if(error)return alert(error.message);if(communityThreadPostId===id){communityThreadPostId=null;showCommunityFeed()}else loadCommunityFeed()}
+async function toggleCommunityPostLike(id){
+ if(!communityUser)return openSignIn('community','community');let p=communityFeed.find(x=>Number(x.id)===Number(id)),loved=(p?.community_post_likes||[]).some(x=>x.user_id===communityUser.id);
+ let r=loved?await sb.from('community_post_likes').delete().eq('post_id',id).eq('user_id',communityUser.id):await sb.from('community_post_likes').insert({post_id:id,user_id:communityUser.id});if(r.error)return;communityThreadPostId?loadCommunityThread(communityThreadPostId):loadCommunityFeed()
+}
+async function openCommunityThread(id){communityThreadPostId=Number(id);$('communityFeedView').style.display='none';$('communityTopicsView').style.display='none';$('communityThreadView').style.display='block';await applyMemberState();await loadCommunityThread(id);scrollPageTop()}
+function closeCommunityThread(){communityThreadPostId=null;$('communityThreadView').style.display='none';$('communityTopicsView').style.display='none';$('communityFeedView').style.display='block';loadCommunityFeed();scrollPageTop()}
+async function loadCommunityThread(id){
+ try{
+  let {data:p,error}=await sb.from('community_posts').select('id,topic_id,user_id,content,created_at,updated_at,profiles(display_name,avatar_url,badge,role),community_topics(id,title),community_post_likes(user_id),community_replies(id)').eq('id',id).single();if(error)throw error;
+  if(!$('communityThreadPost'))return;$('communityThreadPost').innerHTML=renderCommunityPost(p,true);
+  let {data:r,error:re}=await sb.from('community_replies').select('id,post_id,user_id,content,created_at,profiles(display_name,avatar_url,badge,role),community_reply_likes(user_id)').eq('post_id',id).order('created_at',{ascending:true});if(re)throw re;renderCommunityReplies(r||[])
+ }catch(e){$('communityThreadPost').innerHTML='<div class="threadEmpty">This post is unavailable.</div>'}
+}
+function renderCommunityReplies(items){let el=$('communityReplyList');if(!el)return;if(!items.length){el.innerHTML='<div class="threadEmpty">No replies yet.</div>';return}el.innerHTML=items.map(r=>{let p=r.profiles||{},loved=!!communityUser&&(r.community_reply_likes||[]).some(x=>x.user_id===communityUser.id),likes=(r.community_reply_likes||[]).length,can=communityUser&&(r.user_id===communityUser.id||communityRole==='admin');return '<div class="threadReply"><div class="threadReplyHeader"><div><span class="threadReplyName">'+esc(p.display_name||'Commuter')+'</span><span class="threadReplyMeta"> · '+communityTimeAgo(r.created_at)+'</span></div>'+(can?'<button class="threadMore" onclick="deleteCommunityReply('+Number(r.id)+')">⋯</button>':'')+'</div><div class="threadReplyText">'+esc(r.content)+'</div><div class="threadReplyActions"><button class="threadAction '+(loved?'loved':'')+'" onclick="toggleCommunityReplyLike('+Number(r.id)+')"><span class="threadActionIcon">'+(loved?'♥':'♡')+'</span><span>'+likes+'</span></button></div></div>'}).join('')}
+async function createCommunityReply(btn){if(!communityUser)return openSignIn('community','community');let content=$('communityReplyText')?.value.trim();if(!communityThreadPostId||!content)return;setBusy(btn,true);let {error}=await sb.from('community_replies').insert({post_id:communityThreadPostId,user_id:communityUser.id,content});setBusy(btn,false);if(error)return alert(error.message);$('communityReplyText').value='';await loadCommunityThread(communityThreadPostId)}
+async function deleteCommunityReply(id){if(!communityUser||!confirm('Delete this reply?'))return;let {error}=await sb.from('community_replies').delete().eq('id',id);if(error)return alert(error.message);loadCommunityThread(communityThreadPostId)}
+async function toggleCommunityReplyLike(id){if(!communityUser)return openSignIn('community','community');let {data}=await sb.from('community_reply_likes').select('reply_id').eq('reply_id',id).eq('user_id',communityUser.id).maybeSingle();let r=data?await sb.from('community_reply_likes').delete().eq('reply_id',id).eq('user_id',communityUser.id):await sb.from('community_reply_likes').insert({reply_id:id,user_id:communityUser.id});if(!r.error)loadCommunityThread(communityThreadPostId)}
+function subscribeCommunityFeed(){
+ if(communityChannel){sb.removeChannel(communityChannel);communityChannel=null}
+ communityChannel=sb.channel('community-v28').on('postgres_changes',{event:'*',schema:'public',table:'community_posts'},()=>communityThreadPostId?loadCommunityThread(communityThreadPostId):loadCommunityFeed()).on('postgres_changes',{event:'*',schema:'public',table:'community_replies'},()=>communityThreadPostId?loadCommunityThread(communityThreadPostId):loadCommunityFeed()).on('postgres_changes',{event:'*',schema:'public',table:'community_post_likes'},()=>communityThreadPostId?loadCommunityThread(communityThreadPostId):loadCommunityFeed()).on('postgres_changes',{event:'*',schema:'public',table:'community_reply_likes'},()=>communityThreadPostId?loadCommunityThread(communityThreadPostId):loadCommunityFeed()).subscribe()
+}
 
 function toggleProfileEdit(on){let c=$('profileCard');if(!c)return;c.classList.toggle('editing',!!on);if(on){$('profileName')?.focus();txt('profileStatus','Your tag is managed by RunSGD.')}}
-async function saveProfile(btn){if(!communityUser)return;let name=$('profileName')?.value.trim(),bio=$('profileBio')?.value.trim();if(!name||name.length<2)return txt('profileStatus','Display name must be at least 2 characters.');setBusy(btn,true);let {error}=await sb.from('profiles').update({display_name:name,bio}).eq('id',communityUser.id);setBusy(btn,false);if(error)return txt('profileStatus',error.message);txt('profileStatus','Profile saved.');await applyMemberState();toggleProfileEdit(false);if(activeRoom)await loadCommunityMessages()}
-async function uploadProfilePhoto(input){if(!communityUser||!input.files?.[0])return;let file=input.files[0];if(file.size>2097152){txt('profileStatus','Photo must be 2 MB or smaller.');input.value='';return}txt('profileStatus','Uploading photo…');let path=communityUser.id+'/avatar',r=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type||'image/jpeg'});if(r.error){txt('profileStatus',r.error.message);input.value='';return}let url=sb.storage.from('avatars').getPublicUrl(path).data.publicUrl+'?v='+Date.now();let {error}=await sb.from('profiles').update({avatar_url:url}).eq('id',communityUser.id);input.value='';if(error)return txt('profileStatus',error.message);txt('profileStatus','Profile photo updated.');await applyMemberState();if(activeRoom)await loadCommunityMessages()}
+async function saveProfile(btn){if(!communityUser)return;let name=$('profileName')?.value.trim(),bio=$('profileBio')?.value.trim();if(!name||name.length<2)return txt('profileStatus','Display name must be at least 2 characters.');setBusy(btn,true);let {error}=await sb.from('profiles').update({display_name:name,bio}).eq('id',communityUser.id);setBusy(btn,false);if(error)return txt('profileStatus',error.message);txt('profileStatus','Profile saved.');await applyMemberState();toggleProfileEdit(false);if(document.querySelector('.page.active')?.id==='community')await loadCommunityFeed()}
+async function uploadProfilePhoto(input){if(!communityUser||!input.files?.[0])return;let file=input.files[0];if(file.size>2097152){txt('profileStatus','Photo must be 2 MB or smaller.');input.value='';return}txt('profileStatus','Uploading photo…');let path=communityUser.id+'/avatar',r=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type||'image/jpeg'});if(r.error){txt('profileStatus',r.error.message);input.value='';return}let url=sb.storage.from('avatars').getPublicUrl(path).data.publicUrl+'?v='+Date.now();let {error}=await sb.from('profiles').update({avatar_url:url}).eq('id',communityUser.id);input.value='';if(error)return txt('profileStatus',error.message);txt('profileStatus','Profile photo updated.');await applyMemberState();if(document.querySelector('.page.active')?.id==='community')await loadCommunityFeed()}
 
 let journeyRecentCache=[],journeyPlannerState='plan',journeyPlanResultsOpen=false;
 function openJourneyEmailSignIn(){openSignIn('journey','journey')}
@@ -2253,7 +2362,7 @@ function showPage(n){
  if(n==='signin')renderSignInContext();
  if(n==='explore')showExplore(localStorage.getItem('runsgdExploreTab')||'know');
  if(n==='journey'){applyJourneyAuthState();if(communityUser)loadJourneyProfileData()}
- if(n==='community'&&activeRoom)loadCommunityMessages();
+ if(n==='community')loadCommunityFeed();
  scrollPageTop()
 }
 const knowledgeBase=[
