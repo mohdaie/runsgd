@@ -200,7 +200,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.6.2 dedicated Journey experience */
+/* v2.6.3 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0 16px}.journeyStage{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 6px;border-radius:13px;background:#f1f3f8;color:#929aab;font-size:10px;font-weight:900}.journeyStage span{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca}.journeyStage.active span{background:#5976e7;color:#fff}
@@ -215,7 +215,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.6.2</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.6.3</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -509,7 +509,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.6.2</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.6.3</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -562,7 +562,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.6.2</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.6.3</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -661,12 +661,17 @@ async function initCommunity(){
     }
 
     // Mobile / installed-PWA Google auth returns through the same RunSGD window.
+    // Do a clean app reload after OAuth instead of rendering inside the callback document.
+    // Android can otherwise keep the auth/custom-tab viewport scale, making RunSGD look like a tiny desktop page.
     if(isGoogleAuthReturn&&communityUser&&!isGooglePopupReturn){
       let target=['journey','community','more'].includes(googleReturnTarget)?googleReturnTarget:'journey';
       localStorage.removeItem('runsgdGoogleAttempt');
       localStorage.removeItem('runsgdGoogleDone');
+      localStorage.removeItem('runsgdGoogleReturnTarget');
       localStorage.removeItem('runsgdAuthReturn');
-      history.replaceState(null,'',location.pathname+'#'+target);
+      sessionStorage.setItem('runsgdPostAuth','1');
+      location.replace('/#'+target);
+      return
     }
 
     await loadCommunityRooms();
@@ -2340,7 +2345,7 @@ async function refreshExplore(btn){setBusy(btn,true);let type=localStorage.getIt
 let timerSecs=300,timerId=null;function setTimer(m){clearInterval(timerId);timerId=null;timerSecs=m*60;txt('timerBtn','Start');drawTimer()}function drawTimer(){let m=Math.floor(timerSecs/60),s=timerSecs%60;txt('timerDisplay',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'))}function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;txt('timerBtn','Start');return}txt('timerBtn','Pause');timerId=setInterval(()=>{if(timerSecs<=0){clearInterval(timerId);timerId=null;txt('timerBtn','Start');alert('RunSGD timer finished.');return}timerSecs--;drawTimer()},1000)}function calcLeave(){let v=$('arrivalTime').value,b=+$('bufferMin').value;if(!v)return txt('leaveResult','Choose an arrival time.');let [h,m]=v.split(':').map(Number),d=new Date();d.setHours(h,m-b,0,0);txt('leaveResult','Leave by about '+d.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' for a '+b+' min buffer.')}
 let swStart=null,swElapsed=0,swId=null;function drawSW(){let total=swElapsed+(swStart?Date.now()-swStart:0),s=Math.floor(total/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;txt('stopwatchDisplay',[h,m,ss].map(x=>String(x).padStart(2,'0')).join(':'))}function toggleStopwatch(){if(swId){swElapsed+=Date.now()-swStart;swStart=null;clearInterval(swId);swId=null;txt('stopwatchBtn','Start')}else{swStart=Date.now();swId=setInterval(drawSW,250);txt('stopwatchBtn','Pause')}}function resetStopwatch(){if(swId){clearInterval(swId);swId=null}swStart=null;swElapsed=0;txt('stopwatchBtn','Start');drawSW()}
 function updateClocks(){let now=new Date(),fmt=new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});txt('sgClock',fmt.format(now));txt('jbClock',fmt.format(now));txt('clockDate',new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',weekday:'long',day:'numeric',month:'long'}).format(now))}setInterval(updateClocks,1000);updateClocks();
-async function init(){if(isGooglePopupReturn){await initCommunity();return}if('scrollRestoration' in history)history.scrollRestoration='manual';scrollPageTop();trackAppVisit();greeting();updateHeaderProfile();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();updateSgRouteOrigin();await initCommunity();restoreSgJourney();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','journey','community','more'].includes(hash)?hash:['home','explore','journey','community','more'].includes(saved)?saved:'home';showPage(page);requestAnimationFrame(()=>requestAnimationFrame(scrollPageTop));setTimeout(scrollPageTop,120);setTimeout(scrollPageTop,420);updateBrief();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
+async function init(){if(isGooglePopupReturn){await initCommunity();return}if('scrollRestoration' in history)history.scrollRestoration='manual';if(sessionStorage.getItem('runsgdPostAuth')){sessionStorage.removeItem('runsgdPostAuth');let vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1,viewport-fit=cover')}scrollPageTop();trackAppVisit();greeting();updateHeaderProfile();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();updateSgRouteOrigin();await initCommunity();restoreSgJourney();let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','journey','community','more'].includes(hash)?hash:['home','explore','journey','community','more'].includes(saved)?saved:'home';showPage(page);requestAnimationFrame(()=>requestAnimationFrame(scrollPageTop));setTimeout(scrollPageTop,120);setTimeout(scrollPageTop,420);updateBrief();await refreshAll();if(live.location){loadNearbyPrayer();loadAir()}}
 window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if(['home','explore','journey','community','more'].includes(n))showPage(n)});
 document.addEventListener('visibilitychange',()=>{
  if(!sgJourney||sgJourney.status!=='active')return;
