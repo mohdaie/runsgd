@@ -202,7 +202,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.3.1</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.4.0</span></div>
   <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
 </div>
 <section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
@@ -457,7 +457,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.3.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.4.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location, current page and Explore tab are stored in this browser.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -481,7 +481,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 </article>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.3.1</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.4.0</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -693,7 +693,7 @@ const live={rate:null,weather:{},air:null,traffic:null,transport:null,prayer:nul
 let sgRouteSearchTimer=null,sgRouteSearchSeq=0,sgRouteSelection=null,sgRouteResults=[],sgRouteDestRegion='',sgRouteTravelMode='transit',sgJourneyIntent=null;
 const WOODLANDS_CP={name:'Woodlands Checkpoint',address:'Woodlands Checkpoint, Singapore',lat:1.4459,lon:103.7686};
 const JB_CIQ={name:'JB CIQ',address:'Bangunan Sultan Iskandar, Johor Bahru',lat:1.4637,lon:103.7648};
-let sgJourney=null,sgJourneyWatchId=null,sgJourneyHeading=null,sgJourneyCompassListening=false,sgJourneyCompassPermissionNeeded=false,sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0};
+let sgJourney=null,sgJourneyWatchId=null,sgJourneyHeading=null,sgJourneyCompassListening=false,sgJourneyCompassPermissionNeeded=false,sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:null,routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0};
 const $=x=>document.getElementById(x),txt=(x,v)=>{if($(x))$(x).textContent=v};
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function setBusy(btn,on){if(!btn)return;btn.classList.toggle('busy',!!on);btn.setAttribute('aria-busy',on?'true':'false')}
@@ -943,7 +943,7 @@ async function planJbToSgSmart(origin,destination,intent){
   if(drive?.routes?.length&&sg?.routes?.length){
    let a=drive.routes[0],b=sg.routes[0];
    let park={mode:'PARK',manual:true,duration_sec:0,distance_m:0,from:{name:target.name||'JB Sentral / CIQ area',lat:target.lat,lon:target.lon},to:{name:'JB CIQ',lat:JB_CIQ.lat,lon:JB_CIQ.lon},instruction:'Park at a suitable facility near JB Sentral / CIQ, then continue to immigration'};
-   out.push({provider:'cross-border',kind:'drive_then_transit',label:'Drive + bus + MRT',tag:'Car → Transit',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),walk_distance_m:Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,legs:[...(a.legs||[]),park,...makeJbToSgBorderHops(),...(b.legs||[])],explanation:'Drive on the Johor side, park, cross by bus, then continue by Singapore public transport. Confirm a suitable parking facility before departure.'})
+   out.push({provider:'cross-border',kind:'drive_then_transit',label:'Drive + bus + MRT',tag:'Car → Transit',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),walk_distance_m:Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,polyline:a.polyline||'',road_leg_count:(a.legs||[]).length,legs:[...(a.legs||[]),park,...makeJbToSgBorderHops(),...(b.legs||[])],explanation:'Drive on the Johor side, park, cross by bus, then continue by Singapore public transport. Confirm a suitable parking facility before departure.'})
   }
  }
 
@@ -1098,6 +1098,118 @@ function journeyMeters(a,b,c,d){
  let R=6371000,r=x=>x*Math.PI/180,da=r(c-a),db=r(d-b),h=Math.sin(da/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(db/2)**2;
  return 2*R*Math.asin(Math.sqrt(h));
 }
+function journeyRoadMode(v){v=String(v||'').toUpperCase();return v==='DRIVE'||v==='TWO_WHEELER'}
+function decodeGooglePolyline(s){
+ let out=[],i=0,lat=0,lon=0;s=String(s||'');
+ try{
+  while(i<s.length){
+   let b=0,shift=0,result=0;
+   do{b=s.charCodeAt(i++)-63;result|=(b&31)<<shift;shift+=5}while(b>=32&&i<=s.length);
+   lat+=(result&1)?~(result>>1):(result>>1);
+   shift=0;result=0;
+   do{b=s.charCodeAt(i++)-63;result|=(b&31)<<shift;shift+=5}while(b>=32&&i<=s.length);
+   lon+=(result&1)?~(result>>1):(result>>1);
+   out.push({lat:lat/1e5,lon:lon/1e5})
+  }
+ }catch{return []}
+ return out
+}
+function buildJourneyRoadCache(route){
+ let points=decodeGooglePolyline(route?.polyline||'');
+ if(points.length<2)return null;
+ let cum=[0];
+ for(let i=1;i<points.length;i++)cum[i]=cum[i-1]+(journeyMeters(points[i-1].lat,points[i-1].lon,points[i].lat,points[i].lon)||0);
+ let legs=route?.legs||[],legEnds={},cursor=0;
+ for(let li=0;li<legs.length;li++){
+  let leg=legs[li];if(!journeyRoadMode(leg?.mode))continue;
+  let lat=Number(leg?.to?.lat),lon=Number(leg?.to?.lon);if(!Number.isFinite(lat)||!Number.isFinite(lon))continue;
+  let bestI=cursor,best=Infinity;
+  for(let i=cursor;i<points.length;i++){
+   let d=journeyMeters(lat,lon,points[i].lat,points[i].lon);
+   if(d<best){best=d;bestI=i}
+   if(i>cursor+60&&best<20&&d>best+120)break
+  }
+  cursor=Math.max(cursor,bestI);legEnds[li]=cum[cursor]
+ }
+ return {points,cum,total:cum[cum.length-1]||0,legEnds,lastIndex:0}
+}
+function projectJourneyToRoad(cache,lat,lon,forceAll=false){
+ if(!cache?.points?.length||!Number.isFinite(lat)||!Number.isFinite(lon))return null;
+ let pts=cache.points,cos=Math.max(.2,Math.cos(lat*Math.PI/180)),mx=111320*cos,my=110540;
+ let start=0,end=pts.length-2;
+ if(!forceAll&&Number.isInteger(cache.lastIndex)){
+  start=Math.max(0,cache.lastIndex-45);end=Math.min(end,cache.lastIndex+260)
+ }
+ function scan(a,z){
+  let best=null;
+  for(let i=a;i<=z;i++){
+   let A=pts[i],B=pts[i+1],ax=(A.lon-lon)*mx,ay=(A.lat-lat)*my,bx=(B.lon-lon)*mx,by=(B.lat-lat)*my,dx=bx-ax,dy=by-ay,den=dx*dx+dy*dy;
+   let t=den?Math.max(0,Math.min(1,-(ax*dx+ay*dy)/den)):0,px=ax+t*dx,py=ay+t*dy,d=Math.hypot(px,py);
+   if(!best||d<best.distance_m)best={distance_m:d,progress_m:cache.cum[i]+t*(cache.cum[i+1]-cache.cum[i]),index:i}
+  }
+  return best
+ }
+ let best=scan(start,end);
+ if((start>0||end<pts.length-2)&&(!best||best.distance_m>180))best=scan(0,pts.length-2);
+ if(best)cache.lastIndex=best.index;
+ return best
+}
+function roadArrivalThreshold(coords){
+ let speed=Number(coords?.speed),accuracy=Number(coords?.accuracy);
+ let base=Number.isFinite(speed)&&speed>22?220:Number.isFinite(speed)&&speed>13?175:Number.isFinite(speed)&&speed>6?135:105;
+ if(Number.isFinite(accuracy))base+=Math.min(45,Math.max(0,accuracy-15)*.45);
+ return Math.min(260,Math.round(base))
+}
+function roadPassMargin(coords){
+ let speed=Number(coords?.speed),accuracy=Number(coords?.accuracy);
+ let m=Number.isFinite(speed)&&speed>22?85:Number.isFinite(speed)&&speed>12?60:40;
+ if(Number.isFinite(accuracy))m+=Math.min(35,accuracy*.25);
+ return Math.min(115,Math.round(m))
+}
+function advanceSgJourneyTo(target){
+ if(!sgJourney)return;
+ let legs=sgJourney.route?.legs||[],next=Math.max(Number(sgJourney.current_hop)||0,Math.floor(Number(target)||0));
+ if(next>=legs.length){finishSgJourney();return}
+ sgJourney.current_hop=next;sgJourneyRuntime.bestDistance=Infinity;sgJourneyRuntime.worseCount=0;sgJourneyRuntime.lastMovedAt=Date.now();persistSgJourney();renderSgJourney()
+}
+function reconcileRoadProgress(p,lat,lon,leg,distance,moved,now){
+ let legs=sgJourney?.route?.legs||[],idx=Math.max(0,Number(sgJourney?.current_hop)||0),coords=p?.coords||{},threshold=roadArrivalThreshold(coords),pass=roadPassMargin(coords);
+ if(!sgJourneyRuntime.roadCache)sgJourneyRuntime.roadCache=buildJourneyRoadCache(sgJourney?.route);
+ let cache=sgJourneyRuntime.roadCache,proj=cache?projectJourneyToRoad(cache,lat,lon,now-sgJourneyRuntime.lastFixAt>30000):null;
+ sgJourneyRuntime.lastFixAt=now;
+ if(proj){
+  sgJourneyRuntime.routeProgressM=proj.progress_m;sgJourneyRuntime.routeTotalM=cache.total;sgJourneyRuntime.offRouteM=proj.distance_m;
+  if(proj.distance_m<=Math.max(150,Number(coords.accuracy||0)*2)){
+   let target=idx;
+   for(let i=idx;i<Math.min(legs.length,idx+10);i++){
+    if(!journeyRoadMode(legs[i]?.mode))break;
+    let end=Number(cache.legEnds?.[i]);
+    if(Number.isFinite(end)&&proj.progress_m>=end-pass)target=i+1;
+    else break
+   }
+   if(target>idx){advanceSgJourneyTo(target);return true}
+   if(idx>=legs.length-1&&cache.total-proj.progress_m<=threshold){finishSgJourney();return true}
+  }
+ }
+ let target=idx;
+ for(let i=idx;i<Math.min(legs.length,idx+4);i++){
+  if(!journeyRoadMode(legs[i]?.mode))break;
+  let tlat=Number(legs[i]?.to?.lat),tlon=Number(legs[i]?.to?.lon),d=journeyMeters(lat,lon,tlat,tlon);
+  if(d!=null&&d<=threshold)target=i+1
+ }
+ if(target>idx){advanceSgJourneyTo(target);return true}
+ if(distance!=null){
+  let prevBest=sgJourneyRuntime.bestDistance;
+  if(distance<prevBest-10){sgJourneyRuntime.bestDistance=distance;sgJourneyRuntime.worseCount=0}
+  else if(Number.isFinite(prevBest)&&prevBest<Math.max(320,threshold*1.6)&&distance>prevBest+Math.max(75,threshold*.45)&&moved!=null&&moved>25)sgJourneyRuntime.worseCount++;
+  if(sgJourneyRuntime.worseCount>=2){advanceSgJourneyTo(idx+1);return true}
+ }
+ return false
+}
+function reconcileSgJourneyPosition(){
+ if(!sgJourney||sgJourney.status!=='active'||!navigator.geolocation)return;
+ navigator.geolocation.getCurrentPosition(handleSgJourneyPosition,()=>{if(!document.hidden)txt('sgJourneyDistance','Could not refresh GPS yet · live journey remains saved')},{enableHighAccuracy:true,timeout:12000,maximumAge:0})
+}
 function sgJourneyLeg(){
  return sgJourney?.route?.legs?.[Math.max(0,Number(sgJourney.current_hop)||0)]||null;
 }
@@ -1123,8 +1235,8 @@ function sgJourneyDefaultCoach(leg,distance){
  if(mode==='CROSS_BORDER_BUS')return 'Take an available cross-border bus to JB CIQ after Singapore immigration. Border queue time can vary, so RunSGD does not guess it.';
  if(distance!=null&&distance<130)return 'You’re very close to '+to+'. Get ready for the next hop.';
  if(mode==='WALK')return distance!=null?'Keep walking — about '+routeDistance(distance)+' to '+to+'.':'Keep walking towards '+to+'.';
- if(mode==='DRIVE')return 'Keep driving towards '+to+'. Follow road signs and use Google Maps for turn-by-turn navigation.';
- if(mode==='TWO_WHEELER')return 'Keep riding towards '+to+'. Follow road signs and use Google Maps for turn-by-turn navigation.';
+ if(mode==='DRIVE')return 'Continue driving towards '+to+'. RunSGD is matching your GPS against the planned road route automatically.';
+ if(mode==='TWO_WHEELER')return 'Continue riding towards '+to+'. RunSGD is matching your GPS against the planned road route automatically.';
  if(mode==='BUS')return 'Stay on Bus'+(leg.route?' '+leg.route:'')+(leg.headsign?' towards '+leg.headsign:'')+'. I’ll update when you get close to '+to+'.';
  if(mode==='SUBWAY')return 'Stay on '+(leg.route?'MRT '+leg.route:'the MRT')+(leg.headsign?' towards '+leg.headsign:'')+'. I’ll alert you near '+to+'.';
  if(mode==='RAIL'||mode==='TRAIN'||mode==='TRAM')return 'Stay on '+(leg.route?routeModeLabel(leg):'the train')+(leg.headsign?' towards '+leg.headsign:'')+'. I’ll alert you near '+to+'.';
@@ -1222,10 +1334,16 @@ function renderSgJourney(distance=null){
  txt('sgJourneyMeta','Hop '+(idx+1)+' of '+Math.max(1,legs.length)+' · started '+new Date(sgJourney.started_at).toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}));
  let remaining=legs.slice(idx).reduce((n,x)=>n+Number(x.duration_sec||0),0),borderPending=!!sgJourney.route?.border_variable&&idx<=Number(sgJourney.route?.border_end_index??-1);txt('sgJourneyEta',remaining?(routeMinutes(remaining)+(borderPending?' + border':'')+' left'):'Live');
  txt('sgJourneyAction',sgJourneyInstruction(leg));
- let distText=distance!=null?routeDistance(distance)+' from next hop':'Waiting for live GPS…';
- txt('sgJourneyDistance',distText+' · tracking only while RunSGD is open');
+ let road=journeyRoadMode(leg?.mode),distText=distance!=null?routeDistance(distance)+' from next hop':'Waiting for live GPS…',pct=legs.length?Math.min(100,Math.round((idx/legs.length)*100)):0;
+ if(road&&Number.isFinite(sgJourneyRuntime.routeProgressM)&&Number.isFinite(sgJourneyRuntime.routeTotalM)&&sgJourneyRuntime.routeTotalM>0){
+  let remain=Math.max(0,sgJourneyRuntime.routeTotalM-sgJourneyRuntime.routeProgressM);
+  let off=Number(sgJourneyRuntime.offRouteM),match=Number.isFinite(off)&&off>180?' · checking route position':' · GPS matched to road';
+  distText=routeDistance(remain)+' driving route remaining'+match;
+  pct=Math.min(100,Math.max(0,Math.round(sgJourneyRuntime.routeProgressM/sgJourneyRuntime.routeTotalM*100)))
+ }
+ txt('sgJourneyDistance',distText+(road?' · auto hop tracking':' · tracking while RunSGD is open'));
  renderJourneyBeacon(distance);
- let pct=legs.length?Math.min(100,Math.round((idx/legs.length)*100)):0;if($('sgJourneyProgressBar'))$('sgJourneyProgressBar').style.width=pct+'%';
+ if($('sgJourneyProgressBar'))$('sgJourneyProgressBar').style.width=pct+'%';
  if(!$('sgJourneyAiText')?.dataset.aiLock)txt('sgJourneyAiText',sgJourneyDefaultCoach(leg,distance));
  let next=legs[idx+1];$('sgJourneyNext').innerHTML=next?'<b>Next:</b> '+esc(sgJourneyInstruction(next)):'<b>Final hop:</b> Keep going until you reach '+esc(sgJourney.destination?.name||'your destination')+'.';let doneBtn=$('sgJourneyHopDoneBtn');if(doneBtn)doneBtn.textContent=leg?.manual?'Cleared immigration':'Hop done';
  $('sgJourneyAllHops').innerHTML=legs.map((l,n)=>'<div class="routeLeg '+(n<idx?'journeyDone':n===idx?'journeyCurrent':'')+'"><div class="routeLegIcon">'+routeModeIcon(l.mode)+'</div><div><div class="routeLegTitle">'+esc(sgJourneyInstruction(l))+'</div><div class="routeLegMeta">'+esc(routeMinutes(l.duration_sec)+(l.distance_m?' · '+routeDistance(l.distance_m):''))+'</div></div></div>').join('');
@@ -1239,16 +1357,17 @@ function restoreSgJourney(){
 function startSgJourneyTracking(){
  if(!sgJourney||sgJourney.status!=='active'||!navigator.geolocation)return;
  if(sgJourneyWatchId!=null)navigator.geolocation.clearWatch(sgJourneyWatchId);
- sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0};
+ sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:buildJourneyRoadCache(sgJourney.route),routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0};
  startJourneyCompass();
- sgJourneyWatchId=navigator.geolocation.watchPosition(handleSgJourneyPosition,()=>{txt('sgJourneyDistance','GPS temporarily unavailable · journey remains saved');},{enableHighAccuracy:true,maximumAge:15000,timeout:20000});
+ sgJourneyWatchId=navigator.geolocation.watchPosition(handleSgJourneyPosition,()=>{if(!document.hidden)txt('sgJourneyDistance','GPS temporarily unavailable · journey remains saved');},{enableHighAccuracy:true,maximumAge:3000,timeout:15000});
+ setTimeout(reconcileSgJourneyPosition,250);
 }
 function stopSgJourneyTracking(){
  if(sgJourneyWatchId!=null&&navigator.geolocation){navigator.geolocation.clearWatch(sgJourneyWatchId);sgJourneyWatchId=null}
  stopJourneyCompass();
 }
 function handleSgJourneyPosition(p){
- if(document.hidden||!sgJourney||sgJourney.status!=='active')return;
+ if(!sgJourney||sgJourney.status!=='active')return;
  let lat=Number(p.coords.latitude),lon=Number(p.coords.longitude),now=Date.now(),leg=sgJourneyLeg();
  if(Number.isFinite(Number(p.coords.heading)))sgJourneyHeading=Number(p.coords.heading);
  if(!Number.isFinite(lat)||!Number.isFinite(lon)||!leg)return;
@@ -1257,11 +1376,16 @@ function handleSgJourneyPosition(p){
  let moved=sgJourneyRuntime.lastLat==null?0:journeyMeters(sgJourneyRuntime.lastLat,sgJourneyRuntime.lastLon,lat,lon);
  if(moved!=null&&moved>18)sgJourneyRuntime.lastMovedAt=now;
  sgJourneyRuntime.lastLat=lat;sgJourneyRuntime.lastLon=lon;
- if(leg.manual){persistSgJourney();renderSgJourney(distance);return}
+ if(leg.manual){persistSgJourney();if(!document.hidden)renderSgJourney(distance);return}
+ let mode=String(leg.mode||'').toUpperCase();
+ if(journeyRoadMode(mode)){
+  if(reconcileRoadProgress(p,lat,lon,leg,distance,moved,now))return;
+  persistSgJourney();if(!document.hidden)renderSgJourney(distance);return
+ }
  if(distance!=null){
   if(distance<sgJourneyRuntime.bestDistance-12){sgJourneyRuntime.bestDistance=distance;sgJourneyRuntime.worseCount=0}
   else if(distance>sgJourneyRuntime.bestDistance+Math.max(160,sgJourneyRuntime.bestDistance*.35)&&moved!=null&&moved>15)sgJourneyRuntime.worseCount++;
-  let mode=String(leg.mode||'').toUpperCase(),threshold=mode==='WALK'?65:mode==='CROSS_BORDER_BUS'?220:135;
+  let threshold=mode==='WALK'?65:mode==='CROSS_BORDER_BUS'?220:135;
   if(distance<=threshold){advanceSgJourneyHop();return}
   let stationary=now-sgJourneyRuntime.lastMovedAt>5*60*1000&&distance>180&&mode==='WALK';
   let wrongWay=mode==='WALK'&&sgJourneyRuntime.worseCount>=3&&distance>220;
@@ -1270,14 +1394,9 @@ function handleSgJourneyPosition(p){
    journeyAiIntervention(wrongWay?'moving_away':'not_progressing',distance);
   }
  }
- persistSgJourney();renderSgJourney(distance);
+ persistSgJourney();if(!document.hidden)renderSgJourney(distance);
 }
-function advanceSgJourneyHop(){
- if(!sgJourney)return;
- let legs=sgJourney.route?.legs||[];
- if(sgJourney.current_hop>=legs.length-1){finishSgJourney();return}
- sgJourney.current_hop++;sgJourneyRuntime.bestDistance=Infinity;sgJourneyRuntime.worseCount=0;sgJourneyRuntime.lastMovedAt=Date.now();persistSgJourney();renderSgJourney();
-}
+function advanceSgJourneyHop(){if(sgJourney?.status==='active')advanceSgJourneyTo((Number(sgJourney.current_hop)||0)+1)}
 function completeSgJourneyHop(){if(sgJourney?.status==='active')advanceSgJourneyHop()}
 async function journeyAiIntervention(reason,distance,manual=false){
  let el=$('sgJourneyAiText');if(document.hidden||!el||!sgJourney)return;
@@ -1784,12 +1903,13 @@ window.addEventListener('hashchange',()=>{let n=location.hash.replace('#','');if
 document.addEventListener('visibilitychange',()=>{
  if(!sgJourney||sgJourney.status!=='active')return;
  if(document.hidden){
-   stopSgJourneyTracking();
-   txt('sgJourneyDistance','Paused while RunSGD is in the background · journey remains saved');
+   persistSgJourney();
+   txt('sgJourneyDistance','Background GPS may pause on this phone · RunSGD will catch up automatically when reopened');
  }else{
-   startSgJourneyTracking();
+   if(sgJourneyWatchId==null)startSgJourneyTracking();
    renderSgJourney();
-   txt('sgJourneyAiText','Welcome back — live hop tracking resumed.');
+   reconcileSgJourneyPosition();
+   txt('sgJourneyAiText','Live route tracking is catching up from your current GPS position.');
  }
 });
 init();
