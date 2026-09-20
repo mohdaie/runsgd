@@ -1,10 +1,25 @@
-const CACHE='runsgd-shell-v2123';
-const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg','/privacy.html','/admin/','/admin/index.html'];
+const CACHE='runsgd-shell-v2124';
+const SHELL=['/','/index.html','/VERSION','/manifest.webmanifest','/icon.svg','/privacy.html','/admin/','/admin/index.html'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
 self.addEventListener('activate',event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('runsgd-shell-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+  event.waitUntil((async()=>{
+    const keys=await caches.keys();
+    await Promise.all(keys.filter(k=>k.startsWith('runsgd-shell-')&&k!==CACHE).map(k=>caches.delete(k)));
+    await self.clients.claim();
+    // Bootstrap older installed PWAs that are still showing stale HTML.
+    // Conservatively leave Journey screens alone so live navigation is never interrupted.
+    const windows=await self.clients.matchAll({type:'window',includeUncontrolled:true});
+    await Promise.all(windows.map(async client=>{
+      try{
+        const u=new URL(client.url);
+        if(u.hash==='#journey')return;
+        u.searchParams.set('_sw',CACHE);
+        await client.navigate(u.toString());
+      }catch{}
+    }));
+  })());
 });
 self.addEventListener('fetch',event=>{
   const req=event.request;
@@ -13,9 +28,8 @@ self.addEventListener('fetch',event=>{
   if(url.origin!==self.location.origin)return;
   // Auth callbacks must reach the app unchanged and must never be cached.
   if(url.searchParams.has('auth')||url.searchParams.has('code')||url.searchParams.has('error'))return;
-  // Deployment metadata must always come from the network so the UI can detect
-  // a newer release even while an older app document is still open.
-  if(url.pathname==='/build-info.json'){
+  // VERSION is the deployment source of truth and must never come from stale cache.
+  if(url.pathname==='/VERSION'){
     event.respondWith(fetch(req,{cache:'no-store'}));
     return;
   }

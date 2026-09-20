@@ -270,7 +270,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.12.3</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.12.4</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -608,7 +608,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.12.3</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.12.4</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -661,7 +661,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.12.3</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.12.4</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -703,15 +703,13 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.12.3';
-let runsgdBuildInfo=null,runsgdReloadingForUpdate=false;
-function runsgdVersionLabel(info=runsgdBuildInfo){
- const version=String(info?.version||RUNSGD_VERSION).replace(/^v/i,'');
- const build=String(info?.build||'').trim();
- return 'v'+version+(build?' · b'+build:'')
+const RUNSGD_VERSION='2.12.4';
+let runsgdReloadingForUpdate=false;
+function runsgdVersionLabel(version=RUNSGD_VERSION){
+ return 'v'+String(version||RUNSGD_VERSION).trim().replace(/^v/i,'')
 }
-function runsgdApplyVersion(info=runsgdBuildInfo){
- const label=runsgdVersionLabel(info);
+function runsgdApplyVersion(version=RUNSGD_VERSION){
+ const label=runsgdVersionLabel(version);
  let el=document.getElementById('appVersionBadge');if(el)el.textContent=label;
  el=document.getElementById('moreVersionTitle');if(el)el.textContent='RunSGD Beta · '+label;
  el=document.getElementById('betaFeedbackVersion');if(el)el.textContent=label
@@ -719,34 +717,41 @@ function runsgdApplyVersion(info=runsgdBuildInfo){
 function runsgdJourneyActive(){
  return typeof sgJourney!=='undefined'&&!!sgJourney&&sgJourney.status==='active'
 }
-function runsgdMarkUpdateReady(info){
- localStorage.setItem('runsgdPendingUpdate','1');
- const version=String(info?.version||RUNSGD_VERSION).replace(/^v/i,'');
- const build=String(info?.build||'').trim();
+function runsgdMarkUpdateReady(version){
+ const v=String(version||'').trim().replace(/^v/i,'');
+ if(v)localStorage.setItem('runsgdPendingUpdate',v);
  const el=document.getElementById('appVersionBadge');
- if(el)el.textContent='v'+version+(build?' · b'+build:'')+' · update ready'
+ if(el)el.textContent=runsgdVersionLabel(v||RUNSGD_VERSION)+' · update ready'
 }
-function runsgdReloadForUpdate(){
+function runsgdReloadForUpdate(version){
  if(runsgdReloadingForUpdate||runsgdJourneyActive())return false;
- runsgdReloadingForUpdate=true;localStorage.removeItem('runsgdPendingUpdate');location.reload();return true
+ runsgdReloadingForUpdate=true;
+ localStorage.removeItem('runsgdPendingUpdate');
+ const v=String(version||RUNSGD_VERSION).trim().replace(/^v/i,'');
+ const u=new URL(location.href);
+ u.searchParams.set('appv',v);
+ u.searchParams.set('_refresh',String(Date.now()));
+ location.replace(u.pathname+u.search+u.hash);
+ return true
 }
 function runsgdApplyPendingUpdate(){
- if(localStorage.getItem('runsgdPendingUpdate')==='1'&&!runsgdJourneyActive())runsgdReloadForUpdate()
+ const pending=String(localStorage.getItem('runsgdPendingUpdate')||'').trim().replace(/^v/i,'');
+ if(!pending)return;
+ if(pending===RUNSGD_VERSION){localStorage.removeItem('runsgdPendingUpdate');return}
+ if(!runsgdJourneyActive())runsgdReloadForUpdate(pending)
 }
-async function checkRunsgdBuild(){
+async function checkRunsgdVersion(){
  try{
-  const r=await fetch('/build-info.json?ts='+Date.now(),{cache:'no-store'});
-  if(!r.ok)return;
-  const next=await r.json();
-  if(!next?.version)return;
-  if(!runsgdBuildInfo){runsgdBuildInfo=next;runsgdApplyVersion(next);runsgdApplyPendingUpdate();return}
-  const changed=!!next.commit&&!!runsgdBuildInfo.commit&&next.commit!==runsgdBuildInfo.commit;
-  if(changed){
-   if(runsgdJourneyActive()){runsgdMarkUpdateReady(next);return}
-   runsgdReloadForUpdate();return
+  const r=await fetch('/VERSION?ts='+Date.now(),{cache:'no-store'});
+  if(!r.ok)return false;
+  const serverVersion=(await r.text()).trim().replace(/^v/i,'');
+  if(!serverVersion)return false;
+  if(serverVersion!==RUNSGD_VERSION){
+   if(runsgdJourneyActive()){runsgdMarkUpdateReady(serverVersion);return true}
+   runsgdReloadForUpdate(serverVersion);return true
   }
-  runsgdBuildInfo=next;runsgdApplyVersion(next)
- }catch{}
+  runsgdApplyVersion(serverVersion);runsgdApplyPendingUpdate();return false
+ }catch{return false}
 }
 
 const runsgdAuthParams=new URLSearchParams(location.search);
@@ -3136,7 +3141,7 @@ function updateBrief(fallback=false){
  else if(live.holidays[0]){let d=new Date(live.holidays[0].date+'T00:00:00'),t=new Date();t.setHours(0,0,0,0);let days=Math.round((d-t)/86400000);if(days>=0&&days<=2){action='Add a little extra travel margin.';why=`${live.holidays[0].name} is ${days===0?'today':days===1?'tomorrow':'in '+days+' days'}.`;extra='Crowd and operating patterns may be less predictable.'}}
  txt('brief',action);txt('briefWhy',why);txt('briefExtra',extra);txt('briefStatus','Fallback')
 }
-async function refreshAll(btn){setBusy(btn,true);txt('briefStatus','Updating');await Promise.allSettled([loadTrafficSnapshot(),loadPublicTransport(),loadRate(),loadWeather(),loadPrayer(),loadHolidays(),live.location?loadNearbyPrayer():Promise.resolve(),live.location?loadAir():Promise.resolve()]);updateBrief();setBusy(btn,false)}
+async function refreshAll(btn){setBusy(btn,true);txt('briefStatus','Updating');await checkRunsgdVersion();if(runsgdReloadingForUpdate)return;await Promise.allSettled([loadTrafficSnapshot(),loadPublicTransport(),loadRate(),loadWeather(),loadPrayer(),loadHolidays(),live.location?loadNearbyPrayer():Promise.resolve(),live.location?loadAir():Promise.resolve()]);updateBrief();setBusy(btn,false)}
 function scrollPageTop(){document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0)}
 function showPage(n,opts={}){
  if(!['home','explore','journey','community','more','signin'].includes(n))n='home';
@@ -3371,7 +3376,7 @@ window.addEventListener('popstate',e=>{
  }finally{setTimeout(()=>{runsgdHistoryHandling=false},0)}
 });
 document.addEventListener('visibilitychange',()=>{
- if(!document.hidden){checkRunsgdBuild();runsgdApplyPendingUpdate()}
+ if(!document.hidden){checkRunsgdVersion();runsgdApplyPendingUpdate()}
  if(!sgJourney||sgJourney.status!=='active')return;
  if(document.hidden){
    persistSgJourney();
@@ -3383,7 +3388,7 @@ document.addEventListener('visibilitychange',()=>{
    txt('sgJourneyAiText','Live route tracking is catching up from your current GPS position.');
  }
 });
-runsgdApplyVersion();checkRunsgdBuild();init();
+runsgdApplyVersion();checkRunsgdVersion();init();
 if('serviceWorker' in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
     if(runsgdJourneyActive()){runsgdMarkUpdateReady(runsgdBuildInfo);return}
@@ -3395,6 +3400,7 @@ if('serviceWorker' in navigator){
     }).catch(e=>console.warn('RunSGD service worker',e));
   });
 }
+setInterval(()=>{if(!document.hidden)checkRunsgdVersion()},60000);
 
 </script>
 </body>
