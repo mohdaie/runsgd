@@ -166,7 +166,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .journeyNext{margin-top:10px;padding:10px 12px;border-radius:14px;background:#dff5e8;color:#3c674e;font-size:11px;line-height:1.45}.journeyButtons{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.journeyBtn{border:0;border-radius:12px;padding:9px 11px;background:#fff;color:#286045;font-weight:850;font-size:11px;box-shadow:0 3px 10px #1b754114}.journeyBtn.reroute{background:#fff5df;color:#8a5a10;border:1px solid #f2d394}.journeyBtn.reroute.offroute{background:#ffead0;color:#984b12;box-shadow:0 0 0 4px #f09a3120}.journeyBtn.danger{background:#fff3f3;color:#a24a55}.journeyAllHops{display:none;margin-top:11px;padding-top:8px;border-top:1px solid #cde9d8}.journeyAllHops.show{display:block}.journeyAllHops .routeLeg{opacity:.64}.journeyAllHops .routeLeg.journeyDone{opacity:.42}.journeyAllHops .routeLeg.journeyCurrent{opacity:1;background:#ffffffaa;border-radius:12px;padding:8px}.journeyArrival{background:linear-gradient(145deg,#e8fff2,#f7fffa);border-color:#a8dfbd}.journeyArrival .journeyLivePill{background:#cdf3dc}
 
 
-/* v2.10.7 cleaner live navigation hierarchy */
+/* v2.10.8 cleaner live navigation hierarchy */
 .journeyNow.roadFocus{display:flex;flex-direction:column}
 .journeyNow.roadFocus .journeyNowLabel,.journeyNow.roadFocus .journeyAction,.journeyNow.roadFocus .journeyDistance{display:none}
 .journeyNow.roadFocus .journeyDriveFocus{order:1;margin-top:0}
@@ -224,7 +224,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.10.7 dedicated Journey experience */
+/* v2.10.8 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
@@ -240,7 +240,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 @media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
 
 
-/* v2.10.7 community — full-height Threads-inspired dark page */
+/* v2.10.8 community — full-height Threads-inspired dark page */
 body.communityMode .hello{display:none}
 body.communityMode{background:#0b0b0c;color:#f5f5f5}
 body.communityMode .app{background:#0b0b0c}
@@ -265,7 +265,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.7</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.8</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -603,7 +603,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.7</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.8</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -656,7 +656,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.7</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.8</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -1336,7 +1336,7 @@ function requestLocation(btn){
  setBusy(btn,true);txt('locBtn','📍 Locating…');
  let near=$('nearestPrayer');if(near)near.innerHTML='<div class="sub">📍 Getting your location…</div>';
  navigator.geolocation.getCurrentPosition(async p=>{
-   live.location={...classify(p.coords.latitude,p.coords.longitude),detected_at:Date.now()};
+   live.location={...classify(p.coords.latitude,p.coords.longitude),detected_at:Date.now(),accuracy_m:Number(p.coords.accuracy)||null};
    localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
    txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);updateSgRouteOrigin();
    await Promise.allSettled([loadPrayer(),loadNearbyPrayer(),loadAir(),loadPublicTransport()]);
@@ -1384,8 +1384,16 @@ function setRouteDestinationRegion(v){
  let p=destinationProvider();txt('sgRouteStatus',p?p.hint:'Choose Malaysia or Singapore to start searching.');
  updateSgRouteOrigin();if(p)setTimeout(()=>$('sgRouteDestination')?.focus(),50)
 }
+function routeOriginLabel(loc=live.location){
+ if(!loc)return 'Current location';
+ let lat=Number(loc.lat),lon=Number(loc.lon),acc=Number(loc.accuracy_m??loc.accuracy);
+ if(Number.isFinite(lat)&&Number.isFinite(lon)){
+  return 'Current GPS · '+lat.toFixed(5)+', '+lon.toFixed(5)+(Number.isFinite(acc)?' · ±'+Math.round(acc)+' m':'')
+ }
+ return loc.name||'Current location'
+}
 function updateSgRouteOrigin(){
- let el=$('sgRouteOrigin');if(!el)return;el.textContent='📍 From: '+(live.location?.name||'Current location');
+ let el=$('sgRouteOrigin');if(!el)return;el.textContent='📍 From: '+routeOriginLabel();
  let to=destinationProvider(),from=routeProvider();
  if(!to){txt('sgRouteBadge','Choose country');txt('sgRouteProviderNote','Same search experience; RunSGD switches map providers behind the scenes.');return}
  txt('sgRouteBadge',from.id!==to.id?'Cross-border':to.id==='jb'?'Malaysia':'Singapore');
@@ -1528,9 +1536,20 @@ async function resolveRoutePlace(query,provider,from=null){
 async function planLocalSmart(origin,destination,provider,intent){
  let out=[];
  if(provider.id==='sg'){
-  let j=await routeApiSafe({action:'route',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address},max_walk_m:1200},provider);
-  let future=!!j?.future_departure;
-  (j?.routes||[]).slice(0,3).forEach(x=>out.push(routeCandidate(x,{provider:'sg',kind:'transit',label:'Public transport',tag:future?'OneMap · Next service':'OneMap · Singapore',future_departure:future,explanation:future?'Current public transport is limited right now. This shows the next available Singapore bus/MRT planning window.':'Singapore public-transport route.'})));
+  if(intent.allow_bus!==false||intent.allow_mrt!==false){
+   let j=await routeApiSafe({action:'route',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address},max_walk_m:1200},provider);
+   let future=!!j?.future_departure;
+   (j?.routes||[]).slice(0,3).forEach(x=>out.push(routeCandidate(x,{provider:'sg',kind:'transit',label:'Public transport',tag:future?'OneMap · Next service':'OneMap · Singapore',future_departure:future,explanation:future?'Current public transport is limited right now. This shows the next available Singapore bus/MRT planning window.':'Singapore public-transport route.'})));
+  }
+  let roadProvider=routeProviderFor('jb');
+  if(intent.has_car||intent.direct_drive||intent.active_road_mode==='DRIVE'){
+   let j=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},roadProvider);
+   (j?.routes||[]).slice(0,2).forEach(x=>out.push(routeCandidate(x,{provider:'sg-road',kind:'direct_drive',travel_mode:'DRIVE',label:'Drive',tag:'Google · Singapore Drive',explanation:'Driving route starts from your live GPS position and remains in driving mode.'})))
+  }
+  if(intent.has_motorcycle||intent.active_road_mode==='TWO_WHEELER'){
+   let j=await routeApiSafe({action:'route',travel_mode:'TWO_WHEELER',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},roadProvider);
+   (j?.routes||[]).slice(0,2).forEach(x=>out.push(routeCandidate(x,{provider:'sg-road',kind:'motorcycle',travel_mode:'TWO_WHEELER',label:'Motorcycle',tag:'Google · Singapore Motorcycle',explanation:'Motorcycle route starts from your live GPS position and remains in motorcycle mode.'})))
+  }
   return out
  }
  let tasks=[];
@@ -1672,6 +1691,20 @@ function rankJourneyRoutes(routes,intent){
  }
  return [...routes].sort((a,b)=>score(a)-score(b))
 }
+function activeJourneyRoadMode(){
+ if(!sgJourney||sgJourney.status!=='active')return '';
+ let legs=sgJourney.route?.legs||[],idx=Math.max(0,Number(sgJourney.current_hop)||0),mode=String(legs[idx]?.mode||'').toUpperCase();
+ return journeyRoadMode(mode)?mode:''
+}
+function applyActiveRoadContext(intent,q){
+ let mode=activeJourneyRoadMode(),s=String(q||'').toLowerCase();
+ if(!mode)return intent;
+ let wantsModeChange=/\b(walk|walking|mrt|bus|train|public transport|transit|park here|stop driving|switch mode)\b/.test(s);
+ if(wantsModeChange)return intent;
+ if(mode==='DRIVE')return {...intent,has_car:true,direct_drive:true,allow_bus:false,allow_mrt:false,active_road_mode:'DRIVE',answer:'You are currently driving, so this recalculation will stay in driving mode from your live GPS position.'};
+ if(mode==='TWO_WHEELER')return {...intent,has_motorcycle:true,allow_bus:false,allow_mrt:false,active_road_mode:'TWO_WHEELER',answer:'You are currently riding, so this recalculation will stay in motorcycle mode from your live GPS position.'};
+ return intent
+}
 function chooseJourneyRouteSet(routes,intent,limit=4){
  let ranked=rankJourneyRoutes(routes,intent),picked=ranked.slice(0,limit);
  let publicRoute=ranked.find(r=>r.kind==='border_transit'||r.kind==='transit');
@@ -1691,7 +1724,7 @@ async function planAiJourney(btn){
  try{
   let origin=await plannerGps(),originP=routeProvider();
   txt('sgRouteStatus','Understanding your plan…');
-  sgJourneyIntent=await interpretJourneyIntent(q,origin,sgRouteSelection);renderJourneyIntent(sgJourneyIntent);
+  sgJourneyIntent=applyActiveRoadContext(await interpretJourneyIntent(q,origin,sgRouteSelection),q);renderJourneyIntent(sgJourneyIntent);
 
   // Overnight policy: after 12:30 AM Singapore time, stop pretending a normal
   // MRT/bus itinerary is available. Give the user a clear explanation and a
@@ -1704,7 +1737,7 @@ async function planAiJourney(btn){
    let routes=await planLateNightDriving(origin,sgRouteSelection);
    if(!routes.length)throw Error('It is after 12:30 AM and RunSGD could not find a usable late-night driving route.');
    sgRouteResults=routes;renderSgRoutes();
-   txt('journeyCompareRoute',(origin.name||'Current location')+' → '+(sgRouteSelection.name||sgRouteSelection.address||'Destination'));
+   txt('journeyCompareRoute',routeOriginLabel(origin)+' → '+(sgRouteSelection.name||sgRouteSelection.address||'Destination'));
    txt('journeyCompareIntent','🌙 Late-night route · 🚗 Driving');
    journeyPlanResultsOpen=true;setJourneyPlannerState('plan');
    txt('sgRouteBadge','Late night');
@@ -1721,32 +1754,30 @@ async function planAiJourney(btn){
   routes=chooseJourneyRouteSet(routes,sgJourneyIntent,4);
   if(!routes.length)throw Error('No usable route combination was returned for this plan.');
   sgRouteResults=routes;renderSgRoutes();
-  txt('journeyCompareRoute',(origin.name||'Current location')+' → '+(sgRouteSelection.name||sgRouteSelection.address||'Destination'));let tags=journeyHistoryTags(sgJourneyIntent).map(journeyTagLabel);txt('journeyCompareIntent',tags.join(' · '));journeyPlanResultsOpen=true;setJourneyPlannerState('plan');
+  txt('journeyCompareRoute',routeOriginLabel(origin)+' → '+(sgRouteSelection.name||sgRouteSelection.address||'Destination'));let tags=journeyHistoryTags(sgJourneyIntent).map(journeyTagLabel);txt('journeyCompareIntent',tags.join(' · '));journeyPlanResultsOpen=true;setJourneyPlannerState('plan');
   txt('sgRouteBadge',originP.id===destP.id?'Local mix':'Cross-border mix');
   txt('sgRouteProviderNote','RunSGD combines OneMap and Google Maps where needed. AI interprets your preference; routing APIs calculate the legs.');
   txt('sgRouteStatus',sgRouteResults.length+' journey combination'+(sgRouteResults.length===1?'':'s')+' found. Checkpoint and immigration time stays separate.')
  }catch(e){txt('sgRouteBadge','Unavailable');txt('sgRouteStatus',e.message||'Journey planning unavailable.')}
  finally{setBusy(btn,false)}
 }
-function plannerGps(){
- let cached=live.location?.lat&&live.location?.lon?live.location:null;
+async function plannerGps(){
+ let cached=live.location?.lat&&live.location?.lon?live.location:null,cachedAge=cached?.detected_at?Date.now()-Number(cached.detected_at):Infinity;
  if(!navigator.geolocation){
-  if(cached)return Promise.resolve(cached);
-  return Promise.reject(Error('Location is unavailable in this browser.'));
+  if(cached&&cachedAge<=30000)return cached;
+  throw Error('Location is unavailable in this browser.')
  }
- txt('sgRouteStatus','Refreshing your current location…');
- return new Promise((resolve,reject)=>{
-  navigator.geolocation.getCurrentPosition(p=>{
-   live.location={...classify(p.coords.latitude,p.coords.longitude),detected_at:Date.now(),accuracy_m:Number(p.coords.accuracy)||null};
-   localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
-   txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);updateSgRouteOrigin();
-   resolve(live.location);
-   Promise.allSettled([loadPrayer(),loadNearbyPrayer(),loadAir(),loadPublicTransport()]);
-  },()=>{
-   if(cached){resolve(cached);return}
-   reject(Error('Could not get your location. Allow location access and try again.'))
-  },{enableHighAccuracy:true,timeout:12000,maximumAge:15000});
- });
+ txt('sgRouteStatus','Refreshing your exact current GPS position…');
+ try{
+  let p=await freshJourneyGps(),loc={...classify(p.lat,p.lon),lat:p.lat,lon:p.lon,detected_at:p.timestamp||Date.now(),accuracy_m:Number(p.accuracy)||null};
+  live.location=loc;localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
+  txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);updateSgRouteOrigin();
+  Promise.allSettled([loadPrayer(),loadNearbyPrayer(),loadAir(),loadPublicTransport()]);
+  return loc
+ }catch(e){
+  if(cached&&cachedAge<=30000)return cached;
+  throw Error(e?.message||'Could not get a fresh GPS position. Allow precise location and try again.')
+ }
 }
 function routeMinutes(s){let m=Math.max(1,Math.round(Number(s||0)/60));return m>=60?Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m':m+' min'}
 function routeDistance(m){m=Number(m||0);return m>=1000?(m/1000).toFixed(1)+' km':Math.round(m)+' m'}
@@ -2452,14 +2483,29 @@ async function journeyAiIntervention(reason,distance,manual=false){
  finally{setTimeout(()=>{if(el)delete el.dataset.aiLock},45000)}
 }
 function freshJourneyGps(){
+ let age=sgJourneyRuntime.gpsUpdatedAt?Date.now()-Number(sgJourneyRuntime.gpsUpdatedAt):Infinity,lat=Number(sgJourneyRuntime.lastLat),lon=Number(sgJourneyRuntime.lastLon),acc=Number(sgJourneyRuntime.gpsAccuracy);
+ if([lat,lon].every(Number.isFinite)&&age<=5000&&(!Number.isFinite(acc)||acc<=50)){
+  return Promise.resolve({lat,lon,accuracy:Number.isFinite(acc)?acc:null,timestamp:Date.now(),source:'live_tracking'})
+ }
  return new Promise((resolve,reject)=>{
   if(!navigator.geolocation)return reject(Error('GPS is unavailable on this device.'));
-  navigator.geolocation.getCurrentPosition(p=>{
-   let lat=Number(p.coords.latitude),lon=Number(p.coords.longitude),accuracy=Number(p.coords.accuracy);
-   if(!Number.isFinite(lat)||!Number.isFinite(lon))return reject(Error('Could not read your current position.'));
-   if(Number.isFinite(accuracy)&&accuracy>80)return reject(Error('GPS accuracy is too weak (±'+Math.round(accuracy)+' m). Move to a clearer area and try Reroute again.'));
-   resolve({lat,lon,accuracy:Number.isFinite(accuracy)?accuracy:null,timestamp:Number(p.timestamp)||Date.now()})
-  },()=>reject(Error('Could not get a fresh GPS position. Check location permission and try again.')),{enableHighAccuracy:true,maximumAge:0,timeout:12000})
+  let best=null,done=false,watchId=null,timer=null;
+  const finish=(err=null)=>{
+   if(done)return;done=true;
+   if(watchId!=null)navigator.geolocation.clearWatch(watchId);if(timer)clearTimeout(timer);
+   if(best){resolve(best);return}
+   reject(err||Error('Could not get a fresh GPS position. Check precise location permission and try again.'))
+  };
+  watchId=navigator.geolocation.watchPosition(p=>{
+   let plat=Number(p.coords.latitude),plon=Number(p.coords.longitude),accuracy=Number(p.coords.accuracy),candidate={lat:plat,lon:plon,accuracy:Number.isFinite(accuracy)?accuracy:null,timestamp:Number(p.timestamp)||Date.now(),source:'fresh_gps'};
+   if(!Number.isFinite(plat)||!Number.isFinite(plon))return;
+   if(!best||!Number.isFinite(best.accuracy)||(Number.isFinite(candidate.accuracy)&&candidate.accuracy<best.accuracy))best=candidate;
+   if(Number.isFinite(candidate.accuracy)&&candidate.accuracy<=25)finish()
+  },()=>{if(!best)finish(Error('Could not get a fresh GPS position. Check precise location permission and try again.'))},{enableHighAccuracy:true,maximumAge:0,timeout:10000});
+  timer=setTimeout(()=>{
+   if(best&&(!Number.isFinite(best.accuracy)||best.accuracy<=80))finish();
+   else finish(Error(best?.accuracy?'GPS accuracy is too weak (±'+Math.round(best.accuracy)+' m). Move to a clearer area and try Reroute again.':'Could not get a precise GPS fix.'))
+  },8000)
  })
 }
 function currentRoadBlock(legs,idx){
@@ -2480,32 +2526,39 @@ async function manualSgJourneyReroute(btn){
  let ai=$('sgJourneyAiText');if(ai){ai.dataset.aiLock='1';ai.textContent='Getting a fresh GPS fix and calculating a new route…'}
  txt('sgJourneyAction','REROUTING…');txt('sgJourneyDistance','Getting your exact current position…');setJourneyTurnState('Rerouting from here…','confirm');
  try{
-  let pos=await freshJourneyGps(),fromClass=classify(pos.lat,pos.lon),provider=routeProviderFor('jb');
-  txt('sgJourneyDistance','Fresh GPS'+(Number.isFinite(pos.accuracy)?' · ±'+Math.round(pos.accuracy)+' m':'')+' · calculating route…');
+  let pos=await freshJourneyGps(),fromClass=classify(pos.lat,pos.lon),roadProvider=routeProviderFor('jb'),originPoint={name:'Current GPS position',lat:pos.lat,lon:pos.lon};
+  txt('sgJourneyDistance','Current GPS · '+pos.lat.toFixed(5)+', '+pos.lon.toFixed(5)+(Number.isFinite(pos.accuracy)?' · ±'+Math.round(pos.accuracy)+' m':'')+' · recalculating '+(block.mode==='TWO_WHEELER'?'motorcycle':'driving')+' route…');
   let j=await sgRouteApi({
    action:'route',
    travel_mode:block.mode,
    from:{lat:pos.lat,lon:pos.lon},
    to:{lat:block.target.lat,lon:block.target.lon,name:block.target.name||'',address:block.target.address||''}
-  },provider);
+  },roadProvider);
   let fresh=(j.routes||[])[0];
   if(!fresh?.legs?.length)throw Error('No replacement road route was returned.');
+  let roadLegs=(fresh.legs||[]).map((l,n)=>{
+   let m=String(l?.mode||'').toUpperCase();
+   if(m&&m!==block.mode)throw Error('Reroute tried to switch from '+(block.mode==='TWO_WHEELER'?'motorcycle':'driving')+' to '+routeModeLabel({mode:m})+'. Keeping the current journey instead.');
+   return {...l,mode:block.mode,from:n===0?{...(l.from||{}),...originPoint}:l.from}
+  });
 
   // Discard the already-travelled road instructions. Keep the remaining non-road journey intact.
   let future=legs.slice(block.end+1),futureDuration=future.reduce((n,x)=>n+Number(x.duration_sec||0),0),futureDistance=future.reduce((n,x)=>n+Number(x.distance_m||0),0),old=sgJourney.route||{};
   sgJourney.route={
    ...old,
+   travel_mode:block.mode,
    polyline:fresh.polyline||'',
-   legs:[...(fresh.legs||[]),...future],
+   legs:[...roadLegs,...future],
+   reroute_origin:{...originPoint,accuracy_m:pos.accuracy||null,source:pos.source||'gps'},
    duration_sec:Number(fresh.duration_sec||0)+futureDuration,
    distance_m:Number(fresh.distance_m||0)+futureDistance,
    rerouted_at:Date.now(),
    reroute_count:Number(old.reroute_count||0)+1
   };
   sgJourney.current_hop=0;
-  sgJourney.origin={...fromClass,lat:pos.lat,lon:pos.lon,accuracy:pos.accuracy,detected_at:Date.now()};
+  sgJourney.origin={...fromClass,name:'Current GPS position',lat:pos.lat,lon:pos.lon,accuracy_m:pos.accuracy,detected_at:Date.now()};
   sgJourney.reroute_count=Number(sgJourney.reroute_count||0)+1;sgJourney.last_reroute_at=Date.now();
-  live.location={...sgJourney.origin};
+  live.location={...fromClass,lat:pos.lat,lon:pos.lon,accuracy_m:pos.accuracy,detected_at:Date.now()};localStorage.setItem('runsgdLocation',JSON.stringify(live.location));updateSgRouteOrigin();
   persistSgJourney();
 
   stopSgJourneyTracking();startSgJourneyTracking();
@@ -2685,7 +2738,7 @@ async function autoDetectTransportLocation(force=false){
  txt('transportTime','Detecting your current area for nearby transport…');
  return await new Promise(resolve=>{
    navigator.geolocation.getCurrentPosition(p=>{
-     live.location={...classify(p.coords.latitude,p.coords.longitude),detected_at:Date.now()};
+     live.location={...classify(p.coords.latitude,p.coords.longitude),detected_at:Date.now(),accuracy_m:Number(p.coords.accuracy)||null};
      localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
      txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);
      resolve(true);
