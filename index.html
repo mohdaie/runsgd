@@ -165,6 +165,30 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .journeyAi{margin-top:12px;padding:12px 13px;border-radius:16px;background:#ffffffc9;border:1px solid #d8efe0;display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start}.journeyAiIcon{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:#dbf7e6}.journeyAiTitle{font-size:10px;font-weight:950;color:#228553;text-transform:uppercase;letter-spacing:.3px}.journeyAiText{font-size:13px;font-weight:800;color:#315a42;line-height:1.45;margin-top:2px}
 .journeyNext{margin-top:10px;padding:10px 12px;border-radius:14px;background:#dff5e8;color:#3c674e;font-size:11px;line-height:1.45}.journeyButtons{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.journeyBtn{border:0;border-radius:12px;padding:9px 11px;background:#fff;color:#286045;font-weight:850;font-size:11px;box-shadow:0 3px 10px #1b754114}.journeyBtn.reroute{background:#fff5df;color:#8a5a10;border:1px solid #f2d394}.journeyBtn.reroute.offroute{background:#ffead0;color:#984b12;box-shadow:0 0 0 4px #f09a3120}.journeyBtn.danger{background:#fff3f3;color:#a24a55}.journeyAllHops{display:none;margin-top:11px;padding-top:8px;border-top:1px solid #cde9d8}.journeyAllHops.show{display:block}.journeyAllHops .routeLeg{opacity:.64}.journeyAllHops .routeLeg.journeyDone{opacity:.42}.journeyAllHops .routeLeg.journeyCurrent{opacity:1;background:#ffffffaa;border-radius:12px;padding:8px}.journeyArrival{background:linear-gradient(145deg,#e8fff2,#f7fffa);border-color:#a8dfbd}.journeyArrival .journeyLivePill{background:#cdf3dc}
 
+
+/* v2.10.7 cleaner live navigation hierarchy */
+.journeyNow.roadFocus{display:flex;flex-direction:column}
+.journeyNow.roadFocus .journeyNowLabel,.journeyNow.roadFocus .journeyAction,.journeyNow.roadFocus .journeyDistance{display:none}
+.journeyNow.roadFocus .journeyDriveFocus{order:1;margin-top:0}
+.journeyNow.roadFocus .journeyGpsBar{order:2;margin-top:10px}
+.journeyNow.roadFocus .journeyProgress{order:3}
+.journeyNow.roadFocus .journeyBeacon{order:4}
+.journeyNow.roadFocus #sgJourneyTurnState:not(.important){display:none}
+.journeyDriveHead{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center}
+.journeyDriveIcon{width:64px;height:64px;border-radius:18px;background:#ffffff16;display:grid;place-items:center;font-size:40px;font-weight:950;line-height:1;color:#fff}
+.journeyDriveMain{min-width:0}
+.journeyDriveCommand{font-size:14px;letter-spacing:.45px}
+.journeyDriveDistance{font-size:46px;margin-top:2px}
+.journeyDriveUntil{font-size:13px;color:#eef9f2;margin-top:9px;line-height:1.35}
+.journeyDriveRoad{font-size:10px;color:#a9d2b8;margin-top:6px}
+.journeyStepHero{margin-top:11px;padding-top:9px}
+.journeyStepPercent{font-size:11px;color:#d7f4e2}
+.journeyStepRemaining{display:none}
+.journeyAi{display:none}
+.journeyAi.show{display:grid}
+.journeyNext{display:none;margin-top:10px;padding:11px 12px;border-radius:14px;background:#dff5e8;color:#3c674e;font-size:11px;line-height:1.45}
+.journeyNext.show{display:block}
+
 /* v2.3.0 destination-first AI journey planner */
 .routePlannerSetup{display:block}
 .routePlannerStep{font-size:10px;font-weight:950;letter-spacing:.35px;text-transform:uppercase;color:#8490a4;margin:13px 2px 6px}
@@ -200,7 +224,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.10.6 dedicated Journey experience */
+/* v2.10.7 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
@@ -216,7 +240,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 @media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
 
 
-/* v2.10.6 community — full-height Threads-inspired dark page */
+/* v2.10.7 community — full-height Threads-inspired dark page */
 body.communityMode .hello{display:none}
 body.communityMode{background:#0b0b0c;color:#f5f5f5}
 body.communityMode .app{background:#0b0b0c}
@@ -241,7 +265,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.6</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.7</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -446,7 +470,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
       <div><span id="sgJourneyPill" class="journeyLivePill">Live journey</span><div id="sgJourneyDestination" class="journeyDest">Destination</div><div id="sgJourneyMeta" class="journeyMeta">Hop 1</div></div>
       <span id="sgJourneyEta" class="tag">—</span>
     </div>
-    <div class="journeyNow">
+    <div id="sgJourneyNow" class="journeyNow">
       <div id="sgJourneyNowLabel" class="journeyNowLabel">Current hop</div>
       <div id="sgJourneyAction" class="journeyAction">Getting your location…</div>
       <div id="sgJourneyDistance" class="journeyDistance">Live tracking starts while RunSGD is open.</div>
@@ -455,9 +479,14 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
         <span id="sgJourneyTurnState" class="journeyGpsChip turn">Route matching…</span>
       </div>
       <div id="sgJourneyDriveFocus" class="journeyDriveFocus">
-        <div id="sgJourneyDriveCommand" class="journeyDriveCommand">KEEP STRAIGHT</div>
-        <div id="sgJourneyDriveDistance" class="journeyDriveDistance">—</div>
-        <div id="sgJourneyDriveUntil" class="journeyDriveUntil">until next turn</div>
+        <div class="journeyDriveHead">
+          <div id="sgJourneyDriveIcon" class="journeyDriveIcon">↑</div>
+          <div class="journeyDriveMain">
+            <div id="sgJourneyDriveCommand" class="journeyDriveCommand">KEEP STRAIGHT</div>
+            <div id="sgJourneyDriveDistance" class="journeyDriveDistance">—</div>
+          </div>
+        </div>
+        <div id="sgJourneyDriveUntil" class="journeyDriveUntil">Continue on this road</div>
         <div id="sgJourneyDriveRoad" class="journeyDriveRoad"></div>
         <div class="journeyStepHero">
           <div id="sgJourneyStepPercent" class="journeyStepPercent">Current hop · 0% complete</div>
@@ -476,7 +505,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
       </div>
       <div class="journeyProgress"><div id="sgJourneyProgressBar" class="journeyProgressBar"></div></div>
     </div>
-    <div class="journeyAi"><div class="journeyAiIcon">✨</div><div><div class="journeyAiTitle">RunSGD Companion</div><div id="sgJourneyAiText" class="journeyAiText">I’ll only interrupt if something looks off.</div></div></div>
+    <div id="sgJourneyAiCard" class="journeyAi"><div class="journeyAiIcon">✨</div><div><div class="journeyAiTitle">RunSGD Companion</div><div id="sgJourneyAiText" class="journeyAiText">I’ll only interrupt if something looks off.</div></div></div>
     <div id="sgJourneyNext" class="journeyNext"></div>
     <div class="journeyButtons">
       <button class="journeyBtn" onclick="toggleSgJourneyHops(this)">View trip steps</button>
@@ -574,7 +603,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.6</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.7</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -627,7 +656,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.6</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.7</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -1936,15 +1965,17 @@ function updateJourneyGpsHealth(){
  let age=sgJourneyRuntime.gpsUpdatedAt?Math.max(0,Math.round((Date.now()-sgJourneyRuntime.gpsUpdatedAt)/1000)):null,acc=Number.isFinite(sgJourneyRuntime.gpsAccuracy)?sgJourneyRuntime.gpsAccuracy:null,cls='fair',label='GPS acquiring…';
  if(sgJourneyRuntime.gpsError&&age==null){cls='weak';label='GPS unavailable'}
  else if(age==null){cls='fair';label='GPS acquiring…'}
- else if(age>12){cls='stale';label='GPS stale · last update '+age+'s ago'}
+ else if(age>12){cls='stale';label='GPS stale · '+age+'s'}
  else{
   cls=acc<=20&&age<=5?'good':acc<=40&&age<=8?'fair':'weak';
-  label=(cls==='good'?'GPS live':cls==='fair'?'GPS active':'GPS weak')+(Number.isFinite(acc)?' · ±'+Math.round(acc)+' m':'')+' · '+(age<=1?'updated now':'updated '+age+'s ago')
+  label=cls==='good'?'GPS active':cls==='fair'?'GPS active':'GPS weak'+(Number.isFinite(acc)?' · ±'+Math.round(acc)+' m':'')
  }
- el.className='journeyGpsChip '+cls;el.textContent=(cls==='good'?'● ':cls==='fair'?'● ':'● ')+label
+ el.className='journeyGpsChip '+cls;el.textContent='● '+label
 }
 function setJourneyTurnState(textValue,state='turn'){
- let el=$('sgJourneyTurnState');if(!el)return;el.className='journeyGpsChip '+state;el.textContent=textValue
+ let el=$('sgJourneyTurnState');if(!el)return;
+ el.className='journeyGpsChip '+state;el.textContent=textValue;
+ el.classList.toggle('important',/off route|rerout|destination|turn detected|route position|new route|failed|gps unavailable/i.test(String(textValue||'')))
 }
 function startJourneyGpsUiTimer(){
  if(sgJourneyGpsTimer)clearInterval(sgJourneyGpsTimer);
@@ -2074,6 +2105,18 @@ function sgJourneyDefaultCoach(leg,distance){
  if(mode==='SUBWAY')return 'Stay on '+(leg.route?'MRT '+leg.route:'the MRT')+(leg.headsign?' towards '+leg.headsign:'')+'. I’ll alert you near '+to+'.';
  if(mode==='RAIL'||mode==='TRAIN'||mode==='TRAM')return 'Stay on '+(leg.route?routeModeLabel(leg):'the train')+(leg.headsign?' towards '+leg.headsign:'')+'. I’ll alert you near '+to+'.';
  return 'Continue towards '+to+'.';
+}
+function sgJourneyCompanionMessage(leg,distance,road,legs,idx){
+ let off=Number(sgJourneyRuntime.offRouteM);
+ if(road&&Number.isFinite(off)&&off>120)return 'You appear to be off the planned route. Tap Reroute when it is safe to do so.';
+ let age=sgJourneyRuntime.gpsUpdatedAt?Date.now()-sgJourneyRuntime.gpsUpdatedAt:null;
+ if(road&&Number.isFinite(age)&&age>12000)return 'GPS has not updated recently. Keep the app open and check location permission if this continues.';
+ let mode=String(leg?.mode||'').toUpperCase();
+ if(['IMMIGRATION','LOCAL_TRANSFER','CROSS_BORDER_BUS'].includes(mode))return sgJourneyDefaultCoach(leg,distance);
+ let next=legs?.[idx+1],stepRemain=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null;
+ if(road&&next&&!journeyRoadMode(next.mode)&&Number.isFinite(stepRemain)&&stepRemain<=350)return 'Driving segment almost complete. Next: '+sgJourneyInstruction(next);
+ if(mode==='WALK'&&distance!=null&&distance<130)return sgJourneyDefaultCoach(leg,distance);
+ return ''
 }
 function journeyBearing(lat1,lon1,lat2,lon2){
  if(![lat1,lon1,lat2,lon2].every(Number.isFinite))return null;
@@ -2231,43 +2274,55 @@ function journeyThenPreview(legs,idx){
  if(cue.risk==='normal'&&gap>900)return null;
  return {cue,gap}
 }
+function journeyManeuverIcon(cue){
+ let a=String(cue?.action||'').toUpperCase(),side=cue?.side;
+ if(/U-TURN/.test(a))return side==='right'?'↪':'↩';
+ if(/ROUNDABOUT/.test(a))return '⟳';
+ if(/SHARP LEFT/.test(a))return '↙';
+ if(/SHARP RIGHT/.test(a))return '↘';
+ if(/SLIGHT LEFT|KEEP LEFT/.test(a))return '↖';
+ if(/SLIGHT RIGHT|KEEP RIGHT|EXIT/.test(a))return '↗';
+ if(/LEFT/.test(a))return '←';
+ if(/RIGHT/.test(a))return '→';
+ if(/PARK/.test(a))return 'P';
+ return '↑'
+}
 function journeyRichNextHtml(legs,idx,stepRemain){
- let current=legs[idx],next=legs[idx+1];
- if(!next){
-  let entry=journeyCurrentEntryCue(current,idx,legs),dest=sgJourney?.destination?.name||'your destination';
-  if(entry)return '<b>Final approach:</b> '+esc(entry.action)+(entry.detail?' · '+esc(entry.detail):'')+'<br><b>Then:</b> continue to '+esc(dest)+'.';
-  return '<b>Final road segment:</b> Continue to '+esc(dest)+'.'
+ let next=legs[idx+1],after=legs[idx+2],dest=sgJourney?.destination?.name||'your destination';
+ if(!next)return '<b>FINAL:</b> Continue to '+esc(dest)+'.';
+ let then=journeyThenPreview(legs,idx);
+ if(then){
+  let extra=then.cue.detail&&!/^CONTINUE ONTO\b/i.test(then.cue.action)?' · '+esc(then.cue.detail):'';
+  return '<b>THEN'+(then.gap?' · '+esc(routeDistance(then.gap)):'')+':</b> '+esc(then.cue.action)+extra
  }
- let cue=journeyManeuverCue(next,current),d=Number.isFinite(stepRemain)?routeDistance(stepRemain):'ahead',then=journeyThenPreview(legs,idx);
- let html='<b>Next in '+esc(d)+':</b> '+esc(cue.action)+(cue.detail?' · '+esc(cue.detail):'');
- if(then){html+='<br><b>Then'+(then.gap? ' about '+esc(routeDistance(then.gap))+' later':'')+':</b> '+esc(then.cue.action)+(then.cue.detail?' · '+esc(then.cue.detail):'')}
- return html
+ if(after)return '<b>AFTER THIS:</b> '+esc(sgJourneyInstruction(after));
+ if(!journeyRoadMode(next.mode))return '<b>NEXT HOP:</b> '+esc(sgJourneyInstruction(next));
+ return '<b>AFTER THIS TURN:</b> Continue towards '+esc(dest)+'.'
 }
 function renderJourneyDriveFocus(road,leg,idx,legs){
  let box=$('sgJourneyDriveFocus');if(!box)return;
  if(!road){box.classList.remove('show');return}
  box.classList.add('show');
- let finalRoad=idx===legs.length-1,next=legs[idx+1],stepRemain=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?Math.max(0,sgJourneyRuntime.currentStepRemainingM):null,stepPct=Number.isFinite(sgJourneyRuntime.currentStepProgressPct)?Math.min(100,Math.max(0,Math.round(sgJourneyRuntime.currentStepProgressPct))):0;
- let destRemain=journeyDestinationDistanceNow(),cue=journeyManeuverCue(next,leg),entryCue=journeyCurrentEntryCue(leg,idx,legs),bands=journeyWarningBands(cue,sgJourneyRuntime.gpsSpeed),command='KEEP STRAIGHT',until='Continue on this road';
+ let finalRoad=idx===legs.length-1,next=legs[idx+1],nextRoad=!!next&&journeyRoadMode(next.mode),stepRemain=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?Math.max(0,sgJourneyRuntime.currentStepRemainingM):null;
+ let destRemain=journeyDestinationDistanceNow(),cue=journeyManeuverCue(next,leg),entryCue=journeyCurrentEntryCue(leg,idx,legs),command='KEEP STRAIGHT',until='Continue on this road',icon='↑';
  if(finalRoad){
-  if(entryCue){command='NOW · '+entryCue.action;until=(entryCue.detail||entryCue.action)+' · then continue to destination'}
-  else{command='CONTINUE TO DESTINATION';until='Stay on this road to your destination'}
- }else if(next&&Number.isFinite(stepRemain)){
-  if(cue.kind==='continue')command=stepRemain<=Math.max(140,bands.now)?cue.action:'KEEP STRAIGHT';
-  else if(stepRemain<=bands.now)command=cue.action;
-  else if(stepRemain<=bands.urgent)command='NOW PREPARE · '+cue.action;
-  else if(stepRemain<=bands.prepare)command='GET READY · '+cue.action;
-  else if(stepRemain<=bands.early&&cue.risk==='high')command='AHEAD · '+cue.action;
-  else command='KEEP STRAIGHT';
-  until='Next: '+cue.action+(cue.detail&&cue.action==='CONTINUE'?' · '+cue.detail:cue.detail&&cue.kind!=='continue'?' · '+cue.detail:'');
-  let then=journeyThenPreview(legs,idx);if(then)until+=' · THEN '+(then.gap?routeDistance(then.gap)+' later · ':'')+then.cue.action
- }else if(next){until='Next: '+cue.action+(cue.detail?' · '+cue.detail:'')}
+  command=entryCue?entryCue.action:'CONTINUE TO DESTINATION';icon=entryCue?journeyManeuverIcon(entryCue):'◎';
+  until=entryCue?.detail||('Towards '+(sgJourney.destination?.name||'your destination'))
+ }else if(next&&!nextRoad){
+  command='CONTINUE TO NEXT HOP';icon='◎';until='Then · '+sgJourneyInstruction(next)
+ }else if(next){
+  command=cue.action||'KEEP STRAIGHT';icon=journeyManeuverIcon(cue);
+  let targetRoad=journeyCurrentRoadName(next);
+  until=targetRoad?'onto '+targetRoad:(cue.detail||'Follow the planned road')
+ }
+ let shownDistance=finalRoad?destRemain:stepRemain,routeRemain=Number.isFinite(sgJourneyRuntime.routeProgressM)&&Number.isFinite(sgJourneyRuntime.routeTotalM)?Math.max(0,sgJourneyRuntime.routeTotalM-sgJourneyRuntime.routeProgressM):null;
+ txt('sgJourneyDriveIcon',icon);
  txt('sgJourneyDriveCommand',command);
- txt('sgJourneyDriveDistance',Number.isFinite(finalRoad?destRemain:stepRemain)?routeDistance(finalRoad?destRemain:stepRemain):'—');
+ txt('sgJourneyDriveDistance',Number.isFinite(shownDistance)?routeDistance(shownDistance):'—');
  txt('sgJourneyDriveUntil',until);
- txt('sgJourneyDriveRoad',(journeyPrecisionZone()?'Precision approach · ':'')+(journeyCurrentRoadName(leg)?'On '+journeyCurrentRoadName(leg):'tracking this road segment'));
- txt('sgJourneyStepPercent','Current hop · '+stepPct+'% complete');
- txt('sgJourneyStepRemaining',Number.isFinite(stepRemain)?routeDistance(stepRemain)+' remaining in this hop':'Tracking this road segment…')
+ txt('sgJourneyDriveRoad',(journeyPrecisionZone()?'Precision approach · ':'')+(journeyCurrentRoadName(leg)?'On '+journeyCurrentRoadName(leg):'GPS route matching active'));
+ txt('sgJourneyStepPercent',Number.isFinite(routeRemain)?routeDistance(routeRemain)+' route remaining':'Route tracking active');
+ txt('sgJourneyStepRemaining','')
 }
 function renderSgJourney(distance=null){
  let card=$('sgJourneyLiveCard'),planner=$('sgRoutePlannerCard');if(!card||!planner)return;
@@ -2276,9 +2331,9 @@ function renderSgJourney(distance=null){
  txt('sgRouteBadge','LIVE');txt('sgJourneyPill','Live journey');txt('sgRouteProviderNote',(sgJourney.provider==='cross-border'?'🇸🇬 OneMap → 🛂 Woodlands → 🇲🇾 Google Maps':sgJourney.provider==='jb'?'🇲🇾 Google Maps · JB':'🇸🇬 OneMap · Singapore')+' · selected route saved');
  let legs=sgJourney.route?.legs||[],idx=Math.min(Math.max(0,Number(sgJourney.current_hop)||0),Math.max(0,legs.length-1)),leg=legs[idx];
  txt('sgJourneyDestination',sgJourney.destination?.name||sgJourney.destination?.address||'Destination');
- txt('sgJourneyMeta','Hop '+(idx+1)+' of '+Math.max(1,legs.length)+' · started '+new Date(sgJourney.started_at).toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'}));
- let remaining=legs.slice(idx).reduce((n,x)=>n+Number(x.duration_sec||0),0),borderPending=!!sgJourney.route?.border_variable&&idx<=Number(sgJourney.route?.border_end_index??-1);txt('sgJourneyEta',remaining?(routeMinutes(remaining)+(borderPending?' + border':'')+' left'):'Live');
- let road=journeyRoadMode(leg?.mode);
+ txt('sgJourneyMeta','Hop '+(idx+1)+' of '+Math.max(1,legs.length));
+ let remaining=legs.slice(idx).reduce((n,x)=>n+Number(x.duration_sec||0),0),borderPending=!!sgJourney.route?.border_variable&&idx<=Number(sgJourney.route?.border_end_index??-1),arrival=remaining&&!borderPending?new Date(Date.now()+remaining*1000).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';txt('sgJourneyEta',remaining?(routeMinutes(remaining)+(borderPending?' + border':' · '+arrival)):'Live');
+ let road=journeyRoadMode(leg?.mode);$('sgJourneyNow')?.classList.toggle('roadFocus',road);
  if(road){
   let nextRoad=legs[idx+1],sr=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null,cue=journeyManeuverCue(nextRoad,leg),entryCue=journeyCurrentEntryCue(leg,idx,legs),bands=journeyWarningBands(cue,sgJourneyRuntime.gpsSpeed),label='Keep straight';
   if(idx===legs.length-1)label=entryCue?entryCue.action:'Continue to '+(sgJourney.destination?.name||'your destination');
@@ -2316,8 +2371,9 @@ function renderSgJourney(distance=null){
  }
  renderJourneyBeacon(distance);
  if($('sgJourneyProgressBar'))$('sgJourneyProgressBar').style.width=pct+'%';
- if(!$('sgJourneyAiText')?.dataset.aiLock)txt('sgJourneyAiText',sgJourneyDefaultCoach(leg,distance));
- let next=legs[idx+1];$('sgJourneyNext').innerHTML=road?journeyRichNextHtml(legs,idx,Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null):(next?'<b>Next:</b> '+esc(sgJourneyInstruction(next)):'<b>Final hop:</b> Keep going until you reach '+esc(sgJourney.destination?.name||'your destination')+'.');let doneBtn=$('sgJourneyHopDoneBtn');if(doneBtn){let manualMode=String(leg?.mode||'').toUpperCase();doneBtn.textContent=manualMode==='IMMIGRATION'?'Cleared immigration':manualMode==='LOCAL_TRANSFER'?'At JB CIQ':manualMode==='CROSS_BORDER_BUS'?'At checkpoint':road&&idx===legs.length-1?'I have arrived':'Hop done'}
+ let aiText=$('sgJourneyAiText'),aiCard=$('sgJourneyAiCard'),aiLocked=!!aiText?.dataset.aiLock,companion=aiLocked?(aiText?.textContent||''):sgJourneyCompanionMessage(leg,distance,road,legs,idx);
+ if(!aiLocked&&companion)txt('sgJourneyAiText',companion);if(aiCard)aiCard.classList.toggle('show',aiLocked||!!companion);
+ let next=legs[idx+1],nextHtml=road?journeyRichNextHtml(legs,idx,Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null):(next?'<b>Next:</b> '+esc(sgJourneyInstruction(next)):'<b>Final hop:</b> Keep going until you reach '+esc(sgJourney.destination?.name||'your destination')+'.'),nextEl=$('sgJourneyNext');if(nextEl){nextEl.innerHTML=nextHtml;nextEl.classList.toggle('show',!!nextHtml)}let doneBtn=$('sgJourneyHopDoneBtn');if(doneBtn){let manualMode=String(leg?.mode||'').toUpperCase();doneBtn.textContent=manualMode==='IMMIGRATION'?'Cleared immigration':manualMode==='LOCAL_TRANSFER'?'At JB CIQ':manualMode==='CROSS_BORDER_BUS'?'At checkpoint':road&&idx===legs.length-1?'I have arrived':'Hop done'}
  $('sgJourneyAllHops').innerHTML=legs.map((l,n)=>'<div class="routeLeg '+(n<idx?'journeyDone':n===idx?'journeyCurrent':'')+'"><div class="routeLegIcon">'+routeModeIcon(l.mode)+'</div><div><div class="routeLegTitle">'+esc(sgJourneyInstruction(l))+'</div><div class="routeLegMeta">'+esc(l.manual&&!Number(l.duration_sec)?'Time not included':routeMinutes(l.duration_sec)+(l.distance_m?' · '+routeDistance(l.distance_m):''))+'</div></div></div>').join('');
 }
 function restoreSgJourney(){
@@ -2384,7 +2440,7 @@ async function journeyAiIntervention(reason,distance,manual=false){
  let el=$('sgJourneyAiText');if(document.hidden||!el||!sgJourney)return;
  let leg=sgJourneyLeg(),fallback=reason==='moving_away'?'You seem to be moving away from this hop. Check the direction before continuing.':'You haven’t made much progress on this walking hop. Check that you’re still heading toward '+(leg?.to?.name||'the next stop')+'.';
  if(manual)fallback='No worries — check your current hop and make sure you are heading toward '+(leg?.to?.name||'the next stop')+'.';
- el.dataset.aiLock='1';el.textContent='Checking your journey…';
+ el.dataset.aiLock='1';$('sgJourneyAiCard')?.classList.add('show');el.textContent='Checking your journey…';
  try{
   let {data:{session}}=await sb.auth.getSession();
   if(!session)throw Error('guest');
@@ -2414,7 +2470,7 @@ function currentRoadBlock(legs,idx){
  return {mode,end,target:{...target,lat,lon}}
 }
 async function manualSgJourneyReroute(btn){
- if(!sgJourney||sgJourney.status!=='active')return;
+ if(!sgJourney||sgJourney.status!=='active')return;$('sgJourneyAiCard')?.classList.add('show');
  let legs=sgJourney.route?.legs||[],idx=Math.max(0,Number(sgJourney.current_hop)||0),block=currentRoadBlock(legs,idx);
  if(!block){
   txt('sgJourneyAiText','Reroute from here is available while RunSGD is guiding a driving or motorcycle road segment. For this hop, use the trip steps or Hop done when appropriate.');
@@ -2453,11 +2509,11 @@ async function manualSgJourneyReroute(btn){
   persistSgJourney();
 
   stopSgJourneyTracking();startSgJourneyTracking();
-  if(ai){ai.textContent='✓ Route rebuilt from your current position. Follow the new turn instructions.';delete ai.dataset.aiLock}
+  if(ai){ai.textContent='✓ Route rebuilt from your current position. Follow the new turn instructions.';setTimeout(()=>{if(ai){delete ai.dataset.aiLock;renderSgJourney()}},12000)}
   setJourneyTurnState('✓ New route active','good');$('sgJourneyRerouteBtn')?.classList.remove('offroute');
   renderSgJourney();
  }catch(e){
-  if(ai){ai.textContent=e.message||'Reroute failed. Keep somewhere safe and try again.';delete ai.dataset.aiLock}
+  if(ai){ai.textContent=e.message||'Reroute failed. Keep somewhere safe and try again.';setTimeout(()=>{if(ai){delete ai.dataset.aiLock;renderSgJourney()}},15000)}
   setJourneyTurnState('Reroute failed · try again safely','weak');
   txt('sgJourneyDistance',e.message||'Could not calculate a new route.')
  }finally{setBusy(btn,false);btn.disabled=false}
