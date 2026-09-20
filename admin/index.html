@@ -48,7 +48,7 @@
 .apiInfoOverlay{display:none;position:fixed;inset:0;z-index:50;background:#17213b55;backdrop-filter:blur(5px);padding:22px;align-items:center;justify-content:center}.apiInfoOverlay.open{display:flex}.apiInfoModal{width:min(390px,100%);background:#fff;border:1px solid #eef1f6;border-radius:24px;padding:18px;box-shadow:0 24px 70px #17213b38}.apiInfoTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.apiInfoTitle{font-size:18px;font-weight:900;line-height:1.25}.apiInfoClose{width:32px;height:32px;border:0;border-radius:11px;background:#f0f3f8;color:#56647d;font-weight:900}.apiInfoState{display:inline-flex;margin-top:12px;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:900;background:#f0f2f5;color:#7c879a}.apiInfoState.ok{background:#eaf8f1;color:#247a55}.apiInfoState.bad{background:#fff0f2;color:#b43d55}.apiInfoNote{margin-top:12px;padding:12px 13px;border-radius:15px;background:linear-gradient(120deg,#f4f8ff,#faf6ff);font-size:12px;color:#5c6880;line-height:1.5}.apiInfoResult{margin-top:10px;font-size:12px;color:#68758b;line-height:1.5}
 @media(max-width:520px){.apiGrid{grid-template-columns:1fr}.metric{padding:12px 8px}.metricValue{font-size:23px}.metricLabel{font-size:9px}.metricSub{font-size:9px}.apiIconBtn{width:31px;height:31px}}
 
-/* v2.13.3 production navigation diagnostics */
+/* v2.14.0 production navigation diagnostics */
 .navDiagCard{background:linear-gradient(145deg,#fff 0%,#f5fbf8 52%,#eef7ff 100%)}
 .navDiagTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.navDiagSelect{width:100%;margin-top:10px;border:1px solid #dfe7ef;background:#fff;border-radius:13px;padding:10px 11px;color:#263550;font-weight:750}
 .navDiagGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.navDiagMetric{padding:11px 9px;border-radius:15px;background:#fff;border:1px solid #e8eef1}.navDiagMetric strong{display:block;font-size:20px;line-height:1;color:#1e4935}.navDiagMetric span{display:block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.3px;color:#7c8d84;margin-top:7px}
@@ -61,7 +61,7 @@
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.13.3</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.0</span></div>
 <section class="hero"><h1>Admin</h1><p class="sub">Manage RunSGD settings and community membership.</p></section>
 <div id="adminProfileCard" class="adminProfile">
   <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
@@ -103,18 +103,20 @@
 
 <article class="card" id="googleBillingCard">
  <div class="head"><div class="title">📈 Google Maps query monitor</div><span id="googleBillingState" class="pill ok">Tracking</span></div>
- <p class="sub">RunSGD counts Google Places and Routes queries internally. Free caps are tracked separately because Google bills each SKU independently.</p>
+ <p class="sub">Internal RunSGD counters for Google Places, traffic-aware Routes Pro and Dynamic Map loads. Google Cloud Billing remains the source of truth.</p>
  <div class="billingGrid">
-  <div class="billingMetric"><strong id="gmTodayTotal">—</strong><span>Calls today</span></div>
-  <div class="billingMetric"><strong id="gmMonthTotal">—</strong><span>Calls this month</span></div>
+  <div class="billingMetric"><strong id="gmTodayTotal">—</strong><span>Events today</span></div>
+  <div class="billingMetric"><strong id="gmMonthTotal">—</strong><span>Events this month</span></div>
   <div class="billingMetric"><strong id="gmMonthPlaces">—</strong><span>Places searches</span></div>
-  <div class="billingMetric"><strong id="gmMonthRoutes">—</strong><span>Route requests</span></div>
+  <div class="billingMetric"><strong id="gmMonthRoutes">—</strong><span>Routes Pro</span></div>
+  <div class="billingMetric"><strong id="gmMonthMaps">—</strong><span>Dynamic maps</span></div>
  </div>
  <div class="billingPanel">
   <div class="billingTop"><div><div class="sub">Free-tier threshold monitor</div><div id="gmThresholdState" class="billingCost">Checking…</div></div><span id="gmThresholdPill" class="pill ok">Safe</span></div>
   <div id="gmPlacesThreshold" class="billingNote">Places Text Search Pro: — / 5,000 free monthly</div>
-  <div id="gmRoutesThreshold" class="billingNote">Compute Routes Essentials: — / 10,000 free monthly</div>
-  <div class="billingNote">RunSGD warns at 70%, 85% and 95%. Admin API tests are excluded from these counters.</div>
+  <div id="gmRoutesThreshold" class="billingNote">Compute Routes Pro: — / 5,000 free monthly</div>
+  <div id="gmMapsThreshold" class="billingNote">Dynamic Maps: — / 10,000 free monthly</div>
+  <div class="billingNote">RunSGD warns at 70%, 85% and 95%. Admin API tests are excluded from app counters.</div>
  </div>
  <div class="healthFooter"><div id="gmUsageUpdated" class="status">Loading usage…</div><button id="gmUsageBtn" class="btn soft healthRefresh" onclick="loadGoogleMapsUsage(this)">↻ Refresh usage</button></div>
 </article>
@@ -158,11 +160,14 @@
 </article>
 
 <article class="card" id="googleMapsCard">
- <div class="head"><div class="title">🇲🇾 Google Maps · JB Route Planner</div><span id="googleMapsState" class="pill">Not configured</span></div>
- <p class="sub">Server-side key for Johor Bahru destination search and public-transport routing. Restricted to Routes API + Places API (New).</p>
- <div class="field"><label for="googleMapsKey">Google Maps API key</label><div class="row"><input id="googleMapsKey" class="input" type="password" placeholder="Paste RunSGD JB Route Backend key" autocomplete="off"><button class="btn soft" onclick="toggleKey('googleMapsKey',this)">Show</button></div></div>
- <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveGoogleMapsKey()">Save securely</button><button id="googleMapsTestBtn" class="btn soft" onclick="testGoogleMaps()">Test APIs</button><button class="btn soft" onclick="clearGoogleMapsKey()">Clear</button></div>
- <div id="googleMapsStatus" class="status">Paste the new Google Cloud key here. It is saved in Supabase, not in this browser.</div>
+ <div class="head"><div class="title">🇲🇾 Google Maps · RunSGD Navigation</div><span id="googleMapsState" class="pill">Not configured</span></div>
+ <p class="sub">RunSGD uses separate Google keys: a private server key for Places + Routes, and a browser-restricted key for the Dynamic Map shown inside live navigation.</p>
+ <div class="field"><label for="googleMapsKey">Server key · Places + Routes</label><div class="row"><input id="googleMapsKey" class="input" type="password" placeholder="RunSGD server key" autocomplete="off"><button class="btn soft" onclick="toggleKey('googleMapsKey',this)">Show</button></div></div>
+ <div class="row" style="margin-top:10px"><button class="btn primary" onclick="saveGoogleMapsKey()">Save server key</button><button id="googleMapsTestBtn" class="btn soft" onclick="testGoogleMaps()">Test routing APIs</button><button class="btn soft" onclick="clearGoogleMapsKey()">Clear</button></div>
+ <div id="googleMapsStatus" class="status">Server key stays in Supabase and is never sent to visitors.</div>
+ <div class="field" style="margin-top:16px"><label for="googleMapsBrowserKey">Browser key · Maps JavaScript API / Dynamic Maps</label><div class="row"><input id="googleMapsBrowserKey" class="input" type="password" placeholder="Paste HTTP-referrer-restricted browser key" autocomplete="off"><button class="btn soft" onclick="toggleKey('googleMapsBrowserKey',this)">Show</button></div></div>
+ <div class="row" style="margin-top:10px"><button class="btn primary" onclick="saveGoogleMapsBrowserKey()">Save browser key</button><button class="btn soft" onclick="clearGoogleMapsBrowserKey()">Clear</button><span id="googleMapsBrowserState" class="pill">Not configured</span></div>
+ <div id="googleMapsBrowserStatus" class="status">Use a separate key restricted to Maps JavaScript API and HTTP referrers runsgd.site / www.runsgd.site. The key is visible to browsers by design, so restrictions are required.</div>
 </article>
 
 <article class="card" id="jbMapTestCard">
@@ -429,22 +434,31 @@ async function clearOneMap(){
 
 async function loadGoogleMapsState(){
  try{
-  let {data,error}=await adminSb.from('app_settings').select('secret_value,updated_at').eq('key','google_maps_api_key').maybeSingle();
+  let {data,error}=await adminSb.from('app_settings').select('key,secret_value,updated_at').in('key',['google_maps_api_key','google_maps_browser_key']);
   if(error)throw error;
-  let ok=!!String(data?.secret_value||'').trim();
-  $('googleMapsState').textContent=ok?'Configured':'Not configured';$('googleMapsState').classList.toggle('ok',ok);
-  $('googleMapsKey').value='';
-  $('googleMapsStatus').textContent=ok?'Saved in Supabase'+(data?.updated_at?' · updated '+new Date(data.updated_at).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''):'Paste the RunSGD JB Route Backend key.';
- }catch(e){$('googleMapsState').textContent='Unavailable';$('googleMapsStatus').textContent='Could not load Google Maps setting.'}
+  let map=Object.fromEntries((data||[]).map(x=>[x.key,x])),server=String(map.google_maps_api_key?.secret_value||'').trim(),browser=String(map.google_maps_browser_key?.secret_value||'').trim();
+  $('googleMapsState').textContent=server?'Routing configured':'Routing missing';$('googleMapsState').classList.toggle('ok',!!server);
+  $('googleMapsBrowserState').textContent=browser?'Map configured':'Map missing';$('googleMapsBrowserState').classList.toggle('ok',!!browser);
+  $('googleMapsKey').value='';$('googleMapsBrowserKey').value='';
+  $('googleMapsStatus').textContent=server?'Server Places + Routes key saved in Supabase'+(map.google_maps_api_key?.updated_at?' · updated '+new Date(map.google_maps_api_key.updated_at).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''):'Paste the private RunSGD Places + Routes server key.';
+  $('googleMapsBrowserStatus').textContent=browser?'Dynamic Map browser key saved · live road navigation can load Google Maps.':'Create a separate HTTP-referrer-restricted key with Maps JavaScript API enabled, then paste it here.';
+ }catch(e){$('googleMapsState').textContent='Unavailable';$('googleMapsBrowserState').textContent='Unavailable';$('googleMapsStatus').textContent='Could not load Google Maps settings.'}
 }
 async function saveGoogleMapsKey(){
- let key=$('googleMapsKey').value.trim();
- if(!key)return $('googleMapsStatus').textContent='Paste the Google Maps API key first.';
+ let key=$('googleMapsKey').value.trim();if(!key)return $('googleMapsStatus').textContent='Paste the Google Maps server key first.';
  $('googleMapsStatus').textContent='Saving securely…';
  let {error}=await adminSb.from('app_settings').upsert({key:'google_maps_api_key',secret_value:key,updated_at:new Date().toISOString()},{onConflict:'key'});
  if(error)return $('googleMapsStatus').textContent='Save failed · '+error.message;
- $('googleMapsKey').value='';$('googleMapsKey').type='password';$('googleMapsState').textContent='Configured';$('googleMapsState').classList.add('ok');
- $('googleMapsStatus').textContent='Saved in Supabase. Testing Google Maps APIs…';flash($('googleMapsCard'));await testGoogleMaps();
+ $('googleMapsKey').value='';$('googleMapsKey').type='password';$('googleMapsState').textContent='Routing configured';$('googleMapsState').classList.add('ok');
+ $('googleMapsStatus').textContent='Saved in Supabase. Testing Places + Routes…';flash($('googleMapsCard'));await testGoogleMaps()
+}
+async function saveGoogleMapsBrowserKey(){
+ let key=$('googleMapsBrowserKey').value.trim();if(!key)return $('googleMapsBrowserStatus').textContent='Paste the browser Maps JavaScript API key first.';
+ $('googleMapsBrowserStatus').textContent='Saving…';
+ let {error}=await adminSb.from('app_settings').upsert({key:'google_maps_browser_key',secret_value:key,updated_at:new Date().toISOString()},{onConflict:'key'});
+ if(error)return $('googleMapsBrowserStatus').textContent='Save failed · '+error.message;
+ $('googleMapsBrowserKey').value='';$('googleMapsBrowserKey').type='password';$('googleMapsBrowserState').textContent='Map configured';$('googleMapsBrowserState').classList.add('ok');
+ $('googleMapsBrowserStatus').textContent='Saved. Google Dynamic Maps will load only when a production road-navigation screen needs it.';flash($('googleMapsCard'))
 }
 async function testGoogleMaps(){
  let b=$('googleMapsTestBtn');if(!b)return;b.disabled=true;b.textContent='Testing…';$('googleMapsStatus').textContent='Testing Places API and Routes API…';
@@ -452,16 +466,25 @@ async function testGoogleMaps(){
   let r=await fetch(ADMIN_SUPABASE_URL+'/functions/v1/runsgd-route-jb',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'status'}),cache:'no-store'}),j=await r.json();
   if(!r.ok||!j.connected)throw Error(j.error||'Google Maps connection failed');
   $('googleMapsState').textContent='Connected';$('googleMapsState').classList.add('ok');
-  $('googleMapsStatus').textContent='✓ Places API working · Routes API working · JB provider ready';
+  $('googleMapsStatus').textContent='✓ Places API working · Routes API working';
+  $('googleMapsBrowserState').textContent=j.browser_maps_configured?'Map configured':'Map missing';$('googleMapsBrowserState').classList.toggle('ok',!!j.browser_maps_configured);
+  if(j.browser_maps_configured)$('googleMapsBrowserStatus').textContent='Browser map key configured. It will be validated by Google when live navigation loads the map.'
  }catch(e){$('googleMapsState').textContent='Issue';$('googleMapsState').classList.remove('ok');$('googleMapsStatus').textContent='Test failed · '+(e.message||'Unknown error')}
- finally{b.disabled=false;b.textContent='Test APIs'}
+ finally{b.disabled=false;b.textContent='Test routing APIs'}
 }
 async function clearGoogleMapsKey(){
- if(!confirm('Clear the saved Google Maps JB route key?'))return;
+ if(!confirm('Clear the saved Google Maps Places + Routes server key?'))return;
  $('googleMapsStatus').textContent='Clearing…';
  let {error}=await adminSb.from('app_settings').upsert({key:'google_maps_api_key',secret_value:'',updated_at:new Date().toISOString()},{onConflict:'key'});
  if(error)return $('googleMapsStatus').textContent='Clear failed · '+error.message;
- $('googleMapsKey').value='';$('googleMapsState').textContent='Not configured';$('googleMapsState').classList.remove('ok');$('googleMapsStatus').textContent='Google Maps JB route key cleared.';
+ $('googleMapsKey').value='';$('googleMapsState').textContent='Routing missing';$('googleMapsState').classList.remove('ok');$('googleMapsStatus').textContent='Google Places + Routes server key cleared.'
+}
+async function clearGoogleMapsBrowserKey(){
+ if(!confirm('Clear the Google Maps browser key? Live navigation maps will stop loading.'))return;
+ $('googleMapsBrowserStatus').textContent='Clearing…';
+ let {error}=await adminSb.from('app_settings').upsert({key:'google_maps_browser_key',secret_value:'',updated_at:new Date().toISOString()},{onConflict:'key'});
+ if(error)return $('googleMapsBrowserStatus').textContent='Clear failed · '+error.message;
+ $('googleMapsBrowserKey').value='';$('googleMapsBrowserState').textContent='Map missing';$('googleMapsBrowserState').classList.remove('ok');$('googleMapsBrowserStatus').textContent='Browser map key cleared. RunSGD text navigation continues normally.'
 }
 
 async function loadGeminiState(){try{let {data,error}=await adminSb.from('app_settings').select('secret_value').eq('key','gemini_api_key').maybeSingle();if(error)throw error;let ok=!!data?.secret_value;$('geminiState').textContent=ok?'Configured':'Not configured';$('geminiState').classList.toggle('ok',ok)}catch(e){$('geminiState').textContent='Unavailable'}}
@@ -626,29 +649,24 @@ async function testApiHealth(id,btn){
 async function loadGoogleMapsUsage(btn=null){
   let b=btn||$('gmUsageBtn');if(b){b.disabled=true;b.textContent='Refreshing…'}
   try{
-    let j=await apiHealthRequest('','google_maps_usage'),places=Number(j.month?.places||0),routes=Number(j.month?.routes||0);
-    const placesCap=5000,routesCap=10000,pp=places/placesCap*100,rp=routes/routesCap*100,maxp=Math.max(pp,rp);
-    $('gmTodayTotal').textContent=fmtMetric(j.today?.total);
-    $('gmMonthTotal').textContent=fmtMetric(j.month?.total);
-    $('gmMonthPlaces').textContent=fmtMetric(places);
-    $('gmMonthRoutes').textContent=fmtMetric(routes);
+    let j=await apiHealthRequest('','google_maps_usage'),places=Number(j.month?.places||0),routes=Number(j.month?.routes||0),maps=Number(j.month?.maps||0);
+    const placesCap=5000,routesCap=5000,mapsCap=10000,pp=places/placesCap*100,rp=routes/routesCap*100,mp=maps/mapsCap*100,maxp=Math.max(pp,rp,mp);
+    $('gmTodayTotal').textContent=fmtMetric(j.today?.total);$('gmMonthTotal').textContent=fmtMetric(j.month?.total);
+    $('gmMonthPlaces').textContent=fmtMetric(places);$('gmMonthRoutes').textContent=fmtMetric(routes);$('gmMonthMaps').textContent=fmtMetric(maps);
     $('gmPlacesThreshold').textContent='Places Text Search Pro: '+fmtMetric(places)+' / '+fmtMetric(placesCap)+' free monthly · '+Math.min(999,Math.round(pp))+'%';
-    $('gmRoutesThreshold').textContent='Compute Routes Essentials: '+fmtMetric(routes)+' / '+fmtMetric(routesCap)+' free monthly · '+Math.min(999,Math.round(rp))+'%';
-    let state='Safe',note='Well within free caps';
+    $('gmRoutesThreshold').textContent='Compute Routes Pro: '+fmtMetric(routes)+' / '+fmtMetric(routesCap)+' free monthly · '+Math.min(999,Math.round(rp))+'%';
+    $('gmMapsThreshold').textContent='Dynamic Maps: '+fmtMetric(maps)+' / '+fmtMetric(mapsCap)+' free monthly · '+Math.min(999,Math.round(mp))+'%';
+    let state='Safe',note='Well within tracked free caps';
     if(maxp>=95){state='Critical';note='Very near a free cap — check Google Cloud Billing now'}
     else if(maxp>=85){state='High';note='Approaching a free cap — review Google Cloud usage soon'}
     else if(maxp>=70){state='Watch';note='Usage has passed 70% of a monthly free cap'}
-    $('gmThresholdState').textContent=note;
-    $('gmThresholdPill').textContent=state;
-    $('gmThresholdPill').classList.toggle('ok',maxp<70);
-    $('gmThresholdPill').classList.toggle('bad',maxp>=85);
+    $('gmThresholdState').textContent=note;$('gmThresholdPill').textContent=state;
+    $('gmThresholdPill').classList.toggle('ok',maxp<70);$('gmThresholdPill').classList.toggle('bad',maxp>=85);
     $('googleBillingState').textContent=maxp>=85?'Check usage':maxp>=70?'Watch usage':'Tracking';
-    $('googleBillingState').classList.toggle('ok',maxp<70);
-    $('googleBillingState').classList.toggle('bad',maxp>=85);
-    $('gmUsageUpdated').textContent='Updated '+sgDateTime(j.generated_at)+' · '+fmtMetric(j.month?.admin_tests)+' admin test call'+(Number(j.month?.admin_tests||0)===1?'':'s')+' excluded';
-  }catch(e){
-    $('gmUsageUpdated').textContent='Usage unavailable · '+(e.message||'Unknown error');
-  }finally{if(b){b.disabled=false;b.textContent='↻ Refresh usage'}}
+    $('googleBillingState').classList.toggle('ok',maxp<70);$('googleBillingState').classList.toggle('bad',maxp>=85);
+    $('gmUsageUpdated').textContent='Updated '+sgDateTime(j.generated_at)+' · '+fmtMetric(j.month?.admin_tests)+' admin test event'+(Number(j.month?.admin_tests||0)===1?'':'s')+' excluded';
+  }catch(e){$('gmUsageUpdated').textContent='Usage unavailable · '+(e.message||'Unknown error')}
+  finally{if(b){b.disabled=false;b.textContent='↻ Refresh usage'}}
 }
 
 async function loadMonitoring(){
