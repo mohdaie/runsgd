@@ -270,7 +270,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.12.2</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.12.3</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -608,7 +608,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.12.2</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.12.3</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -661,7 +661,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.12.2</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.12.3</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -702,6 +702,53 @@ const LTA_TRANSPORT_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/l
 const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-ai';
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
+
+const RUNSGD_VERSION='2.12.3';
+let runsgdBuildInfo=null,runsgdReloadingForUpdate=false;
+function runsgdVersionLabel(info=runsgdBuildInfo){
+ const version=String(info?.version||RUNSGD_VERSION).replace(/^v/i,'');
+ const build=String(info?.build||'').trim();
+ return 'v'+version+(build?' · b'+build:'')
+}
+function runsgdApplyVersion(info=runsgdBuildInfo){
+ const label=runsgdVersionLabel(info);
+ let el=document.getElementById('appVersionBadge');if(el)el.textContent=label;
+ el=document.getElementById('moreVersionTitle');if(el)el.textContent='RunSGD Beta · '+label;
+ el=document.getElementById('betaFeedbackVersion');if(el)el.textContent=label
+}
+function runsgdJourneyActive(){
+ return typeof sgJourney!=='undefined'&&!!sgJourney&&sgJourney.status==='active'
+}
+function runsgdMarkUpdateReady(info){
+ localStorage.setItem('runsgdPendingUpdate','1');
+ const version=String(info?.version||RUNSGD_VERSION).replace(/^v/i,'');
+ const build=String(info?.build||'').trim();
+ const el=document.getElementById('appVersionBadge');
+ if(el)el.textContent='v'+version+(build?' · b'+build:'')+' · update ready'
+}
+function runsgdReloadForUpdate(){
+ if(runsgdReloadingForUpdate||runsgdJourneyActive())return false;
+ runsgdReloadingForUpdate=true;localStorage.removeItem('runsgdPendingUpdate');location.reload();return true
+}
+function runsgdApplyPendingUpdate(){
+ if(localStorage.getItem('runsgdPendingUpdate')==='1'&&!runsgdJourneyActive())runsgdReloadForUpdate()
+}
+async function checkRunsgdBuild(){
+ try{
+  const r=await fetch('/build-info.json?ts='+Date.now(),{cache:'no-store'});
+  if(!r.ok)return;
+  const next=await r.json();
+  if(!next?.version)return;
+  if(!runsgdBuildInfo){runsgdBuildInfo=next;runsgdApplyVersion(next);runsgdApplyPendingUpdate();return}
+  const changed=!!next.commit&&!!runsgdBuildInfo.commit&&next.commit!==runsgdBuildInfo.commit;
+  if(changed){
+   if(runsgdJourneyActive()){runsgdMarkUpdateReady(next);return}
+   runsgdReloadForUpdate();return
+  }
+  runsgdBuildInfo=next;runsgdApplyVersion(next)
+ }catch{}
+}
+
 const runsgdAuthParams=new URLSearchParams(location.search);
 const isGoogleAuthReturn=runsgdAuthParams.get('auth')==='google';
 const isGooglePopupReturn=isGoogleAuthReturn&&runsgdAuthParams.get('popup')==='1';
@@ -2764,13 +2811,13 @@ function clearJourneyPlannerAfterTrip(message='Choose a destination to start a n
 function endSgJourney(){
  if(!sgJourney)return;if(!confirm('End this active journey?'))return;
  let historyId=sgJourney.history_id;stopSgJourneyTracking();sgJourney=null;localStorage.removeItem('runsgdSgSelectedRoute');if(historyId)updateJourneyHistoryStatus(historyId,'ended');
- clearJourneyPlannerAfterTrip('Journey ended. Choose a destination to start again.');loadJourneyProfileData()
+ clearJourneyPlannerAfterTrip('Journey ended. Choose a destination to start again.');loadJourneyProfileData();setTimeout(runsgdApplyPendingUpdate,0)
 }
 function finishSgJourney(){
  if(!sgJourney)return;let historyId=sgJourney.history_id;stopSgJourneyTracking();if(historyId)updateJourneyHistoryStatus(historyId,'completed');setJourneyTurnState('✓ Journey complete','good');$('sgJourneyDriveFocus')?.classList.remove('show');let gps=$('sgJourneyGpsHealth');if(gps){gps.className='journeyGpsChip good';gps.textContent='● GPS tracking complete'}
  let card=$('sgJourneyLiveCard');if(card){card.classList.add('show','journeyArrival');txt('sgJourneyPill','Arrived');txt('sgJourneyAction','You’ve arrived 🎉');txt('sgJourneyDistance','Journey complete');txt('sgJourneyEta','Done');if($('sgJourneyProgressBar'))$('sgJourneyProgressBar').style.width='100%';txt('sgJourneyAiText','You made it. Route cleared — ready for the next trip.');$('sgJourneyNext').innerHTML='<b>Destination reached:</b> '+esc(sgJourney.destination?.name||sgJourney.destination?.address||'Destination')}
  localStorage.removeItem('runsgdSgSelectedRoute');sgJourney.status='completed';
- setTimeout(()=>{sgJourney=null;clearJourneyPlannerAfterTrip('Journey completed. Choose a destination for your next trip.');loadJourneyProfileData()},8000)
+ setTimeout(()=>{sgJourney=null;clearJourneyPlannerAfterTrip('Journey completed. Choose a destination for your next trip.');loadJourneyProfileData();runsgdApplyPendingUpdate()},8000)
 }
 
 function makeBorderHops(){
@@ -3324,6 +3371,7 @@ window.addEventListener('popstate',e=>{
  }finally{setTimeout(()=>{runsgdHistoryHandling=false},0)}
 });
 document.addEventListener('visibilitychange',()=>{
+ if(!document.hidden){checkRunsgdBuild();runsgdApplyPendingUpdate()}
  if(!sgJourney||sgJourney.status!=='active')return;
  if(document.hidden){
    persistSgJourney();
@@ -3335,12 +3383,14 @@ document.addEventListener('visibilitychange',()=>{
    txt('sgJourneyAiText','Live route tracking is catching up from your current GPS position.');
  }
 });
-init();
+runsgdApplyVersion();checkRunsgdBuild();init();
 if('serviceWorker' in navigator){
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(runsgdJourneyActive()){runsgdMarkUpdateReady(runsgdBuildInfo);return}
+    runsgdReloadForUpdate()
+  });
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('/sw.js',{scope:'/',updateViaCache:'none'}).then(reg=>{
-      // Update quietly. Do not force-reload the current screen on controllerchange:
-      // that can interrupt a same-origin navigation such as More → Admin.
       reg.update().catch(()=>{});
     }).catch(e=>console.warn('RunSGD service worker',e));
   });
