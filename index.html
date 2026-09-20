@@ -270,7 +270,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.12.1</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.12.2</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -608,7 +608,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.12.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.12.2</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -661,7 +661,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.12.1</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.12.2</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -1480,8 +1480,11 @@ function localJourneyIntent(q){
  let raw=String(q||'').trim(),s=raw.toLowerCase();
  let parkedMatch=raw.match(/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?(?:parked|parking)\s+(?:at|near|in)\s+(.+?)(?=\s+(?:then|and then|after|before|from there|so i|so we)\b|[,.;]|$)/i)
   ||raw.match(/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?(?:at|near|in)\s+(.+?)(?=\s+(?:then|and then|after|before|from there|so i|so we)\b|[,.;]|$)/i);
- let vehicleAccessLocation=(parkedMatch?.[1]||'').trim();
- let vehicleAccess=!!vehicleAccessLocation||/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?parked\b|parked\s+(?:my\s+)?(?:car|kereta)\b/.test(s);
+ let pickupCarFirst=/\b(?:need|have|got|want)\s+to\s+(?:take|get|pick\s*up|pickup|retrieve|collect)\s+(?:my\s+|the\s+)?(?:car|kereta)\s*(?:first|before\b)?|\b(?:take|get|pick\s*up|pickup|retrieve|collect)\s+(?:my\s+|the\s+)?(?:car|kereta)\s+(?:first|before)\b/.test(s);
+ let impliedParkedMatch=pickupCarFirst?(raw.match(/(?:i\s+)?(?:park|parked)\s+(?:my\s+|the\s+)?(?:car\s+)?(?:at|near|in)\s+(.+?)(?=\s*(?:,|;|\.|\bthen\b|\band then\b|\bafter\b|\bbefore\b|$))/i)
+  ||raw.match(/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?(?:over\s+)?(?:at|near|in)\s+(.+?)(?=\s*(?:,|;|\.|\bthen\b|\band then\b|\bafter\b|\bbefore\b|$))/i)):null;
+ let vehicleAccessLocation=(parkedMatch?.[1]||impliedParkedMatch?.[1]||'').trim();
+ let vehicleAccess=!!vehicleAccessLocation||pickupCarFirst||/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?parked\b|parked\s+(?:my\s+)?(?:car|kereta)\b/.test(s);
  let hasCar=/\bcar\b|\bdrive\b|\bdriving\b|kereta/.test(s)||vehicleAccess,hasMotorcycle=/motor|motorcycle|bike|motosikal/.test(s),preferKtm=/\bktm\b|shuttle tebrau|train/.test(s);
  let roadMention=/\b(?:drive|driving|car|kereta)\b/.test(s),transitMention=/\b(?:walk|walking|mrt|bus|train|ktm|public transport|transit|taxi|grab|ride.?hail)\b/.test(s);
  let mixedRoadTransit=vehicleAccess||/(drive|driving|kereta|\bcar\b).*(ciq|checkpoint|park|parking).*(bus|mrt|train|ktm|public transport)|(?:then|after|lepas|kemudian).*(bus|mrt|train|ktm|public transport)/.test(s)||(roadMention&&transitMention&&/\b(?:then|after|and|plus|combine|switch|park|before|first)\b/.test(s));
@@ -1498,12 +1501,21 @@ function localJourneyIntent(q){
  }
  return {answer:vehicleAccess?'I’ll first route you to your parked car, then continue the journey from the car location.':directDrive?'Driving route only — I’ll keep this journey on the road from your current GPS position.':'Got it — I’ll compare the combinations that fit your plan.',priority,has_car:hasCar||directDrive,has_motorcycle:hasMotorcycle,prefer_ktm:directDrive?false:preferKtm,avoid_sg_driving:avoidSg,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,mixed_road_transit:mixedRoadTransit,explicit_road_request:explicitDrive,vehicle_access_required:vehicleAccess,vehicle_access_mode:vehicleAccess?'WALK':'',vehicle_access_location:vehicleAccessLocation,vehicle_access_details:vehicleAccess?'Reach the parked vehicle before any driving leg.':'',must_preserve_sequence:vehicleAccess||mixedRoadTransit,requested_actions:requestedActions,resources:vehicleAccess?[{type:'vehicle',name:'car',status:'parked',location:vehicleAccessLocation,details:''}]:[],constraints:[],preferences:[],semantic_facts:[],assumptions:[],unresolved:vehicleAccess&&!vehicleAccessLocation?['Exact parked-car location was not extracted locally; AI should resolve it.']:[],avoid_modes:[],prefer_modes:[],parking_required:false,parking_location:'',parking_purpose:'',timing:{depart_at:'',arrive_by:'',flexibility:'',details:''},notes:'',ai:false}
 }
+function parseEmbeddedJourneyIntent(v){
+ let s=String(v||'').trim();if(!s)return null;
+ let c=[s,s.replace(/^\`\`\`(?:json)?\s*/i,'').replace(/\s*\`\`\`$/i,'').trim()],a=s.indexOf('{'),b=s.lastIndexOf('}');
+ if(a>=0&&b>a)c.push(s.slice(a,b+1));
+ for(let x of [...new Set(c)]){try{let j=JSON.parse(x);if(typeof j==='string')j=JSON.parse(j);if(j&&typeof j==='object'&&!Array.isArray(j))return j}catch{}}
+ return null
+}
 async function interpretJourneyIntent(q,origin,destination){
  let fallback=localJourneyIntent(q);try{
   let {data:{session}}=await sb.auth.getSession();if(!session)return fallback;
   let context={journey_planner:{origin:{name:origin.name,country:origin.country,lat:origin.lat,lon:origin.lon},destination:{name:destination.name,address:destination.address,country:destinationProvider()?.id==='jb'?'MY':'SG',lat:destination.lat,lon:destination.lon}}};
   let r=await fetch(RUNSGD_AI_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({mode:'journey',question:q,context})});
   let j=await r.json();if(!r.ok)throw Error(j.error||'AI unavailable');
+  let embedded=parseEmbeddedJourneyIntent(j?.answer);
+  if(embedded)j={...j,...embedded,configured:j?.configured,model:j?.model};
   let actionVehicleAccess=Array.isArray(j.requested_actions)&&j.requested_actions.some(a=>/retrieve|access.*vehicle|parked vehicle/i.test(String(a?.action||'')+' '+String(a?.purpose||'')));
   let vehicleAccess=fallback.vehicle_access_required||j.vehicle_access_required===true||actionVehicleAccess;
   let vehicleAccessLocation=String(j.vehicle_access_location||fallback.vehicle_access_location||'').trim();
@@ -1781,6 +1793,9 @@ async function planAiJourney(btn){
   let origin=await plannerGps(),originP=routeProvider();
   txt('sgRouteStatus','Understanding your plan…');
   sgJourneyIntent=applyActiveRoadContext(await interpretJourneyIntent(q,origin,sgRouteSelection),q);sgJourneyIntent=await resolveJourneyPhysicalContext(origin,sgJourneyIntent);renderJourneyIntent(sgJourneyIntent);
+  if(sgJourneyIntent.vehicle_access_required&&!sgJourneyIntent._vehicle_access_point){
+   throw Error('I understood that you must reach '+(sgJourneyIntent.vehicle_access_location||'your parked vehicle')+' before driving, but I could not locate that vehicle stop. Refine the car location instead of starting a driving route from your current GPS.')
+  }
 
   // Overnight policy: after 12:30 AM Singapore time, stop pretending a normal
   // MRT/bus itinerary is available. Give the user a clear explanation and a
