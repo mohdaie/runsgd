@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v2122';
+const CACHE='runsgd-shell-v2123';
 const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg','/privacy.html','/admin/','/admin/index.html'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
@@ -13,6 +13,12 @@ self.addEventListener('fetch',event=>{
   if(url.origin!==self.location.origin)return;
   // Auth callbacks must reach the app unchanged and must never be cached.
   if(url.searchParams.has('auth')||url.searchParams.has('code')||url.searchParams.has('error'))return;
+  // Deployment metadata must always come from the network so the UI can detect
+  // a newer release even while an older app document is still open.
+  if(url.pathname==='/build-info.json'){
+    event.respondWith(fetch(req,{cache:'no-store'}));
+    return;
+  }
   if(req.mode==='navigate'){
     // Always ask the network for the latest HTML and cache each page separately.
     // /admin/ must never overwrite the root app shell.
