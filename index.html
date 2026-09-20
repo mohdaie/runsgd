@@ -166,7 +166,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .journeyNext{margin-top:10px;padding:10px 12px;border-radius:14px;background:#dff5e8;color:#3c674e;font-size:11px;line-height:1.45}.journeyButtons{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.journeyBtn{border:0;border-radius:12px;padding:9px 11px;background:#fff;color:#286045;font-weight:850;font-size:11px;box-shadow:0 3px 10px #1b754114}.journeyBtn.reroute{background:#fff5df;color:#8a5a10;border:1px solid #f2d394}.journeyBtn.reroute.offroute{background:#ffead0;color:#984b12;box-shadow:0 0 0 4px #f09a3120}.journeyBtn.danger{background:#fff3f3;color:#a24a55}.journeyAllHops{display:none;margin-top:11px;padding-top:8px;border-top:1px solid #cde9d8}.journeyAllHops.show{display:block}.journeyAllHops .routeLeg{opacity:.64}.journeyAllHops .routeLeg.journeyDone{opacity:.42}.journeyAllHops .routeLeg.journeyCurrent{opacity:1;background:#ffffffaa;border-radius:12px;padding:8px}.journeyArrival{background:linear-gradient(145deg,#e8fff2,#f7fffa);border-color:#a8dfbd}.journeyArrival .journeyLivePill{background:#cdf3dc}
 
 
-/* v2.10.8 cleaner live navigation hierarchy */
+/* v2.10.9 cleaner live navigation hierarchy */
 .journeyNow.roadFocus{display:flex;flex-direction:column}
 .journeyNow.roadFocus .journeyNowLabel,.journeyNow.roadFocus .journeyAction,.journeyNow.roadFocus .journeyDistance{display:none}
 .journeyNow.roadFocus .journeyDriveFocus{order:1;margin-top:0}
@@ -224,7 +224,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.10.8 dedicated Journey experience */
+/* v2.10.9 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
@@ -240,7 +240,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 @media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
 
 
-/* v2.10.8 community — full-height Threads-inspired dark page */
+/* v2.10.9 community — full-height Threads-inspired dark page */
 body.communityMode .hello{display:none}
 body.communityMode{background:#0b0b0c;color:#f5f5f5}
 body.communityMode .app{background:#0b0b0c}
@@ -265,7 +265,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.8</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.9</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -603,7 +603,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.8</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.9</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -656,7 +656,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.8</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.9</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -1471,14 +1471,16 @@ function journeyTravelPromptChanged(){
  let q=$('journeyTravelPrompt')?.value.trim()||'';if($('journeyPlanBtn'))$('journeyPlanBtn').disabled=!sgRouteSelection||q.length<2
 }
 function localJourneyIntent(q){
- let s=String(q||'').toLowerCase();
- let hasCar=/\bcar\b|kereta|drive|driving/.test(s),hasMotorcycle=/motor|motorcycle|bike|motosikal/.test(s),preferKtm=/\bktm\b|shuttle tebrau|train/.test(s);
- let mixedRoadTransit=/(drive|driving|kereta|\bcar\b).*(ciq|checkpoint|park|parking).*(bus|mrt|train|ktm|public transport)|(?:then|lepas|kemudian).*(bus|mrt|train|ktm|public transport)/.test(s);
- let explicitDrive=/(drive|driving|kereta).*(all the way|direct|terus|into singapore|masuk sg)|direct.*(drive|kereta)|(?:want|prefer|plan|only|just)\s+(?:to\s+)?(?:drive|driving)|^\s*(?:drive|driving)\b/.test(s);
+ let s=String(q||'').toLowerCase().trim();
+ let hasCar=/\bcar\b|\bdrive\b|\bdriving\b|kereta/.test(s),hasMotorcycle=/motor|motorcycle|bike|motosikal/.test(s),preferKtm=/\bktm\b|shuttle tebrau|train/.test(s);
+ let roadMention=/\b(?:drive|driving|car|kereta)\b/.test(s),transitMention=/\b(?:walk|walking|mrt|bus|train|ktm|public transport|transit)\b/.test(s);
+ let mixedRoadTransit=/(drive|driving|kereta|\bcar\b).*(ciq|checkpoint|park|parking).*(bus|mrt|train|ktm|public transport)|(?:then|after|lepas|kemudian).*(bus|mrt|train|ktm|public transport)/.test(s)||(roadMention&&transitMention&&/\b(?:then|after|and|plus|combine|switch|park)\b/.test(s));
+ let explicitDrive=/^\s*(?:drive|driving|car|by car)\b|\b(?:drive|driving|car)\s+(?:route|only|please|now|there|all the way)\b|\b(?:need|want|prefer|use|take|choose|show|give|find|plan)\b.{0,28}\b(?:drive|driving|car)\b|\b(?:i am|i'm|im|currently)\s+(?:already\s+)?driving\b|(?:drive|driving|kereta).*(?:all the way|direct|terus|into singapore|masuk sg)|direct.*(?:drive|driving|car|kereta)/.test(s);
  let directDrive=explicitDrive&&!mixedRoadTransit;
  let avoidSg=/don't want to drive.*sg|dont want to drive.*sg|avoid.*driv.*sg|park.*jb|parking.*jb|tak nak.*drive.*sg|tak mahu.*drive.*sg/.test(s);
  let priority=/fastest|quickest|cepat/.test(s)?'fastest':/cheapest|cheap|murah/.test(s)?'cheapest':/easiest|easy|senang|simple/.test(s)?'easiest':'balanced';
- return {answer:'Got it — I’ll compare the combinations that fit your plan.',priority,has_car:hasCar,has_motorcycle:hasMotorcycle,prefer_ktm:preferKtm,avoid_sg_driving:avoidSg,allow_bus:!/no bus|avoid bus/.test(s),allow_mrt:!/no mrt|avoid mrt/.test(s),allow_cross_border_bus:!/no border bus/.test(s),direct_drive:directDrive,notes:'',ai:false}
+ let allowBus=directDrive?false:!/no bus|avoid bus/.test(s),allowMrt=directDrive?false:!/no mrt|avoid mrt/.test(s),allowBorder=directDrive?false:!/no border bus/.test(s);
+ return {answer:directDrive?'Driving route only — I’ll keep this journey on the road from your current GPS position.':'Got it — I’ll compare the combinations that fit your plan.',priority,has_car:hasCar||directDrive,has_motorcycle:hasMotorcycle,prefer_ktm:directDrive?false:preferKtm,avoid_sg_driving:avoidSg,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,mixed_road_transit:mixedRoadTransit,explicit_road_request:explicitDrive,notes:'',ai:false}
 }
 async function interpretJourneyIntent(q,origin,destination){
  let fallback=localJourneyIntent(q);try{
@@ -1486,12 +1488,15 @@ async function interpretJourneyIntent(q,origin,destination){
   let context={journey_planner:{origin:{name:origin.name,country:origin.country,lat:origin.lat,lon:origin.lon},destination:{name:destination.name,address:destination.address,country:destinationProvider()?.id==='jb'?'MY':'SG',lat:destination.lat,lon:destination.lon}}};
   let r=await fetch(RUNSGD_AI_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({mode:'journey',question:q,context})});
   let j=await r.json();if(!r.ok)throw Error(j.error||'AI unavailable');
-  return {...fallback,...j,priority:fallback.priority,has_car:fallback.has_car,has_motorcycle:fallback.has_motorcycle,prefer_ktm:fallback.prefer_ktm,avoid_sg_driving:fallback.avoid_sg_driving,allow_bus:fallback.allow_bus,allow_mrt:fallback.allow_mrt,allow_cross_border_bus:fallback.allow_cross_border_bus,direct_drive:fallback.direct_drive,answer:j.answer||fallback.answer,ai:true}
+  let directDrive=!fallback.mixed_road_transit&&(fallback.direct_drive||j.direct_drive===true),hasCar=fallback.has_car||j.has_car===true||directDrive;
+  let allowBus=directDrive?false:(fallback.allow_bus===false?false:j.allow_bus!==false),allowMrt=directDrive?false:(fallback.allow_mrt===false?false:j.allow_mrt!==false),allowBorder=directDrive?false:(fallback.allow_cross_border_bus===false?false:j.allow_cross_border_bus!==false);
+  return {...fallback,...j,priority:['balanced','fastest','cheapest','easiest'].includes(j.priority)?j.priority:fallback.priority,has_car:hasCar,has_motorcycle:fallback.has_motorcycle||j.has_motorcycle===true,prefer_ktm:directDrive?false:(fallback.prefer_ktm||j.prefer_ktm===true),avoid_sg_driving:fallback.avoid_sg_driving||j.avoid_sg_driving===true,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,answer:directDrive?'Driving route only — I’ll keep this journey on the road from your current GPS position.':(j.answer||fallback.answer),ai:true}
  }catch{return fallback}
 }
 function renderJourneyIntent(intent){
  let el=$('journeyIntentStatus');if(!el)return;let parts=[];
- if(intent.has_car)parts.push('🚗 car available');if(intent.has_motorcycle)parts.push('🏍️ motorcycle');if(intent.prefer_ktm)parts.push('🚆 prefer KTM');if(intent.avoid_sg_driving)parts.push('🅿️ avoid driving in SG');if(intent.direct_drive)parts.push('🛣️ direct drive');parts.push('🎯 '+(intent.priority||'balanced'));
+ if(intent.direct_drive)parts.push('🚗 driving only');else if(intent.has_car)parts.push('🚗 car available');
+ if(intent.has_motorcycle)parts.push('🏍️ motorcycle');if(intent.prefer_ktm)parts.push('🚆 prefer KTM');if(intent.avoid_sg_driving)parts.push('🅿️ avoid driving in SG');parts.push('🎯 '+(intent.priority||'balanced'));
  el.innerHTML='<strong>'+(intent.ai?'AI understood':'RunSGD understood')+':</strong> '+esc(intent.answer||'')+'<br>'+esc(parts.join(' · '));el.classList.add('show')
 }
 
@@ -1706,8 +1711,14 @@ function applyActiveRoadContext(intent,q){
  return intent
 }
 function chooseJourneyRouteSet(routes,intent,limit=4){
- let ranked=rankJourneyRoutes(routes,intent),picked=ranked.slice(0,limit);
- let publicRoute=ranked.find(r=>r.kind==='border_transit'||r.kind==='transit');
+ let ranked=rankJourneyRoutes(routes,intent);
+ if(intent.direct_drive||intent.active_road_mode==='DRIVE'){
+  return ranked.filter(r=>r.kind==='direct_drive'||String(r.travel_mode||'').toUpperCase()==='DRIVE').slice(0,limit)
+ }
+ if(intent.active_road_mode==='TWO_WHEELER'){
+  return ranked.filter(r=>r.kind==='motorcycle'||String(r.travel_mode||'').toUpperCase()==='TWO_WHEELER').slice(0,limit)
+ }
+ let picked=ranked.slice(0,limit),publicRoute=ranked.find(r=>r.kind==='border_transit'||r.kind==='transit');
  if(publicRoute&&!picked.includes(publicRoute)){
   if(picked.length<limit)picked.push(publicRoute);
   else picked[picked.length-1]=publicRoute
