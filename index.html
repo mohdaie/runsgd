@@ -1477,16 +1477,26 @@ function journeyTravelPromptChanged(){
  let q=$('journeyTravelPrompt')?.value.trim()||'';if($('journeyPlanBtn'))$('journeyPlanBtn').disabled=!sgRouteSelection||q.length<2
 }
 function localJourneyIntent(q){
- let s=String(q||'').toLowerCase().trim();
- let hasCar=/\bcar\b|\bdrive\b|\bdriving\b|kereta/.test(s),hasMotorcycle=/motor|motorcycle|bike|motosikal/.test(s),preferKtm=/\bktm\b|shuttle tebrau|train/.test(s);
- let roadMention=/\b(?:drive|driving|car|kereta)\b/.test(s),transitMention=/\b(?:walk|walking|mrt|bus|train|ktm|public transport|transit)\b/.test(s);
- let mixedRoadTransit=/(drive|driving|kereta|\bcar\b).*(ciq|checkpoint|park|parking).*(bus|mrt|train|ktm|public transport)|(?:then|after|lepas|kemudian).*(bus|mrt|train|ktm|public transport)/.test(s)||(roadMention&&transitMention&&/\b(?:then|after|and|plus|combine|switch|park)\b/.test(s));
+ let raw=String(q||'').trim(),s=raw.toLowerCase();
+ let parkedMatch=raw.match(/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?(?:parked|parking)\s+(?:at|near|in)\s+(.+?)(?=\s+(?:then|and then|after|before|from there|so i|so we)\b|[,.;]|$)/i)
+  ||raw.match(/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?(?:at|near|in)\s+(.+?)(?=\s+(?:then|and then|after|before|from there|so i|so we)\b|[,.;]|$)/i);
+ let vehicleAccessLocation=(parkedMatch?.[1]||'').trim();
+ let vehicleAccess=!!vehicleAccessLocation||/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?parked\b|parked\s+(?:my\s+)?(?:car|kereta)\b/.test(s);
+ let hasCar=/\bcar\b|\bdrive\b|\bdriving\b|kereta/.test(s)||vehicleAccess,hasMotorcycle=/motor|motorcycle|bike|motosikal/.test(s),preferKtm=/\bktm\b|shuttle tebrau|train/.test(s);
+ let roadMention=/\b(?:drive|driving|car|kereta)\b/.test(s),transitMention=/\b(?:walk|walking|mrt|bus|train|ktm|public transport|transit|taxi|grab|ride.?hail)\b/.test(s);
+ let mixedRoadTransit=vehicleAccess||/(drive|driving|kereta|\bcar\b).*(ciq|checkpoint|park|parking).*(bus|mrt|train|ktm|public transport)|(?:then|after|lepas|kemudian).*(bus|mrt|train|ktm|public transport)/.test(s)||(roadMention&&transitMention&&/\b(?:then|after|and|plus|combine|switch|park|before|first)\b/.test(s));
  let explicitDrive=/^\s*(?:drive|driving|car|by car)\b|\b(?:drive|driving|car)\s+(?:route|only|please|now|there|all the way)\b|\b(?:need|want|prefer|use|take|choose|show|give|find|plan)\b.{0,28}\b(?:drive|driving|car)\b|\b(?:i am|i'm|im|currently)\s+(?:already\s+)?driving\b|(?:drive|driving|kereta).*(?:all the way|direct|terus|into singapore|masuk sg)|direct.*(?:drive|driving|car|kereta)/.test(s);
- let directDrive=explicitDrive&&!mixedRoadTransit;
+ let directDrive=explicitDrive&&!mixedRoadTransit&&!vehicleAccess;
  let avoidSg=/don't want to drive.*sg|dont want to drive.*sg|avoid.*driv.*sg|park.*jb|parking.*jb|tak nak.*drive.*sg|tak mahu.*drive.*sg/.test(s);
  let priority=/fastest|quickest|cepat/.test(s)?'fastest':/cheapest|cheap|murah/.test(s)?'cheapest':/easiest|easy|senang|simple/.test(s)?'easiest':'balanced';
  let allowBus=directDrive?false:!/no bus|avoid bus/.test(s),allowMrt=directDrive?false:!/no mrt|avoid mrt/.test(s),allowBorder=directDrive?false:!/no border bus/.test(s);
- return {answer:directDrive?'Driving route only — I’ll keep this journey on the road from your current GPS position.':'Got it — I’ll compare the combinations that fit your plan.',priority,has_car:hasCar||directDrive,has_motorcycle:hasMotorcycle,prefer_ktm:directDrive?false:preferKtm,avoid_sg_driving:avoidSg,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,mixed_road_transit:mixedRoadTransit,explicit_road_request:explicitDrive,notes:'',ai:false}
+ let requestedActions=[];
+ if(vehicleAccess){
+  requestedActions.push({order:1,action:'reach parked vehicle',mode:'WALK',location:vehicleAccessLocation,relation:'before driving',purpose:'access vehicle',required:true,details:'Vehicle is not assumed to be at current GPS.'});
+  requestedActions.push({order:2,action:'retrieve vehicle',mode:'CAR',location:vehicleAccessLocation,relation:'at vehicle location',purpose:'start vehicle leg',required:true,details:''});
+  if(roadMention)requestedActions.push({order:3,action:'drive',mode:'DRIVE',location:'',relation:'after retrieving vehicle',purpose:'continue journey',required:true,details:''})
+ }
+ return {answer:vehicleAccess?'I’ll first route you to your parked car, then continue the journey from the car location.':directDrive?'Driving route only — I’ll keep this journey on the road from your current GPS position.':'Got it — I’ll compare the combinations that fit your plan.',priority,has_car:hasCar||directDrive,has_motorcycle:hasMotorcycle,prefer_ktm:directDrive?false:preferKtm,avoid_sg_driving:avoidSg,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,mixed_road_transit:mixedRoadTransit,explicit_road_request:explicitDrive,vehicle_access_required:vehicleAccess,vehicle_access_mode:vehicleAccess?'WALK':'',vehicle_access_location:vehicleAccessLocation,vehicle_access_details:vehicleAccess?'Reach the parked vehicle before any driving leg.':'',must_preserve_sequence:vehicleAccess||mixedRoadTransit,requested_actions:requestedActions,resources:vehicleAccess?[{type:'vehicle',name:'car',status:'parked',location:vehicleAccessLocation,details:''}]:[],constraints:[],preferences:[],semantic_facts:[],assumptions:[],unresolved:vehicleAccess&&!vehicleAccessLocation?['Exact parked-car location was not extracted locally; AI should resolve it.']:[],avoid_modes:[],prefer_modes:[],parking_required:false,parking_location:'',parking_purpose:'',timing:{depart_at:'',arrive_by:'',flexibility:'',details:''},notes:'',ai:false}
 }
 async function interpretJourneyIntent(q,origin,destination){
  let fallback=localJourneyIntent(q);try{
@@ -1494,16 +1504,22 @@ async function interpretJourneyIntent(q,origin,destination){
   let context={journey_planner:{origin:{name:origin.name,country:origin.country,lat:origin.lat,lon:origin.lon},destination:{name:destination.name,address:destination.address,country:destinationProvider()?.id==='jb'?'MY':'SG',lat:destination.lat,lon:destination.lon}}};
   let r=await fetch(RUNSGD_AI_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({mode:'journey',question:q,context})});
   let j=await r.json();if(!r.ok)throw Error(j.error||'AI unavailable');
-  let directDrive=!fallback.mixed_road_transit&&(fallback.direct_drive||j.direct_drive===true),hasCar=fallback.has_car||j.has_car===true||directDrive;
+  let actionVehicleAccess=Array.isArray(j.requested_actions)&&j.requested_actions.some(a=>/retrieve|access.*vehicle|parked vehicle/i.test(String(a?.action||'')+' '+String(a?.purpose||'')));
+  let vehicleAccess=fallback.vehicle_access_required||j.vehicle_access_required===true||actionVehicleAccess;
+  let vehicleAccessLocation=String(j.vehicle_access_location||fallback.vehicle_access_location||'').trim();
+  let directDrive=!vehicleAccess&&!fallback.mixed_road_transit&&(fallback.direct_drive||j.direct_drive===true),hasCar=fallback.has_car||j.has_car===true||directDrive||vehicleAccess;
   let allowBus=directDrive?false:(fallback.allow_bus===false?false:j.allow_bus!==false),allowMrt=directDrive?false:(fallback.allow_mrt===false?false:j.allow_mrt!==false),allowBorder=directDrive?false:(fallback.allow_cross_border_bus===false?false:j.allow_cross_border_bus!==false);
-  return {...fallback,...j,priority:['balanced','fastest','cheapest','easiest'].includes(j.priority)?j.priority:fallback.priority,has_car:hasCar,has_motorcycle:fallback.has_motorcycle||j.has_motorcycle===true,prefer_ktm:directDrive?false:(fallback.prefer_ktm||j.prefer_ktm===true),avoid_sg_driving:fallback.avoid_sg_driving||j.avoid_sg_driving===true,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,answer:directDrive?'Driving route only — I’ll keep this journey on the road from your current GPS position.':(j.answer||fallback.answer),ai:true}
+  return {...fallback,...j,priority:['balanced','fastest','cheapest','easiest'].includes(j.priority)?j.priority:fallback.priority,has_car:hasCar,has_motorcycle:fallback.has_motorcycle||j.has_motorcycle===true,prefer_ktm:directDrive?false:(fallback.prefer_ktm||j.prefer_ktm===true),avoid_sg_driving:fallback.avoid_sg_driving||j.avoid_sg_driving===true,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,vehicle_access_required:vehicleAccess,vehicle_access_location:vehicleAccessLocation,vehicle_access_mode:String(j.vehicle_access_mode||fallback.vehicle_access_mode||'WALK'),must_preserve_sequence:fallback.must_preserve_sequence||j.must_preserve_sequence===true,requested_actions:Array.isArray(j.requested_actions)?j.requested_actions:fallback.requested_actions,answer:j.answer||fallback.answer,ai:true}
  }catch{return fallback}
 }
 function renderJourneyIntent(intent){
  let el=$('journeyIntentStatus');if(!el)return;let parts=[];
+ if(intent.vehicle_access_required)parts.push('🚶 reach '+(intent.vehicle_access_location||'parked vehicle')+' first');
  if(intent.direct_drive)parts.push('🚗 driving only');else if(intent.has_car)parts.push('🚗 car available');
  if(intent.has_motorcycle)parts.push('🏍️ motorcycle');if(intent.prefer_ktm)parts.push('🚆 prefer KTM');if(intent.avoid_sg_driving)parts.push('🅿️ avoid driving in SG');parts.push('🎯 '+(intent.priority||'balanced'));
- el.innerHTML='<strong>'+(intent.ai?'AI understood':'RunSGD understood')+':</strong> '+esc(intent.answer||'')+'<br>'+esc(parts.join(' · '));el.classList.add('show')
+ let actions=(intent.requested_actions||[]).slice().sort((a,b)=>Number(a?.order||0)-Number(b?.order||0)).slice(0,6).map(a=>String(a?.mode||a?.action||'').trim()).filter(Boolean);
+ let seq=actions.length?'<br><strong>Sequence:</strong> '+esc(actions.join(' → ')):'';
+ el.innerHTML='<strong>'+(intent.ai?'AI understood':'RunSGD understood')+':</strong> '+esc(intent.answer||'')+'<br>'+esc(parts.join(' · '))+seq;el.classList.add('show')
 }
 
 function makeJbToSgBorderHops(){
@@ -1544,8 +1560,30 @@ async function resolveRoutePlace(query,provider,from=null){
   return x?{...x,_provider:provider.id}:null
  }catch{return null}
 }
+async function resolveJourneyPhysicalContext(origin,intent){
+ let out={...intent};if(!out.vehicle_access_required||!String(out.vehicle_access_location||'').trim())return out;
+ let query=String(out.vehicle_access_location).trim(),originP=routeProvider(),alt=routeProviderFor(originP.id==='sg'?'jb':'sg'),providers=[originP,alt].filter((p,i,a)=>p&&a.findIndex(x=>x.id===p.id)===i),point=null;
+ for(const p of providers){point=await resolveRoutePlace(query,p,{lat:origin.lat,lon:origin.lon});if(point)break}
+ if(!point){
+  return {...out,direct_drive:false,unresolved:[...(Array.isArray(out.unresolved)?out.unresolved:[]),'Could not resolve parked vehicle location: '+query],answer:(out.answer||'')+' I could not resolve the parked-car location yet.'}
+ }
+ let p=routeProviderFor(point._provider||originP.id),rawMode=String(out.vehicle_access_mode||'WALK').toUpperCase(),travelMode=/MOTOR|BIKE/.test(rawMode)?'TWO_WHEELER':/DRIVE|CAR/.test(rawMode)?'DRIVE':/BUS|MRT|TRAIN|TRANSIT/.test(rawMode)?'TRANSIT':'WALK';
+ let access=await routeApiSafe({action:'route',travel_mode:travelMode,from:{lat:origin.lat,lon:origin.lon,name:origin.name},to:{lat:point.lat,lon:point.lon,name:point.name,address:point.address}},p);
+ return {...out,direct_drive:false,has_car:true,_vehicle_access_point:point,_vehicle_access_route:access?.routes?.[0]||null,_vehicle_access_mode:travelMode,answer:out.answer||('First '+(travelMode==='WALK'?'walk':'travel')+' to '+(point.name||query)+', then continue from your car.')}
+}
+function journeyRoadStart(origin,intent){
+ let p=intent?._vehicle_access_point;return p?{lat:p.lat,lon:p.lon,name:p.name||intent.vehicle_access_location,address:p.address||''}:origin
+}
+function withVehicleAccessCandidate(route,intent){
+ let point=intent?._vehicle_access_point;if(!route||!point)return route;
+ let a=intent._vehicle_access_route,mode=String(intent._vehicle_access_mode||'WALK').toUpperCase(),accessLegs=a?.legs?.length?[...a.legs]:[{mode:mode==='WALK'?'WALK':'ACCESS_VEHICLE',manual:true,duration_sec:0,distance_m:0,from:{name:'Current location'},to:{name:point.name||intent.vehicle_access_location,lat:point.lat,lon:point.lon},instruction:(mode==='WALK'?'Walk':'Make your way')+' to your parked vehicle at '+(point.name||intent.vehicle_access_location)}];
+ accessLegs.push({mode:'VEHICLE_PICKUP',manual:true,duration_sec:0,distance_m:0,from:{name:point.name||intent.vehicle_access_location,lat:point.lat,lon:point.lon},to:{name:point.name||intent.vehicle_access_location,lat:point.lat,lon:point.lon},instruction:'Reach your parked car and start the driving leg'});
+ let accessMinutes=Number(a?.duration_sec||0),accessWalk=Number(a?.walk_distance_m||0);
+ return {...route,access_vehicle:true,duration_sec:Number(route.duration_sec||0)+accessMinutes,walk_distance_m:Number(route.walk_distance_m||0)+accessWalk,legs:[...accessLegs,...(route.legs||[])],label:route.kind==='direct_drive'?(mode==='WALK'?'Walk + drive':'Reach car + drive'):route.label,tag:route.kind==='direct_drive'?(mode==='WALK'?'Walk → Car → Drive':'Access car → Drive'):(route.tag||''),explanation:'Your vehicle is at '+(point.name||intent.vehicle_access_location)+'. RunSGD routes you to the vehicle first, then starts the road leg from there. '+(route.explanation||'')}
+}
+
 async function planLocalSmart(origin,destination,provider,intent){
- let out=[];
+ let out=[],roadOrigin=journeyRoadStart(origin,intent);
  if(provider.id==='sg'){
   if(intent.allow_bus!==false||intent.allow_mrt!==false){
    let j=await routeApiSafe({action:'route',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address},max_walk_m:1200},provider);
@@ -1554,8 +1592,8 @@ async function planLocalSmart(origin,destination,provider,intent){
   }
   let roadProvider=routeProviderFor('jb');
   if(intent.has_car||intent.direct_drive||intent.active_road_mode==='DRIVE'){
-   let j=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},roadProvider);
-   (j?.routes||[]).slice(0,2).forEach(x=>out.push(routeCandidate(x,{provider:'sg-road',kind:'direct_drive',travel_mode:'DRIVE',label:'Drive',tag:'Google · Singapore Drive',explanation:'Driving route starts from your live GPS position and remains in driving mode.'})))
+   let j=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:roadOrigin.lat,lon:roadOrigin.lon,name:roadOrigin.name,address:roadOrigin.address},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},roadProvider);
+   (j?.routes||[]).slice(0,2).forEach(x=>out.push(withVehicleAccessCandidate(routeCandidate(x,{provider:'sg-road',kind:'direct_drive',travel_mode:'DRIVE',label:'Drive',tag:'Google · Singapore Drive',explanation:intent.vehicle_access_required?'Driving starts from your parked-car location after the access leg.':'Driving route starts from your live GPS position and remains in driving mode.'}),intent)))
   }
   if(intent.has_motorcycle||intent.active_road_mode==='TWO_WHEELER'){
    let j=await routeApiSafe({action:'route',travel_mode:'TWO_WHEELER',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},roadProvider);
@@ -1565,15 +1603,15 @@ async function planLocalSmart(origin,destination,provider,intent){
  }
  let tasks=[];
  if(intent.allow_bus!==false)tasks.push({kind:'transit',mode:'TRANSIT',p:routeApiSafe({action:'route',travel_mode:'TRANSIT',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},provider)});
- if(intent.has_car||intent.direct_drive)tasks.push({kind:'drive',mode:'DRIVE',p:routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},provider)});
+ if(intent.has_car||intent.direct_drive)tasks.push({kind:'drive',mode:'DRIVE',p:routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:roadOrigin.lat,lon:roadOrigin.lon,name:roadOrigin.name,address:roadOrigin.address},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},provider)});
  if(intent.has_motorcycle)tasks.push({kind:'motorcycle',mode:'TWO_WHEELER',p:routeApiSafe({action:'route',travel_mode:'TWO_WHEELER',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},provider)});
  for(const t of tasks){
-  let j=await t.p;(j?.routes||[]).slice(0,t.kind==='transit'?2:1).forEach(x=>out.push(routeCandidate(x,{provider:'jb',kind:t.kind,travel_mode:t.mode,label:t.kind==='drive'?'Drive':t.kind==='motorcycle'?'Motorcycle':'Public transport',tag:'Google · Malaysia',explanation:t.kind==='transit'?'Local public-transport option.':'Traffic-aware road option.'})))
+  let j=await t.p;(j?.routes||[]).slice(0,t.kind==='transit'?2:1).forEach(x=>{let cand=routeCandidate(x,{provider:'jb',kind:t.kind,travel_mode:t.mode,label:t.kind==='drive'?'Drive':t.kind==='motorcycle'?'Motorcycle':'Public transport',tag:'Google · Malaysia',explanation:t.kind==='transit'?'Local public-transport option.':'Traffic-aware road option.'});out.push(t.kind==='drive'?withVehicleAccessCandidate(cand,intent):cand)})
  }
  return out
 }
 async function planSgToJbSmart(origin,destination,intent){
- let out=[],jbp=routeProviderFor('jb');
+ let out=[],jbp=routeProviderFor('jb'),roadOrigin=journeyRoadStart(origin,intent);
  if(intent.allow_cross_border_bus!==false){
   try{
    let r=await planSgToJb(origin,destination);
@@ -1581,8 +1619,8 @@ async function planSgToJbSmart(origin,destination,intent){
   }catch{}
  }
  if((intent.has_car&&!intent.avoid_sg_driving)||intent.direct_drive){
-  let j=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},jbp);
-  (j?.routes||[]).slice(0,1).forEach(x=>out.push(routeCandidate(x,{provider:'cross-border-road',kind:'direct_drive',travel_mode:'DRIVE',label:'Direct drive',tag:'Google · Drive',border_variable:true,explanation:'Drive across the border. Road ETA excludes checkpoint and immigration time.'})))
+  let j=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:roadOrigin.lat,lon:roadOrigin.lon,name:roadOrigin.name,address:roadOrigin.address},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},jbp);
+  (j?.routes||[]).slice(0,1).forEach(x=>out.push(withVehicleAccessCandidate(routeCandidate(x,{provider:'cross-border-road',kind:'direct_drive',travel_mode:'DRIVE',label:'Direct drive',tag:'Google · Drive',border_variable:true,explanation:'Drive across the border. Road ETA excludes checkpoint and immigration time.'}),intent)))
  }
  if(intent.has_motorcycle){
   let j=await routeApiSafe({action:'route',travel_mode:'TWO_WHEELER',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},jbp);
@@ -1591,7 +1629,7 @@ async function planSgToJbSmart(origin,destination,intent){
  return out
 }
 async function planJbToSgSmart(origin,destination,intent){
- let out=[],jbp=routeProviderFor('jb'),sgp=routeProviderFor('sg');
+ let out=[],jbp=routeProviderFor('jb'),sgp=routeProviderFor('sg'),roadOrigin=journeyRoadStart(origin,intent);
  let sgOnward=await routeApiSafe({action:'route',from:{...WOODLANDS_CP},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address},max_walk_m:1200},sgp);
  let sgFuture=!!sgOnward?.future_departure,sgFutureNote=sgFuture?' Singapore bus/MRT is shown for the next available planning window because immediate service is limited right now.':'';
 
@@ -1645,17 +1683,17 @@ async function planJbToSgSmart(origin,destination,intent){
  if(intent.has_car&&intent.allow_cross_border_bus!==false&&sgOnward?.routes?.length){
   let parkingPoint=await resolveRoutePlace('JB Sentral',jbp,{lat:origin.lat,lon:origin.lon});
   let target=parkingPoint||JB_CIQ;
-  let drive=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:target.lat,lon:target.lon,name:target.name,address:target.address}},jbp);
+  let drive=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:roadOrigin.lat,lon:roadOrigin.lon,name:roadOrigin.name,address:roadOrigin.address},to:{lat:target.lat,lon:target.lon,name:target.name,address:target.address}},jbp);
   if(drive?.routes?.length){
    let a=drive.routes[0],b=sgOnward.routes[0],borderStart=(a.legs||[]).length+1;
    let park={mode:'PARK',manual:true,duration_sec:0,distance_m:0,from:{name:target.name||'JB Sentral / CIQ area',lat:target.lat,lon:target.lon},to:{name:'JB CIQ',lat:JB_CIQ.lat,lon:JB_CIQ.lon},instruction:'Park at a suitable facility near JB Sentral / CIQ, then continue to immigration'};
-   out.push({provider:'cross-border',kind:'drive_then_transit',label:'Drive + bus + MRT',tag:sgFuture?'Car → Transit · Next service':'Car → Transit',future_departure:sgFuture,duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),walk_distance_m:Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,border_start_index:borderStart,border_end_index:borderStart+2,polyline:a.polyline||'',road_leg_count:(a.legs||[]).length,legs:[...(a.legs||[]),park,...makeJbToSgBorderHops(),...(b.legs||[])],explanation:'Drive on the Johor side, park, cross by bus, then continue by Singapore public transport. Confirm a suitable parking facility before departure.'+sgFutureNote})
+   out.push(withVehicleAccessCandidate({provider:'cross-border',kind:'drive_then_transit',label:'Drive + bus + MRT',tag:sgFuture?'Car → Transit · Next service':'Car → Transit',future_departure:sgFuture,duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),walk_distance_m:Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,border_start_index:borderStart,border_end_index:borderStart+2,polyline:a.polyline||'',road_leg_count:(a.legs||[]).length,legs:[...(a.legs||[]),park,...makeJbToSgBorderHops(),...(b.legs||[])],explanation:'Drive on the Johor side, park, cross by bus, then continue by Singapore public transport. Confirm a suitable parking facility before departure.'+sgFutureNote},intent))
   }
  }
 
  if((intent.has_car&&!intent.avoid_sg_driving)||intent.direct_drive){
-  let j=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},jbp);
-  (j?.routes||[]).slice(0,1).forEach(x=>out.push(routeCandidate(x,{provider:'cross-border-road',kind:'direct_drive',travel_mode:'DRIVE',label:'Direct drive',tag:'Google · Drive',border_variable:true,explanation:'Drive all the way into Singapore. Google road ETA excludes checkpoint and immigration time.'})))
+  let j=await routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:roadOrigin.lat,lon:roadOrigin.lon,name:roadOrigin.name,address:roadOrigin.address},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},jbp);
+  (j?.routes||[]).slice(0,1).forEach(x=>out.push(withVehicleAccessCandidate(routeCandidate(x,{provider:'cross-border-road',kind:'direct_drive',travel_mode:'DRIVE',label:'Direct drive',tag:'Google · Drive',border_variable:true,explanation:'Drive all the way into Singapore. Google road ETA excludes checkpoint and immigration time.'}),intent)))
  }
 
  if(intent.has_motorcycle){
@@ -1669,7 +1707,7 @@ async function planJbToSgSmart(origin,destination,intent){
   if(sentral&&wtc){
    let firstMode=intent.has_car?'DRIVE':'TRANSIT';
    let pair=await Promise.all([
-    routeApiSafe({action:'route',travel_mode:firstMode,from:{lat:origin.lat,lon:origin.lon},to:{lat:sentral.lat,lon:sentral.lon,name:sentral.name,address:sentral.address}},jbp),
+    routeApiSafe({action:'route',travel_mode:firstMode,from:firstMode==='DRIVE'?{lat:roadOrigin.lat,lon:roadOrigin.lon,name:roadOrigin.name,address:roadOrigin.address}:{lat:origin.lat,lon:origin.lon},to:{lat:sentral.lat,lon:sentral.lon,name:sentral.name,address:sentral.address}},jbp),
     routeApiSafe({action:'route',from:{lat:wtc.lat,lon:wtc.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address},max_walk_m:1200},sgp)
    ]),first=pair[0],sg=pair[1];
    if(first?.routes?.length&&sg?.routes?.length){
@@ -1680,7 +1718,7 @@ async function planJbToSgSmart(origin,destination,intent){
      {mode:'TRAIN',manual:true,duration_sec:0,distance_m:0,route:'KTM Shuttle Tebrau',from:{name:'JB Sentral',lat:sentral.lat,lon:sentral.lon},to:{name:'Woodlands Train Checkpoint',lat:wtc.lat,lon:wtc.lon},instruction:'Take your booked KTM Shuttle Tebrau service'},
      {mode:'IMMIGRATION',manual:true,duration_sec:0,distance_m:0,from:{name:'Woodlands Train Checkpoint',lat:wtc.lat,lon:wtc.lon},to:{name:'Woodlands Train Checkpoint',lat:wtc.lat,lon:wtc.lon},instruction:'Clear Singapore immigration at Woodlands Train Checkpoint'}
     );
-    out.push({provider:'ktm-cross-border',kind:'ktm',label:intent.has_car?'Drive + KTM + MRT':'KTM + MRT',tag:'KTM option',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),duration_text:'KTM booking time + '+routeMinutes(Number(a.duration_sec||0)+Number(b.duration_sec||0)),walk_distance_m:Number(a.walk_distance_m||0)+Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,legs:[...(a.legs||[]),...extra,...(b.legs||[])],explanation:'Uses your booked KTM service. RunSGD does not guess KTM availability, check-in or immigration waiting time.'})
+    out.push(intent.has_car?withVehicleAccessCandidate({provider:'ktm-cross-border',kind:'ktm',label:'Drive + KTM + MRT',tag:'KTM option',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),duration_text:'KTM booking time + '+routeMinutes(Number(a.duration_sec||0)+Number(b.duration_sec||0)),walk_distance_m:Number(a.walk_distance_m||0)+Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,legs:[...(a.legs||[]),...extra,...(b.legs||[])],explanation:'Uses your booked KTM service. RunSGD does not guess KTM availability, check-in or immigration waiting time.'},intent):{provider:'ktm-cross-border',kind:'ktm',label:'KTM + MRT',tag:'KTM option',duration_sec:Number(a.duration_sec||0)+Number(b.duration_sec||0),duration_text:'KTM booking time + '+routeMinutes(Number(a.duration_sec||0)+Number(b.duration_sec||0)),walk_distance_m:Number(a.walk_distance_m||0)+Number(b.walk_distance_m||0),transfers:Number(b.transfers||0)+1,border_variable:true,legs:[...(a.legs||[]),...extra,...(b.legs||[])],explanation:'Uses your booked KTM service. RunSGD does not guess KTM availability, check-in or immigration waiting time.'})
    }
   }
  }
@@ -1695,6 +1733,7 @@ function rankJourneyRoutes(routes,intent){
   if(intent.direct_drive)s+=k==='direct_drive'?-100000:25000;
   else if(roadOnly)s+=r.border_variable?120000:(intent.priority==='fastest'&&intent.has_car?0:30000);
   if(intent.has_car&&!intent.direct_drive&&k==='drive_then_transit')s-=18000;
+  if(intent.vehicle_access_required)s+=r.access_vehicle?-65000:(intent.must_preserve_sequence?55000:18000);
   if(intent.avoid_sg_driving)s+=k==='direct_drive'||k==='motorcycle'?120000:k==='drive_then_transit'?-30000:0;
   if(intent.priority==='cheapest')s+=k==='border_transit'?-25000:(k==='direct_drive'||k==='motorcycle'?35000:0);
   if(intent.priority==='easiest')s+=Number(r.transfers||0)*900+Number(r.walk_distance_m||0)*0.4;
@@ -1741,7 +1780,7 @@ async function planAiJourney(btn){
  try{
   let origin=await plannerGps(),originP=routeProvider();
   txt('sgRouteStatus','Understanding your plan…');
-  sgJourneyIntent=applyActiveRoadContext(await interpretJourneyIntent(q,origin,sgRouteSelection),q);renderJourneyIntent(sgJourneyIntent);
+  sgJourneyIntent=applyActiveRoadContext(await interpretJourneyIntent(q,origin,sgRouteSelection),q);sgJourneyIntent=await resolveJourneyPhysicalContext(origin,sgJourneyIntent);renderJourneyIntent(sgJourneyIntent);
 
   // Overnight policy: after 12:30 AM Singapore time, stop pretending a normal
   // MRT/bus itinerary is available. Give the user a clear explanation and a
@@ -1798,11 +1837,13 @@ async function plannerGps(){
 }
 function routeMinutes(s){let m=Math.max(1,Math.round(Number(s||0)/60));return m>=60?Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m':m+' min'}
 function routeDistance(m){m=Number(m||0);return m>=1000?(m/1000).toFixed(1)+' km':Math.round(m)+' m'}
-function routeModeIcon(m){m=String(m||'').toUpperCase();return m==='IMMIGRATION'?'🛂':m==='PARK'?'🅿️':m==='LOCAL_TRANSFER'?'🚏':m==='CROSS_BORDER_BUS'?'🚌':m==='DRIVE'?'🚗':m==='TWO_WHEELER'?'🏍️':m==='WALK'?'🚶':m==='BUS'?'🚌':(m==='SUBWAY'||m==='RAIL'||m==='TRAIN'||m==='TRAM')?'🚇':'🚍'}
+function routeModeIcon(m){m=String(m||'').toUpperCase();return m==='IMMIGRATION'?'🛂':m==='PARK'?'🅿️':m==='VEHICLE_PICKUP'?'🔑':m==='ACCESS_VEHICLE'?'🚶':m==='LOCAL_TRANSFER'?'🚏':m==='CROSS_BORDER_BUS'?'🚌':m==='DRIVE'?'🚗':m==='TWO_WHEELER'?'🏍️':m==='WALK'?'🚶':m==='BUS'?'🚌':(m==='SUBWAY'||m==='RAIL'||m==='TRAIN'||m==='TRAM')?'🚇':'🚍'}
 function routeModeLabel(leg){
  let m=String(leg.mode||'').toUpperCase();
  if(m==='IMMIGRATION')return 'Immigration';
  if(m==='PARK')return 'Park';
+ if(m==='VEHICLE_PICKUP')return 'Get vehicle';
+ if(m==='ACCESS_VEHICLE')return 'Reach vehicle';
  if(m==='LOCAL_TRANSFER')return 'Local connection';
  if(m==='CROSS_BORDER_BUS')return 'Border bus';
  if(m==='DRIVE')return 'Drive';
