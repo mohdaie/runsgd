@@ -1373,7 +1373,7 @@ let sgRouteSearchTimer=null,sgRouteSearchSeq=0,sgRouteSelection=null,sgRouteResu
 const WOODLANDS_CP={name:'Woodlands Checkpoint',address:'Woodlands Checkpoint, Singapore',lat:1.4459,lon:103.7686};
 const JB_CIQ={name:'JB CIQ',address:'Bangunan Sultan Iskandar, Johor Bahru',lat:1.4637,lon:103.7648};
 let sgJourney=null,sgJourneyWatchId=null,sgJourneyHeading=null,sgJourneyCompassListening=false,sgJourneyCompassPermissionNeeded=false,sgJourneyGpsTimer=null,sgJourneyFreshFixTimer=null,sgJourneyFreshFixPending=false;
-let sgJourneyGoogleMap=null,sgJourneyGoogleMapOutline=null,sgJourneyGoogleMapRoute=null,sgJourneyGoogleMapVehicle=null,sgJourneyGoogleMapTurn=null,sgJourneyGoogleMapPromise=null,sgJourneyGoogleMapRouteKey='',sgJourneyGoogleMapFollowing=true,sgJourneyGoogleMapLogged=false;
+let sgJourneyGoogleMap=null,sgJourneyGoogleMapOutline=null,sgJourneyGoogleMapRoute=null,sgJourneyGoogleMapVehicle=null,sgJourneyGoogleMapTurn=null,sgJourneyGoogleMapPromise=null,sgJourneyGoogleMapConfigPromise=null,sgJourneyGoogleMapDisabledUntil=0,sgJourneyGoogleMapRouteKey='',sgJourneyGoogleMapFollowing=true,sgJourneyGoogleMapLogged=false;
 let sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:null,routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0,gpsAccuracy:null,gpsUpdatedAt:0,gpsSpeed:null,gpsError:false,movementBearing:null,currentStepRemainingM:null,currentStepProgressPct:null,stepProgressHop:null,stepProgressM:null,stepProgressAt:0,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedLat:null,lastAcceptedLon:null,turnConfirmHop:null,turnConfirmCount:0,lastTurnDetectedAt:0,lastTurnMessage:'',arrivalConfirmCount:0,lastArrivalDistanceM:null,walkCaches:null,walkProgressHop:null,walkProgressM:null,walkTotalM:null,walkRemainingM:null,walkOffPathM:null,walkOffCount:0,walkOffPath:false,walkArrivalCount:0,walkNextInstruction:null};
 const PROD_NAV_DIAG_KEY='runsgdProdNavDiagnosticsV1';
 let prodNavDiagSession=null,prodNavDiagLastSnapshotAt=0,prodNavDiagLastTurnState='';
@@ -2115,11 +2115,18 @@ function loadJourneyGoogleMapsJs(key){
 }
 async function ensureJourneyGoogleMaps(){
  if(window.google?.maps?.Map)return true;
- try{
-  let cfg=await journeyGoogleMapApi('map_config');
-  if(!cfg?.enabled||!cfg?.key)return false;
-  await loadJourneyGoogleMapsJs(cfg.key);return !!window.google?.maps?.Map
- }catch(e){console.warn('RunSGD Google navigation map',e);return false}
+ if(Date.now()<sgJourneyGoogleMapDisabledUntil)return false;
+ if(sgJourneyGoogleMapConfigPromise)return sgJourneyGoogleMapConfigPromise;
+ sgJourneyGoogleMapConfigPromise=(async()=>{
+  try{
+   let cfg=await journeyGoogleMapApi('map_config');
+   if(!cfg?.enabled||!cfg?.key){sgJourneyGoogleMapDisabledUntil=Date.now()+5*60*1000;return false}
+   await loadJourneyGoogleMapsJs(cfg.key);return !!window.google?.maps?.Map
+  }catch(e){
+   sgJourneyGoogleMapDisabledUntil=Date.now()+60*1000;console.warn('RunSGD Google navigation map',e);return false
+  }finally{sgJourneyGoogleMapConfigPromise=null}
+ })();
+ return sgJourneyGoogleMapConfigPromise
 }
 function journeyGoogleRoadPath(legs,idx){
  let points=[];
