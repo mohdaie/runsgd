@@ -166,7 +166,13 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .journeyNext{margin-top:10px;padding:10px 12px;border-radius:14px;background:#dff5e8;color:#3c674e;font-size:11px;line-height:1.45}.journeyButtons{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.journeyBtn{border:0;border-radius:12px;padding:9px 11px;background:#fff;color:#286045;font-weight:850;font-size:11px;box-shadow:0 3px 10px #1b754114}.journeyBtn.reroute{background:#fff5df;color:#8a5a10;border:1px solid #f2d394}.journeyBtn.reroute.offroute{background:#ffead0;color:#984b12;box-shadow:0 0 0 4px #f09a3120}.journeyBtn.danger{background:#fff3f3;color:#a24a55}.journeyAllHops{display:none;margin-top:11px;padding-top:8px;border-top:1px solid #cde9d8}.journeyAllHops.show{display:block}.journeyAllHops .routeLeg{opacity:.64}.journeyAllHops .routeLeg.journeyDone{opacity:.42}.journeyAllHops .routeLeg.journeyCurrent{opacity:1;background:#ffffffaa;border-radius:12px;padding:8px}.journeyArrival{background:linear-gradient(145deg,#e8fff2,#f7fffa);border-color:#a8dfbd}.journeyArrival .journeyLivePill{background:#cdf3dc}
 
 
-/* v2.10.9 cleaner live navigation hierarchy */
+/* v2.11.0 pedestrian path matching */
+.journeyNow.walkFocus .journeyAction{font-size:21px;line-height:1.16}
+.journeyNow.walkFocus .journeyDistance{font-size:12px;line-height:1.45}
+.journeyNow.walkFocus #sgJourneyTurnState.weak{display:inline-flex}
+.journeyNow.walkFocus .journeyProgress{margin-top:12px}
+
+/* v2.11.0 cleaner live navigation hierarchy */
 .journeyNow.roadFocus{display:flex;flex-direction:column}
 .journeyNow.roadFocus .journeyNowLabel,.journeyNow.roadFocus .journeyAction,.journeyNow.roadFocus .journeyDistance{display:none}
 .journeyNow.roadFocus .journeyDriveFocus{order:1;margin-top:0}
@@ -224,7 +230,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .routeOptionExplain{font-size:10px;color:#758399;line-height:1.42;margin-top:6px}
 
 
-/* v2.10.9 dedicated Journey experience */
+/* v2.11.0 dedicated Journey experience */
 .journeyPageHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.journeyPageHead .pageTitle{margin-bottom:5px}
 .journeyAuthGate{text-align:center;padding:24px 19px}.journeyGateIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin:0 auto 13px;background:linear-gradient(135deg,#eaf3ff,#f1ebff);color:#526de1;font-size:25px;font-weight:950}.journeyAuthGate .googleBtn{margin-top:15px}.journeyAuthGate .emailLink{margin-top:4px}
 .journeyStageBar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px}.journeyStage{border:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:14px;background:#f1f3f8;color:#929aab;font-size:11px;font-weight:900}.journeyStage span{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#fff}.journeyStage.active{background:linear-gradient(120deg,#eaf3ff,#f1ecff);color:#4f66ca;box-shadow:0 6px 16px #6678c814}.journeyStage.active span{background:#5976e7;color:#fff}.journeyStage:disabled{opacity:.52;cursor:not-allowed}.journeyStage:not(:disabled):active{transform:scale(.98)}
@@ -240,7 +246,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 @media (max-width:600px){.signinCard{max-width:none}.signinCard h2{font-size:25px}}
 
 
-/* v2.10.9 community — full-height Threads-inspired dark page */
+/* v2.11.0 community — full-height Threads-inspired dark page */
 body.communityMode .hello{display:none}
 body.communityMode{background:#0b0b0c;color:#f5f5f5}
 body.communityMode .app{background:#0b0b0c}
@@ -265,7 +271,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.10.9</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span class="version">v2.11.0</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -603,7 +609,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.10.9</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div class="title">RunSGD Beta · v2.11.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -656,7 +662,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.10.9</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span class="tag">v2.11.0</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -1286,7 +1292,7 @@ const live={rate:null,weather:{},air:null,traffic:null,transport:null,prayer:nul
 let sgRouteSearchTimer=null,sgRouteSearchSeq=0,sgRouteSelection=null,sgRouteResults=[],sgRouteDestRegion='',sgRouteTravelMode='transit',sgJourneyIntent=null;
 const WOODLANDS_CP={name:'Woodlands Checkpoint',address:'Woodlands Checkpoint, Singapore',lat:1.4459,lon:103.7686};
 const JB_CIQ={name:'JB CIQ',address:'Bangunan Sultan Iskandar, Johor Bahru',lat:1.4637,lon:103.7648};
-let sgJourney=null,sgJourneyWatchId=null,sgJourneyHeading=null,sgJourneyCompassListening=false,sgJourneyCompassPermissionNeeded=false,sgJourneyGpsTimer=null,sgJourneyFreshFixTimer=null,sgJourneyFreshFixPending=false,sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:null,routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0,gpsAccuracy:null,gpsUpdatedAt:0,gpsSpeed:null,gpsError:false,movementBearing:null,currentStepRemainingM:null,currentStepProgressPct:null,stepProgressHop:null,stepProgressM:null,stepProgressAt:0,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedLat:null,lastAcceptedLon:null,turnConfirmHop:null,turnConfirmCount:0,lastTurnDetectedAt:0,lastTurnMessage:'',arrivalConfirmCount:0,lastArrivalDistanceM:null};
+let sgJourney=null,sgJourneyWatchId=null,sgJourneyHeading=null,sgJourneyCompassListening=false,sgJourneyCompassPermissionNeeded=false,sgJourneyGpsTimer=null,sgJourneyFreshFixTimer=null,sgJourneyFreshFixPending=false,sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:null,routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0,gpsAccuracy:null,gpsUpdatedAt:0,gpsSpeed:null,gpsError:false,movementBearing:null,currentStepRemainingM:null,currentStepProgressPct:null,stepProgressHop:null,stepProgressM:null,stepProgressAt:0,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedLat:null,lastAcceptedLon:null,turnConfirmHop:null,turnConfirmCount:0,lastTurnDetectedAt:0,lastTurnMessage:'',arrivalConfirmCount:0,lastArrivalDistanceM:null,walkCaches:null,walkProgressHop:null,walkProgressM:null,walkTotalM:null,walkRemainingM:null,walkOffPathM:null,walkOffCount:0,walkOffPath:false,walkArrivalCount:0,walkNextInstruction:null};
 const $=x=>document.getElementById(x),txt=(x,v)=>{if($(x))$(x).textContent=v};
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function setBusy(btn,on){if(!btn)return;btn.classList.toggle('busy',!!on);btn.setAttribute('aria-busy',on?'true':'false')}
@@ -1876,10 +1882,44 @@ function decodeGooglePolyline(s){
  }catch{return []}
  return out
 }
-function makePolylineCache(encoded){
- let points=decodeGooglePolyline(encoded||'');if(points.length<2)return null;
+function makePointCache(points){
+ points=(points||[]).filter(p=>Number.isFinite(Number(p?.lat))&&Number.isFinite(Number(p?.lon))).map(p=>({lat:Number(p.lat),lon:Number(p.lon)}));
+ if(points.length<2)return null;
  let cum=[0];for(let i=1;i<points.length;i++)cum[i]=cum[i-1]+(journeyMeters(points[i-1].lat,points[i-1].lon,points[i].lat,points[i].lon)||0);
  return {points,cum,total:cum[cum.length-1]||0,lastIndex:0}
+}
+function makePolylineCache(encoded){return makePointCache(decodeGooglePolyline(encoded||''))}
+function makeWalkPathCache(leg){
+ let encoded=[leg?.polyline,...(Array.isArray(leg?.step_polylines)?leg.step_polylines:[]),...(Array.isArray(leg?.walk_instructions)?leg.walk_instructions.map(x=>x?.polyline):[])].filter(Boolean);
+ let points=[];
+ for(const e of encoded){
+  let part=decodeGooglePolyline(e||'');
+  for(const p of part){
+   let last=points[points.length-1];
+   if(!last||journeyMeters(last.lat,last.lon,p.lat,p.lon)>1)points.push(p)
+  }
+ }
+ let cache=makePointCache(points);if(!cache)return null;
+ let instructions=(Array.isArray(leg?.walk_instructions)?leg.walk_instructions:[]).map((x,i)=>{
+  let lat=Number(x?.lat),lon=Number(x?.lon),progress=null;
+  if(Number.isFinite(lat)&&Number.isFinite(lon)){
+   let oldIndex=cache.lastIndex,p=projectJourneyToRoad(cache,lat,lon,true);cache.lastIndex=oldIndex;
+   if(p)progress=p.progress_m
+  }
+  return {...x,id:x?.id??i,lat:Number.isFinite(lat)?lat:null,lon:Number.isFinite(lon)?lon:null,progress_m:Number.isFinite(progress)?progress:null}
+ }).filter(x=>x.instruction||x.action||Number.isFinite(x.progress_m));
+ instructions.sort((a,b)=>(Number.isFinite(a.progress_m)?a.progress_m:Infinity)-(Number.isFinite(b.progress_m)?b.progress_m:Infinity));
+ return {...cache,instructions}
+}
+function buildJourneyWalkCaches(route){
+ let out={},legs=route?.legs||[];
+ for(let i=0;i<legs.length;i++)if(String(legs[i]?.mode||'').toUpperCase()==='WALK'){let pc=makeWalkPathCache(legs[i]);if(pc)out[i]=pc}
+ return out
+}
+function walkUpcomingInstruction(cache,progress){
+ if(!cache?.instructions?.length)return null;
+ let p=Number.isFinite(progress)?progress:0;
+ return cache.instructions.find(x=>Number.isFinite(x.progress_m)&&x.progress_m>p+7)||null
 }
 function buildJourneyRoadCache(route){
  let main=makePolylineCache(route?.polyline||'');if(!main)return null;
@@ -2024,11 +2064,53 @@ function startJourneyGpsUiTimer(){
  updateJourneyGpsHealth();sgJourneyGpsTimer=setInterval(updateJourneyGpsHealth,1000)
 }
 function stopJourneyGpsUiTimer(){if(sgJourneyGpsTimer){clearInterval(sgJourneyGpsTimer);sgJourneyGpsTimer=null}}
+function walkFixQuality(p,now=Date.now()){
+ let acc=Number(p?.coords?.accuracy),stamp=Number(p?.timestamp),age=Number.isFinite(stamp)?Math.max(0,now-stamp):0;
+ return {accuracy:acc,age_ms:age,good:Number.isFinite(acc)&&acc<=65&&age<=9000,excellent:Number.isFinite(acc)&&acc<=25&&age<=5000}
+}
+function reconcileWalkProgress(p,lat,lon,leg,distance,moved,now){
+ let idx=Math.max(0,Number(sgJourney?.current_hop)||0),cache=sgJourneyRuntime.walkCaches?.[idx];if(!cache)return false;
+ let quality=walkFixQuality(p,now),gap=sgJourneyRuntime.lastFixAt?now-sgJourneyRuntime.lastFixAt:0,proj=projectJourneyToRoad(cache,lat,lon,gap>30000);
+ sgJourneyRuntime.lastFixAt=now;
+ if(!proj)return false;
+ sgJourneyRuntime.walkOffPathM=proj.distance_m;sgJourneyRuntime.walkTotalM=cache.total;
+ if(!quality.good){
+  sgJourneyRuntime.walkOffPath=false;sgJourneyRuntime.walkOffCount=0;
+  setJourneyTurnState('Pedestrian GPS ±'+(Number.isFinite(quality.accuracy)?Math.round(quality.accuracy):'?')+' m · holding path match','weak');
+  return true
+ }
+ if(sgJourneyRuntime.walkProgressHop!==idx){
+  sgJourneyRuntime.walkProgressHop=idx;sgJourneyRuntime.walkProgressM=Math.max(0,proj.progress_m)
+ }else{
+  let prev=Number.isFinite(sgJourneyRuntime.walkProgressM)?sgJourneyRuntime.walkProgressM:0,physical=Number.isFinite(moved)?moved:0,maxForward=Math.max(45,physical*3+quality.accuracy*1.8);
+  if(proj.progress_m>=prev-15&&proj.progress_m-prev<=maxForward)sgJourneyRuntime.walkProgressM=Math.max(prev,proj.progress_m)
+ }
+ let progress=Number(sgJourneyRuntime.walkProgressM)||0,remaining=Math.max(0,cache.total-progress);
+ sgJourneyRuntime.walkRemainingM=remaining;
+ let tolerance=Math.min(70,Math.max(30,quality.accuracy*1.6));
+ if(proj.distance_m>tolerance)sgJourneyRuntime.walkOffCount=(Number(sgJourneyRuntime.walkOffCount)||0)+1;
+ else sgJourneyRuntime.walkOffCount=0;
+ sgJourneyRuntime.walkOffPath=sgJourneyRuntime.walkOffCount>=3;
+ let next=walkUpcomingInstruction(cache,progress);
+ if(next)sgJourneyRuntime.walkNextInstruction={...next,distance_m:Math.max(0,Number(next.progress_m)-progress)};
+ else sgJourneyRuntime.walkNextInstruction=null;
+ let arrivalRadius=Math.min(45,Math.max(22,quality.accuracy*1.2)),nearDest=Number.isFinite(distance)&&distance<=arrivalRadius,pathNear=remaining<=Math.max(55,arrivalRadius*1.4);
+ if(nearDest&&pathNear){
+  sgJourneyRuntime.walkArrivalCount=(Number(sgJourneyRuntime.walkArrivalCount)||0)+1;
+  let need=quality.excellent?2:3;
+  setJourneyTurnState('Confirming walking arrival · '+Math.min(need,sgJourneyRuntime.walkArrivalCount)+'/'+need,'confirm');
+  if(sgJourneyRuntime.walkArrivalCount>=need){advanceSgJourneyHop();return true}
+ }else sgJourneyRuntime.walkArrivalCount=0;
+ if(sgJourneyRuntime.walkOffPath)setJourneyTurnState('Off walking path · '+routeDistance(proj.distance_m),'weak');
+ else if(next&&sgJourneyRuntime.walkNextInstruction.distance_m<=140)setJourneyTurnState(String(next.instruction||next.action||'Continue')+' · '+routeDistance(sgJourneyRuntime.walkNextInstruction.distance_m),'confirm');
+ else setJourneyTurnState('On pedestrian path','good');
+ return true
+}
 function advanceSgJourneyTo(target,reason=''){
  if(!sgJourney)return;
  let legs=sgJourney.route?.legs||[],old=Number(sgJourney.current_hop)||0,next=Math.max(old,Math.floor(Number(target)||0));
  if(next>=legs.length){finishSgJourney();return}
- sgJourney.current_hop=next;sgJourneyRuntime.bestDistance=Infinity;sgJourneyRuntime.worseCount=0;sgJourneyRuntime.lastMovedAt=Date.now();sgJourneyRuntime.turnConfirmHop=null;sgJourneyRuntime.turnConfirmCount=0;sgJourneyRuntime.currentStepRemainingM=null;sgJourneyRuntime.currentStepProgressPct=null;sgJourneyRuntime.stepProgressHop=null;sgJourneyRuntime.stepProgressM=null;sgJourneyRuntime.stepProgressAt=0;sgJourneyRuntime.hopEntryConfirmed=reason==='turn'||reason==='catchup';
+ sgJourney.current_hop=next;sgJourneyRuntime.bestDistance=Infinity;sgJourneyRuntime.worseCount=0;sgJourneyRuntime.lastMovedAt=Date.now();sgJourneyRuntime.turnConfirmHop=null;sgJourneyRuntime.turnConfirmCount=0;sgJourneyRuntime.currentStepRemainingM=null;sgJourneyRuntime.currentStepProgressPct=null;sgJourneyRuntime.stepProgressHop=null;sgJourneyRuntime.stepProgressM=null;sgJourneyRuntime.stepProgressAt=0;sgJourneyRuntime.walkProgressHop=null;sgJourneyRuntime.walkProgressM=null;sgJourneyRuntime.walkTotalM=null;sgJourneyRuntime.walkRemainingM=null;sgJourneyRuntime.walkOffPathM=null;sgJourneyRuntime.walkOffCount=0;sgJourneyRuntime.walkOffPath=false;sgJourneyRuntime.walkArrivalCount=0;sgJourneyRuntime.walkNextInstruction=null;sgJourneyRuntime.hopEntryConfirmed=reason==='turn'||reason==='catchup';
  if(reason==='turn'){sgJourneyRuntime.lastTurnDetectedAt=Date.now();sgJourneyRuntime.lastTurnMessage='✓ Turn detected · hop '+(old+1)+' complete';setJourneyTurnState(sgJourneyRuntime.lastTurnMessage,'good')}
  else if(reason==='catchup'){sgJourneyRuntime.lastTurnDetectedAt=Date.now();sgJourneyRuntime.lastTurnMessage='✓ Route position caught up';setJourneyTurnState(sgJourneyRuntime.lastTurnMessage,'good')}
  persistSgJourney();renderSgJourney()
@@ -2140,7 +2222,13 @@ function sgJourneyDefaultCoach(leg,distance){
  if(mode==='LOCAL_TRANSFER')return 'Complete this local connection to '+to+'. RunSGD will continue with the verified border bus and Singapore public-transport legs after that.';
  if(mode==='CROSS_BORDER_BUS')return 'Take an available cross-border bus to '+to+'. Border queue time can vary, so RunSGD does not guess it.';
  if(distance!=null&&distance<130)return 'You’re very close to '+to+'. Get ready for the next hop.';
- if(mode==='WALK')return distance!=null?'Keep walking — about '+routeDistance(distance)+' to '+to+'.':'Keep walking towards '+to+'.';
+ if(mode==='WALK'){
+  let remain=Number(sgJourneyRuntime.walkRemainingM),next=sgJourneyRuntime.walkNextInstruction;
+  if(sgJourneyRuntime.walkOffPath)return 'You appear to be off the planned pedestrian path. Head back toward the route before continuing.';
+  if(next&&Number.isFinite(next.distance_m)&&next.distance_m<=140)return (next.instruction||next.action||'Continue')+' in about '+routeDistance(next.distance_m)+'.';
+  if(Number.isFinite(remain))return 'Keep following the pedestrian path — about '+routeDistance(remain)+' remaining to '+to+'.';
+  return distance!=null?'Keep walking — about '+routeDistance(distance)+' to '+to+'.':'Keep walking towards '+to+'.'
+ }
  if(mode==='DRIVE')return 'Continue driving towards '+to+'. RunSGD is matching your GPS against the planned road route automatically.';
  if(mode==='TWO_WHEELER')return 'Continue riding towards '+to+'. RunSGD is matching your GPS against the planned road route automatically.';
  if(mode==='BUS')return 'Stay on Bus'+(leg.route?' '+leg.route:'')+(leg.headsign?' towards '+leg.headsign:'')+'. I’ll update when you get close to '+to+'.';
@@ -2157,7 +2245,8 @@ function sgJourneyCompanionMessage(leg,distance,road,legs,idx){
  if(['IMMIGRATION','LOCAL_TRANSFER','CROSS_BORDER_BUS'].includes(mode))return sgJourneyDefaultCoach(leg,distance);
  let next=legs?.[idx+1],stepRemain=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null;
  if(road&&next&&!journeyRoadMode(next.mode)&&Number.isFinite(stepRemain)&&stepRemain<=350)return 'Driving segment almost complete. Next: '+sgJourneyInstruction(next);
- if(mode==='WALK'&&distance!=null&&distance<130)return sgJourneyDefaultCoach(leg,distance);
+ if(mode==='WALK'&&sgJourneyRuntime.walkOffPath)return 'You are off the planned pedestrian path by about '+routeDistance(sgJourneyRuntime.walkOffPathM||0)+'. Head back toward the path; indoor GPS may be less precise.';
+ if(mode==='WALK'&&(Number.isFinite(sgJourneyRuntime.walkRemainingM)||distance!=null)&&((sgJourneyRuntime.walkRemainingM??distance)<130))return sgJourneyDefaultCoach(leg,distance);
  return ''
 }
 function journeyBearing(lat1,lon1,lat2,lon2){
@@ -2213,15 +2302,16 @@ function renderJourneyBeacon(distance=null){
  let box=$('sgJourneyBeacon');if(!box)return;
  let leg=sgJourneyLeg(),mode=String(leg?.mode||'').toUpperCase();
  if(!sgJourney||sgJourney.status!=='active'||mode!=='WALK'){box.classList.remove('show');return}
- let lat=Number(sgJourneyRuntime.lastLat),lon=Number(sgJourneyRuntime.lastLon),tlat=Number(leg?.to?.lat),tlon=Number(leg?.to?.lon);
- if(!Number.isFinite(distance)&&[lat,lon,tlat,tlon].every(Number.isFinite))distance=journeyMeters(lat,lon,tlat,tlon);
+ let lat=Number(sgJourneyRuntime.lastLat),lon=Number(sgJourneyRuntime.lastLon),walkNext=sgJourneyRuntime.walkNextInstruction,tlat=Number(walkNext?.lat??leg?.to?.lat),tlon=Number(walkNext?.lon??leg?.to?.lon);
+ if(walkNext&&Number.isFinite(walkNext.distance_m))distance=walkNext.distance_m;
+ else if(!Number.isFinite(distance)&&[lat,lon,tlat,tlon].every(Number.isFinite))distance=journeyMeters(lat,lon,tlat,tlon);
  if(distance!=null&&distance>900){box.classList.remove('show');return}
  box.classList.add('show');
  let legs=sgJourney.route?.legs||[],idx=Math.max(0,Number(sgJourney.current_hop)||0),isFinal=idx>=legs.length-1;
- let target=(isFinal?(sgJourney.destination?.name||sgJourney.destination?.address):null)||leg?.to?.name||leg?.to?.stopCode||'next point';
- let address=isFinal?(sgJourney.destination?.address||''):'';
+ let target=walkNext?(walkNext.instruction||walkNext.action||'Next pedestrian turn'):((isFinal?(sgJourney.destination?.name||sgJourney.destination?.address):null)||leg?.to?.name||leg?.to?.stopCode||'next point');
+ let address=walkNext?(walkNext.path_name||''):(isFinal?(sgJourney.destination?.address||''):'');
  txt('sgJourneyBeaconTarget',target);
- txt('sgJourneyBeaconAddress',address&&address!==target?'Look for: '+address:'');
+ txt('sgJourneyBeaconAddress',address&&address!==target?'Path: '+address:'');
  let bearing=[lat,lon,tlat,tlon].every(Number.isFinite)?journeyBearing(lat,lon,tlat,tlon):null;
  let arrow=$('sgJourneyBeaconArrow'),guide=$('sgJourneyBeaconGuide'),btn=$('sgJourneyCompassBtn');
  if(btn)btn.classList.toggle('show',sgJourneyCompassPermissionNeeded&&!Number.isFinite(sgJourneyHeading));
@@ -2375,7 +2465,7 @@ function renderSgJourney(distance=null){
  txt('sgJourneyDestination',sgJourney.destination?.name||sgJourney.destination?.address||'Destination');
  txt('sgJourneyMeta','Hop '+(idx+1)+' of '+Math.max(1,legs.length));
  let remaining=legs.slice(idx).reduce((n,x)=>n+Number(x.duration_sec||0),0),borderPending=!!sgJourney.route?.border_variable&&idx<=Number(sgJourney.route?.border_end_index??-1),arrival=remaining&&!borderPending?new Date(Date.now()+remaining*1000).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';txt('sgJourneyEta',remaining?(routeMinutes(remaining)+(borderPending?' + border':' · '+arrival)):'Live');
- let road=journeyRoadMode(leg?.mode);$('sgJourneyNow')?.classList.toggle('roadFocus',road);
+ let road=journeyRoadMode(leg?.mode),walk=String(leg?.mode||'').toUpperCase()==='WALK',walkMatched=walk&&Number.isFinite(sgJourneyRuntime.walkTotalM);$('sgJourneyNow')?.classList.toggle('roadFocus',road);$('sgJourneyNow')?.classList.toggle('walkFocus',walk);
  if(road){
   let nextRoad=legs[idx+1],sr=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null,cue=journeyManeuverCue(nextRoad,leg),entryCue=journeyCurrentEntryCue(leg,idx,legs),bands=journeyWarningBands(cue,sgJourneyRuntime.gpsSpeed),label='Keep straight';
   if(idx===legs.length-1)label=entryCue?entryCue.action:'Continue to '+(sgJourney.destination?.name||'your destination');
@@ -2388,6 +2478,11 @@ function renderSgJourney(distance=null){
    else label='Keep straight · next '+cue.action.toLowerCase()+' in '+routeDistance(sr)
   }
   txt('sgJourneyAction',label);
+ }else if(walkMatched){
+  let wi=sgJourneyRuntime.walkNextInstruction,to=leg?.to?.name||leg?.to?.stopCode||'the next hop';
+  if(sgJourneyRuntime.walkOffPath)txt('sgJourneyAction','Return to pedestrian path');
+  else if(wi&&Number.isFinite(wi.distance_m)&&wi.distance_m<=180)txt('sgJourneyAction',wi.instruction||wi.action||'Continue on pedestrian path');
+  else txt('sgJourneyAction','Follow pedestrian path to '+to)
  }else txt('sgJourneyAction',sgJourneyInstruction(leg));
  let distText=distance!=null?routeDistance(distance)+' from next hop':'Waiting for live GPS…',pct=legs.length?Math.min(100,Math.round((idx/legs.length)*100)):0;
  if(road&&Number.isFinite(sgJourneyRuntime.routeProgressM)&&Number.isFinite(sgJourneyRuntime.routeTotalM)&&sgJourneyRuntime.routeTotalM>0){
@@ -2398,8 +2493,15 @@ function renderSgJourney(distance=null){
   let match=Number.isFinite(off)&&off>120?' · off route — use Reroute':'';
   distText=turn+' · '+routeDistance(remain)+' route remaining'+match;
   pct=Math.min(100,Math.max(0,Math.round(sgJourneyRuntime.routeProgressM/sgJourneyRuntime.routeTotalM*100)))
+ }else if(walkMatched){
+  let remain=Math.max(0,Number(sgJourneyRuntime.walkRemainingM)||0),off=Number(sgJourneyRuntime.walkOffPathM),wi=sgJourneyRuntime.walkNextInstruction,detail=routeDistance(remain)+' along walking path';
+  if(wi&&Number.isFinite(wi.distance_m))detail+=' · next turn '+routeDistance(wi.distance_m);
+  if(sgJourneyRuntime.walkOffPath&&Number.isFinite(off))detail+=' · '+routeDistance(off)+' off path';
+  distText=detail;
+  let walkPct=sgJourneyRuntime.walkTotalM>0?Math.min(1,Math.max(0,1-remain/sgJourneyRuntime.walkTotalM)):0;
+  pct=Math.min(100,Math.round(((idx+walkPct)/Math.max(1,legs.length))*100))
  }
- txt('sgJourneyDistance',distText+(road?' · auto hop tracking':' · tracking while RunSGD is open'));
+ txt('sgJourneyDistance',distText+(road?' · auto hop tracking':walkMatched?' · pedestrian path matching':' · tracking while RunSGD is open'));
  updateJourneyGpsHealth();renderJourneyDriveFocus(road,leg,idx,legs);
  if(road&&Date.now()-Number(sgJourneyRuntime.lastTurnDetectedAt||0)>4000&&!sgJourneyRuntime.turnConfirmCount&&!sgJourneyRuntime.arrivalConfirmCount){
   let age=sgJourneyRuntime.gpsUpdatedAt?Date.now()-sgJourneyRuntime.gpsUpdatedAt:Infinity,acc=Number(sgJourneyRuntime.gpsAccuracy);
@@ -2430,7 +2532,7 @@ function startSgJourneyTracking(){
  if(!sgJourney||sgJourney.status!=='active'||!navigator.geolocation)return;
  if(sgJourneyWatchId!=null)navigator.geolocation.clearWatch(sgJourneyWatchId);
  sgJourneyFreshFixPending=false;
- sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:buildJourneyRoadCache(sgJourney.route),routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0,gpsAccuracy:null,gpsUpdatedAt:0,gpsSpeed:null,gpsError:false,movementBearing:null,currentStepRemainingM:null,currentStepProgressPct:null,stepProgressHop:null,stepProgressM:null,stepProgressAt:0,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedLat:null,lastAcceptedLon:null,turnConfirmHop:null,turnConfirmCount:0,lastTurnDetectedAt:0,lastTurnMessage:'',arrivalConfirmCount:0,lastArrivalDistanceM:null,hopEntryConfirmed:Number(sgJourney.current_hop||0)>0};
+ sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:buildJourneyRoadCache(sgJourney.route),routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0,gpsAccuracy:null,gpsUpdatedAt:0,gpsSpeed:null,gpsError:false,movementBearing:null,currentStepRemainingM:null,currentStepProgressPct:null,stepProgressHop:null,stepProgressM:null,stepProgressAt:0,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedLat:null,lastAcceptedLon:null,turnConfirmHop:null,turnConfirmCount:0,lastTurnDetectedAt:0,lastTurnMessage:'',arrivalConfirmCount:0,lastArrivalDistanceM:null,walkCaches:buildJourneyWalkCaches(sgJourney.route),walkProgressHop:null,walkProgressM:null,walkTotalM:null,walkRemainingM:null,walkOffPathM:null,walkOffCount:0,walkOffPath:false,walkArrivalCount:0,walkNextInstruction:null,hopEntryConfirmed:Number(sgJourney.current_hop||0)>0};
  startJourneyCompass();startJourneyGpsUiTimer();setJourneyTurnState('Route matching…','turn');$('sgJourneyRerouteBtn')?.classList.remove('offroute');
  sgJourneyWatchId=navigator.geolocation.watchPosition(handleSgJourneyPosition,()=>{
   sgJourneyRuntime.gpsError=true;updateJourneyGpsHealth();if(!document.hidden)txt('sgJourneyDistance','GPS temporarily unavailable · journey remains saved')
@@ -2450,7 +2552,7 @@ function handleSgJourneyPosition(p){
  if(Number.isFinite(Number(p.coords.heading)))sgJourneyHeading=Number(p.coords.heading);
  if(!Number.isFinite(lat)||!Number.isFinite(lon)||!leg)return;
  sgJourneyRuntime.gpsUpdatedAt=Number.isFinite(Number(p.timestamp))?Number(p.timestamp):now;sgJourneyRuntime.gpsAccuracy=Number.isFinite(Number(p.coords.accuracy))?Number(p.coords.accuracy):null;sgJourneyRuntime.gpsSpeed=Number.isFinite(Number(p.coords.speed))?Number(p.coords.speed):null;sgJourneyRuntime.gpsError=false;updateJourneyGpsHealth();
- live.location={...classify(lat,lon),detected_at:now};
+ live.location={...classify(lat,lon),detected_at:now,accuracy_m:sgJourneyRuntime.gpsAccuracy};
  let targetLat=Number(leg.to?.lat),targetLon=Number(leg.to?.lon),distance=journeyMeters(lat,lon,targetLat,targetLon);
  let prevLat=sgJourneyRuntime.lastLat,prevLon=sgJourneyRuntime.lastLon,moved=prevLat==null?0:journeyMeters(prevLat,prevLon,lat,lon);
  if(moved!=null&&moved>=8&&[prevLat,prevLon,lat,lon].every(Number.isFinite))sgJourneyRuntime.movementBearing=journeyBearing(prevLat,prevLon,lat,lon);
@@ -2460,6 +2562,9 @@ function handleSgJourneyPosition(p){
  let mode=String(leg.mode||'').toUpperCase();
  if(journeyRoadMode(mode)){
   if(reconcileRoadProgress(p,lat,lon,leg,distance,moved,now))return;
+  persistSgJourney();if(!document.hidden)renderSgJourney(distance);return
+ }
+ if(mode==='WALK'&&reconcileWalkProgress(p,lat,lon,leg,distance,moved,now)){
   persistSgJourney();if(!document.hidden)renderSgJourney(distance);return
  }
  if(distance!=null){
