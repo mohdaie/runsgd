@@ -1,9 +1,66 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="theme-color" content="#e9fff4"><title>RunSGD · JB Map Test</title>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="theme-color" content="#e9fff4"><title>RunSGD · JB Navigation Lab</title>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.css"><link rel="stylesheet" href="./style.css">
-<div id="jbTestGate" style="max-width:520px;margin:0 auto;padding:28px 18px;color:#073d2d;font:16px system-ui,sans-serif"><strong style="font-size:24px">JB Map Test · Admin</strong><p id="jbTestGateText" style="line-height:1.5;color:#416554">Checking RunSGD admin access…</p><a href="/admin/" style="color:#166047;font-weight:800">← Back to Admin</a></div>
-<main id="jbTestApp" hidden><header><a href="/admin/">‹ Admin</a><strong>runSGD <small>v2.13.1</small></strong><span class="badge">JB TEST</span></header>
-<section id="setup"><h1>Your own JB map.</h1><p>Independent driving pilot. Choose your start and destination on the map.</p><div class="buttons"><button id="gps">Use my location</button><button id="pickStart">Pick start</button><button id="pickEnd">Pick destination</button></div><p id="points">Tap the map to choose your destination.</p><button id="plan" disabled>Preview driving route</button><details><summary>About this test</summary><p>OSM map data · OSRM driving routes · RunSGD GPS tracking. Estimates exclude live traffic and checkpoint queues. JB local driving only; no motorcycle, walking or cross-border routes.</p><p>Route coordinates are sent to the public FOSSGIS routing service. Map tiles come from OpenStreetMap. Test services can be unavailable. Your test location is not saved by RunSGD.</p><a href="https://routing.openstreetmap.de/about.html" target="_blank" rel="noopener">Routing service & privacy</a></details></section>
-<section class="navigation"><div class="instruction"><div id="arrow">↗</div><div><span id="command">CHOOSE YOUR ROUTE</span><strong id="distance">JB</strong></div><h2 id="road">Johor Bahru map test</h2></div><div class="mapwrap"><div id="map" aria-label="Johor Bahru interactive map"></div><div class="fade"></div><button id="follow">Recenter</button></div><div class="bottom"><div id="then">Choose points to preview a route.</div><div id="remaining"></div><p id="status" role="status" aria-live="polite">Loading map…</p><div class="buttons"><button id="start" disabled>Start GPS test</button><button id="reroute" disabled>Reroute</button><button id="stop" disabled>Stop</button></div></div></section><footer>Map © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> · Routing: <a href="https://routing.openstreetmap.de">OSRM / FOSSGIS</a> · <a href="https://www.openstreetmap.org/fixthemap">Fix the map</a></footer></main>
+<div id="jbTestGate" class="gate"><strong>JB Navigation Lab · Admin</strong><p id="jbTestGateText">Checking RunSGD admin access…</p><a href="/admin/">← Back to Admin</a></div>
+<main id="jbTestApp" hidden>
+<header><a href="/admin/">‹ Admin</a><strong>runSGD <small>v2.13.2</small></strong><span class="badge">NAV LAB</span></header>
+
+<section id="setup" class="labSetup">
+  <div class="labTitleRow"><div><span class="labKicker">ADMIN EXPERIMENT</span><h1>JB Navigation Lab</h1></div><span class="sourcePill">OSM · OSRM</span></div>
+  <p class="intro">Test RunSGD map UX, GPS matching, turn confirmation, rerouting and arrival logic without touching production Google routing.</p>
+
+  <div class="labStep">
+    <div class="stepLabel">1 · Start point</div>
+    <div class="stepValue" id="originSummary">Current location is recommended.</div>
+    <div class="buttons">
+      <button id="gps" class="primaryAction">Use current GPS</button>
+      <button id="pickStart">Pick start on map</button>
+    </div>
+  </div>
+
+  <div class="labStep destinationStep">
+    <label class="stepLabel" for="destinationQuery">2 · Destination</label>
+    <div class="searchRow">
+      <input id="destinationQuery" autocomplete="off" maxlength="100" placeholder="Search JB place, road or landmark">
+      <button id="searchDestination">Search</button>
+    </div>
+    <div id="destinationResults" class="destinationResults" aria-live="polite"></div>
+    <div class="buttons secondaryRow">
+      <button id="pickEnd">Pick destination on map</button>
+      <button id="clearDestination">Clear destination</button>
+    </div>
+    <div id="destinationSummary" class="selectedDestination">No destination selected.</div>
+  </div>
+
+  <div class="labStep">
+    <div class="stepLabel">3 · Preview route</div>
+    <p id="points" class="pointSummary">Set your current GPS and choose a destination.</p>
+    <button id="plan" class="primaryAction fullAction" disabled>Preview driving route</button>
+  </div>
+
+  <details><summary>About this lab</summary>
+    <p>MapLibre renders OpenStreetMap tiles. Manual destination search uses OpenStreetMap Nominatim. Driving routes use the public FOSSGIS OSRM service. This is an admin development lab, not the production RunSGD route provider.</p>
+    <p>There is no live traffic or checkpoint-queue modelling. Public test services can be unavailable. GPS positions are processed in your browser and are not saved by this lab.</p>
+    <p><a href="https://routing.openstreetmap.de/about.html" target="_blank" rel="noopener">OSRM / FOSSGIS service</a> · <a href="https://operations.osmfoundation.org/policies/nominatim/" target="_blank" rel="noopener">Nominatim usage policy</a></p>
+  </details>
+</section>
+
+<div id="activeRouteContext" class="activeRouteContext" hidden>
+  <div><span>DESTINATION</span><strong id="activeDestination">Destination</strong></div>
+  <button id="changeDestination">Change</button>
+</div>
+
+<section class="navigation">
+  <div class="instruction"><div id="arrow">↗</div><div><span id="command">CHOOSE YOUR ROUTE</span><strong id="distance">JB</strong></div><h2 id="road">Johor Bahru navigation lab</h2></div>
+  <div class="mapwrap"><div id="map" aria-label="Johor Bahru interactive map"></div><div class="fade"></div><button id="follow">Recenter</button></div>
+  <div class="bottom">
+    <div id="then">Choose a destination to preview a route.</div>
+    <div class="routeMeta"><div id="remaining"></div><span class="labProvider">LAB · OSM/OSRM</span></div>
+    <p id="status" role="status" aria-live="polite">Loading map…</p>
+    <div class="buttons"><button id="start" class="primaryAction" disabled>Start GPS test</button><button id="reroute" disabled>Reroute</button><button id="stop" disabled>Stop</button></div>
+  </div>
+</section>
+<footer>Map & search © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> · Routing: <a href="https://routing.openstreetmap.de">OSRM / FOSSGIS</a></footer>
+</main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.js"></script>
 <script type="module">
 const gate=document.getElementById('jbTestGate'),gateText=document.getElementById('jbTestGateText'),app=document.getElementById('jbTestApp');
