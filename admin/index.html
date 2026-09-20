@@ -47,12 +47,21 @@
 .apiItem{align-items:center}.apiInfo{align-self:stretch;display:flex;flex-direction:column;justify-content:center}.apiStatusText{font-size:10px;font-weight:900;margin-top:3px;color:#6078b7}.apiItem.ok .apiStatusText{color:#24825a}.apiItem.bad .apiStatusText{color:#b54458}.apiActions{display:flex;align-items:center;gap:6px;margin-left:auto}.apiIconBtn{width:32px;height:32px;border:0;border-radius:11px;background:#eef3fb;color:#4d6084;font-weight:950;display:grid;place-items:center;cursor:pointer;padding:0;font-size:15px;flex:0 0 auto}.apiIconBtn:active{transform:scale(.95)}.apiIconBtn:disabled{opacity:.55;cursor:wait}.apiIconBtn.info{border:1px solid #e3e8f2;background:#fff;font-family:Georgia,serif;font-style:italic;font-size:14px}.apiIconBtn.test{font-size:16px}
 .apiInfoOverlay{display:none;position:fixed;inset:0;z-index:50;background:#17213b55;backdrop-filter:blur(5px);padding:22px;align-items:center;justify-content:center}.apiInfoOverlay.open{display:flex}.apiInfoModal{width:min(390px,100%);background:#fff;border:1px solid #eef1f6;border-radius:24px;padding:18px;box-shadow:0 24px 70px #17213b38}.apiInfoTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.apiInfoTitle{font-size:18px;font-weight:900;line-height:1.25}.apiInfoClose{width:32px;height:32px;border:0;border-radius:11px;background:#f0f3f8;color:#56647d;font-weight:900}.apiInfoState{display:inline-flex;margin-top:12px;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:900;background:#f0f2f5;color:#7c879a}.apiInfoState.ok{background:#eaf8f1;color:#247a55}.apiInfoState.bad{background:#fff0f2;color:#b43d55}.apiInfoNote{margin-top:12px;padding:12px 13px;border-radius:15px;background:linear-gradient(120deg,#f4f8ff,#faf6ff);font-size:12px;color:#5c6880;line-height:1.5}.apiInfoResult{margin-top:10px;font-size:12px;color:#68758b;line-height:1.5}
 @media(max-width:520px){.apiGrid{grid-template-columns:1fr}.metric{padding:12px 8px}.metricValue{font-size:23px}.metricLabel{font-size:9px}.metricSub{font-size:9px}.apiIconBtn{width:31px;height:31px}}
+
+/* v2.13.3 production navigation diagnostics */
+.navDiagCard{background:linear-gradient(145deg,#fff 0%,#f5fbf8 52%,#eef7ff 100%)}
+.navDiagTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.navDiagSelect{width:100%;margin-top:10px;border:1px solid #dfe7ef;background:#fff;border-radius:13px;padding:10px 11px;color:#263550;font-weight:750}
+.navDiagGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.navDiagMetric{padding:11px 9px;border-radius:15px;background:#fff;border:1px solid #e8eef1}.navDiagMetric strong{display:block;font-size:20px;line-height:1;color:#1e4935}.navDiagMetric span{display:block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.3px;color:#7c8d84;margin-top:7px}
+.navDiagConfidence{margin-top:12px;padding:13px;border-radius:16px;background:#f2f8f5;border:1px solid #dfece5}.navDiagConfidenceTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.navDiagScore{font-size:25px;font-weight:950;color:#1e6e49}.navDiagTrack{height:8px;border-radius:99px;background:#dce9e2;overflow:hidden;margin-top:9px}.navDiagBar{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#59a27b,#268d60);transition:width .25s ease}.navDiagNote{font-size:10px;color:#71827a;line-height:1.45;margin-top:7px}
+.navDiagSnapshot{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.navDiagFact{padding:9px 10px;border-radius:13px;background:#fff;border:1px solid #e8edf2}.navDiagFact b{display:block;font-size:11px;color:#334a3e}.navDiagFact span{display:block;font-size:11px;color:#718079;margin-top:3px;overflow-wrap:anywhere}
+.navDiagEvents{margin-top:12px;display:flex;flex-direction:column;gap:6px;max-height:280px;overflow:auto}.navDiagEvent{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:8px 9px;border-radius:12px;background:#fff;border:1px solid #edf0f3}.navDiagTime{font-size:9px;color:#89968f;font-weight:800}.navDiagEventText{font-size:10px;color:#53645b;line-height:1.4;overflow-wrap:anywhere}.navDiagActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.navDiagEmpty{padding:15px;border-radius:15px;background:#f6f8fa;color:#7d8793;font-size:12px;line-height:1.5;margin-top:10px}
+@media(max-width:520px){.navDiagGrid{grid-template-columns:1fr 1fr}.navDiagSnapshot{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.13.2</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.13.3</span></div>
 <section class="hero"><h1>Admin</h1><p class="sub">Manage RunSGD settings and community membership.</p></section>
 <div id="adminProfileCard" class="adminProfile">
   <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
@@ -161,6 +170,20 @@
  <p class="sub">Independent Johor navigation sandbox for map UX and RunSGD GPS logic. Phase 1 adds current-GPS origin, manual OSM destination search, route preview, live GPS matching, reroute testing and persistent destination context.</p>
  <a class="btn primary full" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="/jb-test/">Open JB Navigation Lab →</a>
  <div class="status">MapLibre + OpenStreetMap + OSRM · isolated from production Google routing.</div>
+</article>
+
+<article class="card navDiagCard" id="prodNavDiagCard">
+ <div class="navDiagTop"><div><div class="title">🧠 Production Navigation Diagnostics</div><div class="sub">Real Journey route · real production GPS matcher · read-only diagnostics</div></div><span id="prodNavDiagState" class="pill">No trace</span></div>
+ <p class="sub">This reads diagnostics written by the actual production Journey engine on this device. It does not use the OSM/OSRM lab flow and it does not change routing decisions. Raw latitude/longitude are not stored.</p>
+ <select id="prodNavDiagSessionSelect" class="navDiagSelect" onchange="renderProductionNavDiagnostics()"></select>
+ <div id="prodNavDiagEmpty" class="navDiagEmpty">No production navigation trace yet. After this version is installed, start a real Journey and drive normally; this card will record the engine decisions for review.</div>
+ <div id="prodNavDiagBody" style="display:none">
+  <div class="navDiagGrid"><div class="navDiagMetric"><strong id="prodDiagFixes">—</strong><span>GPS fixes</span></div><div class="navDiagMetric"><strong id="prodDiagAvgGps">—</strong><span>Avg GPS</span></div><div class="navDiagMetric"><strong id="prodDiagMaxOffset">—</strong><span>Max offset</span></div><div class="navDiagMetric"><strong id="prodDiagLowFixes">—</strong><span>&lt;85 score</span></div></div>
+  <div class="navDiagConfidence"><div class="navDiagConfidenceTop"><div><div class="sub">Current operational confidence</div><div id="prodDiagConfidence" class="navDiagScore">—</div></div><span id="prodDiagConfidencePill" class="pill">Diagnostic</span></div><div class="navDiagTrack"><div id="prodDiagConfidenceBar" class="navDiagBar"></div></div><div class="navDiagNote">This score measures current GPS/route-match signal quality. It is not yet a validated navigation-accuracy percentage. We use the trace to measure and tune real accuracy.</div></div>
+  <div id="prodDiagSnapshot" class="navDiagSnapshot"></div>
+  <div class="head" style="margin:14px 0 0"><div class="title" style="font-size:13px">Decision timeline</div><span id="prodDiagSessionMeta" class="pill"></span></div><div id="prodDiagEvents" class="navDiagEvents"></div>
+ </div>
+ <div class="navDiagActions"><button class="btn soft" onclick="loadProductionNavDiagnostics()">↻ Refresh</button><button class="btn soft" onclick="copyProductionNavDiagnostics()">Copy trace</button><button class="btn danger" onclick="clearProductionNavDiagnostics()">Clear local traces</button></div>
 </article>
 
 <article class="card" id="geminiCard">
@@ -293,10 +316,53 @@ async function sendAdminAi(){
  }finally{if(btn){btn.disabled=false;btn.textContent='Send'}}
 }
 
+const PROD_NAV_DIAG_KEY='runsgdProdNavDiagnosticsV1';
+let prodNavDiagSessions=[];
+function readProductionNavDiagnostics(){try{let v=JSON.parse(localStorage.getItem(PROD_NAV_DIAG_KEY)||'null');return v&&Array.isArray(v.sessions)?v.sessions:[]}catch{return []}}
+function navDiagWhen(ms){try{return new Date(Number(ms)).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})}catch{return '—'}}
+function navDiagVal(v,suffix=''){return Number.isFinite(Number(v))?String(Math.round(Number(v)*10)/10)+suffix:'—'}
+function txtAdmin(id,v){let e=$(id);if(e)e.textContent=v}
+function loadProductionNavDiagnostics(){
+ prodNavDiagSessions=readProductionNavDiagnostics().sort((a,b)=>Number(b.started_at||0)-Number(a.started_at||0));
+ let sel=$('prodNavDiagSessionSelect'),empty=$('prodNavDiagEmpty'),body=$('prodNavDiagBody'),state=$('prodNavDiagState');if(!sel)return;
+ let previous=sel.value;sel.innerHTML=prodNavDiagSessions.map(s=>'<option value="'+esc(s.id)+'">'+esc((s.status||'trace').toUpperCase()+' · '+(s.destination||'Destination')+' · '+navDiagWhen(s.started_at))+'</option>').join('');
+ if(previous&&prodNavDiagSessions.some(s=>s.id===previous))sel.value=previous;
+ if(!prodNavDiagSessions.length){sel.style.display='none';empty.style.display='block';body.style.display='none';state.textContent='No trace';state.classList.remove('ok');return}
+ sel.style.display='block';empty.style.display='none';body.style.display='block';state.textContent='REAL PROD';state.classList.add('ok');renderProductionNavDiagnostics()
+}
+function navDiagEventLabel(e){
+ let type=String(e?.type||'event').replaceAll('_',' ');
+ if(e.type==='snapshot')return (e.next_maneuver?e.next_maneuver+' · ':'')+(Number.isFinite(Number(e.route_offset_m))?'route offset '+Math.round(Number(e.route_offset_m))+' m · ':'')+(Number.isFinite(Number(e.confidence))?'score '+e.confidence+'%':'GPS snapshot');
+ if(e.type==='navigation_state')return (e.state?String(e.state).toUpperCase()+' · ':'')+String(e.text||'');
+ if(e.type==='hop_advance')return 'Hop '+e.from_hop+' → '+e.to_hop+' · '+String(e.reason||'advance');
+ if(e.type==='reroute_requested')return 'Reroute requested · '+String(e.mode||'road')+(Number.isFinite(Number(e.route_offset_m))?' · offset '+e.route_offset_m+' m':'');
+ if(e.type==='reroute_applied')return 'New '+String(e.mode||'road').toLowerCase()+' route applied · '+String(e.new_road_legs||0)+' road legs';
+ if(e.type==='reroute_failed')return 'Reroute failed · '+String(e.message||'');
+ if(e.type==='session_started')return 'Production diagnostics started';
+ if(e.type==='session_resumed'||e.type==='tracking_resumed')return 'Production tracking resumed';
+ if(e.type==='session_completed')return 'Journey completed';
+ if(e.type==='session_ended')return 'Journey ended by user';
+ if(e.type==='final_hop_complete')return 'Final hop completed';return type
+}
+function renderProductionNavDiagnostics(){
+ let id=$('prodNavDiagSessionSelect')?.value,s=prodNavDiagSessions.find(x=>x.id===id)||prodNavDiagSessions[0];if(!s)return;
+ let snap=s.last_snapshot||{},avg=Number(s.accuracy_count)>0?Number(s.accuracy_sum||0)/Number(s.accuracy_count):null,conf=Number(snap.confidence);
+ txtAdmin('prodDiagFixes',String(s.fix_count||0));txtAdmin('prodDiagAvgGps',Number.isFinite(avg)?'±'+Math.round(avg)+' m':'—');txtAdmin('prodDiagMaxOffset',Number.isFinite(Number(s.max_route_offset_m))?Math.round(Number(s.max_route_offset_m))+' m':'—');txtAdmin('prodDiagLowFixes',String(s.low_confidence_fixes||0));txtAdmin('prodDiagConfidence',Number.isFinite(conf)?Math.round(conf)+'%':'—');
+ let bar=$('prodDiagConfidenceBar');if(bar)bar.style.width=(Number.isFinite(conf)?Math.max(0,Math.min(100,conf)):0)+'%';
+ let pill=$('prodDiagConfidencePill');if(pill){pill.textContent=!Number.isFinite(conf)?'Waiting':conf>=95?'Strong signal':conf>=85?'Watch':'Low signal';pill.classList.toggle('ok',Number.isFinite(conf)&&conf>=95);pill.classList.toggle('bad',Number.isFinite(conf)&&conf<85)}
+ let facts=[['Destination',s.destination||'—'],['Provider',s.provider||'—'],['Road mode',s.road_mode||snap.mode||'—'],['Status',String(s.status||'—').toUpperCase()],['Current hop',snap.hop?String(snap.hop)+' / '+String(snap.total_hops||'—'):'—'],['GPS accuracy',Number.isFinite(Number(snap.gps_accuracy_m))?'±'+snap.gps_accuracy_m+' m':'—'],['Route offset',navDiagVal(snap.route_offset_m,' m')],['Route progress',navDiagVal(snap.route_progress_pct,'%')],['Step remaining',navDiagVal(snap.step_remaining_m,' m')],['Turn confirms',String(snap.turn_confirm_count??'—')],['Next maneuver',snap.next_maneuver||'—'],['Engine state',snap.turn_state||'—']];
+ $('prodDiagSnapshot').innerHTML=facts.map(x=>'<div class="navDiagFact"><b>'+esc(x[0])+'</b><span>'+esc(x[1])+'</span></div>').join('');
+ let meaningful=(s.events||[]).filter(e=>e.type!=='snapshot'),snapshots=(s.events||[]).filter(e=>e.type==='snapshot').slice(-5),events=[...meaningful.slice(-16),...snapshots].sort((a,b)=>Number(b.at||0)-Number(a.at||0)).slice(0,20);
+ $('prodDiagEvents').innerHTML=events.length?events.map(e=>'<div class="navDiagEvent"><div class="navDiagTime">'+esc((navDiagWhen(e.at).split(', ').pop()||navDiagWhen(e.at)))+'</div><div class="navDiagEventText">'+esc(navDiagEventLabel(e))+'</div></div>').join(''):'<div class="navDiagEmpty">No diagnostic events recorded in this session yet.</div>';
+ txtAdmin('prodDiagSessionMeta',(s.app_version?'v'+s.app_version+' · ':'')+navDiagWhen(s.started_at))
+}
+async function copyProductionNavDiagnostics(){let id=$('prodNavDiagSessionSelect')?.value,s=prodNavDiagSessions.find(x=>x.id===id)||prodNavDiagSessions[0];if(!s)return;try{await navigator.clipboard.writeText(JSON.stringify(s,null,2));$('prodNavDiagState').textContent='Copied'}catch{$('prodNavDiagState').textContent='Copy blocked'}}
+function clearProductionNavDiagnostics(){if(!confirm('Clear production navigation diagnostics stored on this device?'))return;localStorage.removeItem(PROD_NAV_DIAG_KEY);loadProductionNavDiagnostics()}
+
 function cfg(){try{return JSON.parse(localStorage.getItem('runsgdAdminConfig')||'{}')}catch{return {}}}
 function saveCfg(next){localStorage.setItem('runsgdAdminConfig',JSON.stringify(next))}
 function maskState(){let key=localStorage.getItem('runsgdTwelveDataKey')||'';$('twelveState').textContent=key?'Configured':'Not configured';$('twelveState').classList.toggle('ok',!!key)}
-function load(){let c=cfg(),tk=localStorage.getItem('runsgdTwelveDataKey')||c.twelveDataKey||'';$('twelveKey').value=tk;maskState();loadLtaState();loadGeminiState();loadOneMapState();loadGoogleMapsState()}
+function load(){let c=cfg(),tk=localStorage.getItem('runsgdTwelveDataKey')||c.twelveDataKey||'';$('twelveKey').value=tk;maskState();loadLtaState();loadGeminiState();loadOneMapState();loadGoogleMapsState();loadProductionNavDiagnostics()}
 function saveTwelve(){let key=$('twelveKey').value.trim(),c=cfg();if(key){localStorage.setItem('runsgdTwelveDataKey',key);c.twelveDataKey=key}else{localStorage.removeItem('runsgdTwelveDataKey');delete c.twelveDataKey}saveCfg(c);maskState();$('twelveStatus').textContent=key?'Saved on this browser.':'Twelve Data key cleared.';flash($('fxCard'))}
 async function testTwelve(){let key=$('twelveKey').value.trim();if(!key)return $('twelveStatus').textContent='Enter a Twelve Data API key first.';let b=$('testBtn');b.disabled=true;b.textContent='Testing…';$('twelveStatus').textContent='Requesting live SGD/MYR…';try{let r=await fetch('https://api.twelvedata.com/exchange_rate?symbol=SGD%2FMYR&apikey='+encodeURIComponent(key),{cache:'no-store'}),j=await r.json();if(!r.ok||!j.rate)throw Error(j.message||('HTTP '+r.status));let rate=Number(j.rate);$('twelveStatus').textContent='✓ Working · 1 SGD = RM '+rate.toFixed(4);saveTwelve()}catch(e){$('twelveStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test SGD/MYR'}}
 function saveLLM(){let c=cfg();c.llmProvider=$('llmProvider').value;c.llmKey=$('llmKey').value.trim();c.llmModel=$('llmModel').value.trim();c.llmEndpoint=$('llmEndpoint').value.trim();saveCfg(c);$('llmStatus').textContent='Saved. Main app integration will use these settings in the LLM release.';flash($('llmStatus').closest('.card'))}
