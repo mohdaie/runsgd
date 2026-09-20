@@ -178,7 +178,7 @@
  <select id="prodNavDiagSessionSelect" class="navDiagSelect" onchange="renderProductionNavDiagnostics()"></select>
  <div id="prodNavDiagEmpty" class="navDiagEmpty">No production navigation trace yet. After this version is installed, start a real Journey and drive normally; this card will record the engine decisions for review.</div>
  <div id="prodNavDiagBody" style="display:none">
-  <div class="navDiagGrid"><div class="navDiagMetric"><strong id="prodDiagFixes">—</strong><span>GPS fixes</span></div><div class="navDiagMetric"><strong id="prodDiagAvgGps">—</strong><span>Avg GPS</span></div><div class="navDiagMetric"><strong id="prodDiagMaxOffset">—</strong><span>Max offset</span></div><div class="navDiagMetric"><strong id="prodDiagLowFixes">—</strong><span>&lt;85 score</span></div></div>
+  <div class="navDiagGrid"><div class="navDiagMetric"><strong id="prodDiagFixes">—</strong><span>Trace samples</span></div><div class="navDiagMetric"><strong id="prodDiagAvgGps">—</strong><span>Avg GPS</span></div><div class="navDiagMetric"><strong id="prodDiagMaxOffset">—</strong><span>Max offset</span></div><div class="navDiagMetric"><strong id="prodDiagLowFixes">—</strong><span>&lt;85 samples</span></div></div>
   <div class="navDiagConfidence"><div class="navDiagConfidenceTop"><div><div class="sub">Current operational confidence</div><div id="prodDiagConfidence" class="navDiagScore">—</div></div><span id="prodDiagConfidencePill" class="pill">Diagnostic</span></div><div class="navDiagTrack"><div id="prodDiagConfidenceBar" class="navDiagBar"></div></div><div class="navDiagNote">This score measures current GPS/route-match signal quality. It is not yet a validated navigation-accuracy percentage. We use the trace to measure and tune real accuracy.</div></div>
   <div id="prodDiagSnapshot" class="navDiagSnapshot"></div>
   <div class="head" style="margin:14px 0 0"><div class="title" style="font-size:13px">Decision timeline</div><span id="prodDiagSessionMeta" class="pill"></span></div><div id="prodDiagEvents" class="navDiagEvents"></div>
@@ -320,7 +320,7 @@ const PROD_NAV_DIAG_KEY='runsgdProdNavDiagnosticsV1';
 let prodNavDiagSessions=[];
 function readProductionNavDiagnostics(){try{let v=JSON.parse(localStorage.getItem(PROD_NAV_DIAG_KEY)||'null');return v&&Array.isArray(v.sessions)?v.sessions:[]}catch{return []}}
 function navDiagWhen(ms){try{return new Date(Number(ms)).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})}catch{return '—'}}
-function navDiagVal(v,suffix=''){return Number.isFinite(Number(v))?String(Math.round(Number(v)*10)/10)+suffix:'—'}
+function navDiagVal(v,suffix=''){return v!==null&&v!==undefined&&v!==''&&Number.isFinite(Number(v))?String(Math.round(Number(v)*10)/10)+suffix:'—'}
 function txtAdmin(id,v){let e=$(id);if(e)e.textContent=v}
 function loadProductionNavDiagnostics(){
  prodNavDiagSessions=readProductionNavDiagnostics().sort((a,b)=>Number(b.started_at||0)-Number(a.started_at||0));
@@ -346,7 +346,7 @@ function navDiagEventLabel(e){
 }
 function renderProductionNavDiagnostics(){
  let id=$('prodNavDiagSessionSelect')?.value,s=prodNavDiagSessions.find(x=>x.id===id)||prodNavDiagSessions[0];if(!s)return;
- let snap=s.last_snapshot||{},avg=Number(s.accuracy_count)>0?Number(s.accuracy_sum||0)/Number(s.accuracy_count):null,conf=Number(snap.confidence);
+ let snap=s.last_snapshot||{},avg=Number(s.accuracy_count)>0?Number(s.accuracy_sum||0)/Number(s.accuracy_count):null,conf=snap.confidence!==null&&snap.confidence!==undefined&&Number.isFinite(Number(snap.confidence))?Number(snap.confidence):null;
  txtAdmin('prodDiagFixes',String(s.fix_count||0));txtAdmin('prodDiagAvgGps',Number.isFinite(avg)?'±'+Math.round(avg)+' m':'—');txtAdmin('prodDiagMaxOffset',Number.isFinite(Number(s.max_route_offset_m))?Math.round(Number(s.max_route_offset_m))+' m':'—');txtAdmin('prodDiagLowFixes',String(s.low_confidence_fixes||0));txtAdmin('prodDiagConfidence',Number.isFinite(conf)?Math.round(conf)+'%':'—');
  let bar=$('prodDiagConfidenceBar');if(bar)bar.style.width=(Number.isFinite(conf)?Math.max(0,Math.min(100,conf)):0)+'%';
  let pill=$('prodDiagConfidencePill');if(pill){pill.textContent=!Number.isFinite(conf)?'Waiting':conf>=95?'Strong signal':conf>=85?'Watch':'Low signal';pill.classList.toggle('ok',Number.isFinite(conf)&&conf>=95);pill.classList.toggle('bad',Number.isFinite(conf)&&conf<85)}
