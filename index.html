@@ -1392,6 +1392,7 @@ function prodNavDiagStart(){
  let store=prodNavDiagRead(),existing=(store.sessions||[]).find(s=>Number(s.journey_started_at)===journeyStarted&&s.status==='active');
  if(existing){prodNavDiagSession=existing;prodNavDiagEvent('session_resumed',{hop:Number(sgJourney.current_hop||0)+1});return}
  let firstRoad=(sgJourney.route?.legs||[]).find(l=>journeyRoadMode(l?.mode));
+ prodNavDiagLastSnapshotAt=0;prodNavDiagLastTurnState='';
  prodNavDiagSession={id:'prod-'+journeyStarted+'-'+Math.random().toString(36).slice(2,7),journey_started_at:journeyStarted,started_at:Date.now(),ended_at:null,status:'active',
   app_version:RUNSGD_VERSION,destination:String(sgJourney.destination?.name||sgJourney.destination?.address||'Destination').slice(0,160),provider:String(sgJourney.provider||sgJourney.route?.provider||'').slice(0,80),
   route_kind:String(sgJourney.route?.kind||'').slice(0,80),road_mode:String(firstRoad?.mode||sgJourney.route?.travel_mode||'').toUpperCase(),selected_route:Number(sgJourney.selected_route||0),
