@@ -52,7 +52,7 @@
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.13.1</span></div>
 <section class="hero"><h1>Admin</h1><p class="sub">Manage RunSGD settings and community membership.</p></section>
 <div id="adminProfileCard" class="adminProfile">
   <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
@@ -154,6 +154,13 @@
  <div class="field"><label for="googleMapsKey">Google Maps API key</label><div class="row"><input id="googleMapsKey" class="input" type="password" placeholder="Paste RunSGD JB Route Backend key" autocomplete="off"><button class="btn soft" onclick="toggleKey('googleMapsKey',this)">Show</button></div></div>
  <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveGoogleMapsKey()">Save securely</button><button id="googleMapsTestBtn" class="btn soft" onclick="testGoogleMaps()">Test APIs</button><button class="btn soft" onclick="clearGoogleMapsKey()">Clear</button></div>
  <div id="googleMapsStatus" class="status">Paste the new Google Cloud key here. It is saved in Supabase, not in this browser.</div>
+</article>
+
+<article class="card" id="jbMapTestCard">
+ <div class="head"><div class="title">🧪 JB Map Test</div><span class="pill">TEST MODE</span></div>
+ <p class="sub">Independent Johor driving-map pilot using MapLibre with OpenStreetMap tiles and OSRM test routing. Kept outside the public Journey planner while we evaluate map rendering, GPS tracking and maneuver UX.</p>
+ <a class="btn primary full" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="/jb-test/">Open JB Map Test →</a>
+ <div class="status">Admin entry point · test routes do not use RunSGD production Google routing.</div>
 </article>
 
 <article class="card" id="geminiCard">
