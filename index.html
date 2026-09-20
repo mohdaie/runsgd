@@ -1901,7 +1901,7 @@ function makeWalkPathCache(leg){
  }
  let cache=makePointCache(points);if(!cache)return null;
  let instructions=(Array.isArray(leg?.walk_instructions)?leg.walk_instructions:[]).map((x,i)=>{
-  let lat=Number(x?.lat),lon=Number(x?.lon),progress=null;
+  let lat=x?.lat==null?NaN:Number(x.lat),lon=x?.lon==null?NaN:Number(x.lon),progress=null;
   if(Number.isFinite(lat)&&Number.isFinite(lon)){
    let oldIndex=cache.lastIndex,p=projectJourneyToRoad(cache,lat,lon,true);cache.lastIndex=oldIndex;
    if(p)progress=p.progress_m
@@ -2076,6 +2076,7 @@ function reconcileWalkProgress(p,lat,lon,leg,distance,moved,now){
  sgJourneyRuntime.walkOffPathM=proj.distance_m;sgJourneyRuntime.walkTotalM=cache.total;
  if(!quality.good){
   sgJourneyRuntime.walkOffPath=false;sgJourneyRuntime.walkOffCount=0;
+  let held=Number.isFinite(sgJourneyRuntime.walkProgressM)?sgJourneyRuntime.walkProgressM:0;sgJourneyRuntime.walkRemainingM=Math.max(0,cache.total-held);
   setJourneyTurnState('Pedestrian GPS ±'+(Number.isFinite(quality.accuracy)?Math.round(quality.accuracy):'?')+' m · holding path match','weak');
   return true
  }
@@ -2095,7 +2096,7 @@ function reconcileWalkProgress(p,lat,lon,leg,distance,moved,now){
  if(next)sgJourneyRuntime.walkNextInstruction={...next,distance_m:Math.max(0,Number(next.progress_m)-progress)};
  else sgJourneyRuntime.walkNextInstruction=null;
  let arrivalRadius=Math.min(45,Math.max(22,quality.accuracy*1.2)),nearDest=Number.isFinite(distance)&&distance<=arrivalRadius,pathNear=remaining<=Math.max(55,arrivalRadius*1.4);
- if(nearDest&&pathNear){
+ if(nearDest&&pathNear&&!sgJourneyRuntime.walkOffPath){
   sgJourneyRuntime.walkArrivalCount=(Number(sgJourneyRuntime.walkArrivalCount)||0)+1;
   let need=quality.excellent?2:3;
   setJourneyTurnState('Confirming walking arrival · '+Math.min(need,sgJourneyRuntime.walkArrivalCount)+'/'+need,'confirm');
