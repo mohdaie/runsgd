@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v2126';
+const CACHE='runsgd-shell-v2130';
 const SHELL=['/','/index.html','/VERSION','/manifest.webmanifest','/icon.svg','/privacy.html','/admin/','/admin/index.html'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
@@ -14,7 +14,7 @@ self.addEventListener('activate',event=>{
     await Promise.all(windows.map(async client=>{
       try{
         const u=new URL(client.url);
-        if(u.hash==='#journey')return;
+        if(u.hash==='#journey'||u.pathname.startsWith('/jb-test/'))return;
         u.searchParams.set('_sw',CACHE);
         await client.navigate(u.toString());
       }catch{}
