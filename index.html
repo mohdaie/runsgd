@@ -761,7 +761,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.14.8';
+const RUNSGD_VERSION='2.14.9';
 let runsgdReloadingForUpdate=false;
 function runsgdVersionLabel(version=RUNSGD_VERSION){
  return 'v'+String(version||RUNSGD_VERSION).trim().replace(/^v/i,'')
@@ -3652,9 +3652,11 @@ async function askRunSgd(btn=null){
 }
 
 function signalCards(){let c=[],r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0);if(r>=60)c.push(['🌧 Weather',`Rain chance is up to ${r}% around SG/JB. Consider a small travel buffer.`]);if(live.prayer)c.push(['🕌 Prayer',`Current / previous: ${live.prayer.currentLabel} started at ${live.prayer.currentTime} (${live.prayer.currentMinsAgo} min ago). Next: ${live.prayer.label} at ${live.prayer.time} in about ${live.prayer.mins} min.${live.prayer.friday&&live.prayer.fridayZohorTime?' Friday Zohor reference: '+live.prayer.fridayZohorTime+'; mosque Jumu’ah session time may differ.':''}${live.nearby[0]?' Nearest mapped place: '+live.nearby[0].name+'.':''}`]);if(live.holidays[0])c.push(['📅 Next holiday',`${live.holidays[0].name} · ${new Date(live.holidays[0].date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})}.`]);if(live.rate)c.push(['💱 SGD/MYR',`Reference rate is ${live.rate.toFixed(4)} MYR per SGD.`]);if(!c.length)c.push(['✨ All calm','No strong live signal needs your attention right now.']);return c}
-async function loadDiscover(type){if(type!=='news'&&type!=='events'&&type!=='shopping')return;let feed=$('exploreFeed');feed.innerHTML='<div class="feedcard"><h3>Loading…</h3><div class="sub">Checking current items.</div></div>';let qs={news:'Singapore Johor Malaysia causeway immigration transport',events:'Singapore Johor event festival concert exhibition',shopping:'Singapore Johor shopping sale promotion mall'};try{let q=qs[type],rss='https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=en-SG&gl=SG&ceid=SG:en',j=await get('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rss),9000),items=(j.items||[]).slice(0,7).map(x=>({title:x.title,url:x.link,source:x.author||'Google News',date:x.pubDate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
- try{let q=qs[type],j=await get('https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent(q)+'&mode=artlist&maxrecords=8&format=json&sort=datedesc',9000),items=(j.articles||[]).slice(0,7).map(x=>({title:x.title,url:x.url,source:x.domain,date:x.seendate}));if(items.length){live.feeds[type]=items;save('feed-'+type,items);renderFeed(type,items,'Live');return}}catch{}
- let cached=old('feed-'+type);if(cached?.length){live.feeds[type]=cached;renderFeed(type,cached,'Saved');return}renderFeed(type,[], 'Search')}
+async function loadDiscover(type){
+ if(type!=='news'&&type!=='events'&&type!=='shopping')return;
+ live.feeds[type]=[];
+ renderFeed(type,[],'Web search')
+}
 function feedTime(v){
  if(!v)return 0;let s=String(v).trim();
  if(/^\d{8}T\d{6}Z?$/.test(s))s=s.slice(0,4)+'-'+s.slice(4,6)+'-'+s.slice(6,8)+'T'+s.slice(9,11)+':'+s.slice(11,13)+':'+s.slice(13,15)+'Z';
