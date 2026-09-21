@@ -205,7 +205,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .journeyNow.roadFocus .journeyDriveRoad{font-size:10px;margin-top:8px}
 .journeyLiveCard .journeyNext.show{font-size:16px;line-height:1.34;font-weight:800;padding:14px 15px;margin-top:12px;color:#315f45}
 .journeyLiveCard .journeyNext b{font-weight:950;color:#214b35}
-/* v2.14.1 Google Dynamic Map + RunSGD navigation */
+/* v2.14.2 Google Dynamic Map + RunSGD navigation */
 .journeyProdMapWrap{display:none;position:relative;order:2;height:29svh;min-height:220px;max-height:320px;margin:0 -2px 0;border-radius:0 0 19px 19px;overflow:hidden;background:#e8f3ed;border:1px solid #cfe5d8;border-top:0}
 .journeyProdMapWrap.show{display:block}.journeyProdMap{position:absolute;inset:0}.journeyProdMapFade{position:absolute;left:0;right:0;bottom:0;height:82px;pointer-events:none;background:linear-gradient(180deg,rgba(237,255,245,0) 0%,rgba(237,255,245,.16) 36%,#edfff5 100%);z-index:2}
 .journeyProdMapBadge{position:absolute;left:11px;top:11px;z-index:3;padding:6px 9px;border-radius:999px;background:#ffffffeb;color:#426352;font-size:9px;font-weight:900;box-shadow:0 4px 14px #173d2a18}
@@ -216,6 +216,23 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .journeyNow.roadFocus .journeyProgress{order:4}
 .journeyNow.roadFocus .journeyBeacon{order:5}
 @media(max-width:430px){.journeyProdMapWrap{height:28svh;min-height:210px;max-height:285px}.journeyProdMapFade{height:76px}}
+
+/* v2.14.2 driver-first live navigation ergonomics */
+.journeyLiveCard{padding:14px 16px 16px}
+.journeyLiveBack{font-size:9px;padding-bottom:8px}
+.journeyLivePill{padding:5px 8px;font-size:9px}
+.journeyLiveTop .journeyDest{font-size:13px;margin-top:6px;line-height:1.2}
+.journeyLiveTop .journeyMeta{font-size:9px;margin-top:2px}
+#sgJourneyEta{font-size:15px;padding:9px 11px;min-width:82px}
+.journeyNow{margin-top:12px}
+.journeyProdMapWrap{height:36svh;min-height:270px;max-height:400px}
+.journeyProdMapFade{height:56px}
+.journeyNow.roadFocus .journeyDriveFocus{order:1;padding-bottom:11px}
+.journeyNow.roadFocus .journeyProgress{order:1;position:relative;height:18px;margin:0;padding:0 15px 11px;border-radius:0;background:#215c3b;overflow:visible}
+.journeyNow.roadFocus .journeyProgress:before{content:"";position:absolute;left:15px;right:15px;top:0;height:5px;border-radius:999px;background:#ffffff2a}
+.journeyNow.roadFocus .journeyProgressBar{position:relative;z-index:1;height:5px;background:linear-gradient(90deg,#55d58c,#83e4aa);box-shadow:0 0 10px #55d58c44}
+.journeyNow.roadFocus .journeyProdMapWrap{order:2}
+@media(max-width:430px){.journeyProdMapWrap{height:35svh;min-height:250px;max-height:360px}.journeyProdMapFade{height:52px}}
 
 /* v2.3.0 destination-first AI journey planner */
 .routePlannerSetup{display:block}
@@ -292,7 +309,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.14.1</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.14.2</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -636,7 +653,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.14.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.14.2</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -689,7 +706,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.14.1</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.14.2</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -1373,7 +1390,7 @@ let sgRouteSearchTimer=null,sgRouteSearchSeq=0,sgRouteSelection=null,sgRouteResu
 const WOODLANDS_CP={name:'Woodlands Checkpoint',address:'Woodlands Checkpoint, Singapore',lat:1.4459,lon:103.7686};
 const JB_CIQ={name:'JB CIQ',address:'Bangunan Sultan Iskandar, Johor Bahru',lat:1.4637,lon:103.7648};
 let sgJourney=null,sgJourneyWatchId=null,sgJourneyHeading=null,sgJourneyCompassListening=false,sgJourneyCompassPermissionNeeded=false,sgJourneyGpsTimer=null,sgJourneyFreshFixTimer=null,sgJourneyFreshFixPending=false;
-let sgJourneyGoogleMap=null,sgJourneyGoogleMapOutline=null,sgJourneyGoogleMapRoute=null,sgJourneyGoogleMapVehicle=null,sgJourneyGoogleMapTurn=null,sgJourneyGoogleMapPromise=null,sgJourneyGoogleMapConfigPromise=null,sgJourneyGoogleMapDisabledUntil=0,sgJourneyGoogleMapRouteKey='',sgJourneyGoogleMapFollowing=true,sgJourneyGoogleMapLogged=false;
+let sgJourneyGoogleMap=null,sgJourneyGoogleMapOutline=null,sgJourneyGoogleMapRoute=null,sgJourneyGoogleMapVehicle=null,sgJourneyGoogleMapTurn=null,sgJourneyGoogleMapPromise=null,sgJourneyGoogleMapConfigPromise=null,sgJourneyGoogleMapDisabledUntil=0,sgJourneyGoogleMapRouteKey='',sgJourneyGoogleMapFollowing=true,sgJourneyGoogleMapLogged=false,sgJourneyGoogleMapHeading=null;
 let sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:null,routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0,gpsAccuracy:null,gpsUpdatedAt:0,gpsSpeed:null,gpsError:false,movementBearing:null,currentStepRemainingM:null,currentStepProgressPct:null,stepProgressHop:null,stepProgressM:null,stepProgressAt:0,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedLat:null,lastAcceptedLon:null,turnConfirmHop:null,turnConfirmCount:0,lastTurnDetectedAt:0,lastTurnMessage:'',arrivalConfirmCount:0,lastArrivalDistanceM:null,walkCaches:null,walkProgressHop:null,walkProgressM:null,walkTotalM:null,walkRemainingM:null,walkOffPathM:null,walkOffCount:0,walkOffPath:false,walkArrivalCount:0,walkNextInstruction:null};
 const PROD_NAV_DIAG_KEY='runsgdProdNavDiagnosticsV1';
 let prodNavDiagSession=null,prodNavDiagLastSnapshotAt=0,prodNavDiagLastTurnState='';
@@ -2165,14 +2182,26 @@ function journeyGoogleCameraState(lat,lon){
  let zoom=stepRemain<180?17.6:speed>24?16.8:speed>15?17.0:17.25;
  return {display,center,heading,zoom}
 }
+function journeyGoogleMapCourseHeading(target,force=false){
+ target=Number(target);if(!Number.isFinite(target))target=0;target=((target%360)+360)%360;
+ if(force||!Number.isFinite(sgJourneyGoogleMapHeading)){sgJourneyGoogleMapHeading=target;return target}
+ let delta=((target-sgJourneyGoogleMapHeading+540)%360)-180,factor=Math.abs(delta)>55?.55:.34;
+ sgJourneyGoogleMapHeading=(sgJourneyGoogleMapHeading+delta*factor+360)%360;
+ return sgJourneyGoogleMapHeading
+}
 function updateJourneyGoogleMapLive(lat=Number(sgJourneyRuntime.lastLat),lon=Number(sgJourneyRuntime.lastLon),force=false){
  if(!sgJourneyGoogleMap||!sgJourneyGoogleMapVehicle||![lat,lon].every(Number.isFinite))return;
- let cam=journeyGoogleCameraState(lat,lon);
+ let cam=journeyGoogleCameraState(lat,lon),heading=journeyGoogleMapCourseHeading(cam.heading,force);
  sgJourneyGoogleMapVehicle.setPosition(cam.display);
- let icon=journeyGoogleMapVehicleIcon();if(icon){icon.rotation=cam.heading;sgJourneyGoogleMapVehicle.setIcon(icon)}
+ let icon=journeyGoogleMapVehicleIcon();if(icon)sgJourneyGoogleMapVehicle.setIcon(icon);
  if(sgJourneyGoogleMapFollowing||force){
-  sgJourneyGoogleMap.panTo(cam.center);
-  let current=Number(sgJourneyGoogleMap.getZoom());if(!Number.isFinite(current)||Math.abs(current-cam.zoom)>.25)sgJourneyGoogleMap.setZoom(cam.zoom)
+  if(typeof sgJourneyGoogleMap.moveCamera==='function'){
+   sgJourneyGoogleMap.moveCamera({center:cam.center,zoom:cam.zoom,heading,tilt:0})
+  }else{
+   sgJourneyGoogleMap.panTo(cam.center);
+   let current=Number(sgJourneyGoogleMap.getZoom());if(!Number.isFinite(current)||Math.abs(current-cam.zoom)>.25)sgJourneyGoogleMap.setZoom(cam.zoom);
+   if(typeof sgJourneyGoogleMap.setHeading==='function')sgJourneyGoogleMap.setHeading(heading)
+  }
  }
 }
 function recenterJourneyGoogleMap(){
@@ -2181,8 +2210,7 @@ function recenterJourneyGoogleMap(){
 }
 function journeyGoogleMapVehicleIcon(){
  let maps=window.google?.maps;if(!maps)return null;
- let h=Number(sgJourneyRuntime.movementBearing),gpsH=Number(sgJourneyHeading),rotation=Number.isFinite(h)?h:Number.isFinite(gpsH)?gpsH:0;
- return {path:maps.SymbolPath.FORWARD_CLOSED_ARROW,scale:6,rotation,fillColor:'#2567e8',fillOpacity:1,strokeColor:'#ffffff',strokeWeight:2}
+ return {path:maps.SymbolPath.FORWARD_CLOSED_ARROW,scale:6,rotation:0,fillColor:'#2567e8',fillOpacity:1,strokeColor:'#ffffff',strokeWeight:2}
 }
 async function renderJourneyGoogleMap(road,leg,idx,legs){
  let wrap=$('sgJourneyProdMapWrap'),host=$('sgJourneyProdMap');if(!wrap||!host)return;
@@ -2196,7 +2224,11 @@ async function renderJourneyGoogleMap(road,leg,idx,legs){
  let livePos=[lat,lon].every(Number.isFinite)?{lat,lng:lon}:null;
  if(!sgJourneyGoogleMap){
   let start=livePos||path[0];
-  sgJourneyGoogleMap=new maps.Map(host,{center:start,zoom:17.25,disableDefaultUI:true,clickableIcons:false,keyboardShortcuts:false,gestureHandling:'none',mapTypeId:'roadmap'});
+  let mapOptions={center:start,zoom:17.25,disableDefaultUI:true,clickableIcons:false,keyboardShortcuts:false,gestureHandling:'cooperative',mapTypeId:'roadmap',heading:0,tilt:0,headingInteractionEnabled:false,tiltInteractionEnabled:false};
+  if(maps.RenderingType?.VECTOR)mapOptions.renderingType=maps.RenderingType.VECTOR;
+  sgJourneyGoogleMap=new maps.Map(host,mapOptions);
+  maps.event.addListener(sgJourneyGoogleMap,'dragstart',()=>{sgJourneyGoogleMapFollowing=false});
+  host.addEventListener('touchstart',e=>{if((e.touches?.length||0)>=2)sgJourneyGoogleMapFollowing=false},{passive:true});
   sgJourneyGoogleMapOutline=new maps.Polyline({map:sgJourneyGoogleMap,path,strokeColor:'#ffffff',strokeOpacity:.95,strokeWeight:10,zIndex:2});
   sgJourneyGoogleMapRoute=new maps.Polyline({map:sgJourneyGoogleMap,path,strokeColor:'#2468e8',strokeOpacity:1,strokeWeight:6,zIndex:3});
   sgJourneyGoogleMapVehicle=new maps.Marker({map:sgJourneyGoogleMap,position:start,icon:journeyGoogleMapVehicleIcon(),zIndex:6,title:'Current position'});
