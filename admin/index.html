@@ -77,7 +77,7 @@
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.11</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.12</span></div>
 <section class="hero"><h1>Admin</h1><p class="sub">Manage RunSGD settings and community membership.</p></section>
 <div id="adminProfileCard" class="adminProfile">
   <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
@@ -561,7 +561,7 @@ const API_SERVICES=[
  {id:'air',name:'Open-Meteo Air Quality',group:'Environment',note:'Checks the PM2.5 / air-quality API used by RunSGD.'},
  {id:'prayer',name:'AlAdhan Prayer Times',group:'Utility',note:'Checks the prayer-time service used by the Prayer widget.'},
  {id:'holidays',name:'Nager Public Holidays',group:'Utility',note:'Checks Singapore public-holiday data used by RunSGD.'},
- {id:'overpass-pool',name:'Nearby Prayer Lookup · Overpass',group:'Location',note:'Tests the same three public Overpass mirrors used by RunSGD with a RunSGD user agent. The result now reports each mirror HTTP result and latency; Healthy means at least one mirror is available.'}
+ {id:'overpass-pool',name:'Nearby Prayer Lookup · Overpass',group:'Location',note:'Browser-path health check. It tests the same three public Overpass mirrors directly from this Admin browser using the same POST request style as the real RunSGD prayer lookup. Healthy means at least one mirror is usable from a real user browser.'}
 ];
 const apiHealthResults={};
 function apiService(id){return API_SERVICES.find(x=>x.id===id)}
@@ -600,11 +600,11 @@ function showApiInfo(id){
   $('apiInfoOverlay').classList.add('open');
 }
 function hideApiInfo(){$('apiInfoOverlay').classList.remove('open')}
-async function apiHealthRequest(checkId='',action=''){
+async function apiHealthRequest(checkId='',action='',extra={}){
   let {data:{session}}=await adminSb.auth.getSession();
   if(!session)throw Error('Admin session missing');
   let twelveKey=localStorage.getItem('runsgdTwelveDataKey')||cfg().twelveDataKey||'';
-  let payload={twelve_key:twelveKey};
+  let payload={twelve_key:twelveKey,...extra};
   if(checkId)payload.check_id=checkId;
   if(action)payload.action=action;
   let r=await fetch(ADMIN_MONITOR_URL,{
@@ -615,6 +615,48 @@ async function apiHealthRequest(checkId='',action=''){
   let j=await r.json();
   if(!r.ok)throw Error(j.error||'Health check failed');
   return j
+}
+const OVERPASS_BROWSER_MIRRORS=[
+ {name:'Kumi',url:'https://overpass.kumi.systems/api/interpreter'},
+ {name:'Main',url:'https://overpass-api.de/api/interpreter'},
+ {name:'Coffee',url:'https://overpass.private.coffee/api/interpreter'}
+];
+async function probeOverpassFromBrowser(){
+  let q='[out:json][timeout:6];nwr["amenity"="place_of_worship"]["religion"="muslim"](around:1500,1.3521,103.8198);out ids 1;';
+  let results=[],startedAll=performance.now();
+  for(let mirror of OVERPASS_BROWSER_MIRRORS){
+    let started=performance.now(),c=new AbortController(),t=setTimeout(()=>c.abort(),7000);
+    try{
+      let r=await fetch(mirror.url,{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+        body:'data='+encodeURIComponent(q),
+        signal:c.signal,
+        cache:'no-store'
+      });
+      clearTimeout(t);
+      let latency=Math.max(1,Math.round(performance.now()-started));
+      if(!r.ok){results.push({name:mirror.name,ok:false,code:String(r.status),latency});continue}
+      let j=await r.json().catch(()=>null);
+      results.push({name:mirror.name,ok:Array.isArray(j?.elements),code:Array.isArray(j?.elements)?String(r.status):'BADJSON',latency})
+    }catch(e){
+      clearTimeout(t);
+      let latency=Math.max(1,Math.round(performance.now()-started));
+      results.push({name:mirror.name,ok:false,code:(e?.name==='AbortError'?'TIMEOUT':'ERR'),latency})
+    }
+  }
+  let available=results.filter(x=>x.ok).length;
+  let states=results.map(x=>x.name+' '+x.code+' '+x.latency+'ms').join(' · ');
+  return {
+    ok:available>0,
+    latency_ms:Math.max(1,Math.round(performance.now()-startedAll)),
+    detail:available+'/3 mirrors available from browser · '+states+(available===1?' · degraded':available===2?' · partial redundancy':'')
+  }
+}
+async function runOverpassBrowserHealth(){
+  let result=await probeOverpassFromBrowser();
+  let saved=await apiHealthRequest('overpass-pool','save_client_health',{client_result:result});
+  return saved.checks?.[0]||{id:'overpass-pool',name:'Nearby Prayer Lookup · Overpass',group:'Location',...result,checked_at:saved.checked_at}
 }
 async function loadSavedApiHealth(){
   $('apiHealthUpdated').textContent='Loading last saved scan…';
@@ -639,13 +681,18 @@ async function loadApiHealth(btn=null){
   let b=btn||$('apiHealthBtn'),summary=$('apiHealthSummary');
   if(b){b.disabled=true;b.textContent='Checking…'}
   summary.textContent='Checking all…';summary.classList.remove('ok','bad');
-  $('apiHealthUpdated').textContent='Running manual checks…';
+  $('apiHealthUpdated').textContent='Running API checks + browser location lookup probe…';
   try{
     let j=await apiHealthRequest();
     (j.checks||[]).forEach(x=>{apiHealthResults[x.id]={...x,checked_at:j.checked_at}});
     renderApiHealth();
-    let unhealthy=(j.total||0)-(j.healthy||0);
-    $('apiHealthUpdated').textContent='Last checked '+sgDateTime(j.checked_at)+(unhealthy?' · '+unhealthy+' issue'+(unhealthy===1?'':'s'):' · all systems healthy');
+    $('apiHealthUpdated').textContent='Core checks done · testing Overpass from this browser…';
+    let op=await runOverpassBrowserHealth();
+    apiHealthResults['overpass-pool']={...op,checked_at:op.checked_at||new Date().toISOString()};
+    renderApiHealth();
+    let issues=API_SERVICES.filter(x=>apiHealthResults[x.id]&&!apiHealthResults[x.id].ok).length;
+    let latest=[j.checked_at,op.checked_at].filter(Boolean).sort().at(-1);
+    $('apiHealthUpdated').textContent='Last checked '+sgDateTime(latest)+(issues?' · '+issues+' issue'+(issues===1?'':'s'):' · all systems healthy');
   }catch(e){
     summary.textContent='Check failed';summary.classList.add('bad');
     $('apiHealthUpdated').textContent='Could not complete checks · '+(e.message||'Unknown error');
@@ -658,11 +705,18 @@ async function testApiHealth(id,btn){
   let old=btn.textContent;btn.disabled=true;btn.textContent='…';
   $('apiHealthUpdated').textContent='Testing '+s.name+'…';
   try{
-    let j=await apiHealthRequest(id),r=j.checks?.[0];
+    let r,j;
+    if(id==='overpass-pool'){
+      $('apiHealthUpdated').textContent='Testing Overpass from this browser using the real RunSGD request path…';
+      r=await runOverpassBrowserHealth();
+      j={checked_at:r.checked_at||new Date().toISOString()};
+    }else{
+      j=await apiHealthRequest(id);r=j.checks?.[0];
+    }
     if(!r)throw Error('No result returned');
-    apiHealthResults[id]={...r,checked_at:j.checked_at};
+    apiHealthResults[id]={...r,checked_at:r.checked_at||j.checked_at};
     renderApiHealth();
-    $('apiHealthUpdated').textContent=s.name+' · '+(r.ok?'healthy':'issue detected')+' · checked '+sgDateTime(j.checked_at);
+    $('apiHealthUpdated').textContent=s.name+' · '+(r.ok?'healthy':'issue detected')+' · checked '+sgDateTime(r.checked_at||j.checked_at);
   }catch(e){
     apiHealthResults[id]={id,name:s.name,group:s.group,ok:false,latency_ms:0,detail:'Test could not run · '+(e.message||'Unknown error'),checked_at:new Date().toISOString()};
     renderApiHealth();
