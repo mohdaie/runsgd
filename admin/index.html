@@ -77,7 +77,7 @@
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.10</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.11</span></div>
 <section class="hero"><h1>Admin</h1><p class="sub">Manage RunSGD settings and community membership.</p></section>
 <div id="adminProfileCard" class="adminProfile">
   <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
@@ -561,7 +561,7 @@ const API_SERVICES=[
  {id:'air',name:'Open-Meteo Air Quality',group:'Environment',note:'Checks the PM2.5 / air-quality API used by RunSGD.'},
  {id:'prayer',name:'AlAdhan Prayer Times',group:'Utility',note:'Checks the prayer-time service used by the Prayer widget.'},
  {id:'holidays',name:'Nager Public Holidays',group:'Utility',note:'Checks Singapore public-holiday data used by RunSGD.'},
- {id:'overpass-pool',name:'Nearby Prayer Lookup · Overpass',group:'Location',note:'Tests the same three public Overpass mirrors used by RunSGD. Healthy means at least one mirror is available; the result shows how many mirrors responded.'}
+ {id:'overpass-pool',name:'Nearby Prayer Lookup · Overpass',group:'Location',note:'Tests the same three public Overpass mirrors used by RunSGD with a RunSGD user agent. The result now reports each mirror HTTP result and latency; Healthy means at least one mirror is available.'}
 ];
 const apiHealthResults={};
 function apiService(id){return API_SERVICES.find(x=>x.id===id)}
