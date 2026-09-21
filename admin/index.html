@@ -77,7 +77,7 @@
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.8</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.9</span></div>
 <section class="hero"><h1>Admin</h1><p class="sub">Manage RunSGD settings and community membership.</p></section>
 <div id="adminProfileCard" class="adminProfile">
   <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
@@ -234,7 +234,6 @@
   <div class="service"><strong>🌦 Open-Meteo</strong><span>SG/JB weather</span></div>
   <div class="service"><strong>🕌 AlAdhan</strong><span>Prayer times</span></div>
   <div class="service"><strong>📅 Nager</strong><span>Singapore public holidays</span></div>
-  <div class="service"><strong>📰 Google News / GDELT</strong><span>Explore discovery</span></div>
   <div class="service"><strong>📍 OpenStreetMap</strong><span>Nearby mosque / surau lookup</span></div>
   <div class="service"><strong>💱 FX fallbacks</strong><span>Fawaz · ER API · Frankfurter</span></div>
  </div>
@@ -561,10 +560,7 @@ const API_SERVICES=[
  {id:'weather',name:'Open-Meteo Weather',group:'Environment',note:'Checks the weather API used for Singapore and Johor forecasts.'},
  {id:'air',name:'Open-Meteo Air Quality',group:'Environment',note:'Checks the PM2.5 / air-quality API used by RunSGD.'},
  {id:'prayer',name:'AlAdhan Prayer Times',group:'Utility',note:'Checks the prayer-time service used by the Prayer widget.'},
- {id:'holidays',name:'Nager Public Holidays',group:'Utility',note:'Checks Singapore public-holiday data used by RunSGD.'},
- {id:'rss2json',name:'RSS2JSON · Explore',group:'Explore',note:'Checks the primary feed converter used for current Explore news results.'},
- {id:'gdelt',name:'GDELT · Explore',group:'Explore',note:'Checks the fallback current-news source used by Explore.'},
- {id:'overpass',name:'OpenStreetMap · Overpass',group:'Location',note:'Checks nearby-place lookup used for mosque, surau and location discovery.'}
+ {id:'holidays',name:'Nager Public Holidays',group:'Utility',note:'Checks Singapore public-holiday data used by RunSGD.'}
 ];
 const apiHealthResults={};
 function apiService(id){return API_SERVICES.find(x=>x.id===id)}
