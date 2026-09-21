@@ -205,7 +205,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .journeyNow.roadFocus .journeyDriveRoad{font-size:10px;margin-top:8px}
 .journeyLiveCard .journeyNext.show{font-size:16px;line-height:1.34;font-weight:800;padding:14px 15px;margin-top:12px;color:#315f45}
 .journeyLiveCard .journeyNext b{font-weight:950;color:#214b35}
-/* v2.14.3 Google Dynamic Map + RunSGD navigation */
+/* v2.14.4 Google Dynamic Map + RunSGD navigation */
 .journeyProdMapWrap{display:none;position:relative;order:2;height:29svh;min-height:220px;max-height:320px;margin:0 -2px 0;border-radius:0 0 19px 19px;overflow:hidden;background:#e8f3ed;border:1px solid #cfe5d8;border-top:0}
 .journeyProdMapWrap.show{display:block}.journeyProdMap{position:absolute;inset:0}.journeyProdMapFade{position:absolute;left:0;right:0;bottom:0;height:82px;pointer-events:none;background:linear-gradient(180deg,rgba(237,255,245,0) 0%,rgba(237,255,245,.16) 36%,#edfff5 100%);z-index:2}
 .journeyProdMapBadge{position:absolute;left:11px;top:11px;z-index:3;padding:6px 9px;border-radius:999px;background:#ffffffeb;color:#426352;font-size:9px;font-weight:900;box-shadow:0 4px 14px #173d2a18}
@@ -217,7 +217,7 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 .journeyNow.roadFocus .journeyBeacon{order:5}
 @media(max-width:430px){.journeyProdMapWrap{height:28svh;min-height:210px;max-height:285px}.journeyProdMapFade{height:76px}}
 
-/* v2.14.3 driver-first live navigation ergonomics */
+/* v2.14.4 driver-first live navigation ergonomics */
 .journeyLiveCard{padding:14px 16px 16px}
 .journeyLiveBack{font-size:9px;padding-bottom:8px}
 .journeyLivePill{padding:5px 8px;font-size:9px}
@@ -309,7 +309,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.14.3</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.14.4</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -653,7 +653,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.14.3</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.14.4</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -706,7 +706,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.14.3</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.14.4</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -748,7 +748,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.14.3';
+const RUNSGD_VERSION='2.14.4';
 let runsgdReloadingForUpdate=false;
 function runsgdVersionLabel(version=RUNSGD_VERSION){
  return 'v'+String(version||RUNSGD_VERSION).trim().replace(/^v/i,'')
