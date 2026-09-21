@@ -414,7 +414,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
   <div id="rate" class="big">—</div><div class="sub">1 SGD = MYR · reference rate</div>
   <div class="amount"><input id="amount" inputmode="decimal" placeholder="Amount" oninput="convert()"><select id="direction" onchange="convert()"><option value="SGD">SGD → MYR</option><option value="MYR">MYR → SGD</option></select></div>
   <div id="conversion" class="result">Enter an amount to convert.</div><div id="rateStatus" class="status">Connecting…</div>
-  <a class="wiseReferral" href="https://wise.com/invite/ahpc/mohdzuhairia1" target="_blank" rel="noopener noreferrer sponsored" aria-label="Open Wise personal referral">
+  <a class="wiseReferral" href="https://wise.com/invite/ahpc/mohdzuhairia1" target="_blank" rel="noopener noreferrer sponsored" aria-label="Open Wise personal referral" onclick="trackAffiliateClick('wise_personal','currency_home')">
     <div class="wiseReferralMain">
       <div class="wiseReferralBrand">Wise</div>
       <div class="wiseReferralText">Sending or spending SGD ↔ MYR?</div>
@@ -761,7 +761,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.14.7';
+const RUNSGD_VERSION='2.14.8';
 let runsgdReloadingForUpdate=false;
 function runsgdVersionLabel(version=RUNSGD_VERSION){
  return 'v'+String(version||RUNSGD_VERSION).trim().replace(/^v/i,'')
@@ -840,6 +840,17 @@ async function trackAppVisit(){
     await sb.from('app_page_views').insert({
       visitor_id:analyticsVisitorId(),
       path:(location.pathname||'/').slice(0,200)
+    })
+  }catch{}
+}
+async function trackAffiliateClick(linkKey,source='app'){
+  try{
+    let {data:{session}}=await sb.auth.getSession();
+    await sb.from('affiliate_clicks').insert({
+      link_key:String(linkKey||'').slice(0,80),
+      visitor_id:analyticsVisitorId(),
+      user_id:session?.user?.id||null,
+      source:String(source||'app').slice(0,120)
     })
   }catch{}
 }
