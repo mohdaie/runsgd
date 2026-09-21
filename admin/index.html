@@ -56,12 +56,28 @@
 .navDiagSnapshot{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.navDiagFact{padding:9px 10px;border-radius:13px;background:#fff;border:1px solid #e8edf2}.navDiagFact b{display:block;font-size:11px;color:#334a3e}.navDiagFact span{display:block;font-size:11px;color:#718079;margin-top:3px;overflow-wrap:anywhere}
 .navDiagEvents{margin-top:12px;display:flex;flex-direction:column;gap:6px;max-height:280px;overflow:auto}.navDiagEvent{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:8px 9px;border-radius:12px;background:#fff;border:1px solid #edf0f3}.navDiagTime{font-size:9px;color:#89968f;font-weight:800}.navDiagEventText{font-size:10px;color:#53645b;line-height:1.4;overflow-wrap:anywhere}.navDiagActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.navDiagEmpty{padding:15px;border-radius:15px;background:#f6f8fa;color:#7d8793;font-size:12px;line-height:1.5;margin-top:10px}
 @media(max-width:520px){.navDiagGrid{grid-template-columns:1fr 1fr}.navDiagSnapshot{grid-template-columns:1fr}}
+
+/* Affiliate tracking */
+.affiliateTableWrap{overflow-x:auto;border:1px solid #edf0f5;border-radius:17px;background:#fff}
+.affiliateTable{width:100%;border-collapse:collapse;min-width:760px}
+.affiliateTable th,.affiliateTable td{padding:11px 12px;text-align:left;border-bottom:1px solid #edf0f5;vertical-align:middle}
+.affiliateTable th{font-size:9px;text-transform:uppercase;letter-spacing:.35px;color:#7d899f;background:#f8faff;font-weight:900}
+.affiliateTable td{font-size:12px;color:#41506b}
+.affiliateTable tbody tr:last-child td{border-bottom:0}
+.affiliatePartner{font-weight:900;color:#243655}.affiliateLabel{font-size:10px;color:#8a95aa;margin-top:3px}
+.affiliateMetric{font-size:16px;font-weight:950;color:#253858}.affiliateMetric small{display:block;font-size:9px;font-weight:750;color:#8b96aa;margin-top:3px}
+.affiliateStatus{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:900;background:#eaf8f1;color:#247a55}
+.affiliateStatus.off{background:#f1f2f5;color:#7f899a}
+.affiliateLinkBtn{display:inline-flex;text-decoration:none;border-radius:11px;padding:8px 10px;background:#eef3ff;color:#4d64b8;font-size:10px;font-weight:900;white-space:nowrap}
+.affiliateFooter{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px}.affiliateFooter .status{margin:0}
+@media(max-width:520px){.affiliateFooter{align-items:flex-start;flex-direction:column}.affiliateFooter .btn{width:100%}}
+
 </style>
 </head>
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.5</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.8</span></div>
 <section class="hero"><h1>Admin</h1><p class="sub">Manage RunSGD settings and community membership.</p></section>
 <div id="adminProfileCard" class="adminProfile">
   <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
@@ -119,6 +135,18 @@
   <div class="billingNote">RunSGD warns at 70%, 85% and 95%. Admin API tests are excluded from app counters.</div>
  </div>
  <div class="healthFooter"><div id="gmUsageUpdated" class="status">Loading usage…</div><button id="gmUsageBtn" class="btn soft healthRefresh" onclick="loadGoogleMapsUsage(this)">↻ Refresh usage</button></div>
+</article>
+
+<article class="card" id="affiliateTrackingCard">
+ <div class="head"><div><div class="title">🔗 Affiliate tracking</div><div class="sub">RunSGD referral link clicks · Singapore time</div></div><span id="affiliateTrackingState" class="pill ok">Tracking</span></div>
+ <p class="sub">RunSGD records link clicks only. Conversions, rewards and commissions are confirmed by the affiliate provider.</p>
+ <div class="affiliateTableWrap">
+  <table class="affiliateTable">
+   <thead><tr><th>Partner</th><th>Placement</th><th>Today</th><th>7 days</th><th>Total</th><th>Last click</th><th>Link</th></tr></thead>
+   <tbody id="affiliateTableBody"><tr><td colspan="7" class="sub">Loading affiliate links…</td></tr></tbody>
+  </table>
+ </div>
+ <div class="affiliateFooter"><div id="affiliateUpdated" class="status">Loading…</div><button id="affiliateRefreshBtn" class="btn soft" onclick="loadAffiliateStats(this)">↻ Refresh</button></div>
 </article>
 
 <article class="card" id="apiHealthCard">
@@ -669,11 +697,48 @@ async function loadGoogleMapsUsage(btn=null){
   finally{if(b){b.disabled=false;b.textContent='↻ Refresh usage'}}
 }
 
+
+async function loadAffiliateStats(btn=null){
+  let b=btn||$('affiliateRefreshBtn'),body=$('affiliateTableBody'),state=$('affiliateTrackingState');
+  if(b){b.disabled=true;b.textContent='Refreshing…'}
+  try{
+    let {data,error}=await adminSb.rpc('admin_affiliate_stats');
+    if(error)throw error;
+    let rows=Array.isArray(data?.links)?data.links:[];
+    if(!rows.length){
+      body.innerHTML='<tr><td colspan="7" class="sub">No affiliate links configured yet.</td></tr>';
+      state.textContent='No links';state.classList.remove('ok');
+    }else{
+      body.innerHTML=rows.map(r=>{
+        let last=r.last_clicked_at?sgDateTime(r.last_clicked_at):'No clicks yet';
+        let active=!!r.active;
+        return '<tr>'+
+          '<td><div class="affiliatePartner">'+esc(r.partner||'Affiliate')+'</div><div class="affiliateLabel">'+esc(r.label||r.link_key||'')+'</div><div style="margin-top:5px"><span class="affiliateStatus '+(active?'':'off')+'">'+(active?'Active':'Paused')+'</span></div></td>'+
+          '<td>'+esc(r.placement||'App')+'</td>'+
+          '<td><div class="affiliateMetric">'+fmtMetric(r.clicks_today)+'</div></td>'+
+          '<td><div class="affiliateMetric">'+fmtMetric(r.clicks_7d)+'<small>'+fmtMetric(r.unique_7d)+' unique visitor'+(Number(r.unique_7d||0)===1?'':'s')+'</small></div></td>'+
+          '<td><div class="affiliateMetric">'+fmtMetric(r.clicks_total)+'</div></td>'+
+          '<td>'+esc(last)+'</td>'+
+          '<td><a class="affiliateLinkBtn" target="_blank" rel="noopener noreferrer" href="'+esc(r.url||'#')+'">Open ↗</a></td>'+
+        '</tr>'
+      }).join('');
+      state.textContent=rows.length+' link'+(rows.length===1?'':'s');state.classList.add('ok');
+    }
+    $('affiliateUpdated').textContent='Updated '+sgDateTime(data?.generated_at||new Date().toISOString());
+  }catch(e){
+    body.innerHTML='<tr><td colspan="7" class="sub">Affiliate tracking unavailable.</td></tr>';
+    state.textContent='Unavailable';state.classList.remove('ok');
+    $('affiliateUpdated').textContent='Could not load · '+(e.message||'Unknown error');
+  }finally{
+    if(b){b.disabled=false;b.textContent='↻ Refresh'}
+  }
+}
+
 async function loadMonitoring(){
   renderApiHealth();
-  await Promise.all([loadDashboardMetrics(),loadSavedApiHealth(),loadGoogleMapsUsage()]);
+  await Promise.all([loadDashboardMetrics(),loadSavedApiHealth(),loadGoogleMapsUsage(),loadAffiliateStats()]);
   if(monitorTimer)clearInterval(monitorTimer);
-  monitorTimer=setInterval(loadDashboardMetrics,5*60*1000);
+  monitorTimer=setInterval(()=>{loadDashboardMetrics();loadAffiliateStats()},5*60*1000);
 }
 function clearAll(){if(!confirm('Clear RunSGD local API settings from this browser?'))return;localStorage.removeItem('runsgdTwelveDataKey');localStorage.removeItem('runsgdAdminConfig');load();$('twelveStatus').textContent='Local API settings cleared.'}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
