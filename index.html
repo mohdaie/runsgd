@@ -149,6 +149,14 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 
 /* v2.2.12 journey dropdown */
 .journeySelectWrap{margin-top:12px}.journeySelectLabel{display:block;font-size:11px;font-weight:850;color:#6a7690;margin:0 0 6px 2px}.journeySelect{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:15px;padding:12px 13px;color:#17213b;font-weight:800}.journeyCustom{display:none}.journeyCustom.show{display:block}
+.journeyCheckHint{margin:10px 2px 0;color:#7e899e;font-size:11px;line-height:1.4}
+.aiBriefAnswer{display:none}.aiBriefAnswer.show{display:block}
+.aiOnlineRow{display:flex;align-items:center;gap:9px;margin-top:14px;color:#4c5c78;font-size:12px;font-weight:850}
+.aiOnlineDot{width:11px;height:11px;border-radius:50%;background:#2dcc70;box-shadow:0 0 0 4px #2dcc7018}
+.aiAccessNote.member .aiAccessText,.aiAccessNote.member .aiAccessLink{display:none}
+.aiAccessNote.member .aiAccessTop{flex-wrap:nowrap}
+.aiAccessNote.member{padding-top:10px;padding-bottom:10px}
+
 /* v2.2.12 Singapore Route Planner */
 .routePlannerCard{position:relative;overflow:visible}.routeOrigin{margin:11px 0 9px;padding:10px 12px;border-radius:14px;background:#f4f7fc;color:#5f6d86;font-size:12px;font-weight:750}.routeRegionRow{display:flex;gap:7px;margin:0 0 9px}.routeRegionBtn{flex:1;border:1px solid #e0e7f2;background:#f8faff;color:#64718a;border-radius:12px;padding:8px 9px;font-size:10px;font-weight:900}.routeRegionBtn.active{background:#eaf2ff;border-color:#b8cdf9;color:#245fbf}.routeRegionBtn.jb.active{background:#eaf9f0;border-color:#b9e1c8;color:#1a7a49}.routeModeRow{display:flex;gap:7px;margin:10px 0 8px;overflow-x:auto;scrollbar-width:none}.routeModeRow::-webkit-scrollbar{display:none}.routeModeBtn{flex:1 0 auto;border:1px solid #e2e7f1;background:#fff;color:#60708a;border-radius:13px;padding:9px 11px;font-size:11px;font-weight:900}.routeModeBtn.active{color:#fff;border-color:transparent;background:linear-gradient(120deg,#4b82f5,#796af0)}.routeModeBtn.car.active{background:linear-gradient(120deg,#2878e8,#4b93f4)}.routeModeBtn.bike.active{background:linear-gradient(120deg,#159968,#29b979)}.routeModeWarning{margin-top:3px;font-size:10px;line-height:1.4;color:#7c879a}.routeModeWarning.warn{color:#99621f;background:#fff8e8;border:1px solid #f3ddb0;border-radius:12px;padding:8px 10px}.routeBorderMeta{margin-top:5px;font-size:10px;color:#278052;font-weight:850}.routeSearchRow{display:flex;gap:8px;align-items:center}.routeSearchRow .toolInput{flex:1}.routeSearchGo{margin:0;width:auto;padding-left:18px;padding-right:18px}.routeSuggestions{display:none;margin-top:8px;border:1px solid #e4e9f3;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 12px 28px #46537d16}.routeSuggestions.show{display:block}.routeSuggestion{display:block;width:100%;text-align:left;border:0;background:#fff;padding:11px 12px;color:#283550}.routeSuggestion+.routeSuggestion{border-top:1px solid #edf0f5}.routeSuggestion b{display:block;font-size:13px}.routeSuggestion span{display:block;font-size:10px;color:#8390a5;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.routeOptions{display:flex;flex-direction:column;gap:10px;margin-top:12px}.routeOption{border:1px solid #e7ebf3;border-radius:18px;background:#fff;padding:13px;transition:border-color .18s ease,box-shadow .18s ease}.routeOption.selected{border-color:#9db7fb;box-shadow:0 0 0 4px #4b82f50c}.routeOptionTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.routeDuration{font-size:23px;font-weight:950;letter-spacing:-.8px}.routeSummary{font-size:12px;font-weight:800;color:#52617b;margin-top:5px;line-height:1.45}.routeStats{font-size:10px;color:#8a95a9;margin-top:4px}.routeActions{display:flex;gap:7px;margin-top:10px}.routeLegs{display:none;margin-top:11px;padding-top:9px;border-top:1px solid #edf0f5}.routeLegs.show{display:block}.routeLeg{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:7px 0}.routeLegIcon{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:#f1f5fc;font-size:14px}.routeLegTitle{font-size:12px;font-weight:850;line-height:1.35}.routeLegMeta{font-size:10px;color:#8792a6;margin-top:2px}.routeSelectedNote{display:none;margin-top:11px;padding:11px 12px;border-radius:14px;background:linear-gradient(120deg,#eef7ff,#f6efff);font-size:12px;color:#4d5d79}.routeSelectedNote.show{display:block}
 /* v2.2.12 live journey */
@@ -309,7 +317,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.5</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.6</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -318,7 +326,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
     </div>
   </div>
 </div>
-<section class="hello"><h1 id="greeting">Hello 👋</h1><p>Only what matters right now. Calm, useful and live.</p></section>
+<section class="hello"><h1 id="greeting">Hello 👋</h1><p id="homeStatusLine">Only what matters right now. Calm, useful and live.</p></section>
 
 <section id="signin" class="page signinPage">
   <button class="signinBack" onclick="closeSignIn()">← Back to RunSGD</button>
@@ -345,10 +353,9 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <section id="home" class="page">
 <div class="stack">
 <article class="card">
-  <div class="head"><div class="title">✦ What should I do?</div><span id="briefStatus" class="tag">Ready</span></div>
-  <div class="sub">Choose your journey. RunSGD checks your location, traffic, transport, weather and recent commuter signals — then shows only what matters now.</div>
+  <div class="head"><div class="title">✨ Ready to go?</div><span id="briefStatus" class="tag">Ready</span></div>
   <div class="journeySelectWrap">
-    <label class="journeySelectLabel" for="journeyIntentSelect">My journey</label>
+    <label class="journeySelectLabel" for="journeyIntentSelect">Choose your plan.</label>
     <select id="journeyIntentSelect" class="journeySelect" onchange="journeyIntentChanged()">
       <option value="">Choose what you are doing…</option>
       <option value="sg-jb">🇸🇬 → 🇲🇾 Going to JB from SG</option>
@@ -360,9 +367,13 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
   </div>
   <input id="journeyCustom" class="journeyCustom" maxlength="180" placeholder="Tell RunSGD what you want to do…" oninput="journeyCustomChanged()">
   <button id="aiBriefBtn" class="btn refresh" onclick="loadAiBrief(true,this)">✨ Check my journey</button>
-  <div class="soft" style="margin-top:12px"><div id="brief" class="briefAction">Choose a trip or type what you want to do.</div><div id="briefWhy" class="sub briefWhy">RunSGD will use traffic, weather, public transport, community and your enabled widgets.</div></div>
-  <div id="briefExtra" class="actionline">If there is nothing important to act on, RunSGD will simply say you are good to go.</div>
-  <div id="aiBriefMeta" class="aiMeta" style="margin-top:9px">AI available · RunSGD app data only</div>
+  <div class="journeyCheckHint">Tap check my journey for current recommendation.</div>
+  <div id="aiBriefAnswer" class="aiBriefAnswer">
+    <div class="soft" style="margin-top:12px"><div id="brief" class="briefAction"></div><div id="briefWhy" class="sub briefWhy"></div></div>
+    <div id="briefExtra" class="actionline"></div>
+    <div id="aiBriefMeta" class="aiMeta" style="margin-top:9px"></div>
+  </div>
+  <div class="aiOnlineRow"><span class="aiOnlineDot" aria-hidden="true"></span><span>RunSGD AI online</span></div>
   <div id="aiAccessNote" class="aiAccessNote guest">
     <div class="aiAccessTop"><span id="aiAccessPill" class="aiAccessPill">Guest AI</span><b id="aiAccessTitle" class="aiAccessTitle">AI works without sign-in</b></div>
     <div id="aiAccessText" class="aiAccessText">Live AI checks are available now. Sign in only for AI Journey Planner, saved journey history and personalised route suggestions.</div>
@@ -660,7 +671,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.5</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.6</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -713,7 +724,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.5</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.6</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -755,7 +766,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.15.5';
+const RUNSGD_VERSION='2.15.6';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -830,6 +841,23 @@ const isGooglePopupReturn=isGoogleAuthReturn&&runsgdAuthParams.get('popup')==='1
 const googleReturnTarget=runsgdAuthParams.get('return')||'community';
 const googleReturnAttempt=runsgdAuthParams.get('attempt')||sessionStorage.getItem('runsgdGooglePopup')||'';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const HOME_STATUS_DEFAULT='Only what matters right now. Calm, useful and live.';
+let appContentChannel=null;
+async function loadHomeStatus(){
+ try{
+  const {data,error}=await sb.from('app_content').select('content,updated_at').eq('key','home_status').maybeSingle();
+  if(error)throw error;
+  txt('homeStatusLine',String(data?.content||HOME_STATUS_DEFAULT).trim()||HOME_STATUS_DEFAULT);
+ }catch{txt('homeStatusLine',HOME_STATUS_DEFAULT)}
+}
+function subscribeAppContent(){
+ if(appContentChannel)return;
+ appContentChannel=sb.channel('runsgd-public-app-content')
+  .on('postgres_changes',{event:'*',schema:'public',table:'app_content',filter:'key=eq.home_status'},payload=>{
+    const value=String(payload?.new?.content||'').trim();
+    if(value)txt('homeStatusLine',value);else loadHomeStatus();
+  }).subscribe();
+}
 function analyticsVisitorId(){
   let id=localStorage.getItem('runsgdVisitorId');
   if(!id){
@@ -3452,12 +3480,13 @@ async function loadHolidays(){
 }
 function updateBrief(fallback=false){
  if(!fallback){
-   txt('brief','Tap “Check my journey” for a current recommendation.');
-   txt('briefWhy','It weighs journey direction, current location, traffic, transport, weather and recent commuter updates by relevance and freshness.');
-   txt('briefExtra','No background AI calls — you decide when to check.');
    txt('briefStatus','Ready');
+   if(!$('aiBriefAnswer')?.classList.contains('show')){
+     txt('brief','');txt('briefWhy','');txt('briefExtra','');txt('aiBriefMeta','');
+   }
    return
  }
+ $('aiBriefAnswer')?.classList.add('show');
  let r=Math.max(live.weather.SG?.rain||0,live.weather.JB?.rain||0),h=new Date().getHours(),action='You’re good to go.',why='No strong RunSGD signal suggests changing your plan right now.',extra='Check the latest Causeway snapshot before crossing.';
  if(r>=75){action=h<15?'Allow about 15 minutes extra.':'Give your trip a little extra buffer.';why=`Rain chance is up to ${r}% around SG/JB in the next few hours.`;extra='Weather is the clearest useful signal right now.'}
  else if(homeWidgetEnabled('prayer')&&live.prayer?.mins!=null&&live.prayer.mins<=45){action=`Plan around ${live.prayer.label}.`;why=`It is about ${live.prayer.mins} minutes away at ${live.prayer.time}.`;extra=live.nearby[0]?`Nearest mapped prayer place: ${live.nearby[0].name}.`:'Use location to find a nearby prayer place.'}
@@ -3599,6 +3628,7 @@ const JOURNEY_PRESETS={
 };
 function journeyIntentChanged(){
  let sel=$('journeyIntentSelect'),id=sel?.value||'';
+ $('aiBriefAnswer')?.classList.remove('show');txt('briefStatus','Ready');
  if(id)localStorage.setItem('runsgdJourneyIntent',id);else localStorage.removeItem('runsgdJourneyIntent');
  let custom=$('journeyCustom'),isCustom=id==='custom';
  if(custom)custom.classList.toggle('show',isCustom);
@@ -3681,6 +3711,7 @@ async function callRunSgdAi(mode,question=''){
 }
 function renderAiSources(id,sources){let e=$(id);if(!e)return;e.innerHTML=(sources||[]).slice(0,5).map(x=>`<span class="aiSource">${esc(x)}</span>`).join('')}
 async function loadAiBrief(force=false,btn=null){
+ $('aiBriefAnswer')?.classList.add('show');
  let cacheKey=aiBriefCacheKey(),cached=old(cacheKey),modeLabel=communityUser?'Member AI':'Guest AI';
  if(!force&&cached?.answer&&Date.now()-(cached.saved_at||0)<600000){txt('brief',cached.answer);txt('briefWhy',cached.reason||'');txt('briefExtra',(cached.sources||[]).length?'AI sources: '+cached.sources.join(' · '):'RunSGD data only');txt('briefStatus','AI');txt('aiBriefMeta',modeLabel+' · Gemini 3.5 Flash-Lite · cached');return}
  setBusy(btn,true);txt('briefStatus','AI…');txt('aiBriefMeta',modeLabel+' · checking direction, location and current RunSGD signals…');
@@ -3699,7 +3730,7 @@ async function init(){
  if(isGooglePopupReturn){await initCommunity();return}
  if('scrollRestoration' in history)history.scrollRestoration='manual';
  if(!normalizeMobileViewport())return;
- scrollPageTop();trackAppVisit();greeting();updateHeaderProfile();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();updateSgRouteOrigin();
+ scrollPageTop();trackAppVisit();greeting();updateHeaderProfile();loadHomeStatus();subscribeAppContent();restoreLocation();restoreJourneyIntent();loadTwelveKeyField();applyHomeWidgets();updateSgRouteOrigin();
  await initCommunity();restoreSgJourney();
  let hash=location.hash.replace('#',''),saved=localStorage.getItem('runsgdPage'),page=['home','explore','journey','community','more','signin'].includes(hash)?hash:['home','explore','journey','community','more'].includes(saved)?saved:'home';
  if(communityUser&&page==='signin')page=localStorage.getItem('runsgdAuthReturn')||'home';
@@ -3736,7 +3767,7 @@ document.addEventListener('visibilitychange',()=>{
  if(document.hidden){
    if(communityChannel){sb.removeChannel(communityChannel);communityChannel=null}
  }else{
-   checkRunsgdVersion();runsgdApplyPendingUpdate();
+   checkRunsgdVersion();runsgdApplyPendingUpdate();loadHomeStatus();
    if(document.querySelector('.page.active')?.id==='community'&&!communityChannel)loadCommunityFeed()
  }
  if(!sgJourney||sgJourney.status!=='active')return;
