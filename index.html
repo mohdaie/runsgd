@@ -309,7 +309,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.3</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.4</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -660,7 +660,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.3</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.4</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh live data</button></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -713,7 +713,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.3</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.4</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -755,7 +755,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.15.3';
+const RUNSGD_VERSION='2.15.4';
 let runsgdReloadingForUpdate=false;
 function runsgdVersionLabel(version=RUNSGD_VERSION){
  return 'v'+String(version||RUNSGD_VERSION).trim().replace(/^v/i,'')
@@ -779,26 +779,29 @@ function runsgdReloadForUpdate(version){
  if(runsgdReloadingForUpdate||runsgdJourneyActive())return false;
  const v=String(version||RUNSGD_VERSION).trim().replace(/^v/i,'');
  const u=new URL(location.href);
- const attemptKey='runsgdReloadAttempt:'+v;
- if(u.searchParams.get('appv')===v&&sessionStorage.getItem(attemptKey)==='1'){
-  localStorage.setItem('runsgdPendingUpdate',v);
-  const el=document.getElementById('appVersionBadge');
-  if(el)el.textContent=runsgdVersionLabel(RUNSGD_VERSION)+' · refresh pending';
-  return false
- }
  runsgdReloadingForUpdate=true;
- sessionStorage.setItem(attemptKey,'1');
  localStorage.removeItem('runsgdPendingUpdate');
  u.searchParams.set('appv',v);
  u.searchParams.set('_refresh',String(Date.now()));
  location.replace(u.pathname+u.search+u.hash);
  return true
 }
-function runsgdApplyPendingUpdate(){
+async function runsgdApplyPendingUpdate(){
  const pending=String(localStorage.getItem('runsgdPendingUpdate')||'').trim().replace(/^v/i,'');
  if(!pending)return;
  if(pending===RUNSGD_VERSION){localStorage.removeItem('runsgdPendingUpdate');return}
- if(!runsgdJourneyActive())runsgdReloadForUpdate(pending)
+ if(!runsgdJourneyActive()&&await runsgdPublishedHtmlHasVersion(pending))runsgdReloadForUpdate(pending)
+}
+async function runsgdPublishedHtmlHasVersion(version){
+ try{
+  const u=new URL('/index.html',location.origin);
+  u.searchParams.set('_runsgd_probe',String(version));
+  u.searchParams.set('ts',String(Date.now()));
+  const r=await fetch(u.href,{cache:'no-store'});
+  if(!r.ok)return false;
+  const html=await r.text();
+  return html.includes("const RUNSGD_VERSION='"+String(version)+"'")||html.includes('const RUNSGD_VERSION="'+String(version)+'"')
+ }catch{return false}
 }
 async function checkRunsgdVersion(){
  try{
@@ -808,9 +811,9 @@ async function checkRunsgdVersion(){
   if(!serverVersion)return false;
   if(serverVersion!==RUNSGD_VERSION){
    if(runsgdJourneyActive()){runsgdMarkUpdateReady(serverVersion);return true}
+   if(!await runsgdPublishedHtmlHasVersion(serverVersion)){runsgdMarkUpdateReady(serverVersion);return true}
    runsgdReloadForUpdate(serverVersion);return true
   }
-  sessionStorage.removeItem('runsgdReloadAttempt:'+serverVersion);
   runsgdApplyVersion(serverVersion);runsgdApplyPendingUpdate();return false
  }catch{return false}
 }

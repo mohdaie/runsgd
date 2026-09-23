@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v2153';
+const CACHE='runsgd-shell-v2154';
 const SHELL=['/','/index.html','/VERSION','/manifest.webmanifest','/icon.svg','/privacy.html','/admin/','/admin/index.html','/admin/health/','/admin/health/index.html','/admin/keys/','/admin/keys/index.html','/admin/developer/','/admin/developer/index.html','/admin/people/','/admin/people/index.html','/admin/affiliate-members/','/admin/affiliate-members/index.html','/admin/detailed-health/','/admin/detailed-health/index.html','/admin/community-business/','/admin/community-business/index.html'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
@@ -41,6 +41,8 @@ self.addEventListener('fetch',event=>{
       if(res.ok){const copy=res.clone();caches.open(CACHE).then(c=>c.put(key,copy));}
       return res;
     }).catch(async()=>{
+      // A versioned refresh must never silently fall back to the previous app shell.
+      if(url.searchParams.has('appv'))return new Response('RunSGD is updating. Reconnect and refresh to load the latest version.',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
       const exact=await caches.match(key);
       if(exact)return exact;
       if(key==='/'||key==='/index.html')return caches.match('/');
