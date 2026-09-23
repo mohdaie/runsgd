@@ -77,8 +77,8 @@ body.adminHome #affiliateTrackingCard,body.adminHome #communityMembersCard,body.
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">KEYS · v2.15.1</span></div>
-<section class="hero"><h1>Keys & credentials</h1><p class="sub">Admin-only RunSGD management.</p></section><div class="stack" style="display:none;margin-bottom:16px"><a class="card back" style="display:block;text-decoration:none" href="/admin/health/"><b>🩺 Detailed System Health</b><div class="sub">Extensive monitoring and history.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/keys/"><b>🔐 Keys & credentials</b><div class="sub">API keys and provider credentials.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/developer/"><b>🧑‍💻 Developer's world</b><div class="sub">Navigation Lab and diagnostics.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/people/"><b>🤝 Affiliate & members</b><div class="sub">Affiliate monitoring and members.</div></a></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">KEYS · v2.15.2</span></div>
+<section class="hero"><h1>Keys & credentials</h1><p class="sub">Manage all RunSGD API keys and provider credentials in one place.</p></section><div class="stack" style="display:none;margin-bottom:16px"><a class="card back" style="display:block;text-decoration:none" href="/admin/health/"><b>🩺 Detailed System Health</b><div class="sub">Extensive monitoring and history.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/keys/"><b>🔐 Keys & credentials</b><div class="sub">API keys and provider credentials.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/developer/"><b>🧑‍💻 Developer's world</b><div class="sub">Navigation Lab and diagnostics.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/people/"><b>🤝 Affiliate & members</b><div class="sub">Affiliate monitoring and members.</div></a></div>
 <div id="adminProfileCard" class="adminProfile">
   <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
   <div><div id="adminName" class="title">Admin</div><div id="adminEmail" class="sub"></div><div class="memberTags"><span class="memberTag admin">Admin</span></div></div>
@@ -142,7 +142,7 @@ body.adminHome #affiliateTrackingCard,body.adminHome #communityMembersCard,body.
 
 <article class="card">
  <div class="title">Local admin storage</div>
- <p class="note">Twelve Data remains stored locally for this prototype. LTA, OneMap, Gemini and Google Maps route credentials are stored server-side in Supabase and are not exposed in the public GitHub repository.</p>
+ <p class="note">Twelve Data is stored on this admin device for the live app and also in Supabase for the 3-day Extensive Test. LTA, OneMap, Gemini and Google Maps credentials are stored server-side and are not exposed in the public GitHub repository.</p>
  <div class="switch"><div><b>Hide keys by default</b><div class="sub">Password fields remain masked unless you press Show.</div></div><input type="checkbox" checked disabled></div>
  <button class="btn danger full" onclick="clearAll()">Clear API settings from this browser</button>
 </article>
