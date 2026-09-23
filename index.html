@@ -317,7 +317,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.6</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.7</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -671,7 +671,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.6</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.7</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -724,7 +724,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.6</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.7</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -747,7 +747,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <button class="journeyNavBtn" data-page="journey" onclick="showPage('journey')">
 <span class="journeyNavDot"></span><svg class="navIcon" viewBox="0 0 24 24"><path d="M5 19 19 5"/><path d="m10 5 9 0 0 9"/><circle cx="6" cy="18" r="2"/></svg>Journey
 </button>
-<button data-page="community" onclick="showPage('community')">
+<button id="communityNavBtn" data-page="community" onclick="showPage('community')" style="display:none">
 <svg class="navIcon" viewBox="0 0 24 24"><path d="M5 6.5h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-7l-4.5 3v-3H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z"/><path d="M7.5 11h9M7.5 14h6"/></svg>Community
 </button>
 <button data-page="more" onclick="showPage('more')">
@@ -766,7 +766,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.15.6';
+const RUNSGD_VERSION='2.15.7';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -886,6 +886,13 @@ async function trackAffiliateClick(linkKey,source='app'){
   }catch{}
 }
 let communityUser=null,communityRole='member',communityProfile=null,communityTopics=[],communityFeed=[],communityThreadPostId=null,communityThreadStack=[],communityTopicFilter=null,communityChannel=null;
+function communityAdminAllowed(){return !!communityUser&&communityRole==='admin'}
+function updateCommunityAccessUi(){
+ let nav=$('communityNavBtn'),allowed=communityAdminAllowed();
+ if(nav)nav.style.display=allowed?'':'none';
+ if(!allowed&&document.querySelector('.page.active')?.id==='community')showPage('home');
+ return allowed
+}
 async function submitBetaFeedback(btn){
   let msg=$('betaFeedbackMessage')?.value.trim(),category=$('betaFeedbackCategory')?.value||'feedback';
   if(!msg)return txt('betaFeedbackStatus','Write a short note first.');
@@ -939,6 +946,7 @@ function renderSignInContext(){txt('signinClientBadge',clientLabel());txt('signi
 function returnAfterSignIn(){
  let t=localStorage.getItem('runsgdAuthReturn')||authReturnTarget||'home';
  if(!['home','explore','journey','community','more'].includes(t))t='home';
+ if(t==='community'&&!communityAdminAllowed())t='home';
  localStorage.removeItem('runsgdAuthSource');history.replaceState(null,'',location.pathname+'#'+t);showPage(t)
 }
 async function initCommunity(){
@@ -973,7 +981,7 @@ async function initCommunity(){
     }
 
     await applyMemberState();
-    await loadCommunityFeed();
+    if(communityAdminAllowed())await loadCommunityFeed();
 
     let returned=isGoogleAuthReturn||localStorage.getItem('runsgdAuthReturn')==='community'||localStorage.getItem('runsgdAuthReturn')==='journey';
     if(communityUser&&returned&&!isGooglePopupReturn){
@@ -989,7 +997,7 @@ async function initCommunity(){
       communityUser=session?.user||null;
       if(!communityUser&&sgJourney){stopSgJourneyTracking();sgJourney=null;localStorage.removeItem('runsgdSgSelectedRoute');setJourneyPlannerState('plan')}
       await applyMemberState();
-      if(document.querySelector('.page.active')?.id==='community')await loadCommunityFeed();
+      if(communityAdminAllowed()&&document.querySelector('.page.active')?.id==='community')await loadCommunityFeed();
       if(event==='SIGNED_IN'&&communityUser&&document.querySelector('.page.active')?.id==='signin')returnAfterSignIn()
     },0)})
   }catch(e){authStatus('Community connection unavailable.')}
@@ -1026,7 +1034,7 @@ async function signInWithGoogle(btn){
   try{
    if(localStorage.getItem('runsgdGoogleDone')===attempt){
     const {data:{session}}=await sb.auth.getSession();
-    if(session){cleanup();localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleAttempt');communityUser=session.user;await applyMemberState();if(document.querySelector('.page.active')?.id==='community')await loadCommunityFeed();let t=localStorage.getItem('runsgdGoogleReturnTarget')||target;localStorage.removeItem('runsgdGoogleReturnTarget');localStorage.setItem('runsgdAuthReturn',t);returnAfterSignIn();authStatus('Signed in with Google.');try{popup.close();window.focus()}catch{}return}
+    if(session){cleanup();localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleAttempt');communityUser=session.user;await applyMemberState();if(communityAdminAllowed()&&document.querySelector('.page.active')?.id==='community')await loadCommunityFeed();let t=localStorage.getItem('runsgdGoogleReturnTarget')||target;localStorage.removeItem('runsgdGoogleReturnTarget');localStorage.setItem('runsgdAuthReturn',t);returnAfterSignIn();authStatus('Signed in with Google.');try{popup.close();window.focus()}catch{}return}
    }
    if(Date.now()-started>300000){cleanup();authStatus('Sign-in timed out. You can try again.')}
   }catch{}finally{checking=false}
@@ -1080,17 +1088,18 @@ async function communitySignOut(){
  if(!communityUser)return;let active=document.querySelector('.page.active')?.id;
  await sb.auth.signOut();communityUser=null;localStorage.removeItem('runsgdGoogleDone');localStorage.removeItem('runsgdGoogleAttempt');localStorage.removeItem('runsgdGoogleReturnTarget');
  if(sgJourney){stopSgJourneyTracking();sgJourney=null;localStorage.removeItem('runsgdSgSelectedRoute')}
- setJourneyPlannerState('plan');await applyMemberState();if(active==='journey')showPage('journey')
+ setJourneyPlannerState('plan');await applyMemberState();if(active==='journey')showPage('journey');else if(active==='community')showPage('home')
 }
 async function applyMemberState(){
  let signed=!!communityUser,auth=$('communityAuthCard'),start=$('communityStartPost'),reply=$('communityReplyComposer'),replyGuest=$('communityReplyGuest');
  if(auth)auth.style.display=signed?'none':'flex';if(start)start.style.display=signed?'flex':'none';if(reply)reply.style.display=signed&&communityThreadPostId?'flex':'none';if(replyGuest)replyGuest.style.display=signed?'none':'block';
  let adminCard=$('adminSettingsCard'),profileCard=$('profileCard'),journeyProfileCard=$('journeyProfileCard');
  if(!signed){
-  communityRole='member';communityProfile=null;if(adminCard)adminCard.style.display='none';if(profileCard)profileCard.style.display='none';if(journeyProfileCard)journeyProfileCard.style.display='none';updateHeaderProfile();applyJourneyAuthState();updateAiAccessUi();renderCommunityComposerIdentity();return
+  communityRole='member';communityProfile=null;if(adminCard)adminCard.style.display='none';if(profileCard)profileCard.style.display='none';if(journeyProfileCard)journeyProfileCard.style.display='none';updateCommunityAccessUi();updateHeaderProfile();applyJourneyAuthState();updateAiAccessUi();renderCommunityComposerIdentity();return
  }
  let {data:p}=await sb.from('profiles').select('display_name,avatar_url,bio,badge,role').eq('id',communityUser.id).maybeSingle();
  communityProfile=p||{};let metaAvatar=communityUser.user_metadata?.avatar_url||communityUser.user_metadata?.picture||'';if(!communityProfile.avatar_url&&metaAvatar){try{let {error:ae}=await sb.from('profiles').update({avatar_url:metaAvatar}).eq('id',communityUser.id);if(!ae)communityProfile.avatar_url=metaAvatar}catch{}}let name=communityProfile.display_name||await communityProfileName(communityUser);communityRole=communityProfile.role||await communityRoleOf(communityUser);
+ updateCommunityAccessUi();
  if(adminCard)adminCard.style.display=communityRole==='admin'?'block':'none';if(journeyProfileCard)journeyProfileCard.style.display='block';
  if(profileCard){
   profileCard.style.display='block';profileCard.classList.remove('editing');$('profileName').value=name||'';$('profileBio').value=communityProfile.bio||'';txt('profileEmail',communityUser.email||'');txt('profileViewName',name||'Member');txt('profileViewBio','Bio: '+(communityProfile.bio||'—'));
@@ -1169,6 +1178,7 @@ async function createCommunityPost(btn){
  }catch(e){txt('communityPostStatus',e.message||'Could not post.')}finally{setBusy(btn,false)}
 }
 async function loadCommunityFeed(){
+ if(!communityAdminAllowed())return;
  if(!$('communityFeed'))return;
  try{
   let q=sb.from('community_posts').select('id,parent_post_id,topic_text,user_id,content,created_at,updated_at').is('parent_post_id',null).order('created_at',{ascending:false}).limit(60);
@@ -3534,6 +3544,7 @@ async function refreshAll(btn){
 function scrollPageTop(){document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0)}
 function showPage(n,opts={}){
  if(!['home','explore','journey','community','more','signin'].includes(n))n='home';
+ if(n==='community'&&!communityAdminAllowed())n='home';
  let prev=document.querySelector('.page.active')?.id||null,fromHistory=!!opts.fromHistory;
  if(n!=='community'&&communityChannel){sb.removeChannel(communityChannel);communityChannel=null}
  document.body.classList.toggle('signinMode',n==='signin');
@@ -3747,6 +3758,7 @@ window.addEventListener('popstate',e=>{
  try{
   let st=e.state||{},page=st.runsgdPage||location.hash.replace('#','');
   if(page==='community'){
+   if(!communityAdminAllowed()){showPage('home',{fromHistory:true});history.replaceState({runsgd:true,runsgdPage:'home'},'','#home');return}
    showPage('community',{fromHistory:true});
    if(st.communityView==='thread'&&st.threadId){
     communityThreadPostId=Number(st.threadId);$('communityFeedView').style.display='none';$('communityThreadView').style.display='block';loadCommunityThread(communityThreadPostId);scrollPageTop()
