@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v2155';
+const CACHE='runsgd-shell-v2156';
 const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
