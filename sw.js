@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v21511';
+const CACHE='runsgd-shell-v21512';
 const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg'];
 
 async function freshResponse(path){
@@ -35,7 +35,7 @@ self.addEventListener('activate',event=>{
     await Promise.all(windows.map(async client=>{
       try{
         const url=new URL(client.url);
-        if(url.pathname.startsWith('/jb-test/')||url.hash==='#journey')return;
+        if(url.pathname==='/admin'||url.pathname.startsWith('/admin/')||url.pathname.startsWith('/jb-test/')||url.hash==='#journey')return;
         url.searchParams.set('_sw',CACHE);
         url.searchParams.set('_refresh',String(Date.now()));
         await client.navigate(url.toString());
@@ -59,6 +59,9 @@ self.addEventListener('fetch',event=>{
 
   // The rescue page must always bypass the service worker, including during stale-cache recovery.
   if(url.pathname==='/update'||url.pathname.startsWith('/update/'))return;
+
+  // Admin pages must stay live and must never fall into the cached app-shell offline page.
+  if(url.pathname==='/admin'||url.pathname.startsWith('/admin/'))return;
 
   // Auth callbacks must reach the app untouched.
   if(url.searchParams.has('auth')||url.searchParams.has('code')||url.searchParams.has('error'))return;
