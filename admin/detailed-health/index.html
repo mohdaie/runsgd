@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f8fbff">
+<title>Detailed System Health · RunSGD</title>
+<style>
+:root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--green:#20a36a;--red:#d94c61;--amber:#a87518}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 3%,#dff2ff 0,transparent 30%),radial-gradient(circle at 92% 8%,#efe5ff 0,transparent 28%),linear-gradient(180deg,#fbfdff,#faf9ff 55%,#fffaf7);min-height:100vh}.app{max-width:720px;margin:auto;padding:24px 18px 56px}.top,.head,.footerRow,.runTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.brand{font-weight:950;font-size:29px;letter-spacing:-1.8px;background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;color:transparent}.badge,.pill{font-size:10px;font-weight:900;padding:6px 9px;border-radius:999px;background:#eef4ff;color:#5067b4}.pill.ok{background:#eaf8f1;color:#247a55}.pill.bad{background:#fff0f2;color:#b43d55}.pill.warn{background:#fff7e4;color:#8b671b}.hero{padding:26px 4px 18px}.hero h1{font-size:30px;margin:0 0 7px}.sub,.status{color:var(--muted);font-size:12px;line-height:1.5}.stack{display:flex;flex-direction:column;gap:16px}.card{background:#fffffff0;border:1px solid #fff;border-radius:24px;padding:18px;box-shadow:0 12px 32px #46537d12}.title{font-weight:900}.btn{border:0;border-radius:14px;padding:10px 13px;font-weight:900;cursor:pointer}.primary{background:linear-gradient(120deg,var(--blue),var(--violet));color:#fff}.soft{background:#edf2fb;color:#2e4369}.btn:disabled{opacity:.55}.back{display:inline-flex;color:#4965c7;text-decoration:none;font-weight:850;font-size:13px}.apiGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.apiItem{padding:12px;border-radius:17px;border:1px solid #edf0f5;background:#fff}.apiTop{display:flex;align-items:flex-start;gap:8px}.dot{width:10px;height:10px;border-radius:50%;background:#9ca6b8;margin-top:4px;flex:0 0 auto}.apiItem.ok .dot{background:var(--green)}.apiItem.bad .dot{background:var(--red)}.apiName{font-size:12px;font-weight:900}.apiState{font-size:10px;font-weight:900;margin-top:3px;color:#72809a}.apiItem.ok .apiState{color:#24825a}.apiItem.bad .apiState{color:#b54458}.apiDetail{font-size:10px;color:#8590a5;line-height:1.4;margin-top:4px}.apiMeta{font-size:9px;color:#a0a8b7;margin-top:5px}.apiActions{display:flex;gap:6px;margin-top:8px}.iconBtn{border:0;border-radius:10px;padding:7px 9px;background:#eef3fb;color:#4d6084;font-weight:900}.billingGrid,.summaryGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.metric{padding:12px;border:1px solid #edf0f6;border-radius:16px;background:#fff}.metric strong{display:block;font-size:22px}.metric span{display:block;font-size:9px;text-transform:uppercase;color:#7f8aa0;margin-top:6px;font-weight:900}.usageBox{margin-top:12px;padding:13px;border-radius:16px;background:linear-gradient(120deg,#f2f8ff,#f7f3ff);border:1px solid #e7ecf7}.runCard{border:1px solid #e8ecf5;border-radius:18px;padding:13px;background:#fff;margin-top:10px}.runCard.selected{border-color:#aebfff;box-shadow:0 0 0 3px #4b82f50c}.runMeta{font-size:10px;color:#8490a5;margin-top:4px}.checkList{display:flex;flex-direction:column;gap:8px;margin-top:12px}.checkRow{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:start;padding:10px;border-radius:14px;border:1px solid #edf0f5;background:#fff}.checkIcon{font-size:14px}.checkName{font-size:12px;font-weight:900}.checkDetail{font-size:10px;color:#7f8ba0;line-height:1.4;margin-top:3px}.checkMs{font-size:10px;font-weight:900;color:#8994a8}.callout{margin-top:12px;padding:12px 13px;border-radius:15px;background:#fff8e9;color:#806339;font-size:11px;line-height:1.5}.footerRow{margin-top:12px}.history{max-height:360px;overflow:auto;padding-right:2px}@media(max-width:600px){.apiGrid{grid-template-columns:1fr}.billingGrid,.summaryGrid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div id="gate" class="app"><section class="hero"><h1>Detailed System Health</h1><p id="gateText" class="sub">Checking admin access…</p><a class="back" href="/admin/">← Admin</a></section></div>
+<main id="app" class="app" style="display:none">
+<div class="top"><div class="brand">runSGD</div><span class="badge">HEALTH · v2.15.0</span></div>
+<section class="hero"><h1>Detailed System Health</h1><p class="sub">Deep monitoring lives here. The Extensive Test is scheduled every 72 hours and every run is stored in Supabase.</p></section>
+<div class="stack">
+<article class="card">
+ <div class="head"><div><div class="title">🧪 Extensive Test</div><div class="sub">AI Journey · SG/JB routing · navigation payload · dependencies · deployment · usage</div></div><span id="extState" class="pill">Loading</span></div>
+ <div class="summaryGrid">
+  <div class="metric"><strong id="extHealthy">—</strong><span>Healthy</span></div>
+  <div class="metric"><strong id="extWarnings">—</strong><span>Warnings</span></div>
+  <div class="metric"><strong id="extFailed">—</strong><span>Failed</span></div>
+  <div class="metric"><strong id="extNotTested">—</strong><span>Not tested</span></div>
+ </div>
+ <div id="extSchedule" class="status">Loading schedule history…</div>
+ <div class="footerRow"><div id="extUpdated" class="status">—</div><button id="runExtBtn" class="btn primary" onclick="runExtensiveNow()">Run Extensive Test now</button></div>
+ <div class="callout">Scheduled runs are backend-safe. Browser-only items such as actual Dynamic Maps rendering and real phone GPS/UI execution are recorded as <b>Not tested</b> instead of being falsely marked healthy.</div>
+ <div class="head" style="margin-top:17px"><div class="title" style="font-size:13px">Run history</div><button class="btn soft" onclick="loadExtensiveHistory()">↻ Refresh</button></div>
+ <div id="runHistory" class="history"><div class="sub">Loading…</div></div>
+ <div id="selectedChecks" class="checkList"></div>
+</article>
+
+<article class="card">
+ <div class="head"><div><div class="title">🩺 API health</div><div class="sub">Fast dependency scan · last results persist in database</div></div><span id="apiSummary" class="pill">Loading</span></div>
+ <div id="apiGrid" class="apiGrid"></div>
+ <div class="footerRow"><div id="apiUpdated" class="status">Loading saved scan…</div><button id="apiRefresh" class="btn soft" onclick="refreshAllApi()">↻ Refresh all</button></div>
+</article>
+
+<article class="card">
+ <div class="head"><div><div class="title">📈 Google Maps query monitor</div><div class="sub">Places · Routes Pro · Dynamic Maps · app usage only</div></div><span id="gmState" class="pill ok">Tracking</span></div>
+ <div class="billingGrid">
+  <div class="metric"><strong id="gmToday">—</strong><span>Today</span></div>
+  <div class="metric"><strong id="gmMonth">—</strong><span>This month</span></div>
+  <div class="metric"><strong id="gmPlaces">—</strong><span>Places</span></div>
+  <div class="metric"><strong id="gmRoutes">—</strong><span>Routes</span></div>
+  <div class="metric"><strong id="gmMaps">—</strong><span>Dynamic maps</span></div>
+ </div>
+ <div class="usageBox">
+  <div id="gmThreshold" class="title" style="font-size:14px">Checking thresholds…</div>
+  <div id="gmPlacesNote" class="status"></div><div id="gmRoutesNote" class="status"></div><div id="gmMapsNote" class="status"></div>
+ </div>
+ <div class="footerRow"><div id="gmUpdated" class="status">Loading…</div><button class="btn soft" onclick="loadGoogleUsage()">↻ Refresh</button></div>
+</article>
+
+<a class="back" href="/admin/">← Back to Admin</a>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const URL='https://gdycbluljgfezhgslppe.supabase.co';
+const KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
+const sb=window.supabase.createClient(URL,KEY);
+const MON=URL+'/functions/v1/admin-monitor';
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fmt=v=>new Intl.NumberFormat('en-SG').format(Number(v||0));
+const when=v=>v?new Date(v).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—';
+async function req(action='',check_id='',extra={}){
+ const {data:{session}}=await sb.auth.getSession();if(!session)throw Error('Admin session missing');
+ const payload={...extra};if(action)payload.action=action;if(check_id)payload.check_id=check_id;
+ const r=await fetch(MON,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify(payload)});
+ const j=await r.json();if(!r.ok)throw Error(j.error||'Monitor request failed');return j
+}
+const services=[
+ ['supabase-auth','Supabase Auth','Core'],['supabase-db','Supabase Database','Core'],['lta-traffic','LTA Traffic Camera','Transport'],['lta-transit','LTA MRT & Bus','Transport'],['gemini','RunSGD AI · Gemini','AI'],['twelve','Twelve Data FX','Currency'],['fawaz','Currency API · Fawaz','Currency'],['er-api','ExchangeRate API','Currency'],['frankfurter','Frankfurter FX','Currency'],['weather','Open-Meteo Weather','Environment'],['air','Open-Meteo Air Quality','Environment'],['prayer','AlAdhan Prayer Times','Utility'],['holidays','Nager Public Holidays','Utility'],['overpass-pool','Nearby Prayer Lookup · Overpass','Location']
+];
+const api={};
+function drawApi(){
+ let tested=services.filter(x=>api[x[0]]),healthy=tested.filter(x=>api[x[0]]?.ok).length;
+ $('apiSummary').textContent=tested.length?healthy+'/'+tested.length+' healthy':'No saved scan';
+ $('apiSummary').className='pill '+(tested.length&&healthy===tested.length?'ok':tested.length?'bad':'');
+ $('apiGrid').innerHTML=services.map(s=>{let r=api[s[0]],cls=r?(r.ok?'ok':'bad'):'',state=!r?'Not checked':r.ok?'Healthy':'Issue detected';return '<div class="apiItem '+cls+'"><div class="apiTop"><span class="dot"></span><div><div class="apiName">'+esc(s[1])+'</div><div class="apiState">'+state+'</div></div></div><div class="apiDetail">'+esc(r?.detail||s[2]+' · no saved result')+'</div><div class="apiMeta">'+(r?.checked_at?'Last check '+when(r.checked_at)+' · '+fmt(r.latency_ms)+' ms':'Waiting for a scan')+'</div><div class="apiActions"><button class="iconBtn" onclick="testOneApi(\''+s[0]+'\',this)">↻ Test</button></div></div>'}).join('')
+}
+async function loadSavedApi(){
+ try{let j=await req('last');(j.checks||[]).forEach(x=>api[x.id]=x);drawApi();$('apiUpdated').textContent=j.checked_at?'Latest saved check '+when(j.checked_at):'No saved scan yet'}catch(e){drawApi();$('apiUpdated').textContent=e.message}
+}
+async function refreshAllApi(){
+ let b=$('apiRefresh');b.disabled=true;b.textContent='Checking…';$('apiUpdated').textContent='Running dependency scan…';
+ try{let j=await req();(j.checks||[]).forEach(x=>api[x.id]={...x,checked_at:j.checked_at});drawApi();$('apiUpdated').textContent='Checked '+when(j.checked_at)+' · Overpass browser probe remains separately observable'}catch(e){$('apiUpdated').textContent=e.message}finally{b.disabled=false;b.textContent='↻ Refresh all'}
+}
+async function testOneApi(id,b){
+ let old=b.textContent;b.disabled=true;b.textContent='…';
+ try{let j=await req('',id),r=j.checks?.[0];if(r)api[id]={...r,checked_at:j.checked_at};drawApi();$('apiUpdated').textContent=(r?.name||id)+' checked '+when(j.checked_at)}catch(e){$('apiUpdated').textContent=e.message}finally{b.disabled=false;b.textContent=old}
+}
+let runs=[],checks=[];
+function statusIcon(s){return s==='healthy'?'✅':s==='warning'?'⚠️':s==='failed'?'❌':s==='not_tested'?'◻️':'•'}
+function selectRun(id){
+ document.querySelectorAll('.runCard').forEach(x=>x.classList.toggle('selected',x.dataset.id===id));
+ const rs=checks.filter(x=>x.run_id===id);
+ $('selectedChecks').innerHTML=rs.length?rs.map(x=>'<div class="checkRow"><div class="checkIcon">'+statusIcon(x.status)+'</div><div><div class="checkName">'+esc(x.name)+'</div><div class="checkDetail">'+esc(x.group_name+' · '+x.detail)+'</div></div><div class="checkMs">'+(x.latency_ms?fmt(x.latency_ms)+' ms':'—')+'</div></div>').join(''):'<div class="sub">No check rows for this run.</div>'
+}
+function drawExtensive(){
+ const r=runs[0];
+ if(!r){$('extState').textContent='No runs';$('runHistory').innerHTML='<div class="sub">No Extensive Test has run yet.</div>';return}
+ $('extState').textContent=String(r.status||'').toUpperCase();$('extState').className='pill '+(r.status==='healthy'?'ok':r.status==='degraded'?'warn':'bad');
+ $('extHealthy').textContent=fmt(r.healthy_count);$('extWarnings').textContent=fmt(r.warning_count);$('extFailed').textContent=fmt(r.failed_count);$('extNotTested').textContent=fmt(r.skipped_count);
+ const due=new Date(new Date(r.started_at).getTime()+72*3600000);$('extSchedule').textContent='Automatic cadence: every 72 hours · next due around '+when(due.toISOString());
+ $('extUpdated').textContent='Last run '+when(r.started_at)+' · '+fmt(r.duration_ms)+' ms · '+esc(r.trigger||'scheduled');
+ $('runHistory').innerHTML=runs.map(x=>'<button class="runCard" data-id="'+x.id+'" onclick="selectRun(\''+x.id+'\')" style="width:100%;text-align:left;cursor:pointer"><div class="runTop"><div class="title" style="font-size:12px">'+statusIcon(x.status)+' '+esc(String(x.status||'').toUpperCase())+'</div><span class="pill">'+esc(x.app_version?'v'+x.app_version:'No version')+'</span></div><div class="runMeta">'+when(x.started_at)+' · '+fmt(x.healthy_count)+' healthy · '+fmt(x.warning_count)+' warning · '+fmt(x.failed_count)+' failed · '+fmt(x.skipped_count)+' not tested</div></button>').join('');
+ selectRun(r.id)
+}
+async function loadExtensiveHistory(){
+ try{let j=await req('extensive_history','',{limit:20});runs=j.runs||[];checks=j.checks||[];drawExtensive()}catch(e){$('extUpdated').textContent='History unavailable · '+e.message}
+}
+async function runExtensiveNow(){
+ let b=$('runExtBtn');b.disabled=true;b.textContent='Running…';$('extUpdated').textContent='Running full synthetic suite. This can take several seconds…';
+ try{let j=await req('run_extensive');$('extUpdated').textContent='Completed · '+String(j.status||'done')+' · '+fmt(j.duration_ms)+' ms';await loadExtensiveHistory()}catch(e){$('extUpdated').textContent='Extensive Test failed to launch · '+e.message}finally{b.disabled=false;b.textContent='Run Extensive Test now'}
+}
+async function loadGoogleUsage(){
+ try{let j=await req('google_maps_usage'),p=Number(j.month?.places||0),r=Number(j.month?.routes||0),m=Number(j.month?.maps||0),pp=p/5000*100,rp=r/5000*100,mp=m/10000*100,max=Math.max(pp,rp,mp);
+ $('gmToday').textContent=fmt(j.today?.total);$('gmMonth').textContent=fmt(j.month?.total);$('gmPlaces').textContent=fmt(p);$('gmRoutes').textContent=fmt(r);$('gmMaps').textContent=fmt(m);
+ $('gmPlacesNote').textContent='Places: '+fmt(p)+' / 5,000 tracked free threshold · '+Math.round(pp)+'%';
+ $('gmRoutesNote').textContent='Routes Pro: '+fmt(r)+' / 5,000 · '+Math.round(rp)+'%';$('gmMapsNote').textContent='Dynamic Maps: '+fmt(m)+' / 10,000 · '+Math.round(mp)+'%';
+ $('gmThreshold').textContent=max>=95?'Critical · check Google Cloud Billing':max>=85?'High usage':max>=70?'Watch usage':'Within tracked thresholds';
+ $('gmState').textContent=max>=85?'Check usage':max>=70?'Watch':'Tracking';$('gmState').className='pill '+(max>=85?'bad':max>=70?'warn':'ok');$('gmUpdated').textContent='Updated '+when(j.generated_at)+' · Google Cloud Billing remains source of truth'
+ }catch(e){$('gmUpdated').textContent='Usage unavailable · '+e.message}
+}
+async function guard(){
+ try{const {data:{session}}=await sb.auth.getSession();if(!session){$('gateText').textContent='Sign in with the RunSGD admin account first.';return}
+ const {data,error}=await sb.from('profiles').select('role').eq('id',session.user.id).maybeSingle();if(error||data?.role!=='admin'){$('gateText').textContent='This account does not have admin access.';return}
+ $('gate').style.display='none';$('app').style.display='block';drawApi();await Promise.all([loadSavedApi(),loadGoogleUsage(),loadExtensiveHistory()])
+ }catch(e){$('gateText').textContent='Could not verify admin access.'}
+}
+guard();
+</script>
+</body>
+</html>
