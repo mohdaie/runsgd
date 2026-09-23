@@ -1,7 +1,15 @@
-const CACHE='runsgd-shell-v2154';
-const SHELL=['/','/index.html','/VERSION','/manifest.webmanifest','/icon.svg','/privacy.html','/admin/','/admin/index.html','/admin/health/','/admin/health/index.html','/admin/keys/','/admin/keys/index.html','/admin/developer/','/admin/developer/index.html','/admin/people/','/admin/people/index.html','/admin/affiliate-members/','/admin/affiliate-members/index.html','/admin/detailed-health/','/admin/detailed-health/index.html','/admin/community-business/','/admin/community-business/index.html'];
+const CACHE='runsgd-shell-v2155';
+const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg'];
 self.addEventListener('install',event=>{
-  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
+  event.waitUntil((async()=>{
+    const cache=await caches.open(CACHE);
+    const results=await Promise.allSettled(SHELL.map(path=>cache.add(path)));
+    if(results[0].status==='rejected'){
+      const previous=await caches.match('/');
+      if(previous)await cache.put('/',previous);
+    }
+    await self.skipWaiting();
+  })());
 });
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
