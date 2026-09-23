@@ -76,6 +76,26 @@ async function req(action='',check_id='',extra={}){
 const services=[
  ['supabase-auth','Supabase Auth','Core'],['supabase-db','Supabase Database','Core'],['lta-traffic','LTA Traffic Camera','Transport'],['lta-transit','LTA MRT & Bus','Transport'],['gemini','RunSGD AI · Gemini','AI'],['twelve','Twelve Data FX','Currency'],['fawaz','Currency API · Fawaz','Currency'],['er-api','ExchangeRate API','Currency'],['frankfurter','Frankfurter FX','Currency'],['weather','Open-Meteo Weather','Environment'],['air','Open-Meteo Air Quality','Environment'],['prayer','AlAdhan Prayer Times','Utility'],['holidays','Nager Public Holidays','Utility'],['overpass-pool','Nearby Prayer Lookup · Overpass','Location']
 ];
+const OVERPASS=[
+ ['Kumi','https://overpass.kumi.systems/api/interpreter'],
+ ['Main','https://overpass-api.de/api/interpreter'],
+ ['Coffee','https://overpass.private.coffee/api/interpreter']
+];
+async function probeOverpass(){
+ const q='[out:json][timeout:6];nwr["amenity"="place_of_worship"]["religion"="muslim"](around:1500,1.3521,103.8198);out ids 1;';
+ const startedAll=performance.now(),rows=[];
+ for(const [name,url] of OVERPASS){
+  const started=performance.now(),ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),7000);
+  try{
+   const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(q),signal:ctl.signal,cache:'no-store'});
+   clearTimeout(timer);const j=await r.json().catch(()=>null);rows.push({name,ok:r.ok&&Array.isArray(j?.elements),code:r.status,latency_ms:Math.round(performance.now()-started)})
+  }catch(e){clearTimeout(timer);rows.push({name,ok:false,code:e?.name==='AbortError'?'TIMEOUT':'ERR',latency_ms:Math.round(performance.now()-started)})}
+ }
+ const available=rows.filter(x=>x.ok).length;
+ const client_result={ok:available>0,latency_ms:Math.round(performance.now()-startedAll),detail:available+'/3 mirrors available from browser · '+rows.map(x=>x.name+' '+x.code+' '+x.latency_ms+'ms').join(' · ')};
+ const j=await req('save_client_health','overpass-pool',{client_result});
+ return j.checks?.[0]||{id:'overpass-pool',...client_result,checked_at:j.checked_at}
+}
 const api={};
 function drawApi(){
  let tested=services.filter(x=>api[x[0]]),healthy=tested.filter(x=>api[x[0]]?.ok).length;
@@ -88,11 +108,11 @@ async function loadSavedApi(){
 }
 async function refreshAllApi(){
  let b=$('apiRefresh');b.disabled=true;b.textContent='Checking…';$('apiUpdated').textContent='Running dependency scan…';
- try{let j=await req();(j.checks||[]).forEach(x=>api[x.id]={...x,checked_at:j.checked_at});drawApi();$('apiUpdated').textContent='Checked '+when(j.checked_at)+' · Overpass browser probe remains separately observable'}catch(e){$('apiUpdated').textContent=e.message}finally{b.disabled=false;b.textContent='↻ Refresh all'}
+ try{let j=await req();(j.checks||[]).forEach(x=>api[x.id]={...x,checked_at:j.checked_at});$('apiUpdated').textContent='Core checks complete · testing Overpass from this browser…';let op=await probeOverpass();api['overpass-pool']={...op,checked_at:op.checked_at||new Date().toISOString()};drawApi();$('apiUpdated').textContent='Checked '+when(op.checked_at||j.checked_at)}catch(e){$('apiUpdated').textContent=e.message}finally{b.disabled=false;b.textContent='↻ Refresh all'}
 }
 async function testOneApi(id,b){
  let old=b.textContent;b.disabled=true;b.textContent='…';
- try{let j=await req('',id),r=j.checks?.[0];if(r)api[id]={...r,checked_at:j.checked_at};drawApi();$('apiUpdated').textContent=(r?.name||id)+' checked '+when(j.checked_at)}catch(e){$('apiUpdated').textContent=e.message}finally{b.disabled=false;b.textContent=old}
+ try{let j,r;if(id==='overpass-pool'){r=await probeOverpass();j={checked_at:r.checked_at||new Date().toISOString()}}else{j=await req('',id);r=j.checks?.[0]}if(r)api[id]={...r,checked_at:r.checked_at||j.checked_at};drawApi();$('apiUpdated').textContent=(r?.name||id)+' checked '+when(r?.checked_at||j.checked_at)}catch(e){$('apiUpdated').textContent=e.message}finally{b.disabled=false;b.textContent=old}
 }
 let runs=[],checks=[];
 function statusIcon(s){return s==='healthy'?'✅':s==='warning'?'⚠️':s==='failed'?'❌':s==='not_tested'?'◻️':'•'}
