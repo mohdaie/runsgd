@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f8fbff">
+<title>RunSGD Admin</title>
+<style>
+:root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--green:#20a36a}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 3%,#dff2ff 0,transparent 30%),radial-gradient(circle at 92% 8%,#efe5ff 0,transparent 28%),linear-gradient(180deg,#fbfdff,#faf9ff 55%,#fffaf7);min-height:100vh}.app{max-width:620px;margin:auto;padding:24px 18px 54px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;font-size:30px;letter-spacing:-2px;background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;color:transparent}.badge{font-size:10px;font-weight:850;padding:6px 9px;border-radius:99px;background:#ffffffd9;color:#65718a;border:1px solid #fff}.hero{padding:28px 4px 18px}.hero h1{font-size:30px;margin:0 0 7px}.sub,.status,.note{color:var(--muted);font-size:13px;line-height:1.5}.stack{display:flex;flex-direction:column;gap:16px}.card{background:#fffffff0;border:1px solid #fff;border-radius:24px;padding:18px;box-shadow:0 12px 32px #46537d12}.head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.title{font-weight:850}.pill{font-size:10px;font-weight:850;padding:5px 8px;border-radius:99px;background:#eef4ff;color:#5067b4}.pill.ok{background:#eaf8f1;color:#247a55}.field{margin-top:12px}.field label{display:block;font-size:12px;font-weight:800;color:#58647a;margin-bottom:6px}.input,.select{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px 13px;color:var(--ink);outline:none}.input:focus,.select:focus{border-color:#9eb9fb;box-shadow:0 0 0 4px #4b82f510}.row{display:flex;gap:9px;align-items:center}.row .input{flex:1}.btn{border:0;border-radius:14px;padding:11px 14px;font-weight:850;cursor:pointer;transition:transform .14s ease,filter .18s ease,opacity .18s ease}.btn:active{transform:scale(.965);filter:brightness(.97)}.primary{background:linear-gradient(120deg,var(--blue),var(--violet));color:#fff}.soft{background:#edf2fb;color:#2e4369}.danger{background:#fff0f2;color:#a33e53}.full{width:100%;margin-top:12px}.status{margin-top:10px}.services{display:grid;grid-template-columns:1fr 1fr;gap:10px}.service{padding:13px;border-radius:17px;background:linear-gradient(120deg,#f4f8ff,#faf6ff)}.service strong{display:block;font-size:13px}.service span{display:block;font-size:11px;color:var(--muted);margin-top:4px}.back{display:inline-flex;align-items:center;gap:6px;color:#4965c7;text-decoration:none;font-weight:800;font-size:13px}.note{padding:12px 13px;border-radius:15px;background:#fff8e9;color:#806339}.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}.switch input{width:20px;height:20px}.saved{animation:flash .55s ease}@keyframes flash{0%{box-shadow:0 0 0 0 #4b82f533}50%{box-shadow:0 0 0 8px #4b82f510}100%{box-shadow:none}}@media(max-width:520px){.services{grid-template-columns:1fr}}
+
+.adminProfile{display:flex;align-items:center;gap:13px;padding:14px;border-radius:18px;background:linear-gradient(120deg,#f3f8ff,#faf5ff);margin-bottom:16px}.adminAvatar{width:58px;height:58px;border-radius:18px;object-fit:cover;background:#eef3ff;border:1px solid #e2e7f1}.memberList{display:flex;flex-direction:column;gap:10px}.memberRow{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid #edf0f5;border-radius:17px;background:#fff}.memberAvatar{width:45px;height:45px;border-radius:14px;object-fit:cover;background:#eef3ff;flex:0 0 auto}.memberInfo{min-width:0;flex:1}.memberName{font-weight:850;font-size:14px}.memberBio{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.memberTags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}.memberTag{font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 7px;border-radius:99px;background:#eef3ff;color:#5067b4}.memberTag.admin{background:#fff0f2;color:#a33e53}.memberTag.paid{background:#fff7df;color:#8b6b16}
+
+/* RunSGD AI admin console */
+.aiConsoleCard{position:relative;overflow:hidden;background:linear-gradient(145deg,#ffffff 0%,#f6f8ff 52%,#fff4fb 100%);border:1px solid #fff;box-shadow:0 18px 46px #5968a21a}
+.aiConsoleCard:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-80px;top:-90px;background:radial-gradient(circle,#8b67ef24,transparent 67%);pointer-events:none}
+.aiConsoleHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:relative}.aiConsoleTitle{font-size:18px;font-weight:950;letter-spacing:-.3px}.aiConsoleMeta{font-size:10px;color:#8390a8;margin-top:4px}
+.aiQuick{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.aiQuick button{border:1px solid #e5eaf5;background:#fff;border-radius:999px;padding:7px 10px;font-size:10px;font-weight:850;color:#53647f;cursor:pointer}
+.aiChat{min-height:150px;max-height:360px;overflow:auto;padding:10px;border-radius:18px;background:#f8faff;border:1px solid #edf1f8;display:flex;flex-direction:column;gap:9px;scroll-behavior:smooth}
+.aiBubble{max-width:88%;padding:10px 12px;border-radius:15px;font-size:12px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}.aiBubble.bot{align-self:flex-start;background:#fff;border:1px solid #e8edf6;color:#43526d;border-bottom-left-radius:6px}.aiBubble.user{align-self:flex-end;background:linear-gradient(120deg,#4b82f5,#8b67ef);color:#fff;border-bottom-right-radius:6px}.aiBubble.thinking{color:#8a95aa;font-style:italic}.aiBubbleMeta{font-size:9px;color:#98a2b3;margin-top:5px}
+.aiAskRow{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}.aiAskInput{width:100%;border:1px solid #dfe6f2;background:#fff;border-radius:14px;padding:12px 13px;font:inherit;font-size:12px;color:var(--ink);outline:none}.aiAskInput:focus{border-color:#9eb9fb;box-shadow:0 0 0 4px #4b82f510}.aiSendBtn{min-width:72px}
+.aiConsoleFoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px}.aiConsoleFoot .status{margin:0;font-size:10px}.aiClear{border:0;background:transparent;color:#7b879d;font-size:10px;font-weight:850;padding:5px;cursor:pointer}
+@media(max-width:520px){.aiAskRow{grid-template-columns:1fr}.aiSendBtn{width:100%}.aiBubble{max-width:94%}}
+
+/* Admin monitoring */
+.monitorCard{position:relative;overflow:hidden;background:linear-gradient(145deg,#ffffff 0%,#f5f8ff 48%,#fff5fb 100%);border:1px solid rgba(255,255,255,.96);box-shadow:0 18px 44px rgba(70,83,125,.13)}
+.monitorCard:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-70px;top:-90px;background:radial-gradient(circle,#8b67ef22 0%,#4b82f500 68%);pointer-events:none}
+.monitorHead,.trendHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.monitorHead{margin-bottom:14px}.monitorLive{display:inline-flex;align-items:center;gap:6px}.monitorLive:before{content:"";width:7px;height:7px;border-radius:50%;background:#24ad70;box-shadow:0 0 0 5px #24ad7014}
+.metricGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.metric{min-width:0;padding:13px 11px;border-radius:18px;background:#ffffffd9;border:1px solid #edf0f7;box-shadow:0 7px 18px #42527a0b}
+.metricValue{font-size:26px;font-weight:950;letter-spacing:-1.2px;line-height:1;color:#1d2d51}
+.metricLabel{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.35px;color:#67758e;margin-top:8px}
+.metricSub{font-size:10px;color:#929caf;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trendHead{font-size:11px;font-weight:800;color:#65718a;margin-top:15px}
+.billingGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.billingMetric{padding:12px 10px;border:1px solid #edf0f6;border-radius:16px;background:#fff}.billingMetric strong{display:block;font-size:22px;line-height:1;color:#1f3155}.billingMetric span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.3px;color:#7f8aa0;margin-top:7px;font-weight:900}.billingPanel{margin-top:12px;padding:13px 14px;border-radius:16px;background:linear-gradient(120deg,#f2f8ff,#f7f3ff);border:1px solid #e7ecf7}.billingTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.billingCost{font-size:22px;font-weight:950;color:#28395d}.billingNote{font-size:10px;color:#7b879e;margin-top:5px;line-height:1.45}@media(max-width:520px){.billingGrid{grid-template-columns:1fr 1fr}}
+.sparkBars{height:78px;display:grid;grid-template-columns:repeat(7,1fr);gap:7px;align-items:end;margin-top:8px}
+.sparkDay{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px}
+.sparkBar{width:100%;max-width:34px;min-height:7px;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,#6d8df5,#8b67ef 58%,#e77da8);box-shadow:0 6px 14px #766de52b;transition:height .25s ease}
+.sparkLabel{font-size:9px;font-weight:800;color:#8c96a9}
+.apiGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.apiItem{display:flex;align-items:flex-start;gap:9px;padding:11px 12px;border-radius:17px;border:1px solid #edf0f5;background:#fff}
+.apiDot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;margin-top:4px;background:#6f8fe8;box-shadow:0 0 0 4px #6f8fe817}
+.apiItem.ok .apiDot{background:#20a36a;box-shadow:0 0 0 4px #20a36a16}
+.apiItem.bad .apiDot{background:#e35264;box-shadow:0 0 0 4px #e3526415}
+.apiInfo{min-width:0;flex:1}.apiName{font-size:12px;font-weight:900;color:#33405d;line-height:1.25}.apiDetail{font-size:10px;color:#8590a5;line-height:1.35;margin-top:3px;overflow-wrap:anywhere}.apiLatency{font-size:9px;font-weight:800;color:#a0a8b7;margin-top:4px}
+.pill.bad{background:#fff0f2;color:#b43d55}.healthFooter{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}.healthFooter .status{margin:0;min-width:0}.healthRefresh{white-space:nowrap}
+.apiItem{align-items:center}.apiInfo{align-self:stretch;display:flex;flex-direction:column;justify-content:center}.apiStatusText{font-size:10px;font-weight:900;margin-top:3px;color:#6078b7}.apiItem.ok .apiStatusText{color:#24825a}.apiItem.bad .apiStatusText{color:#b54458}.apiActions{display:flex;align-items:center;gap:6px;margin-left:auto}.apiIconBtn{width:32px;height:32px;border:0;border-radius:11px;background:#eef3fb;color:#4d6084;font-weight:950;display:grid;place-items:center;cursor:pointer;padding:0;font-size:15px;flex:0 0 auto}.apiIconBtn:active{transform:scale(.95)}.apiIconBtn:disabled{opacity:.55;cursor:wait}.apiIconBtn.info{border:1px solid #e3e8f2;background:#fff;font-family:Georgia,serif;font-style:italic;font-size:14px}.apiIconBtn.test{font-size:16px}
+.apiInfoOverlay{display:none;position:fixed;inset:0;z-index:50;background:#17213b55;backdrop-filter:blur(5px);padding:22px;align-items:center;justify-content:center}.apiInfoOverlay.open{display:flex}.apiInfoModal{width:min(390px,100%);background:#fff;border:1px solid #eef1f6;border-radius:24px;padding:18px;box-shadow:0 24px 70px #17213b38}.apiInfoTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.apiInfoTitle{font-size:18px;font-weight:900;line-height:1.25}.apiInfoClose{width:32px;height:32px;border:0;border-radius:11px;background:#f0f3f8;color:#56647d;font-weight:900}.apiInfoState{display:inline-flex;margin-top:12px;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:900;background:#f0f2f5;color:#7c879a}.apiInfoState.ok{background:#eaf8f1;color:#247a55}.apiInfoState.bad{background:#fff0f2;color:#b43d55}.apiInfoNote{margin-top:12px;padding:12px 13px;border-radius:15px;background:linear-gradient(120deg,#f4f8ff,#faf6ff);font-size:12px;color:#5c6880;line-height:1.5}.apiInfoResult{margin-top:10px;font-size:12px;color:#68758b;line-height:1.5}
+@media(max-width:520px){.apiGrid{grid-template-columns:1fr}.metric{padding:12px 8px}.metricValue{font-size:23px}.metricLabel{font-size:9px}.metricSub{font-size:9px}.apiIconBtn{width:31px;height:31px}}
+
+/* v2.14.5 production navigation diagnostics */
+.navDiagCard{background:linear-gradient(145deg,#fff 0%,#f5fbf8 52%,#eef7ff 100%)}
+.navDiagTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.navDiagSelect{width:100%;margin-top:10px;border:1px solid #dfe7ef;background:#fff;border-radius:13px;padding:10px 11px;color:#263550;font-weight:750}
+.navDiagGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.navDiagMetric{padding:11px 9px;border-radius:15px;background:#fff;border:1px solid #e8eef1}.navDiagMetric strong{display:block;font-size:20px;line-height:1;color:#1e4935}.navDiagMetric span{display:block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.3px;color:#7c8d84;margin-top:7px}
+.navDiagConfidence{margin-top:12px;padding:13px;border-radius:16px;background:#f2f8f5;border:1px solid #dfece5}.navDiagConfidenceTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.navDiagScore{font-size:25px;font-weight:950;color:#1e6e49}.navDiagTrack{height:8px;border-radius:99px;background:#dce9e2;overflow:hidden;margin-top:9px}.navDiagBar{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#59a27b,#268d60);transition:width .25s ease}.navDiagNote{font-size:10px;color:#71827a;line-height:1.45;margin-top:7px}
+.navDiagSnapshot{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.navDiagFact{padding:9px 10px;border-radius:13px;background:#fff;border:1px solid #e8edf2}.navDiagFact b{display:block;font-size:11px;color:#334a3e}.navDiagFact span{display:block;font-size:11px;color:#718079;margin-top:3px;overflow-wrap:anywhere}
+.navDiagEvents{margin-top:12px;display:flex;flex-direction:column;gap:6px;max-height:280px;overflow:auto}.navDiagEvent{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:8px 9px;border-radius:12px;background:#fff;border:1px solid #edf0f3}.navDiagTime{font-size:9px;color:#89968f;font-weight:800}.navDiagEventText{font-size:10px;color:#53645b;line-height:1.4;overflow-wrap:anywhere}.navDiagActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.navDiagEmpty{padding:15px;border-radius:15px;background:#f6f8fa;color:#7d8793;font-size:12px;line-height:1.5;margin-top:10px}
+@media(max-width:520px){.navDiagGrid{grid-template-columns:1fr 1fr}.navDiagSnapshot{grid-template-columns:1fr}}
+
+/* Affiliate tracking */
+.affiliateTableWrap{overflow-x:auto;border:1px solid #edf0f5;border-radius:17px;background:#fff}
+.affiliateTable{width:100%;border-collapse:collapse;min-width:760px}
+.affiliateTable th,.affiliateTable td{padding:11px 12px;text-align:left;border-bottom:1px solid #edf0f5;vertical-align:middle}
+.affiliateTable th{font-size:9px;text-transform:uppercase;letter-spacing:.35px;color:#7d899f;background:#f8faff;font-weight:900}
+.affiliateTable td{font-size:12px;color:#41506b}
+.affiliateTable tbody tr:last-child td{border-bottom:0}
+.affiliatePartner{font-weight:900;color:#243655}.affiliateLabel{font-size:10px;color:#8a95aa;margin-top:3px}
+.affiliateMetric{font-size:16px;font-weight:950;color:#253858}.affiliateMetric small{display:block;font-size:9px;font-weight:750;color:#8b96aa;margin-top:3px}
+.affiliateStatus{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:900;background:#eaf8f1;color:#247a55}
+.affiliateStatus.off{background:#f1f2f5;color:#7f899a}
+.affiliateLinkBtn{display:inline-flex;text-decoration:none;border-radius:11px;padding:8px 10px;background:#eef3ff;color:#4d64b8;font-size:10px;font-weight:900;white-space:nowrap}
+.affiliateFooter{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px}.affiliateFooter .status{margin:0}
+@media(max-width:520px){.affiliateFooter{align-items:flex-start;flex-direction:column}.affiliateFooter .btn{width:100%}}
+
+body.adminHome #affiliateTrackingCard,body.adminHome #communityMembersCard,body.adminHome #ltaCard,body.adminHome #fxCard,body.adminHome #oneMapCard,body.adminHome #googleMapsCard,body.adminHome #jbMapTestCard,body.adminHome #prodNavDiagCard,body.adminHome #geminiCard,body.adminHome #connectedServicesCard,body.adminHome #localAdminStorageCard{display:none!important}\n#runSgdAiConsole,#monitorCard,#googleBillingCard,#apiHealthCard,#affiliateTrackingCard,#communityMembersCard,#jbMapTestCard,#prodNavDiagCard{display:none!important}\n</style>
+</head>
+<body>
+<div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
+<main id="adminApp" class="app" style="display:none">
+<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.12</span></div>
+<section class="hero"><h1>Keys & credentials</h1><p class="sub">Admin-only RunSGD management.</p></section><div class="stack" style="display:none;margin-bottom:16px"><a class="card back" style="display:block;text-decoration:none" href="/admin/health/"><b>🩺 Detailed System Health</b><div class="sub">Extensive monitoring and history.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/keys/"><b>🔐 Keys & credentials</b><div class="sub">API keys and provider credentials.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/developer/"><b>🧑‍💻 Developer's world</b><div class="sub">Navigation Lab and diagnostics.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/people/"><b>🤝 Affiliate & members</b><div class="sub">Affiliate monitoring and members.</div></a></div>
+<div id="adminProfileCard" class="adminProfile">
+  <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
+  <div><div id="adminName" class="title">Admin</div><div id="adminEmail" class="sub"></div><div class="memberTags"><span class="memberTag admin">Admin</span></div></div>
+</div>
+<div class="stack">
+<article class="card aiConsoleCard" id="runSgdAiConsole">
+ <div class="aiConsoleHead">
+  <div><div class="aiConsoleTitle">✨ Talk to RunSGD AI</div><div class="aiConsoleMeta">Your RunSGD AI · Admin-only conversation</div></div>
+  <span class="pill ok">LIVE AI</span>
+ </div>
+ <p class="sub" style="margin:10px 0 0">Talk to RunSGD AI directly. Ask how it thinks about RunSGD data, what it can use, what it avoids guessing, or just chat normally.</p>
+ <div class="aiQuick">
+  <button onclick="askAdminAiPreset('Explain your behavior and rules in RunSGD.')">Your behavior</button>
+  <button onclick="askAdminAiPreset('What data and sources are you allowed to use?')">Your data</button>
+  <button onclick="askAdminAiPreset('When does RunSGD trigger AI during a live journey?')">Journey triggers</button>
+  <button onclick="askAdminAiPreset('What are you not allowed to guess or invent?')">Your limits</button>
+ </div>
+ <div id="adminAiChat" class="aiChat">
+  <div class="aiBubble bot">Hi 👋 I’m RunSGD AI. Ask me anything about how I work in the app, what I know, what I avoid guessing, or just talk to me normally.</div>
+ </div>
+ <div class="aiAskRow">
+  <input id="adminAiInput" class="aiAskInput" maxlength="500" placeholder="Ask RunSGD AI anything…" onkeydown="if(event.key==='Enter'){event.preventDefault();sendAdminAi()}">
+  <button id="adminAiSend" class="btn primary aiSendBtn" onclick="sendAdminAi()">Send</button>
+ </div>
+ <div class="aiConsoleFoot"><div id="adminAiStatus" class="status">Gemini 3.5 Flash-Lite · Web search OFF</div><button class="aiClear" onclick="clearAdminAiChat()">Clear chat</button></div>
+</article>
+
+<article class="card monitorCard" id="monitorCard">
+ <div class="monitorHead"><div><div class="title">📊 RunSGD monitoring</div><div class="sub">Live activity · Singapore time</div></div><span class="pill ok monitorLive">LIVE</span></div>
+ <div class="metricGrid">
+  <div class="metric"><div id="metricTraffic" class="metricValue">—</div><div class="metricLabel">Traffic</div><div id="metricTrafficSub" class="metricSub">Page views today</div></div>
+  <div class="metric"><div id="metricVisitors" class="metricValue">—</div><div class="metricLabel">Visitors</div><div id="metricVisitorsSub" class="metricSub">Unique today</div></div>
+  <div class="metric"><div id="metricMembers" class="metricValue">—</div><div class="metricLabel">Members</div><div id="metricMembersSub" class="metricSub">Registered total</div></div>
+ </div>
+ <div class="trendHead"><span>7-day traffic</span><span id="monitorUpdated">Loading…</span></div>
+ <div id="trafficBars" class="sparkBars" aria-label="7-day traffic chart"></div>
+</article>
+
+<article class="card" id="googleBillingCard">
+ <div class="head"><div class="title">📈 Google Maps query monitor</div><span id="googleBillingState" class="pill ok">Tracking</span></div>
+ <p class="sub">Internal RunSGD counters for Google Places, traffic-aware Routes Pro and Dynamic Map loads. Google Cloud Billing remains the source of truth.</p>
+ <div class="billingGrid">
+  <div class="billingMetric"><strong id="gmTodayTotal">—</strong><span>Events today</span></div>
+  <div class="billingMetric"><strong id="gmMonthTotal">—</strong><span>Events this month</span></div>
+  <div class="billingMetric"><strong id="gmMonthPlaces">—</strong><span>Places searches</span></div>
+  <div class="billingMetric"><strong id="gmMonthRoutes">—</strong><span>Routes Pro</span></div>
+  <div class="billingMetric"><strong id="gmMonthMaps">—</strong><span>Dynamic maps</span></div>
+ </div>
+ <div class="billingPanel">
+  <div class="billingTop"><div><div class="sub">Free-tier threshold monitor</div><div id="gmThresholdState" class="billingCost">Checking…</div></div><span id="gmThresholdPill" class="pill ok">Safe</span></div>
+  <div id="gmPlacesThreshold" class="billingNote">Places Text Search Pro: — / 5,000 free monthly</div>
+  <div id="gmRoutesThreshold" class="billingNote">Compute Routes Pro: — / 5,000 free monthly</div>
+  <div id="gmMapsThreshold" class="billingNote">Dynamic Maps: — / 10,000 free monthly</div>
+  <div class="billingNote">RunSGD warns at 70%, 85% and 95%. Admin API tests are excluded from app counters.</div>
+ </div>
+ <div class="healthFooter"><div id="gmUsageUpdated" class="status">Loading usage…</div><button id="gmUsageBtn" class="btn soft healthRefresh" onclick="loadGoogleMapsUsage(this)">↻ Refresh usage</button></div>
+</article>
+
+<article class="card" id="affiliateTrackingCard">
+ <div class="head"><div><div class="title">🔗 Affiliate tracking</div><div class="sub">RunSGD referral link clicks · Singapore time</div></div><span id="affiliateTrackingState" class="pill ok">Tracking</span></div>
+ <p class="sub">RunSGD records link clicks only. Conversions, rewards and commissions are confirmed by the affiliate provider.</p>
+ <div class="affiliateTableWrap">
+  <table class="affiliateTable">
+   <thead><tr><th>Partner</th><th>Placement</th><th>Today</th><th>7 days</th><th>Total</th><th>Last click</th><th>Link</th></tr></thead>
+   <tbody id="affiliateTableBody"><tr><td colspan="7" class="sub">Loading affiliate links…</td></tr></tbody>
+  </table>
+ </div>
+ <div class="affiliateFooter"><div id="affiliateUpdated" class="status">Loading…</div><button id="affiliateRefreshBtn" class="btn soft" onclick="loadAffiliateStats(this)">↻ Refresh</button></div>
+</article>
+
+<article class="card" id="apiHealthCard">
+ <div class="head"><div class="title">🩺 API health</div><span id="apiHealthSummary" class="pill">Loading last scan…</span></div>
+ <p class="sub">Shows the last saved health result when Admin opens. No live API tests run automatically. Press ↻ Refresh all, or test one API individually.</p>
+ <div id="apiHealthGrid" class="apiGrid"><div class="sub">Loading last saved results…</div></div>
+ <div class="healthFooter"><div id="apiHealthUpdated" class="status">Loading last scan…</div><button id="apiHealthBtn" class="btn soft healthRefresh" onclick="loadApiHealth(this)">↻ Refresh all</button></div>
+</article>
+
+<article class="card">
+ <div class="head"><div class="title">👥 Community members</div><span id="memberCount" class="pill">0 members</span></div>
+ <p class="sub">Profile photo and community tag shown exactly as members appear in RunSGD chat.</p>
+ <div id="memberList" class="memberList"><div class="sub">Loading members…</div></div>
+</article>
+
+<article class="card" id="ltaCard">
+ <div class="head"><div class="title">🚦 LTA DataMall · Traffic Images</div><span id="ltaState" class="pill">Not configured</span></div>
+ <p class="sub">AccountKey for the Causeway snapshot on Home. Saved securely in Supabase for RunSGD; it is not stored in GitHub or exposed to visitors.</p>
+ <div class="field"><label for="ltaKey">LTA AccountKey</label><div class="row"><input id="ltaKey" class="input" type="password" placeholder="Paste LTA DataMall AccountKey" autocomplete="off"><button class="btn soft" onclick="toggleKey('ltaKey',this)">Show</button></div></div>
+ <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveLtaKey()">Save</button><button id="ltaTestBtn" class="btn soft" onclick="testLta()">Test Causeway</button></div>
+ <div id="ltaStatus" class="status">Camera 2701 · Woodlands Causeway towards Johor.</div>
+</article>
+
+<article class="card" id="fxCard">
+ <div class="head"><div class="title">💱 Currency · Twelve Data</div><span id="twelveState" class="pill">Not configured</span></div>
+ <p class="sub">Primary live SGD/MYR provider. RunSGD keeps the existing free FX sources as fallback.</p>
+ <div class="field"><label for="twelveKey">API key</label><div class="row"><input id="twelveKey" class="input" type="password" placeholder="Paste Twelve Data API key" autocomplete="off"><button class="btn soft" onclick="toggleKey('twelveKey',this)">Show</button></div></div>
+ <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveTwelve()">Save</button><button id="testBtn" class="btn soft" onclick="testTwelve()">Test SGD/MYR</button></div>
+ <div id="twelveStatus" class="status">No test run yet.</div>
+</article>
+
+<article class="card" id="oneMapCard">
+ <div class="head"><div class="title">🗺️ OneMap · Route Planner</div><span id="oneMapState" class="pill">Not configured</span></div>
+ <p class="sub">Admin-only OneMap account used by the Singapore Route Planner. Credentials are saved in Supabase and are not stored in this browser.</p>
+ <div class="field"><label for="oneMapEmail">Registered email</label><input id="oneMapEmail" class="input" type="email" inputmode="email" placeholder="OneMap registered email" autocomplete="off"></div>
+ <div class="field"><label for="oneMapPassword">Password</label><div class="row"><input id="oneMapPassword" class="input" type="password" placeholder="OneMap password" autocomplete="off"><button class="btn soft" onclick="toggleKey('oneMapPassword',this)">Show</button></div></div>
+ <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveOneMap()">Save securely</button><button id="oneMapTestBtn" class="btn soft" onclick="testOneMap()">Test login</button><button class="btn soft" onclick="clearOneMap()">Clear</button></div>
+ <div id="oneMapStatus" class="status">Used only for OneMap authentication. Route API connection will be added next.</div>
+</article>
+
+<article class="card" id="googleMapsCard">
+ <div class="head"><div class="title">🇲🇾 Google Maps · RunSGD Navigation</div><span id="googleMapsState" class="pill">Not configured</span></div>
+ <p class="sub">RunSGD uses separate Google keys: a private server key for Places + Routes, and a browser-restricted key for the Dynamic Map shown inside live navigation.</p>
+ <div class="field"><label for="googleMapsKey">Server key · Places + Routes</label><div class="row"><input id="googleMapsKey" class="input" type="password" placeholder="RunSGD server key" autocomplete="off"><button class="btn soft" onclick="toggleKey('googleMapsKey',this)">Show</button></div></div>
+ <div class="row" style="margin-top:10px"><button class="btn primary" onclick="saveGoogleMapsKey()">Save server key</button><button id="googleMapsTestBtn" class="btn soft" onclick="testGoogleMaps()">Test routing APIs</button><button class="btn soft" onclick="clearGoogleMapsKey()">Clear</button></div>
+ <div id="googleMapsStatus" class="status">Server key stays in Supabase and is never sent to visitors.</div>
+ <div class="field" style="margin-top:16px"><label for="googleMapsBrowserKey">Browser key · Maps JavaScript API / Dynamic Maps</label><div class="row"><input id="googleMapsBrowserKey" class="input" type="password" placeholder="Paste HTTP-referrer-restricted browser key" autocomplete="off"><button class="btn soft" onclick="toggleKey('googleMapsBrowserKey',this)">Show</button></div></div>
+ <div class="row" style="margin-top:10px"><button class="btn primary" onclick="saveGoogleMapsBrowserKey()">Save browser key</button><button class="btn soft" onclick="clearGoogleMapsBrowserKey()">Clear</button><span id="googleMapsBrowserState" class="pill">Not configured</span></div>
+ <div id="googleMapsBrowserStatus" class="status">Use a separate key restricted to Maps JavaScript API and HTTP referrers runsgd.site / www.runsgd.site. The key is visible to browsers by design, so restrictions are required.</div>
+</article>
+
+<article class="card" id="jbMapTestCard">
+ <div class="head"><div class="title">🧪 JB Navigation Lab</div><span class="pill">PHASE 1</span></div>
+ <p class="sub">Independent Johor navigation sandbox for map UX and RunSGD GPS logic. Phase 1 adds current-GPS origin, manual OSM destination search, route preview, live GPS matching, reroute testing and persistent destination context.</p>
+ <a class="btn primary full" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="/jb-test/">Open JB Navigation Lab →</a>
+ <div class="status">MapLibre + OpenStreetMap + OSRM · isolated from production Google routing.</div>
+</article>
+
+<article class="card navDiagCard" id="prodNavDiagCard">
+ <div class="navDiagTop"><div><div class="title">🧠 Production Navigation Diagnostics</div><div class="sub">Real Journey route · real production GPS matcher · read-only diagnostics</div></div><span id="prodNavDiagState" class="pill">No trace</span></div>
+ <p class="sub">This reads diagnostics written by the actual production Journey engine on this device. It does not use the OSM/OSRM lab flow and it does not change routing decisions. Raw latitude/longitude are not stored.</p>
+ <select id="prodNavDiagSessionSelect" class="navDiagSelect" onchange="renderProductionNavDiagnostics()"></select>
+ <div id="prodNavDiagEmpty" class="navDiagEmpty">No production navigation trace yet. After this version is installed, start a real Journey and drive normally; this card will record the engine decisions for review.</div>
+ <div id="prodNavDiagBody" style="display:none">
+  <div class="navDiagGrid"><div class="navDiagMetric"><strong id="prodDiagFixes">—</strong><span>Trace samples</span></div><div class="navDiagMetric"><strong id="prodDiagAvgGps">—</strong><span>Avg GPS</span></div><div class="navDiagMetric"><strong id="prodDiagMaxOffset">—</strong><span>Max offset</span></div><div class="navDiagMetric"><strong id="prodDiagLowFixes">—</strong><span>&lt;85 samples</span></div></div>
+  <div class="navDiagConfidence"><div class="navDiagConfidenceTop"><div><div class="sub">Current operational confidence</div><div id="prodDiagConfidence" class="navDiagScore">—</div></div><span id="prodDiagConfidencePill" class="pill">Diagnostic</span></div><div class="navDiagTrack"><div id="prodDiagConfidenceBar" class="navDiagBar"></div></div><div class="navDiagNote">This score measures current GPS/route-match signal quality. It is not yet a validated navigation-accuracy percentage. We use the trace to measure and tune real accuracy.</div></div>
+  <div id="prodDiagSnapshot" class="navDiagSnapshot"></div>
+  <div class="head" style="margin:14px 0 0"><div class="title" style="font-size:13px">Decision timeline</div><span id="prodDiagSessionMeta" class="pill"></span></div><div id="prodDiagEvents" class="navDiagEvents"></div>
+ </div>
+ <div class="navDiagActions"><button class="btn soft" onclick="loadProductionNavDiagnostics()">↻ Refresh</button><button class="btn soft" onclick="copyProductionNavDiagnostics()">Copy trace</button><button class="btn danger" onclick="clearProductionNavDiagnostics()">Clear local traces</button></div>
+</article>
+
+<article class="card" id="geminiCard">
+ <div class="head"><div class="title">✨ RunSGD AI · Gemini</div><span id="geminiState" class="pill">Not configured</span></div>
+ <p class="sub">v2.0 uses Gemini 3.5 Flash-Lite to analyse RunSGD live data, Knowledge and recent Community updates. External web search is OFF.</p>
+ <div class="field"><label>Model</label><input class="input" value="gemini-3.5-flash-lite" disabled></div>
+ <div class="field"><label for="geminiKey">Gemini API key</label><div class="row"><input id="geminiKey" class="input" type="password" placeholder="Paste Google AI Studio API key" autocomplete="off"><button class="btn soft" onclick="toggleKey('geminiKey',this)">Show</button></div></div>
+ <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveGeminiKey()">Save securely</button><button id="geminiTestBtn" class="btn soft" onclick="testGemini()">Test AI</button></div>
+ <div id="geminiStatus" class="status">API key is stored in Supabase and never sent to GitHub Pages visitors.</div>
+</article>
+
+<article class="card">
+ <div class="head"><div class="title">Connected services</div><span class="pill ok">No key needed</span></div>
+ <div class="services">
+  <div class="service"><strong>🌦 Open-Meteo</strong><span>SG/JB weather</span></div>
+  <div class="service"><strong>🕌 AlAdhan</strong><span>Prayer times</span></div>
+  <div class="service"><strong>📅 Nager</strong><span>Singapore public holidays</span></div>
+  <div class="service"><strong>📍 OpenStreetMap</strong><span>Nearby mosque / surau lookup</span></div>
+  <div class="service"><strong>💱 FX fallbacks</strong><span>Fawaz · ER API · Frankfurter</span></div>
+ </div>
+</article>
+
+<article class="card">
+ <div class="title">Local admin storage</div>
+ <p class="note">Twelve Data remains stored locally for this prototype. LTA, OneMap, Gemini and Google Maps route credentials are stored server-side in Supabase and are not exposed in the public GitHub repository.</p>
+ <div class="switch"><div><b>Hide keys by default</b><div class="sub">Password fields remain masked unless you press Show.</div></div><input type="checkbox" checked disabled></div>
+ <button class="btn danger full" onclick="clearAll()">Clear API settings from this browser</button>
+</article>
+
+<a class="back" href="/admin/">← Back to Admin</a>
+</div>
+</main>
+<div id="apiInfoOverlay" class="apiInfoOverlay" onclick="if(event.target===this)hideApiInfo()">
+ <div class="apiInfoModal" role="dialog" aria-modal="true" aria-labelledby="apiInfoTitle">
+  <div class="apiInfoTop"><div><div id="apiInfoTitle" class="apiInfoTitle">API status</div><div id="apiInfoGroup" class="sub"></div></div><button class="apiInfoClose" onclick="hideApiInfo()" aria-label="Close">×</button></div>
+  <div id="apiInfoState" class="apiInfoState">Not checked</div>
+  <div id="apiInfoNote" class="apiInfoNote"></div>
+  <div id="apiInfoResult" class="apiInfoResult"></div>
+ </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const ADMIN_SUPABASE_URL='https://gdycbluljgfezhgslppe.supabase.co';
+const ADMIN_SUPABASE_KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
+const adminSb=window.supabase.createClient(ADMIN_SUPABASE_URL,ADMIN_SUPABASE_KEY);
+const ADMIN_MONITOR_URL=ADMIN_SUPABASE_URL+'/functions/v1/admin-monitor';
+const RUNSGD_AI_URL=ADMIN_SUPABASE_URL+'/functions/v1/runsgd-ai';
+let monitorTimer=null;
+const $=id=>document.getElementById(id);
+function flash(el){el.classList.remove('saved');void el.offsetWidth;el.classList.add('saved')}
+function toggleKey(id,btn){let e=$(id),show=e.type==='password';e.type=show?'text':'password';btn.textContent=show?'Hide':'Show'}
+let adminAiChat=[];
+const ADMIN_AI_BEHAVIOR={
+ model:'gemini-3.5-flash-lite',
+ role:'RunSGD Companion for Singapore ↔ Johor commuters',
+ modes:['brief','ask'],
+ web_search:false,
+ allowed_inputs:[
+  'RunSGD live context supplied by the app',
+  'up to 5 relevant active Knowledge articles',
+  'recent Community messages',
+  'Causeway traffic-camera image in brief mode when supplied'
+ ],
+ rules:[
+  'Use only RunSGD data supplied to the request',
+  'Never invent traffic, weather, exchange rates, rules, community reports or missing facts',
+  'Prefer current live signals over static knowledge',
+  'Treat Community posts as unverified unless corroborated',
+  'Reply in the user’s language style and keep answers concise'
+ ],
+ journey_ai:{
+  foreground_only:true,
+  automatic_trigger:'Only when RunSGD detects a likely journey anomaly such as moving away or not progressing',
+  manual_trigger:'User taps “I’m lost”',
+  normal_hop_guidance:'Handled locally without an AI request',
+  background_behavior:'GPS watcher and AI intervention pause while RunSGD is hidden'
+ },
+ daily_limits:{admin:200,member:30},
+ knowledge_retrieval:'Question terms rank active Knowledge; maximum 5 articles are supplied',
+ community_window:'ASK uses recent Community up to about 120 minutes; BRIEF uses about 45 minutes'
+};
+function renderAdminAiBubble(role,text,meta=''){
+ let chat=$('adminAiChat');if(!chat)return;
+ let d=document.createElement('div');d.className='aiBubble '+role;d.textContent=text;
+ if(meta){let m=document.createElement('div');m.className='aiBubbleMeta';m.textContent=meta;d.appendChild(m)}
+ chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d
+}
+function askAdminAiPreset(q){$('adminAiInput').value=q;sendAdminAi()}
+function clearAdminAiChat(){
+ adminAiChat=[];
+ let chat=$('adminAiChat');if(chat)chat.innerHTML='<div class="aiBubble bot">Chat cleared. Ask me about my behavior, data, rules, or test a RunSGD question.</div>';
+ txtAdminAiStatus('Ready · Gemini 3.5 Flash-Lite · Web search OFF')
+}
+function txtAdminAiStatus(v){if($('adminAiStatus'))$('adminAiStatus').textContent=v}
+async function sendAdminAi(){
+ let input=$('adminAiInput'),btn=$('adminAiSend'),q=input?.value.trim()||'';
+ if(!q)return;
+ input.value='';renderAdminAiBubble('user',q);adminAiChat.push({role:'admin',text:q,at:new Date().toISOString()});
+ if(adminAiChat.length>12)adminAiChat=adminAiChat.slice(-12);
+ let thinking=renderAdminAiBubble('bot','Thinking…');thinking?.classList.add('thinking');
+ if(btn){btn.disabled=true;btn.textContent='…'}txtAdminAiStatus('Talking to RunSGD AI…');
+ try{
+  let {data:{session}}=await adminSb.auth.getSession();if(!session)throw Error('Admin session missing');
+  let r=await fetch(RUNSGD_AI_URL,{
+   method:'POST',
+   headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+   body:JSON.stringify({
+    mode:'ask',
+    question:q,
+    context:{
+     admin_console:true,
+     purpose:'Admin is talking directly with RunSGD AI. Reply naturally in first person as RunSGD AI, never narrate or analyse the admin’s intent.',
+     behavior_manifest:ADMIN_AI_BEHAVIOR,
+     recent_admin_chat:adminAiChat.slice(-8)
+    }
+   })
+  }),j=await r.json();
+  if(thinking)thinking.remove();
+  if(!r.ok||!j.answer)throw Error(j.error||'RunSGD AI did not return an answer');
+  let answer=j.answer;
+  renderAdminAiBubble('bot',answer,(j.model||ADMIN_AI_BEHAVIOR.model)+(Array.isArray(j.sources)&&j.sources.length?' · '+j.sources.join(' · '):''));
+  adminAiChat.push({role:'runsgd_ai',text:j.answer,at:new Date().toISOString()});
+  if(adminAiChat.length>12)adminAiChat=adminAiChat.slice(-12);
+  txtAdminAiStatus('Ready · '+(j.model||ADMIN_AI_BEHAVIOR.model)+' · Web search OFF');
+ }catch(e){
+  if(thinking)thinking.remove();
+  renderAdminAiBubble('bot','Could not answer · '+(e.message||'RunSGD AI unavailable'));
+  txtAdminAiStatus('AI console issue · '+(e.message||'Unknown error'));
+ }finally{if(btn){btn.disabled=false;btn.textContent='Send'}}
+}
+
+const PROD_NAV_DIAG_KEY='runsgdProdNavDiagnosticsV1';
+let prodNavDiagSessions=[];
+function readProductionNavDiagnostics(){try{let v=JSON.parse(localStorage.getItem(PROD_NAV_DIAG_KEY)||'null');return v&&Array.isArray(v.sessions)?v.sessions:[]}catch{return []}}
+function navDiagWhen(ms){try{return new Date(Number(ms)).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})}catch{return '—'}}
+function navDiagVal(v,suffix=''){return v!==null&&v!==undefined&&v!==''&&Number.isFinite(Number(v))?String(Math.round(Number(v)*10)/10)+suffix:'—'}
+function txtAdmin(id,v){let e=$(id);if(e)e.textContent=v}
+function loadProductionNavDiagnostics(){
+ prodNavDiagSessions=readProductionNavDiagnostics().sort((a,b)=>Number(b.started_at||0)-Number(a.started_at||0));
+ let sel=$('prodNavDiagSessionSelect'),empty=$('prodNavDiagEmpty'),body=$('prodNavDiagBody'),state=$('prodNavDiagState');if(!sel)return;
+ let previous=sel.value;sel.innerHTML=prodNavDiagSessions.map(s=>'<option value="'+esc(s.id)+'">'+esc((s.status||'trace').toUpperCase()+' · '+(s.destination||'Destination')+' · '+navDiagWhen(s.started_at))+'</option>').join('');
+ if(previous&&prodNavDiagSessions.some(s=>s.id===previous))sel.value=previous;
+ if(!prodNavDiagSessions.length){sel.style.display='none';empty.style.display='block';body.style.display='none';state.textContent='No trace';state.classList.remove('ok');return}
+ sel.style.display='block';empty.style.display='none';body.style.display='block';state.textContent='REAL PROD';state.classList.add('ok');renderProductionNavDiagnostics()
+}
+function navDiagEventLabel(e){
+ let type=String(e?.type||'event').replaceAll('_',' ');
+ if(e.type==='snapshot')return (e.next_maneuver?e.next_maneuver+' · ':'')+(Number.isFinite(Number(e.route_offset_m))?'route offset '+Math.round(Number(e.route_offset_m))+' m · ':'')+(Number.isFinite(Number(e.confidence))?'score '+e.confidence+'%':'GPS snapshot');
+ if(e.type==='navigation_state')return (e.state?String(e.state).toUpperCase()+' · ':'')+String(e.text||'');
+ if(e.type==='hop_advance')return 'Hop '+e.from_hop+' → '+e.to_hop+' · '+String(e.reason||'advance');
+ if(e.type==='reroute_requested')return 'Reroute requested · '+String(e.mode||'road')+(Number.isFinite(Number(e.route_offset_m))?' · offset '+e.route_offset_m+' m':'');
+ if(e.type==='reroute_applied')return 'New '+String(e.mode||'road').toLowerCase()+' route applied · '+String(e.new_road_legs||0)+' road legs';
+ if(e.type==='reroute_failed')return 'Reroute failed · '+String(e.message||'');
+ if(e.type==='session_started')return 'Production diagnostics started';
+ if(e.type==='session_resumed'||e.type==='tracking_resumed')return 'Production tracking resumed';
+ if(e.type==='session_completed')return 'Journey completed';
+ if(e.type==='session_ended')return 'Journey ended by user';
+ if(e.type==='final_hop_complete')return 'Final hop completed';return type
+}
+function renderProductionNavDiagnostics(){
+ let id=$('prodNavDiagSessionSelect')?.value,s=prodNavDiagSessions.find(x=>x.id===id)||prodNavDiagSessions[0];if(!s)return;
+ let snap=s.last_snapshot||{},avg=Number(s.accuracy_count)>0?Number(s.accuracy_sum||0)/Number(s.accuracy_count):null,conf=snap.confidence!==null&&snap.confidence!==undefined&&Number.isFinite(Number(snap.confidence))?Number(snap.confidence):null;
+ txtAdmin('prodDiagFixes',String(s.fix_count||0));txtAdmin('prodDiagAvgGps',Number.isFinite(avg)?'±'+Math.round(avg)+' m':'—');txtAdmin('prodDiagMaxOffset',Number.isFinite(Number(s.max_route_offset_m))?Math.round(Number(s.max_route_offset_m))+' m':'—');txtAdmin('prodDiagLowFixes',String(s.low_confidence_fixes||0));txtAdmin('prodDiagConfidence',Number.isFinite(conf)?Math.round(conf)+'%':'—');
+ let bar=$('prodDiagConfidenceBar');if(bar)bar.style.width=(Number.isFinite(conf)?Math.max(0,Math.min(100,conf)):0)+'%';
+ let pill=$('prodDiagConfidencePill');if(pill){pill.textContent=!Number.isFinite(conf)?'Waiting':conf>=95?'Strong signal':conf>=85?'Watch':'Low signal';pill.classList.toggle('ok',Number.isFinite(conf)&&conf>=95);pill.classList.toggle('bad',Number.isFinite(conf)&&conf<85)}
+ let facts=[['Destination',s.destination||'—'],['Provider',s.provider||'—'],['Road mode',s.road_mode||snap.mode||'—'],['Status',String(s.status||'—').toUpperCase()],['Current hop',snap.hop?String(snap.hop)+' / '+String(snap.total_hops||'—'):'—'],['GPS accuracy',Number.isFinite(Number(snap.gps_accuracy_m))?'±'+snap.gps_accuracy_m+' m':'—'],['Route offset',navDiagVal(snap.route_offset_m,' m')],['Route progress',navDiagVal(snap.route_progress_pct,'%')],['Step remaining',navDiagVal(snap.step_remaining_m,' m')],['Turn confirms',String(snap.turn_confirm_count??'—')],['Next maneuver',snap.next_maneuver||'—'],['Engine state',snap.turn_state||'—']];
+ $('prodDiagSnapshot').innerHTML=facts.map(x=>'<div class="navDiagFact"><b>'+esc(x[0])+'</b><span>'+esc(x[1])+'</span></div>').join('');
+ let meaningful=(s.events||[]).filter(e=>e.type!=='snapshot'),snapshots=(s.events||[]).filter(e=>e.type==='snapshot').slice(-5),events=[...meaningful.slice(-16),...snapshots].sort((a,b)=>Number(b.at||0)-Number(a.at||0)).slice(0,20);
+ $('prodDiagEvents').innerHTML=events.length?events.map(e=>'<div class="navDiagEvent"><div class="navDiagTime">'+esc((navDiagWhen(e.at).split(', ').pop()||navDiagWhen(e.at)))+'</div><div class="navDiagEventText">'+esc(navDiagEventLabel(e))+'</div></div>').join(''):'<div class="navDiagEmpty">No diagnostic events recorded in this session yet.</div>';
+ txtAdmin('prodDiagSessionMeta',(s.app_version?'v'+s.app_version+' · ':'')+navDiagWhen(s.started_at))
+}
+async function copyProductionNavDiagnostics(){let id=$('prodNavDiagSessionSelect')?.value,s=prodNavDiagSessions.find(x=>x.id===id)||prodNavDiagSessions[0];if(!s)return;try{await navigator.clipboard.writeText(JSON.stringify(s,null,2));$('prodNavDiagState').textContent='Copied'}catch{$('prodNavDiagState').textContent='Copy blocked'}}
+function clearProductionNavDiagnostics(){if(!confirm('Clear production navigation diagnostics stored on this device?'))return;localStorage.removeItem(PROD_NAV_DIAG_KEY);loadProductionNavDiagnostics()}
+
+function cfg(){try{return JSON.parse(localStorage.getItem('runsgdAdminConfig')||'{}')}catch{return {}}}
+function saveCfg(next){localStorage.setItem('runsgdAdminConfig',JSON.stringify(next))}
+function maskState(){let key=localStorage.getItem('runsgdTwelveDataKey')||'';$('twelveState').textContent=key?'Configured':'Not configured';$('twelveState').classList.toggle('ok',!!key)}
+function load(){let c=cfg(),tk=localStorage.getItem('runsgdTwelveDataKey')||c.twelveDataKey||'';$('twelveKey').value=tk;maskState();loadLtaState();loadGeminiState();loadOneMapState();loadGoogleMapsState();loadProductionNavDiagnostics()}
+function saveTwelve(){let key=$('twelveKey').value.trim(),c=cfg();if(key){localStorage.setItem('runsgdTwelveDataKey',key);c.twelveDataKey=key}else{localStorage.removeItem('runsgdTwelveDataKey');delete c.twelveDataKey}saveCfg(c);maskState();$('twelveStatus').textContent=key?'Saved on this browser.':'Twelve Data key cleared.';flash($('fxCard'))}
+async function testTwelve(){let key=$('twelveKey').value.trim();if(!key)return $('twelveStatus').textContent='Enter a Twelve Data API key first.';let b=$('testBtn');b.disabled=true;b.textContent='Testing…';$('twelveStatus').textContent='Requesting live SGD/MYR…';try{let r=await fetch('https://api.twelvedata.com/exchange_rate?symbol=SGD%2FMYR&apikey='+encodeURIComponent(key),{cache:'no-store'}),j=await r.json();if(!r.ok||!j.rate)throw Error(j.message||('HTTP '+r.status));let rate=Number(j.rate);$('twelveStatus').textContent='✓ Working · 1 SGD = RM '+rate.toFixed(4);saveTwelve()}catch(e){$('twelveStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test SGD/MYR'}}
+function saveLLM(){let c=cfg();c.llmProvider=$('llmProvider').value;c.llmKey=$('llmKey').value.trim();c.llmModel=$('llmModel').value.trim();c.llmEndpoint=$('llmEndpoint').value.trim();saveCfg(c);$('llmStatus').textContent='Saved. Main app integration will use these settings in the LLM release.';flash($('llmStatus').closest('.card'))}
+
+async function loadOneMapState(){
+ try{
+  let {data,error}=await adminSb.from('app_settings').select('key,secret_value,updated_at').in('key',['onemap_email','onemap_password']);
+  if(error)throw error;
+  let map=Object.fromEntries((data||[]).map(x=>[x.key,x]));
+  let email=String(map.onemap_email?.secret_value||'').trim(),hasPassword=!!String(map.onemap_password?.secret_value||'').trim();
+  if($('oneMapEmail'))$('oneMapEmail').value=email;
+  if($('oneMapPassword'))$('oneMapPassword').value='';
+  let ok=!!email&&hasPassword;
+  $('oneMapState').textContent=ok?'Configured':'Not configured';
+  $('oneMapState').classList.toggle('ok',ok);
+  let stamp=[map.onemap_email?.updated_at,map.onemap_password?.updated_at].filter(Boolean).sort().pop();
+  $('oneMapStatus').textContent=ok?'Saved in Supabase'+(stamp?' · updated '+new Date(stamp).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''):'Enter the OneMap account email and password.';
+ }catch(e){
+  $('oneMapState').textContent='Unavailable';
+  $('oneMapStatus').textContent='Could not load OneMap settings.';
+ }
+}
+async function saveOneMap(){
+ let email=$('oneMapEmail').value.trim(),password=$('oneMapPassword').value;
+ if(!email||!email.includes('@'))return $('oneMapStatus').textContent='Enter your registered OneMap email.';
+ if(!password)return $('oneMapStatus').textContent='Enter your OneMap password.';
+ $('oneMapStatus').textContent='Saving securely…';
+ let now=new Date().toISOString();
+ let {error}=await adminSb.from('app_settings').upsert([
+  {key:'onemap_email',secret_value:email,updated_at:now},
+  {key:'onemap_password',secret_value:password,updated_at:now}
+ ],{onConflict:'key'});
+ if(error)return $('oneMapStatus').textContent='Save failed · '+error.message;
+ $('oneMapPassword').value='';
+ $('oneMapPassword').type='password';
+ $('oneMapState').textContent='Configured';
+ $('oneMapState').classList.add('ok');
+ $('oneMapStatus').textContent='Saved in Supabase. Password cleared from this screen.';
+ flash($('oneMapCard'));
+}
+async function testOneMap(){
+ let b=$('oneMapTestBtn');if(!b)return;
+ b.disabled=true;b.textContent='Testing…';$('oneMapStatus').textContent='Connecting to OneMap…';
+ try{
+  let r=await fetch(ADMIN_SUPABASE_URL+'/functions/v1/runsgd-route-sg',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'status'}),cache:'no-store'}),j=await r.json();
+  if(!r.ok||!j.connected)throw Error(j.error||'OneMap connection failed');
+  $('oneMapState').textContent='Connected';$('oneMapState').classList.add('ok');
+  $('oneMapStatus').textContent='✓ OneMap login working · token ready for Route Planner';
+ }catch(e){
+  $('oneMapState').textContent='Issue';$('oneMapState').classList.remove('ok');
+  $('oneMapStatus').textContent='Test failed · '+(e.message||'Unknown error');
+ }finally{b.disabled=false;b.textContent='Test login'}
+}
+
+async function clearOneMap(){
+ if(!confirm('Clear the saved OneMap login from RunSGD?'))return;
+ $('oneMapStatus').textContent='Clearing…';
+ let {error}=await adminSb.from('app_settings').delete().in('key',['onemap_email','onemap_password']);
+ if(error)return $('oneMapStatus').textContent='Clear failed · '+error.message;
+ $('oneMapEmail').value='';$('oneMapPassword').value='';$('oneMapPassword').type='password';
+ $('oneMapState').textContent='Not configured';$('oneMapState').classList.remove('ok');
+ $('oneMapStatus').textContent='OneMap login cleared.';
+}
+
+async function loadGoogleMapsState(){
+ try{
+  let {data,error}=await adminSb.from('app_settings').select('key,secret_value,updated_at').in('key',['google_maps_api_key','google_maps_browser_key']);
+  if(error)throw error;
+  let map=Object.fromEntries((data||[]).map(x=>[x.key,x])),server=String(map.google_maps_api_key?.secret_value||'').trim(),browser=String(map.google_maps_browser_key?.secret_value||'').trim();
+  $('googleMapsState').textContent=server?'Routing configured':'Routing missing';$('googleMapsState').classList.toggle('ok',!!server);
+  $('googleMapsBrowserState').textContent=browser?'Map configured':'Map missing';$('googleMapsBrowserState').classList.toggle('ok',!!browser);
+  $('googleMapsKey').value='';$('googleMapsBrowserKey').value='';
+  $('googleMapsStatus').textContent=server?'Server Places + Routes key saved in Supabase'+(map.google_maps_api_key?.updated_at?' · updated '+new Date(map.google_maps_api_key.updated_at).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''):'Paste the private RunSGD Places + Routes server key.';
+  $('googleMapsBrowserStatus').textContent=browser?'Dynamic Map browser key saved · live road navigation can load Google Maps.':'Create a separate HTTP-referrer-restricted key with Maps JavaScript API enabled, then paste it here.';
+ }catch(e){$('googleMapsState').textContent='Unavailable';$('googleMapsBrowserState').textContent='Unavailable';$('googleMapsStatus').textContent='Could not load Google Maps settings.'}
+}
+async function saveGoogleMapsKey(){
+ let key=$('googleMapsKey').value.trim();if(!key)return $('googleMapsStatus').textContent='Paste the Google Maps server key first.';
+ $('googleMapsStatus').textContent='Saving securely…';
+ let {error}=await adminSb.from('app_settings').upsert({key:'google_maps_api_key',secret_value:key,updated_at:new Date().toISOString()},{onConflict:'key'});
+ if(error)return $('googleMapsStatus').textContent='Save failed · '+error.message;
+ $('googleMapsKey').value='';$('googleMapsKey').type='password';$('googleMapsState').textContent='Routing configured';$('googleMapsState').classList.add('ok');
+ $('googleMapsStatus').textContent='Saved in Supabase. Testing Places + Routes…';flash($('googleMapsCard'));await testGoogleMaps()
+}
+async function saveGoogleMapsBrowserKey(){
+ let key=$('googleMapsBrowserKey').value.trim();if(!key)return $('googleMapsBrowserStatus').textContent='Paste the browser Maps JavaScript API key first.';
+ $('googleMapsBrowserStatus').textContent='Saving…';
+ let {error}=await adminSb.from('app_settings').upsert({key:'google_maps_browser_key',secret_value:key,updated_at:new Date().toISOString()},{onConflict:'key'});
+ if(error)return $('googleMapsBrowserStatus').textContent='Save failed · '+error.message;
+ $('googleMapsBrowserKey').value='';$('googleMapsBrowserKey').type='password';$('googleMapsBrowserState').textContent='Map configured';$('googleMapsBrowserState').classList.add('ok');
+ $('googleMapsBrowserStatus').textContent='Saved. Google Dynamic Maps will load only when a production road-navigation screen needs it.';flash($('googleMapsCard'))
+}
+async function testGoogleMaps(){
+ let b=$('googleMapsTestBtn');if(!b)return;b.disabled=true;b.textContent='Testing…';$('googleMapsStatus').textContent='Testing Places API and Routes API…';
+ try{
+  let r=await fetch(ADMIN_SUPABASE_URL+'/functions/v1/runsgd-route-jb',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'status'}),cache:'no-store'}),j=await r.json();
+  if(!r.ok||!j.connected)throw Error(j.error||'Google Maps connection failed');
+  $('googleMapsState').textContent='Connected';$('googleMapsState').classList.add('ok');
+  $('googleMapsStatus').textContent='✓ Places API working · Routes API working';
+  $('googleMapsBrowserState').textContent=j.browser_maps_configured?'Map configured':'Map missing';$('googleMapsBrowserState').classList.toggle('ok',!!j.browser_maps_configured);
+  if(j.browser_maps_configured)$('googleMapsBrowserStatus').textContent='Browser map key configured. It will be validated by Google when live navigation loads the map.'
+ }catch(e){$('googleMapsState').textContent='Issue';$('googleMapsState').classList.remove('ok');$('googleMapsStatus').textContent='Test failed · '+(e.message||'Unknown error')}
+ finally{b.disabled=false;b.textContent='Test routing APIs'}
+}
+async function clearGoogleMapsKey(){
+ if(!confirm('Clear the saved Google Maps Places + Routes server key?'))return;
+ $('googleMapsStatus').textContent='Clearing…';
+ let {error}=await adminSb.from('app_settings').upsert({key:'google_maps_api_key',secret_value:'',updated_at:new Date().toISOString()},{onConflict:'key'});
+ if(error)return $('googleMapsStatus').textContent='Clear failed · '+error.message;
+ $('googleMapsKey').value='';$('googleMapsState').textContent='Routing missing';$('googleMapsState').classList.remove('ok');$('googleMapsStatus').textContent='Google Places + Routes server key cleared.'
+}
+async function clearGoogleMapsBrowserKey(){
+ if(!confirm('Clear the Google Maps browser key? Live navigation maps will stop loading.'))return;
+ $('googleMapsBrowserStatus').textContent='Clearing…';
+ let {error}=await adminSb.from('app_settings').upsert({key:'google_maps_browser_key',secret_value:'',updated_at:new Date().toISOString()},{onConflict:'key'});
+ if(error)return $('googleMapsBrowserStatus').textContent='Clear failed · '+error.message;
+ $('googleMapsBrowserKey').value='';$('googleMapsBrowserState').textContent='Map missing';$('googleMapsBrowserState').classList.remove('ok');$('googleMapsBrowserStatus').textContent='Browser map key cleared. RunSGD text navigation continues normally.'
+}
+
+async function loadGeminiState(){try{let {data,error}=await adminSb.from('app_settings').select('secret_value').eq('key','gemini_api_key').maybeSingle();if(error)throw error;let ok=!!data?.secret_value;$('geminiState').textContent=ok?'Configured':'Not configured';$('geminiState').classList.toggle('ok',ok)}catch(e){$('geminiState').textContent='Unavailable'}}
+async function saveGeminiKey(){let key=$('geminiKey').value.trim();if(!key)return $('geminiStatus').textContent='Paste your Gemini API key first.';$('geminiStatus').textContent='Saving securely…';let {error}=await adminSb.from('app_settings').upsert({key:'gemini_api_key',secret_value:key,updated_at:new Date().toISOString()},{onConflict:'key'});if(error)return $('geminiStatus').textContent='Save failed · '+error.message;$('geminiKey').value='';$('geminiState').textContent='Configured';$('geminiState').classList.add('ok');$('geminiStatus').textContent='Saved in Supabase. Testing Gemini 3.5 Flash-Lite…';await testGemini()}
+async function testGemini(){let b=$('geminiTestBtn');b.disabled=true;b.textContent='Testing…';try{let {data:{session}}=await adminSb.auth.getSession();if(!session)throw Error('Admin session missing');let r=await fetch('https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-ai',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({mode:'ask',question:'What AI model is powering RunSGD?',context:{test:true}})}),j=await r.json();if(!r.ok)throw Error(j.error||'No response');$('geminiStatus').textContent='✓ Working · '+(j.model||'gemini-3.5-flash-lite');$('geminiState').textContent='Configured';$('geminiState').classList.add('ok')}catch(e){$('geminiStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test AI'}}
+
+async function loadLtaState(){try{let {data,error}=await adminSb.from('app_settings').select('secret_value').eq('key','lta_account_key').maybeSingle();if(error)throw error;let ok=!!data?.secret_value;$('ltaState').textContent=ok?'Configured':'Not configured';$('ltaState').classList.toggle('ok',ok)}catch(e){$('ltaState').textContent='Unavailable'}}
+async function saveLtaKey(){let key=$('ltaKey').value.trim();if(!key)return $('ltaStatus').textContent='Paste your LTA AccountKey first.';$('ltaStatus').textContent='Saving…';let {error}=await adminSb.from('app_settings').update({secret_value:key,updated_at:new Date().toISOString()}).eq('key','lta_account_key');if(error)return $('ltaStatus').textContent='Save failed · '+error.message;$('ltaKey').value='';$('ltaState').textContent='Configured';$('ltaState').classList.add('ok');$('ltaStatus').textContent='Saved in Supabase. Testing Causeway camera…';await testLta()}
+async function testLta(){let b=$('ltaTestBtn');b.disabled=true;b.textContent='Testing…';try{let r=await fetch('https://gdycbluljgfezhgslppe.supabase.co/functions/v1/lta-traffic-snapshot?camera=2701',{cache:'no-store'}),j=await r.json();if(!r.ok||!j.image_url)throw Error(j.error||'No image returned');$('ltaStatus').textContent='✓ Working · '+(j.name||'Causeway camera')+' snapshot available';$('ltaState').textContent='Configured';$('ltaState').classList.add('ok')}catch(e){$('ltaStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test Causeway'}}
+
+function fmtMetric(v){return Number(v||0).toLocaleString('en-SG')}
+function sgTime(v){try{return new Date(v).toLocaleTimeString('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit'})}catch{return ''}}
+function sgDateTime(v){try{return new Date(v).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}catch{return ''}}
+async function loadDashboardMetrics(){
+  try{
+    let {data,error}=await adminSb.rpc('admin_dashboard_stats');
+    if(error)throw error;
+    let s=data||{};
+    $('metricTraffic').textContent=fmtMetric(s.views_today);
+    $('metricVisitors').textContent=fmtMetric(s.visitors_today);
+    $('metricMembers').textContent=fmtMetric(s.members);
+    $('metricTrafficSub').textContent=fmtMetric(s.views_7d)+' views · 7 days';
+    $('metricVisitorsSub').textContent=fmtMetric(s.visitors_7d)+' unique · 7 days';
+    $('metricMembersSub').textContent='+'+fmtMetric(s.members_7d)+' joined · 7 days';
+    $('monitorUpdated').textContent='Updated '+sgTime(s.generated_at);
+    let days=Array.isArray(s.daily)?s.daily:[],max=Math.max(1,...days.map(x=>Number(x.views)||0));
+    $('trafficBars').innerHTML=days.map(x=>{
+      let v=Number(x.views)||0,h=Math.max(7,Math.round(v/max*54));
+      let d=new Date(String(x.date)+'T00:00:00+08:00').toLocaleDateString('en-SG',{weekday:'short',timeZone:'Asia/Singapore'}).slice(0,2);
+      return '<div class="sparkDay" title="'+v+' views · '+(Number(x.visitors)||0)+' visitors"><div class="sparkBar" style="height:'+h+'px"></div><div class="sparkLabel">'+d+'</div></div>'
+    }).join('');
+  }catch(e){
+    $('monitorUpdated').textContent='Dashboard unavailable';
+  }
+}
+const API_SERVICES=[
+ {id:'supabase-auth',name:'Supabase Auth',group:'Core',note:'Checks that the current Admin session can be verified by Supabase Auth.'},
+ {id:'supabase-db',name:'Supabase Database',group:'Core',note:'Checks that the RunSGD database/Data API is responding to a simple profiles query.'},
+ {id:'lta-traffic',name:'LTA Traffic Camera',group:'Transport',note:'Checks the server-side LTA integration and confirms a Woodlands Causeway camera snapshot is available.'},
+ {id:'lta-transit',name:'LTA MRT & Bus',group:'Transport',note:'Checks RunSGD public-transport integration and confirms LTA train status can be retrieved.'},
+ {id:'gemini',name:'RunSGD AI · Gemini',group:'AI',note:'Checks the configured Gemini 3.5 Flash-Lite model endpoint using the server-side API key.'},
+ {id:'twelve',name:'Twelve Data FX',group:'Currency',note:'Checks the primary SGD/MYR exchange-rate provider using the Twelve Data key saved on this browser.'},
+ {id:'fawaz',name:'Currency API · Fawaz',group:'Currency',note:'Checks the first free SGD/MYR fallback source used when the primary FX provider is unavailable.'},
+ {id:'er-api',name:'ExchangeRate API',group:'Currency',note:'Checks a free SGD/MYR fallback exchange-rate source.'},
+ {id:'frankfurter',name:'Frankfurter FX',group:'Currency',note:'Checks another free SGD/MYR fallback exchange-rate source.'},
+ {id:'weather',name:'Open-Meteo Weather',group:'Environment',note:'Checks the weather API used for Singapore and Johor forecasts.'},
+ {id:'air',name:'Open-Meteo Air Quality',group:'Environment',note:'Checks the PM2.5 / air-quality API used by RunSGD.'},
+ {id:'prayer',name:'AlAdhan Prayer Times',group:'Utility',note:'Checks the prayer-time service used by the Prayer widget.'},
+ {id:'holidays',name:'Nager Public Holidays',group:'Utility',note:'Checks Singapore public-holiday data used by RunSGD.'},
+ {id:'overpass-pool',name:'Nearby Prayer Lookup · Overpass',group:'Location',note:'Browser-path health check. It tests the same three public Overpass mirrors directly from this Admin browser using the same POST request style as the real RunSGD prayer lookup. Healthy means at least one mirror is usable from a real user browser.'}
+];
+const apiHealthResults={};
+function apiService(id){return API_SERVICES.find(x=>x.id===id)}
+function apiResultStatus(r){return !r?'Not checked':r.ok?'Healthy':'Issue detected'}
+function renderApiHealth(){
+  let tested=API_SERVICES.filter(s=>apiHealthResults[s.id]),healthy=tested.filter(s=>apiHealthResults[s.id]?.ok).length;
+  $('apiHealthGrid').innerHTML=API_SERVICES.map(s=>{
+    let r=apiHealthResults[s.id],state=r?(r.ok?'ok':'bad'):'',detail=r?(r.detail||apiResultStatus(r)):'No saved scan yet';
+    let timing=r?.checked_at?('Last check '+sgDateTime(r.checked_at)+' · '+fmtMetric(r.latency_ms)+' ms'):s.group+' · waiting for first manual scan';
+    return '<div class="apiItem '+state+'" id="apiRow-'+s.id+'"><span class="apiDot"></span><div class="apiInfo"><div class="apiName">'+esc(s.name)+'</div><div class="apiStatusText">'+apiResultStatus(r)+'</div><div class="apiDetail">'+esc(detail)+'</div><div class="apiLatency">'+esc(timing)+'</div></div><div class="apiActions"><button class="apiIconBtn test" onclick="testApiHealth(\''+s.id+'\',this)" aria-label="Test '+esc(s.name)+'" title="Test this API">↻</button><button class="apiIconBtn info" onclick="showApiInfo(\''+s.id+'\')" aria-label="Info '+esc(s.name)+'" title="Status notes">i</button></div></div>'
+  }).join('');
+  let summary=$('apiHealthSummary');
+  summary.classList.remove('ok','bad');
+  if(!tested.length){summary.textContent='No saved scan'}
+  else if(tested.length===API_SERVICES.length){
+    summary.textContent=healthy+'/'+API_SERVICES.length+' healthy';
+    summary.classList.toggle('ok',healthy===API_SERVICES.length);
+    summary.classList.toggle('bad',healthy!==API_SERVICES.length);
+  }else{
+    summary.textContent=healthy+'/'+tested.length+' healthy';
+    summary.classList.toggle('ok',healthy===tested.length);
+    summary.classList.toggle('bad',healthy!==tested.length);
+  }
+}
+function showApiInfo(id){
+  let s=apiService(id);if(!s)return;
+  let r=apiHealthResults[id],state=$('apiInfoState');
+  $('apiInfoTitle').textContent=s.name;
+  $('apiInfoGroup').textContent=s.group+' API';
+  state.textContent=apiResultStatus(r);
+  state.className='apiInfoState'+(r?(r.ok?' ok':' bad'):'');
+  $('apiInfoNote').textContent=s.note;
+  $('apiInfoResult').textContent=r
+    ? ((r.ok?'Healthy · ':'Issue · ')+(r.detail||'No detail')+' · '+fmtMetric(r.latency_ms)+' ms'+(r.checked_at?' · last checked '+sgDateTime(r.checked_at):''))
+    : 'No saved scan exists for this API yet. Run a manual test once to create the first result.';
+  $('apiInfoOverlay').classList.add('open');
+}
+function hideApiInfo(){$('apiInfoOverlay').classList.remove('open')}
+async function apiHealthRequest(checkId='',action='',extra={}){
+  let {data:{session}}=await adminSb.auth.getSession();
+  if(!session)throw Error('Admin session missing');
+  let twelveKey=localStorage.getItem('runsgdTwelveDataKey')||cfg().twelveDataKey||'';
+  let payload={twelve_key:twelveKey,...extra};
+  if(checkId)payload.check_id=checkId;
+  if(action)payload.action=action;
+  let r=await fetch(ADMIN_MONITOR_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+    body:JSON.stringify(payload)
+  });
+  let j=await r.json();
+  if(!r.ok)throw Error(j.error||'Health check failed');
+  return j
+}
+const OVERPASS_BROWSER_MIRRORS=[
+ {name:'Kumi',url:'https://overpass.kumi.systems/api/interpreter'},
+ {name:'Main',url:'https://overpass-api.de/api/interpreter'},
+ {name:'Coffee',url:'https://overpass.private.coffee/api/interpreter'}
+];
+async function probeOverpassFromBrowser(){
+  let q='[out:json][timeout:6];nwr["amenity"="place_of_worship"]["religion"="muslim"](around:1500,1.3521,103.8198);out ids 1;';
+  let results=[],startedAll=performance.now();
+  for(let mirror of OVERPASS_BROWSER_MIRRORS){
+    let started=performance.now(),c=new AbortController(),t=setTimeout(()=>c.abort(),7000);
+    try{
+      let r=await fetch(mirror.url,{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+        body:'data='+encodeURIComponent(q),
+        signal:c.signal,
+        cache:'no-store'
+      });
+      clearTimeout(t);
+      let latency=Math.max(1,Math.round(performance.now()-started));
+      if(!r.ok){results.push({name:mirror.name,ok:false,code:String(r.status),latency});continue}
+      let j=await r.json().catch(()=>null);
+      results.push({name:mirror.name,ok:Array.isArray(j?.elements),code:Array.isArray(j?.elements)?String(r.status):'BADJSON',latency})
+    }catch(e){
+      clearTimeout(t);
+      let latency=Math.max(1,Math.round(performance.now()-started));
+      results.push({name:mirror.name,ok:false,code:(e?.name==='AbortError'?'TIMEOUT':'ERR'),latency})
+    }
+  }
+  let available=results.filter(x=>x.ok).length;
+  let states=results.map(x=>x.name+' '+x.code+' '+x.latency+'ms').join(' · ');
+  return {
+    ok:available>0,
+    latency_ms:Math.max(1,Math.round(performance.now()-startedAll)),
+    detail:available+'/3 mirrors available from browser · '+states+(available===1?' · degraded':available===2?' · partial redundancy':'')
+  }
+}
+async function runOverpassBrowserHealth(){
+  let result=await probeOverpassFromBrowser();
+  let saved=await apiHealthRequest('overpass-pool','save_client_health',{client_result:result});
+  return saved.checks?.[0]||{id:'overpass-pool',name:'Nearby Prayer Lookup · Overpass',group:'Location',...result,checked_at:saved.checked_at}
+}
+async function loadSavedApiHealth(){
+  $('apiHealthUpdated').textContent='Loading last saved scan…';
+  try{
+    let j=await apiHealthRequest('','last');
+    Object.keys(apiHealthResults).forEach(k=>delete apiHealthResults[k]);
+    (j.checks||[]).forEach(x=>{apiHealthResults[x.id]={...x}});
+    renderApiHealth();
+    if(j.checks?.length){
+      let latest=(j.checks||[]).map(x=>x.checked_at).filter(Boolean).sort().at(-1);
+      let issues=(j.checks||[]).filter(x=>!x.ok).length;
+      $('apiHealthUpdated').textContent='Showing last saved results · latest check '+sgDateTime(latest)+(issues?' · '+issues+' issue'+(issues===1?'':'s'):' · all saved results healthy');
+    }else{
+      $('apiHealthUpdated').textContent='No saved scan yet · press Refresh all once to create it.';
+    }
+  }catch(e){
+    renderApiHealth();
+    $('apiHealthUpdated').textContent='Could not load saved results · '+(e.message||'Unknown error');
+  }
+}
+async function loadApiHealth(btn=null){
+  let b=btn||$('apiHealthBtn'),summary=$('apiHealthSummary');
+  if(b){b.disabled=true;b.textContent='Checking…'}
+  summary.textContent='Checking all…';summary.classList.remove('ok','bad');
+  $('apiHealthUpdated').textContent='Running API checks + browser location lookup probe…';
+  try{
+    let j=await apiHealthRequest();
+    (j.checks||[]).forEach(x=>{apiHealthResults[x.id]={...x,checked_at:j.checked_at}});
+    renderApiHealth();
+    $('apiHealthUpdated').textContent='Core checks done · testing Overpass from this browser…';
+    let op=await runOverpassBrowserHealth();
+    apiHealthResults['overpass-pool']={...op,checked_at:op.checked_at||new Date().toISOString()};
+    renderApiHealth();
+    let issues=API_SERVICES.filter(x=>apiHealthResults[x.id]&&!apiHealthResults[x.id].ok).length;
+    let latest=[j.checked_at,op.checked_at].filter(Boolean).sort().at(-1);
+    $('apiHealthUpdated').textContent='Last checked '+sgDateTime(latest)+(issues?' · '+issues+' issue'+(issues===1?'':'s'):' · all systems healthy');
+  }catch(e){
+    summary.textContent='Check failed';summary.classList.add('bad');
+    $('apiHealthUpdated').textContent='Could not complete checks · '+(e.message||'Unknown error');
+  }finally{
+    if(b){b.disabled=false;b.textContent='↻ Refresh all'}
+  }
+}
+async function testApiHealth(id,btn){
+  let s=apiService(id);if(!s)return;
+  let old=btn.textContent;btn.disabled=true;btn.textContent='…';
+  $('apiHealthUpdated').textContent='Testing '+s.name+'…';
+  try{
+    let r,j;
+    if(id==='overpass-pool'){
+      $('apiHealthUpdated').textContent='Testing Overpass from this browser using the real RunSGD request path…';
+      r=await runOverpassBrowserHealth();
+      j={checked_at:r.checked_at||new Date().toISOString()};
+    }else{
+      j=await apiHealthRequest(id);r=j.checks?.[0];
+    }
+    if(!r)throw Error('No result returned');
+    apiHealthResults[id]={...r,checked_at:r.checked_at||j.checked_at};
+    renderApiHealth();
+    $('apiHealthUpdated').textContent=s.name+' · '+(r.ok?'healthy':'issue detected')+' · checked '+sgDateTime(r.checked_at||j.checked_at);
+  }catch(e){
+    apiHealthResults[id]={id,name:s.name,group:s.group,ok:false,latency_ms:0,detail:'Test could not run · '+(e.message||'Unknown error'),checked_at:new Date().toISOString()};
+    renderApiHealth();
+    $('apiHealthUpdated').textContent=s.name+' · test failed';
+  }finally{
+    if(btn&&btn.isConnected){btn.disabled=false;btn.textContent=old}
+  }
+}
+async function loadGoogleMapsUsage(btn=null){
+  let b=btn||$('gmUsageBtn');if(b){b.disabled=true;b.textContent='Refreshing…'}
+  try{
+    let j=await apiHealthRequest('','google_maps_usage'),places=Number(j.month?.places||0),routes=Number(j.month?.routes||0),maps=Number(j.month?.maps||0);
+    const placesCap=5000,routesCap=5000,mapsCap=10000,pp=places/placesCap*100,rp=routes/routesCap*100,mp=maps/mapsCap*100,maxp=Math.max(pp,rp,mp);
+    $('gmTodayTotal').textContent=fmtMetric(j.today?.total);$('gmMonthTotal').textContent=fmtMetric(j.month?.total);
+    $('gmMonthPlaces').textContent=fmtMetric(places);$('gmMonthRoutes').textContent=fmtMetric(routes);$('gmMonthMaps').textContent=fmtMetric(maps);
+    $('gmPlacesThreshold').textContent='Places Text Search Pro: '+fmtMetric(places)+' / '+fmtMetric(placesCap)+' free monthly · '+Math.min(999,Math.round(pp))+'%';
+    $('gmRoutesThreshold').textContent='Compute Routes Pro: '+fmtMetric(routes)+' / '+fmtMetric(routesCap)+' free monthly · '+Math.min(999,Math.round(rp))+'%';
+    $('gmMapsThreshold').textContent='Dynamic Maps: '+fmtMetric(maps)+' / '+fmtMetric(mapsCap)+' free monthly · '+Math.min(999,Math.round(mp))+'%';
+    let state='Safe',note='Well within tracked free caps';
+    if(maxp>=95){state='Critical';note='Very near a free cap — check Google Cloud Billing now'}
+    else if(maxp>=85){state='High';note='Approaching a free cap — review Google Cloud usage soon'}
+    else if(maxp>=70){state='Watch';note='Usage has passed 70% of a monthly free cap'}
+    $('gmThresholdState').textContent=note;$('gmThresholdPill').textContent=state;
+    $('gmThresholdPill').classList.toggle('ok',maxp<70);$('gmThresholdPill').classList.toggle('bad',maxp>=85);
+    $('googleBillingState').textContent=maxp>=85?'Check usage':maxp>=70?'Watch usage':'Tracking';
+    $('googleBillingState').classList.toggle('ok',maxp<70);$('googleBillingState').classList.toggle('bad',maxp>=85);
+    $('gmUsageUpdated').textContent='Updated '+sgDateTime(j.generated_at)+' · '+fmtMetric(j.month?.admin_tests)+' admin test event'+(Number(j.month?.admin_tests||0)===1?'':'s')+' excluded';
+  }catch(e){$('gmUsageUpdated').textContent='Usage unavailable · '+(e.message||'Unknown error')}
+  finally{if(b){b.disabled=false;b.textContent='↻ Refresh usage'}}
+}
+
+
+async function loadAffiliateStats(btn=null){
+  let b=btn||$('affiliateRefreshBtn'),body=$('affiliateTableBody'),state=$('affiliateTrackingState');
+  if(b){b.disabled=true;b.textContent='Refreshing…'}
+  try{
+    let {data,error}=await adminSb.rpc('admin_affiliate_stats');
+    if(error)throw error;
+    let rows=Array.isArray(data?.links)?data.links:[];
+    if(!rows.length){
+      body.innerHTML='<tr><td colspan="7" class="sub">No affiliate links configured yet.</td></tr>';
+      state.textContent='No links';state.classList.remove('ok');
+    }else{
+      body.innerHTML=rows.map(r=>{
+        let last=r.last_clicked_at?sgDateTime(r.last_clicked_at):'No clicks yet';
+        let active=!!r.active;
+        return '<tr>'+
+          '<td><div class="affiliatePartner">'+esc(r.partner||'Affiliate')+'</div><div class="affiliateLabel">'+esc(r.label||r.link_key||'')+'</div><div style="margin-top:5px"><span class="affiliateStatus '+(active?'':'off')+'">'+(active?'Active':'Paused')+'</span></div></td>'+
+          '<td>'+esc(r.placement||'App')+'</td>'+
+          '<td><div class="affiliateMetric">'+fmtMetric(r.clicks_today)+'</div></td>'+
+          '<td><div class="affiliateMetric">'+fmtMetric(r.clicks_7d)+'<small>'+fmtMetric(r.unique_7d)+' unique visitor'+(Number(r.unique_7d||0)===1?'':'s')+'</small></div></td>'+
+          '<td><div class="affiliateMetric">'+fmtMetric(r.clicks_total)+'</div></td>'+
+          '<td>'+esc(last)+'</td>'+
+          '<td><a class="affiliateLinkBtn" target="_blank" rel="noopener noreferrer" href="'+esc(r.url||'#')+'">Open ↗</a></td>'+
+        '</tr>'
+      }).join('');
+      state.textContent=rows.length+' link'+(rows.length===1?'':'s');state.classList.add('ok');
+    }
+    $('affiliateUpdated').textContent='Updated '+sgDateTime(data?.generated_at||new Date().toISOString());
+  }catch(e){
+    body.innerHTML='<tr><td colspan="7" class="sub">Affiliate tracking unavailable.</td></tr>';
+    state.textContent='Unavailable';state.classList.remove('ok');
+    $('affiliateUpdated').textContent='Could not load · '+(e.message||'Unknown error');
+  }finally{
+    if(b){b.disabled=false;b.textContent='↻ Refresh'}
+  }
+}
+
+async function loadMonitoring(){
+  renderApiHealth();
+  await Promise.all([loadDashboardMetrics(),loadSavedApiHealth(),loadGoogleMapsUsage(),loadAffiliateStats()]);
+  if(monitorTimer)clearInterval(monitorTimer);
+  monitorTimer=setInterval(()=>{loadDashboardMetrics();loadAffiliateStats()},5*60*1000);
+}
+function clearAll(){if(!confirm('Clear RunSGD local API settings from this browser?'))return;localStorage.removeItem('runsgdTwelveDataKey');localStorage.removeItem('runsgdAdminConfig');load();$('twelveStatus').textContent='Local API settings cleared.'}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function tagLabel(v){return ({newbie:'Newbie',pro:'Pro',oldtimer:'Oldtimer',paid:'Paid'})[v]||'Newbie'}
+async function loadMembers(){
+  let el=document.getElementById('memberList');
+  try{
+    let {data,error}=await adminSb.from('profiles').select('id,display_name,avatar_url,bio,badge,role,created_at').order('created_at',{ascending:true});
+    if(error)throw error;
+    let rows=data||[];document.getElementById('memberCount').textContent=rows.length+' member'+(rows.length===1?'':'s');
+    if(!rows.length){el.innerHTML='<div class="sub">No members yet.</div>';return}
+    el.innerHTML=rows.map(p=>{let tag=p.role==='admin'?'Admin':tagLabel(p.badge),av=p.avatar_url||'';return `<div class="memberRow">${av?`<img class="memberAvatar" src="${esc(av)}" alt="">`:`<div class="memberAvatar" style="display:grid;place-items:center">👤</div>`}<div class="memberInfo"><div class="memberName">${esc(p.display_name||'Commuter')}</div><div class="memberBio">${esc(p.bio||'No bio yet')}</div><div class="memberTags"><span class="memberTag ${p.role==='admin'?'admin':p.badge==='paid'?'paid':''}">${esc(tag)}</span></div></div></div>`}).join('');
+  }catch(e){el.innerHTML='<div class="sub">Could not load member profiles.</div>'}
+}
+async function guardAdmin(){
+  try{
+    let {data:{session}}=await adminSb.auth.getSession();
+    if(!session){document.getElementById('gateText').textContent='Sign in with the RunSGD admin account first.';return}
+    let {data,error}=await adminSb.from('profiles').select('role,display_name,avatar_url,badge,bio').eq('id',session.user.id).maybeSingle();
+    if(error||data?.role!=='admin'){document.getElementById('gateText').textContent='This RunSGD account does not have admin access.';return}
+    document.getElementById('adminGate').style.display='none';
+    document.getElementById('adminApp').style.display='block';
+    document.getElementById('adminName').textContent=data.display_name||'Admin';
+    document.getElementById('adminEmail').textContent=session.user.email||'';
+    let avatar=data.avatar_url||session.user.user_metadata?.avatar_url||session.user.user_metadata?.picture||'';
+    document.getElementById('adminAvatar').src=avatar||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2258%22 height=%2258%22%3E%3Crect width=%2258%22 height=%2258%22 rx=%2218%22 fill=%22%23eef3ff%22/%3E%3Ctext x=%2229%22 y=%2237%22 text-anchor=%22middle%22 font-size=%2224%22%3E👤%3C/text%3E%3C/svg%3E';
+    load();
+    await loadMembers();
+    await loadMonitoring();
+  }catch(e){document.getElementById('gateText').textContent='Could not verify admin access.'}
+}
+guardAdmin();
+</script>
+</body>
+</html>
