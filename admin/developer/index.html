@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f8fbff">
-<title>RunSGD Admin</title>
+<title>Developer's world · RunSGD</title>
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--green:#20a36a}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 3%,#dff2ff 0,transparent 30%),radial-gradient(circle at 92% 8%,#efe5ff 0,transparent 28%),linear-gradient(180deg,#fbfdff,#faf9ff 55%,#fffaf7);min-height:100vh}.app{max-width:620px;margin:auto;padding:24px 18px 54px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;font-size:30px;letter-spacing:-2px;background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;color:transparent}.badge{font-size:10px;font-weight:850;padding:6px 9px;border-radius:99px;background:#ffffffd9;color:#65718a;border:1px solid #fff}.hero{padding:28px 4px 18px}.hero h1{font-size:30px;margin:0 0 7px}.sub,.status,.note{color:var(--muted);font-size:13px;line-height:1.5}.stack{display:flex;flex-direction:column;gap:16px}.card{background:#fffffff0;border:1px solid #fff;border-radius:24px;padding:18px;box-shadow:0 12px 32px #46537d12}.head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.title{font-weight:850}.pill{font-size:10px;font-weight:850;padding:5px 8px;border-radius:99px;background:#eef4ff;color:#5067b4}.pill.ok{background:#eaf8f1;color:#247a55}.field{margin-top:12px}.field label{display:block;font-size:12px;font-weight:800;color:#58647a;margin-bottom:6px}.input,.select{width:100%;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:12px 13px;color:var(--ink);outline:none}.input:focus,.select:focus{border-color:#9eb9fb;box-shadow:0 0 0 4px #4b82f510}.row{display:flex;gap:9px;align-items:center}.row .input{flex:1}.btn{border:0;border-radius:14px;padding:11px 14px;font-weight:850;cursor:pointer;transition:transform .14s ease,filter .18s ease,opacity .18s ease}.btn:active{transform:scale(.965);filter:brightness(.97)}.primary{background:linear-gradient(120deg,var(--blue),var(--violet));color:#fff}.soft{background:#edf2fb;color:#2e4369}.danger{background:#fff0f2;color:#a33e53}.full{width:100%;margin-top:12px}.status{margin-top:10px}.services{display:grid;grid-template-columns:1fr 1fr;gap:10px}.service{padding:13px;border-radius:17px;background:linear-gradient(120deg,#f4f8ff,#faf6ff)}.service strong{display:block;font-size:13px}.service span{display:block;font-size:11px;color:var(--muted);margin-top:4px}.back{display:inline-flex;align-items:center;gap:6px;color:#4965c7;text-decoration:none;font-weight:800;font-size:13px}.note{padding:12px 13px;border-radius:15px;background:#fff8e9;color:#806339}.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}.switch input{width:20px;height:20px}.saved{animation:flash .55s ease}@keyframes flash{0%{box-shadow:0 0 0 0 #4b82f533}50%{box-shadow:0 0 0 8px #4b82f510}100%{box-shadow:none}}@media(max-width:520px){.services{grid-template-columns:1fr}}
@@ -77,127 +77,13 @@ body.adminHome #affiliateTrackingCard,body.adminHome #communityMembersCard,body.
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.14.12</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">DEV WORLD · v2.15.0</span></div>
 <section class="hero"><h1>Developer's world</h1><p class="sub">Admin-only RunSGD management.</p></section><div class="stack" style="display:none;margin-bottom:16px"><a class="card back" style="display:block;text-decoration:none" href="/admin/health/"><b>🩺 Detailed System Health</b><div class="sub">Extensive monitoring and history.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/keys/"><b>🔐 Keys & credentials</b><div class="sub">API keys and provider credentials.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/developer/"><b>🧑‍💻 Developer's world</b><div class="sub">Navigation Lab and diagnostics.</div></a><a class="card back" style="display:block;text-decoration:none" href="/admin/people/"><b>🤝 Affiliate & members</b><div class="sub">Affiliate monitoring and members.</div></a></div>
 <div id="adminProfileCard" class="adminProfile">
   <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
   <div><div id="adminName" class="title">Admin</div><div id="adminEmail" class="sub"></div><div class="memberTags"><span class="memberTag admin">Admin</span></div></div>
 </div>
 <div class="stack">
-<article class="card aiConsoleCard" id="runSgdAiConsole">
- <div class="aiConsoleHead">
-  <div><div class="aiConsoleTitle">✨ Talk to RunSGD AI</div><div class="aiConsoleMeta">Your RunSGD AI · Admin-only conversation</div></div>
-  <span class="pill ok">LIVE AI</span>
- </div>
- <p class="sub" style="margin:10px 0 0">Talk to RunSGD AI directly. Ask how it thinks about RunSGD data, what it can use, what it avoids guessing, or just chat normally.</p>
- <div class="aiQuick">
-  <button onclick="askAdminAiPreset('Explain your behavior and rules in RunSGD.')">Your behavior</button>
-  <button onclick="askAdminAiPreset('What data and sources are you allowed to use?')">Your data</button>
-  <button onclick="askAdminAiPreset('When does RunSGD trigger AI during a live journey?')">Journey triggers</button>
-  <button onclick="askAdminAiPreset('What are you not allowed to guess or invent?')">Your limits</button>
- </div>
- <div id="adminAiChat" class="aiChat">
-  <div class="aiBubble bot">Hi 👋 I’m RunSGD AI. Ask me anything about how I work in the app, what I know, what I avoid guessing, or just talk to me normally.</div>
- </div>
- <div class="aiAskRow">
-  <input id="adminAiInput" class="aiAskInput" maxlength="500" placeholder="Ask RunSGD AI anything…" onkeydown="if(event.key==='Enter'){event.preventDefault();sendAdminAi()}">
-  <button id="adminAiSend" class="btn primary aiSendBtn" onclick="sendAdminAi()">Send</button>
- </div>
- <div class="aiConsoleFoot"><div id="adminAiStatus" class="status">Gemini 3.5 Flash-Lite · Web search OFF</div><button class="aiClear" onclick="clearAdminAiChat()">Clear chat</button></div>
-</article>
-
-<article class="card monitorCard" id="monitorCard">
- <div class="monitorHead"><div><div class="title">📊 RunSGD monitoring</div><div class="sub">Live activity · Singapore time</div></div><span class="pill ok monitorLive">LIVE</span></div>
- <div class="metricGrid">
-  <div class="metric"><div id="metricTraffic" class="metricValue">—</div><div class="metricLabel">Traffic</div><div id="metricTrafficSub" class="metricSub">Page views today</div></div>
-  <div class="metric"><div id="metricVisitors" class="metricValue">—</div><div class="metricLabel">Visitors</div><div id="metricVisitorsSub" class="metricSub">Unique today</div></div>
-  <div class="metric"><div id="metricMembers" class="metricValue">—</div><div class="metricLabel">Members</div><div id="metricMembersSub" class="metricSub">Registered total</div></div>
- </div>
- <div class="trendHead"><span>7-day traffic</span><span id="monitorUpdated">Loading…</span></div>
- <div id="trafficBars" class="sparkBars" aria-label="7-day traffic chart"></div>
-</article>
-
-<article class="card" id="googleBillingCard">
- <div class="head"><div class="title">📈 Google Maps query monitor</div><span id="googleBillingState" class="pill ok">Tracking</span></div>
- <p class="sub">Internal RunSGD counters for Google Places, traffic-aware Routes Pro and Dynamic Map loads. Google Cloud Billing remains the source of truth.</p>
- <div class="billingGrid">
-  <div class="billingMetric"><strong id="gmTodayTotal">—</strong><span>Events today</span></div>
-  <div class="billingMetric"><strong id="gmMonthTotal">—</strong><span>Events this month</span></div>
-  <div class="billingMetric"><strong id="gmMonthPlaces">—</strong><span>Places searches</span></div>
-  <div class="billingMetric"><strong id="gmMonthRoutes">—</strong><span>Routes Pro</span></div>
-  <div class="billingMetric"><strong id="gmMonthMaps">—</strong><span>Dynamic maps</span></div>
- </div>
- <div class="billingPanel">
-  <div class="billingTop"><div><div class="sub">Free-tier threshold monitor</div><div id="gmThresholdState" class="billingCost">Checking…</div></div><span id="gmThresholdPill" class="pill ok">Safe</span></div>
-  <div id="gmPlacesThreshold" class="billingNote">Places Text Search Pro: — / 5,000 free monthly</div>
-  <div id="gmRoutesThreshold" class="billingNote">Compute Routes Pro: — / 5,000 free monthly</div>
-  <div id="gmMapsThreshold" class="billingNote">Dynamic Maps: — / 10,000 free monthly</div>
-  <div class="billingNote">RunSGD warns at 70%, 85% and 95%. Admin API tests are excluded from app counters.</div>
- </div>
- <div class="healthFooter"><div id="gmUsageUpdated" class="status">Loading usage…</div><button id="gmUsageBtn" class="btn soft healthRefresh" onclick="loadGoogleMapsUsage(this)">↻ Refresh usage</button></div>
-</article>
-
-<article class="card" id="affiliateTrackingCard">
- <div class="head"><div><div class="title">🔗 Affiliate tracking</div><div class="sub">RunSGD referral link clicks · Singapore time</div></div><span id="affiliateTrackingState" class="pill ok">Tracking</span></div>
- <p class="sub">RunSGD records link clicks only. Conversions, rewards and commissions are confirmed by the affiliate provider.</p>
- <div class="affiliateTableWrap">
-  <table class="affiliateTable">
-   <thead><tr><th>Partner</th><th>Placement</th><th>Today</th><th>7 days</th><th>Total</th><th>Last click</th><th>Link</th></tr></thead>
-   <tbody id="affiliateTableBody"><tr><td colspan="7" class="sub">Loading affiliate links…</td></tr></tbody>
-  </table>
- </div>
- <div class="affiliateFooter"><div id="affiliateUpdated" class="status">Loading…</div><button id="affiliateRefreshBtn" class="btn soft" onclick="loadAffiliateStats(this)">↻ Refresh</button></div>
-</article>
-
-<article class="card" id="apiHealthCard">
- <div class="head"><div class="title">🩺 API health</div><span id="apiHealthSummary" class="pill">Loading last scan…</span></div>
- <p class="sub">Shows the last saved health result when Admin opens. No live API tests run automatically. Press ↻ Refresh all, or test one API individually.</p>
- <div id="apiHealthGrid" class="apiGrid"><div class="sub">Loading last saved results…</div></div>
- <div class="healthFooter"><div id="apiHealthUpdated" class="status">Loading last scan…</div><button id="apiHealthBtn" class="btn soft healthRefresh" onclick="loadApiHealth(this)">↻ Refresh all</button></div>
-</article>
-
-<article class="card">
- <div class="head"><div class="title">👥 Community members</div><span id="memberCount" class="pill">0 members</span></div>
- <p class="sub">Profile photo and community tag shown exactly as members appear in RunSGD chat.</p>
- <div id="memberList" class="memberList"><div class="sub">Loading members…</div></div>
-</article>
-
-<article class="card" id="ltaCard">
- <div class="head"><div class="title">🚦 LTA DataMall · Traffic Images</div><span id="ltaState" class="pill">Not configured</span></div>
- <p class="sub">AccountKey for the Causeway snapshot on Home. Saved securely in Supabase for RunSGD; it is not stored in GitHub or exposed to visitors.</p>
- <div class="field"><label for="ltaKey">LTA AccountKey</label><div class="row"><input id="ltaKey" class="input" type="password" placeholder="Paste LTA DataMall AccountKey" autocomplete="off"><button class="btn soft" onclick="toggleKey('ltaKey',this)">Show</button></div></div>
- <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveLtaKey()">Save</button><button id="ltaTestBtn" class="btn soft" onclick="testLta()">Test Causeway</button></div>
- <div id="ltaStatus" class="status">Camera 2701 · Woodlands Causeway towards Johor.</div>
-</article>
-
-<article class="card" id="fxCard">
- <div class="head"><div class="title">💱 Currency · Twelve Data</div><span id="twelveState" class="pill">Not configured</span></div>
- <p class="sub">Primary live SGD/MYR provider. RunSGD keeps the existing free FX sources as fallback.</p>
- <div class="field"><label for="twelveKey">API key</label><div class="row"><input id="twelveKey" class="input" type="password" placeholder="Paste Twelve Data API key" autocomplete="off"><button class="btn soft" onclick="toggleKey('twelveKey',this)">Show</button></div></div>
- <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveTwelve()">Save</button><button id="testBtn" class="btn soft" onclick="testTwelve()">Test SGD/MYR</button></div>
- <div id="twelveStatus" class="status">No test run yet.</div>
-</article>
-
-<article class="card" id="oneMapCard">
- <div class="head"><div class="title">🗺️ OneMap · Route Planner</div><span id="oneMapState" class="pill">Not configured</span></div>
- <p class="sub">Admin-only OneMap account used by the Singapore Route Planner. Credentials are saved in Supabase and are not stored in this browser.</p>
- <div class="field"><label for="oneMapEmail">Registered email</label><input id="oneMapEmail" class="input" type="email" inputmode="email" placeholder="OneMap registered email" autocomplete="off"></div>
- <div class="field"><label for="oneMapPassword">Password</label><div class="row"><input id="oneMapPassword" class="input" type="password" placeholder="OneMap password" autocomplete="off"><button class="btn soft" onclick="toggleKey('oneMapPassword',this)">Show</button></div></div>
- <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveOneMap()">Save securely</button><button id="oneMapTestBtn" class="btn soft" onclick="testOneMap()">Test login</button><button class="btn soft" onclick="clearOneMap()">Clear</button></div>
- <div id="oneMapStatus" class="status">Used only for OneMap authentication. Route API connection will be added next.</div>
-</article>
-
-<article class="card" id="googleMapsCard">
- <div class="head"><div class="title">🇲🇾 Google Maps · RunSGD Navigation</div><span id="googleMapsState" class="pill">Not configured</span></div>
- <p class="sub">RunSGD uses separate Google keys: a private server key for Places + Routes, and a browser-restricted key for the Dynamic Map shown inside live navigation.</p>
- <div class="field"><label for="googleMapsKey">Server key · Places + Routes</label><div class="row"><input id="googleMapsKey" class="input" type="password" placeholder="RunSGD server key" autocomplete="off"><button class="btn soft" onclick="toggleKey('googleMapsKey',this)">Show</button></div></div>
- <div class="row" style="margin-top:10px"><button class="btn primary" onclick="saveGoogleMapsKey()">Save server key</button><button id="googleMapsTestBtn" class="btn soft" onclick="testGoogleMaps()">Test routing APIs</button><button class="btn soft" onclick="clearGoogleMapsKey()">Clear</button></div>
- <div id="googleMapsStatus" class="status">Server key stays in Supabase and is never sent to visitors.</div>
- <div class="field" style="margin-top:16px"><label for="googleMapsBrowserKey">Browser key · Maps JavaScript API / Dynamic Maps</label><div class="row"><input id="googleMapsBrowserKey" class="input" type="password" placeholder="Paste HTTP-referrer-restricted browser key" autocomplete="off"><button class="btn soft" onclick="toggleKey('googleMapsBrowserKey',this)">Show</button></div></div>
- <div class="row" style="margin-top:10px"><button class="btn primary" onclick="saveGoogleMapsBrowserKey()">Save browser key</button><button class="btn soft" onclick="clearGoogleMapsBrowserKey()">Clear</button><span id="googleMapsBrowserState" class="pill">Not configured</span></div>
- <div id="googleMapsBrowserStatus" class="status">Use a separate key restricted to Maps JavaScript API and HTTP referrers runsgd.site / www.runsgd.site. The key is visible to browsers by design, so restrictions are required.</div>
-</article>
-
 <article class="card" id="jbMapTestCard">
  <div class="head"><div class="title">🧪 JB Navigation Lab</div><span class="pill">PHASE 1</span></div>
  <p class="sub">Independent Johor navigation sandbox for map UX and RunSGD GPS logic. Phase 1 adds current-GPS origin, manual OSM destination search, route preview, live GPS matching, reroute testing and persistent destination context.</p>
@@ -217,33 +103,6 @@ body.adminHome #affiliateTrackingCard,body.adminHome #communityMembersCard,body.
   <div class="head" style="margin:14px 0 0"><div class="title" style="font-size:13px">Decision timeline</div><span id="prodDiagSessionMeta" class="pill"></span></div><div id="prodDiagEvents" class="navDiagEvents"></div>
  </div>
  <div class="navDiagActions"><button class="btn soft" onclick="loadProductionNavDiagnostics()">↻ Refresh</button><button class="btn soft" onclick="copyProductionNavDiagnostics()">Copy trace</button><button class="btn danger" onclick="clearProductionNavDiagnostics()">Clear local traces</button></div>
-</article>
-
-<article class="card" id="geminiCard">
- <div class="head"><div class="title">✨ RunSGD AI · Gemini</div><span id="geminiState" class="pill">Not configured</span></div>
- <p class="sub">v2.0 uses Gemini 3.5 Flash-Lite to analyse RunSGD live data, Knowledge and recent Community updates. External web search is OFF.</p>
- <div class="field"><label>Model</label><input class="input" value="gemini-3.5-flash-lite" disabled></div>
- <div class="field"><label for="geminiKey">Gemini API key</label><div class="row"><input id="geminiKey" class="input" type="password" placeholder="Paste Google AI Studio API key" autocomplete="off"><button class="btn soft" onclick="toggleKey('geminiKey',this)">Show</button></div></div>
- <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveGeminiKey()">Save securely</button><button id="geminiTestBtn" class="btn soft" onclick="testGemini()">Test AI</button></div>
- <div id="geminiStatus" class="status">API key is stored in Supabase and never sent to GitHub Pages visitors.</div>
-</article>
-
-<article class="card">
- <div class="head"><div class="title">Connected services</div><span class="pill ok">No key needed</span></div>
- <div class="services">
-  <div class="service"><strong>🌦 Open-Meteo</strong><span>SG/JB weather</span></div>
-  <div class="service"><strong>🕌 AlAdhan</strong><span>Prayer times</span></div>
-  <div class="service"><strong>📅 Nager</strong><span>Singapore public holidays</span></div>
-  <div class="service"><strong>📍 OpenStreetMap</strong><span>Nearby mosque / surau lookup</span></div>
-  <div class="service"><strong>💱 FX fallbacks</strong><span>Fawaz · ER API · Frankfurter</span></div>
- </div>
-</article>
-
-<article class="card">
- <div class="title">Local admin storage</div>
- <p class="note">Twelve Data remains stored locally for this prototype. LTA, OneMap, Gemini and Google Maps route credentials are stored server-side in Supabase and are not exposed in the public GitHub repository.</p>
- <div class="switch"><div><b>Hide keys by default</b><div class="sub">Password fields remain masked unless you press Show.</div></div><input type="checkbox" checked disabled></div>
- <button class="btn danger full" onclick="clearAll()">Clear API settings from this browser</button>
 </article>
 
 <a class="back" href="/admin/">← Back to Admin</a>
@@ -394,7 +253,7 @@ function clearProductionNavDiagnostics(){if(!confirm('Clear production navigatio
 function cfg(){try{return JSON.parse(localStorage.getItem('runsgdAdminConfig')||'{}')}catch{return {}}}
 function saveCfg(next){localStorage.setItem('runsgdAdminConfig',JSON.stringify(next))}
 function maskState(){let key=localStorage.getItem('runsgdTwelveDataKey')||'';$('twelveState').textContent=key?'Configured':'Not configured';$('twelveState').classList.toggle('ok',!!key)}
-function load(){let c=cfg(),tk=localStorage.getItem('runsgdTwelveDataKey')||c.twelveDataKey||'';$('twelveKey').value=tk;maskState();loadLtaState();loadGeminiState();loadOneMapState();loadGoogleMapsState();loadProductionNavDiagnostics()}
+function load(){loadProductionNavDiagnostics()}
 function saveTwelve(){let key=$('twelveKey').value.trim(),c=cfg();if(key){localStorage.setItem('runsgdTwelveDataKey',key);c.twelveDataKey=key}else{localStorage.removeItem('runsgdTwelveDataKey');delete c.twelveDataKey}saveCfg(c);maskState();$('twelveStatus').textContent=key?'Saved on this browser.':'Twelve Data key cleared.';flash($('fxCard'))}
 async function testTwelve(){let key=$('twelveKey').value.trim();if(!key)return $('twelveStatus').textContent='Enter a Twelve Data API key first.';let b=$('testBtn');b.disabled=true;b.textContent='Testing…';$('twelveStatus').textContent='Requesting live SGD/MYR…';try{let r=await fetch('https://api.twelvedata.com/exchange_rate?symbol=SGD%2FMYR&apikey='+encodeURIComponent(key),{cache:'no-store'}),j=await r.json();if(!r.ok||!j.rate)throw Error(j.message||('HTTP '+r.status));let rate=Number(j.rate);$('twelveStatus').textContent='✓ Working · 1 SGD = RM '+rate.toFixed(4);saveTwelve()}catch(e){$('twelveStatus').textContent='Test failed · '+(e.message||'Unknown error')}finally{b.disabled=false;b.textContent='Test SGD/MYR'}}
 function saveLLM(){let c=cfg();c.llmProvider=$('llmProvider').value;c.llmKey=$('llmKey').value.trim();c.llmModel=$('llmModel').value.trim();c.llmEndpoint=$('llmEndpoint').value.trim();saveCfg(c);$('llmStatus').textContent='Saved. Main app integration will use these settings in the LLM release.';flash($('llmStatus').closest('.card'))}
@@ -817,8 +676,7 @@ async function guardAdmin(){
     let avatar=data.avatar_url||session.user.user_metadata?.avatar_url||session.user.user_metadata?.picture||'';
     document.getElementById('adminAvatar').src=avatar||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2258%22 height=%2258%22%3E%3Crect width=%2258%22 height=%2258%22 rx=%2218%22 fill=%22%23eef3ff%22/%3E%3Ctext x=%2229%22 y=%2237%22 text-anchor=%22middle%22 font-size=%2224%22%3E👤%3C/text%3E%3C/svg%3E';
     load();
-    await loadMembers();
-    await loadMonitoring();
+
   }catch(e){document.getElementById('gateText').textContent='Could not verify admin access.'}
 }
 guardAdmin();
