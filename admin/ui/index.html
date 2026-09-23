@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RunSGD · UI Page Editor</title>
+<style>
+:root{--ink:#1c2844;--muted:#7c879c;--line:#e6eaf2;--blue:#4b82f5;--violet:#8265ef}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(160deg,#f1f9ff,#f7f3ff 52%,#fff8fb);min-height:100vh}
+.app{width:min(760px,100%);margin:auto;padding:22px 18px 48px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:950;font-size:29px;letter-spacing:-1.8px;background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;color:transparent}.badge{font-size:10px;font-weight:900;color:#67748d;background:#ffffffcc;border:1px solid #fff;border-radius:999px;padding:6px 9px}
+.hero{padding:28px 2px 14px}.hero h1{font-size:32px;letter-spacing:-1px;margin:0 0 7px}.sub{color:var(--muted);font-size:13px;line-height:1.5}.card{margin-top:14px;background:#ffffffeb;border:1px solid #fff;border-radius:24px;padding:19px;box-shadow:0 14px 36px #46537d10}.title{font-weight:900;font-size:17px}.label{display:block;margin:16px 0 7px;font-size:11px;font-weight:900;color:#65718a}
+textarea{width:100%;min-height:96px;resize:vertical;border:1px solid #dfe5ef;border-radius:16px;padding:13px 14px;font:inherit;font-size:14px;line-height:1.45;color:#1d2942;background:#fff;outline:none}textarea:focus{border-color:#9db5f6;box-shadow:0 0 0 4px #4b82f510}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}.counter,.meta{font-size:10px;color:#929bad}.actions{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:11px 15px;font-weight:900;cursor:pointer}.primary{background:linear-gradient(120deg,var(--blue),var(--violet));color:#fff}.secondary{background:#edf2fb;color:#3e5278}.btn:disabled{opacity:.55}.status{margin-top:11px;padding:10px 12px;border-radius:14px;background:#f3f6fb;color:#5f6d86;font-size:12px;font-weight:750}.status.ok{background:#edf9f2;color:#28704d}.status.bad{background:#fff0f1;color:#9c4050}
+.preview{margin-top:15px;padding:16px;border-radius:19px;background:linear-gradient(135deg,#eef8ff,#f7f2ff);border:1px solid #e9eef8}.previewTitle{font-size:11px;color:#8490a5;font-weight:900;text-transform:uppercase;letter-spacing:.35px}.previewGreeting{font-size:25px;font-weight:950;margin-top:8px}.previewStatus{margin-top:5px;color:#7d899e;font-size:13px;line-height:1.45}
+.back{display:inline-flex;margin-top:18px;color:#4965c7;text-decoration:none;font-weight:850;font-size:13px}
+#adminGate{padding-top:40px}
+</style>
+</head>
+<body>
+<div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="/admin/">← Back to Admin</a></section></div>
+<main id="adminApp" class="app" style="display:none">
+  <div class="top"><div class="brand">runSGD</div><span class="badge">UI EDITOR · v2.15.6</span></div>
+  <section class="hero"><h1>UI Page Editor</h1><p class="sub">Change selected user-facing text without editing code. Values are read from the RunSGD database, not browser storage.</p></section>
+  <article class="card">
+    <div class="title">Home</div>
+    <div class="sub">Status shown directly below “Good morning / afternoon / evening”.</div>
+    <label class="label" for="homeStatus">Greeting status</label>
+    <textarea id="homeStatus" maxlength="240" placeholder="Type the live Home status…"></textarea>
+    <div class="row"><span id="updatedMeta" class="meta">Loading current value…</span><span id="charCount" class="counter">0 / 240</span></div>
+    <div class="preview">
+      <div class="previewTitle">Preview</div>
+      <div class="previewGreeting">Good morning, Mohd 👋</div>
+      <div id="previewStatus" class="previewStatus"></div>
+    </div>
+    <div class="actions">
+      <button id="saveBtn" class="btn primary" onclick="saveStatus()">Save to database</button>
+      <button class="btn secondary" onclick="useDefault()">Use default text</button>
+      <button class="btn secondary" onclick="loadStatus()">Reload current</button>
+    </div>
+    <div id="saveStatus" class="status">Changes appear on RunSGD as soon as the database update is received.</div>
+  </article>
+  <a class="back" href="/admin/">← Back to Admin</a>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const U='https://gdycbluljgfezhgslppe.supabase.co',K='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
+const sb=window.supabase.createClient(U,K),$=id=>document.getElementById(id);
+const DEFAULT_STATUS='Only what matters right now. Calm, useful and live.';
+let adminSession=null;
+function setMessage(text,kind=''){let e=$('saveStatus');e.textContent=text;e.className='status'+(kind?' '+kind:'')}
+function syncPreview(){let v=$('homeStatus').value;$('charCount').textContent=v.length+' / 240';$('previewStatus').textContent=v||'—'}
+$('homeStatus')?.addEventListener('input',syncPreview);
+function fmtTime(v){try{return new Date(v).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' SGT'}catch{return ''}}
+async function loadStatus(){
+ setMessage('Loading current database value…');
+ const {data,error}=await sb.from('app_content').select('content,updated_at').eq('key','home_status').maybeSingle();
+ if(error){setMessage('Could not load status · '+error.message,'bad');return}
+ $('homeStatus').value=data?.content||DEFAULT_STATUS;syncPreview();
+ $('updatedMeta').textContent=data?.updated_at?'Last saved '+fmtTime(data.updated_at):'Default value';
+ setMessage('Current value loaded from Supabase.','ok')
+}
+function useDefault(){$('homeStatus').value=DEFAULT_STATUS;syncPreview();setMessage('Default text loaded in the editor. Press Save to publish it.')}
+async function saveStatus(){
+ const content=$('homeStatus').value.trim();
+ if(!content){setMessage('Status cannot be empty.','bad');return}
+ if(content.length>240){setMessage('Keep the status within 240 characters.','bad');return}
+ const b=$('saveBtn');b.disabled=true;b.textContent='Saving…';
+ try{
+   const payload={key:'home_status',content,updated_at:new Date().toISOString(),updated_by:adminSession.user.id};
+   const {data,error}=await sb.from('app_content').upsert(payload,{onConflict:'key'}).select('content,updated_at').single();
+   if(error)throw error;
+   $('homeStatus').value=data.content;syncPreview();$('updatedMeta').textContent='Last saved '+fmtTime(data.updated_at);
+   setMessage('✓ Published. RunSGD Home will use this database value.','ok')
+ }catch(e){setMessage('Could not save · '+(e.message||'unknown error'),'bad')}
+ finally{b.disabled=false;b.textContent='Save to database'}
+}
+async function guard(){
+ try{
+  const {data:{session}}=await sb.auth.getSession();adminSession=session;
+  if(!session){$('gateText').textContent='Sign in with the RunSGD admin account first.';return}
+  const {data,error}=await sb.from('profiles').select('role').eq('id',session.user.id).maybeSingle();
+  if(error||data?.role!=='admin'){$('gateText').textContent='This RunSGD account does not have admin access.';return}
+  $('adminGate').style.display='none';$('adminApp').style.display='block';await loadStatus()
+ }catch(e){$('gateText').textContent='Could not verify admin access.'}
+}
+guard();
+</script>
+</body>
+</html>
