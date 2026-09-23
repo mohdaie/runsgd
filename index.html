@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="theme-color" content="#f8fbff">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -317,7 +320,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.8</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.9</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -671,7 +674,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.8</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.9</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -724,7 +727,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.8</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.9</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -766,7 +769,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.15.8';
+const RUNSGD_VERSION='2.15.9';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -784,14 +787,41 @@ function runsgdApplyVersion(version=RUNSGD_VERSION){
 function runsgdJourneyActive(){
  return typeof sgJourney!=='undefined'&&!!sgJourney&&sgJourney.status==='active'
 }
+function runsgdPersistedJourneyActive(){
+ try{
+  const j=JSON.parse(localStorage.getItem('runsgdSgSelectedRoute')||'null');
+  return !!j&&j.status==='active'&&Array.isArray(j.route?.legs)&&j.route.legs.length>0
+ }catch{return false}
+}
+function runsgdJourneyUpdateLock(){
+ if(!(runsgdJourneyActive()||runsgdPersistedJourneyActive()))return false;
+ const active=document.querySelector('.page.active')?.id||location.hash.replace('#','')||localStorage.getItem('runsgdPage')||'';
+ return active==='journey'
+}
 function runsgdMarkUpdateReady(version){
  const v=String(version||'').trim().replace(/^v/i,'');
  if(v)localStorage.setItem('runsgdPendingUpdate',v);
  const el=document.getElementById('appVersionBadge');
  if(el)el.textContent=runsgdVersionLabel(v||RUNSGD_VERSION)+' · update ready'
 }
-function runsgdReloadForUpdate(version){
- if(runsgdReloadingForUpdate||runsgdJourneyActive())return false;
+function runsgdShowUpdating(version){
+ let el=document.getElementById('runsgdUpdateGate');
+ if(!el){el=document.createElement('div');el.id='runsgdUpdateGate';el.style.cssText='position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:28px;background:rgba(248,251,255,.97);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17213b;text-align:center';el.innerHTML='<div style="max-width:330px"><div style="font-size:30px;font-weight:900;letter-spacing:-1px">Updating RunSGD…</div><div id="runsgdUpdateGateText" style="margin-top:9px;color:#748097;font-size:14px;line-height:1.5"></div></div>';document.body.appendChild(el)}
+ const t=document.getElementById('runsgdUpdateGateText');if(t)t.textContent='Loading '+runsgdVersionLabel(version)+' so you do not use an outdated screen.';
+}
+async function runsgdPurgeOldShellCaches(){
+ if(!('caches' in window))return;
+ try{
+  const keys=await caches.keys();
+  await Promise.all(keys.filter(k=>k.startsWith('runsgd-shell-')).map(k=>caches.delete(k)))
+ }catch{}
+}
+async function runsgdKickServiceWorkerUpdate(){
+ if(!('serviceWorker' in navigator))return;
+ try{const reg=await navigator.serviceWorker.getRegistration('/');if(reg)await reg.update()}catch{}
+}
+function runsgdReloadForUpdate(version,force=false){
+ if(runsgdReloadingForUpdate||(!force&&runsgdJourneyUpdateLock()))return false;
  const v=String(version||RUNSGD_VERSION).trim().replace(/^v/i,'');
  const u=new URL(location.href);
  runsgdReloadingForUpdate=true;
@@ -801,38 +831,71 @@ function runsgdReloadForUpdate(version){
  location.replace(u.pathname+u.search+u.hash);
  return true
 }
+async function runsgdForceUpdate(version){
+ if(runsgdReloadingForUpdate)return false;
+ if(runsgdJourneyUpdateLock()){runsgdMarkUpdateReady(version);return false}
+ runsgdShowUpdating(version);
+ await runsgdPurgeOldShellCaches();
+ await runsgdKickServiceWorkerUpdate();
+ return runsgdReloadForUpdate(version,true)
+}
 async function runsgdApplyPendingUpdate(){
  const pending=String(localStorage.getItem('runsgdPendingUpdate')||'').trim().replace(/^v/i,'');
  if(!pending)return;
  if(!runsgdVersionIsNewer(pending)){localStorage.removeItem('runsgdPendingUpdate');return}
- if(!runsgdJourneyActive()&&await runsgdPublishedHtmlHasVersion(pending))runsgdReloadForUpdate(pending)
+ if(!runsgdJourneyUpdateLock()&&await runsgdPublishedHtmlHasVersion(pending))await runsgdForceUpdate(pending)
 }
 async function runsgdPublishedHtmlHasVersion(version){
  try{
   const u=new URL('/index.html',location.origin);
   u.searchParams.set('_runsgd_probe',String(version));
   u.searchParams.set('ts',String(Date.now()));
-  const r=await fetch(u.href,{cache:'no-store'});
+  const r=await fetch(u.href,{cache:'no-store',headers:{'Cache-Control':'no-cache'}});
   if(!r.ok)return false;
   const html=await r.text();
   return html.includes("const RUNSGD_VERSION='"+String(version)+"'")||html.includes('const RUNSGD_VERSION="'+String(version)+'"')
  }catch{return false}
 }
+async function runsgdServerVersion(timeout=3500){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeout);
+ try{
+  const r=await fetch('/VERSION?ts='+Date.now(),{cache:'no-store',headers:{'Cache-Control':'no-cache'},signal:controller.signal});
+  if(!r.ok)return '';
+  return (await r.text()).trim().replace(/^v/i,'')
+ }catch{return ''}finally{clearTimeout(timer)}
+}
+async function runsgdEnsureCurrentBeforeBoot(){
+ const p=new URLSearchParams(location.search);
+ if(p.has('auth')||p.has('code')||p.has('error'))return true;
+ const serverVersion=await runsgdServerVersion();
+ if(!serverVersion)return true;
+ if(!runsgdVersionIsNewer(serverVersion))return true;
+ runsgdDetectedUpdateVersion=serverVersion;
+ if(runsgdJourneyUpdateLock()){runsgdMarkUpdateReady(serverVersion);return true}
+ if(!await runsgdPublishedHtmlHasVersion(serverVersion)){runsgdMarkUpdateReady(serverVersion);return true}
+ await runsgdForceUpdate(serverVersion);
+ return false
+}
 async function checkRunsgdVersion(){
  try{
-  const r=await fetch('/VERSION?ts='+Date.now(),{cache:'no-store'});
-  if(!r.ok)return false;
-  const serverVersion=(await r.text()).trim().replace(/^v/i,'');
+  const serverVersion=await runsgdServerVersion(5000);
   if(!serverVersion)return false;
   if(runsgdVersionIsNewer(serverVersion)){
    runsgdDetectedUpdateVersion=serverVersion;
-   if(runsgdJourneyActive()){runsgdMarkUpdateReady(serverVersion);return true}
+   if(runsgdJourneyUpdateLock()){runsgdMarkUpdateReady(serverVersion);return true}
    if(!await runsgdPublishedHtmlHasVersion(serverVersion)){runsgdMarkUpdateReady(serverVersion);return true}
-   runsgdReloadForUpdate(serverVersion);return true
+   await runsgdForceUpdate(serverVersion);return true
   }
   if(serverVersion!==RUNSGD_VERSION)return false;
-  runsgdApplyVersion(serverVersion);runsgdApplyPendingUpdate();return false
+  runsgdApplyVersion(serverVersion);await runsgdApplyPendingUpdate();return false
  }catch{return false}
+}
+async function runsgdBoot(){
+ runsgdApplyVersion();
+ const current=await runsgdEnsureCurrentBeforeBoot();
+ if(!current)return;
+ await init();
+ checkRunsgdVersion();
 }
 
 const runsgdAuthParams=new URLSearchParams(location.search);
@@ -870,7 +933,8 @@ async function trackAppVisit(){
   try{
     await sb.from('app_page_views').insert({
       visitor_id:analyticsVisitorId(),
-      path:(location.pathname||'/').slice(0,200)
+      path:(location.pathname||'/').slice(0,200),
+      app_version:RUNSGD_VERSION
     })
   }catch{}
 }
@@ -3808,7 +3872,7 @@ document.addEventListener('visibilitychange',()=>{
  if(document.hidden){
    if(communityChannel){sb.removeChannel(communityChannel);communityChannel=null}
  }else{
-   checkRunsgdVersion();runsgdApplyPendingUpdate();loadHomeStatus();
+   checkRunsgdVersion();runsgdKickServiceWorkerUpdate();runsgdApplyPendingUpdate();loadHomeStatus();
    if(document.querySelector('.page.active')?.id==='community'&&!communityChannel)loadCommunityFeed()
  }
  if(!sgJourney||sgJourney.status!=='active')return;
@@ -3822,19 +3886,22 @@ document.addEventListener('visibilitychange',()=>{
    txt('sgJourneyAiText','Live route tracking is catching up from your current GPS position.');
  }
 });
-runsgdApplyVersion();checkRunsgdVersion();init();
+runsgdBoot();
 if('serviceWorker' in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(runsgdJourneyActive()){checkRunsgdVersion();return}
-    runsgdReloadForUpdate(runsgdDetectedUpdateVersion||RUNSGD_VERSION)
+    if(runsgdJourneyUpdateLock()){checkRunsgdVersion();return}
+    runsgdReloadForUpdate(runsgdDetectedUpdateVersion||RUNSGD_VERSION,true)
   });
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/sw.js',{scope:'/',updateViaCache:'none'}).then(reg=>{
+    navigator.serviceWorker.register('/sw.js?v='+encodeURIComponent(RUNSGD_VERSION),{scope:'/',updateViaCache:'none'}).then(reg=>{
       reg.update().catch(()=>{});
     }).catch(e=>console.warn('RunSGD service worker',e));
   });
 }
-setInterval(()=>{if(!document.hidden)checkRunsgdVersion()},60000);
+window.addEventListener('pageshow',()=>{checkRunsgdVersion();runsgdKickServiceWorkerUpdate()});
+window.addEventListener('focus',()=>{if(!document.hidden){checkRunsgdVersion();runsgdKickServiceWorkerUpdate()}});
+window.addEventListener('online',()=>{checkRunsgdVersion();runsgdKickServiceWorkerUpdate()});
+setInterval(()=>{if(!document.hidden)checkRunsgdVersion()},30000);
 
 </script>
 </body>
