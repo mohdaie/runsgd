@@ -317,7 +317,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.7</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.8</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -600,7 +600,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <article class="card aiCard">
   <div class="head"><div class="title">✨ Ask RunSGD</div><span class="tag">Gemini 3.5 Flash-Lite</span></div>
-  <div class="sub">Ask about RunSGD live data, commuter knowledge or recent community updates. Guest AI works without sign-in; no external web search.</div>
+  <div class="sub">Ask about RunSGD live data and commuter knowledge. Guest AI works without sign-in; no external web search.</div>
   <div class="aiAskShell"><input id="aiQuestion" class="aiAskInput" maxlength="500" placeholder="e.g. Is Causeway busy? Do I need MDAC?" onkeydown="if(event.key==='Enter')askRunSgd()"><button id="aiAskBtn" class="aiAskBtn" onclick="askRunSgd(this)" aria-label="Ask RunSGD">➤</button></div>
   <div id="aiAnswer" class="aiAnswer"><div id="aiAnswerMain" class="aiAnswerMain"></div><div id="aiAnswerReason" class="aiAnswerReason"></div><div id="aiSources" class="aiSources"></div></div>
   <div id="aiAskStatus" class="status">Guest AI available · app data only · sign-in not required.</div>
@@ -671,7 +671,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.7</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.8</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -724,7 +724,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.7</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.8</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -766,7 +766,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.15.7';
+const RUNSGD_VERSION='2.15.8';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -3667,12 +3667,27 @@ function restoreJourneyIntent(){
 
 function aiContext(){
  let p=getHomeWidgetPrefs(),enabled=p.order.filter(x=>!p.hidden.includes(x)),journey=getJourneyIntent(),journeyId=$('journeyIntentSelect')?.value||'',now=new Date();
- let direction=journeyId==='sg-jb'?'SG → JB (user selected)':journeyId==='jb-sg'?'JB → SG (user selected)':journeyId==='within-sg'?'Within Singapore (user selected)':live.location?.country==='MY'?'JB → SG (location-based fallback)':live.location?.country==='SG'?'SG → JB (location-based fallback)':'Unknown';
- let originCountry=direction.startsWith('SG →')?'SG':direction.startsWith('JB →')?'MY':direction.startsWith('Within Singapore')?'SG':null;
- let destinationCountry=direction.startsWith('SG →')?'MY':direction.startsWith('JB →')?'SG':direction.startsWith('Within Singapore')?'SG':null;
- let currentCountry=live.location?.country||null,tripStage='unknown';
- if(originCountry&&currentCountry===originCountry)tripStage='origin_side';
- else if(destinationCountry&&currentCountry===destinationCountry)tripStage='destination_side';
+ let currentCountry=live.location?.country||null,text=String(journey||'').toLowerCase();
+ const mentionsJB=/\b(jb|johor|malaysia|my)\b|causeway|second\s*link|woodlands\s*checkpoint|tuas\s*checkpoint|\bciq\b|bukit\s*chagar|larkin|ksl/i.test(text);
+ const mentionsSG=/\b(singapore|sg)\b|kranji|woodlands(?!\s*checkpoint)|paya\s*lebar|tanjong\s*pagar|orchard|bugis|jurong|changi|raffles|bishan|serangoon|tampines/i.test(text);
+ let crossBorderRelevant=journeyId==='sg-jb'||journeyId==='jb-sg';
+ if(journeyId==='custom'){
+   crossBorderRelevant=(currentCountry==='SG'&&mentionsJB)||(currentCountry==='MY'&&mentionsSG)||(/cross[ -]?border|border crossing/i.test(text));
+ }
+ let direction='Custom / local journey — do not infer a border crossing from current location alone';
+ if(journeyId==='sg-jb')direction='SG → JB (user selected)';
+ else if(journeyId==='jb-sg')direction='JB → SG (user selected)';
+ else if(journeyId==='within-sg')direction='Within Singapore (user selected)';
+ else if(journeyId==='surrounding')direction='Current surroundings only';
+ else if(journeyId==='custom'&&crossBorderRelevant)direction=currentCountry==='MY'?'JB → SG (explicit custom intent)':currentCountry==='SG'?'SG → JB (explicit custom intent)':'Cross-border journey (explicit custom intent)';
+ else if(journeyId==='custom'&&currentCountry==='SG')direction='Within Singapore / local journey unless the user explicitly says otherwise';
+ else if(journeyId==='custom'&&currentCountry==='MY')direction='Within Johor / local journey unless the user explicitly says otherwise';
+ let originCountry=direction.startsWith('SG →')?'SG':direction.startsWith('JB →')?'MY':direction.startsWith('Within Singapore')?'SG':direction.startsWith('Within Johor')?'MY':currentCountry;
+ let destinationCountry=direction.startsWith('SG →')?'MY':direction.startsWith('JB →')?'SG':direction.startsWith('Within Singapore')?'SG':direction.startsWith('Within Johor')?'MY':null;
+ let tripStage='unknown';
+ if(originCountry&&currentCountry===originCountry)tripStage=crossBorderRelevant?'origin_side':'local';
+ else if(destinationCountry&&currentCountry===destinationCountry)tripStage=crossBorderRelevant?'destination_side':'local';
+ let journeyScope=crossBorderRelevant?'cross_border':(currentCountry==='SG'?'local_sg':currentCountry==='MY'?'local_my':'local_or_unknown');
  let c={
    time:now.toLocaleString('en-SG',{timeZone:'Asia/Singapore',weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),
    local_hour:Number(new Intl.DateTimeFormat('en-SG',{timeZone:'Asia/Singapore',hour:'2-digit',hour12:false}).format(now)),
@@ -3682,19 +3697,33 @@ function aiContext(){
    location_detail:live.location?{name:live.location.name,area:live.location.area||null,country:currentCountry,detected_at:live.location.detected_at||null}:null,
    journey_id:journeyId||null,
    journey_intent:journey,
+   journey_scope:journeyScope,
+   cross_border_relevant:crossBorderRelevant,
    likely_direction:direction,
    origin_country:originCountry,
    destination_country:destinationCountry,
    trip_stage:tripStage,
    enabled_widgets:enabled
  };
- if(enabled.includes('traffic')&&live.traffic)c.causeway={...live.traffic,source:'LTA DataMall traffic camera'};
- if(enabled.includes('transport')&&live.transport)c.public_transport={source:'LTA DataMall',fetched_at:live.transport.fetched_at||null,train:live.transport.train||null,nearest_mrt:live.transport.nearest_mrt||null,nearby_bus_stops:(live.transport.nearby_bus_stops||[]).slice(0,3).map(x=>({code:x.code,description:x.description,distance_m:x.distance_m,services:(x.services||[]).slice(0,6)}))};
- if(enabled.includes('currency')&&live.rate)c.currency={source:'RunSGD FX feed',sgd_myr:Number(live.rate.toFixed(4))};
- if(enabled.includes('weather'))c.weather={source:'Open-Meteo',SG:live.weather.SG||null,JB:live.weather.JB||null};
+ // Causeway and FX signals are only sent when the selected journey actually crosses the border.
+ if(crossBorderRelevant&&enabled.includes('traffic')&&live.traffic)c.causeway={...live.traffic,source:'LTA DataMall traffic camera'};
+ if(enabled.includes('transport')&&live.transport){
+   let train=live.transport.train?JSON.parse(JSON.stringify(live.transport.train)):null;
+   // LTA may include advisories that mention cross-border services. Strip those for local-only journeys.
+   if(!crossBorderRelevant&&train&&Array.isArray(train.messages)){
+     train.messages=train.messages.filter(x=>!/(\b170x?\b|\b950\b|woodlands\s*checkpoint|tuas\s*checkpoint|causeway|johor|\bciq\b|cross[ -]?border)/i.test(String(x?.content||'')));
+   }
+   c.public_transport={source:'LTA DataMall',fetched_at:live.transport.fetched_at||null,train,nearest_mrt:live.transport.nearest_mrt||null,nearby_bus_stops:(live.transport.nearby_bus_stops||[]).slice(0,3).map(x=>({code:x.code,description:x.description,distance_m:x.distance_m,services:(x.services||[]).slice(0,6)}))}
+ }
+ if(crossBorderRelevant&&enabled.includes('currency')&&live.rate)c.currency={source:'RunSGD FX feed',sgd_myr:Number(live.rate.toFixed(4))};
+ if(enabled.includes('weather')){
+   if(crossBorderRelevant)c.weather={source:'Open-Meteo',SG:live.weather.SG||null,JB:live.weather.JB||null};
+   else if(currentCountry==='SG')c.weather={source:'Open-Meteo',SG:live.weather.SG||null};
+   else if(currentCountry==='MY')c.weather={source:'Open-Meteo',JB:live.weather.JB||null};
+ }
  if(enabled.includes('air')&&live.air)c.air_quality={...live.air,source:'Open-Meteo air quality'};
  if(enabled.includes('prayer')&&live.prayer)c.prayer={source:'Aladhan timings',current:{label:live.prayer.currentLabel,time:live.prayer.currentTime,mins_since_start:live.prayer.currentMinsAgo,day:live.prayer.currentDay},next:{label:live.prayer.label,time:live.prayer.time,mins_until:live.prayer.mins,day:live.prayer.nextDay},friday:live.prayer.friday,friday_zohor_reference:live.prayer.fridayZohorTime,nearest:live.nearby?.[0]?.name||null};
- if(enabled.includes('holidays'))c.holidays={source:'Singapore public holiday feed',items:(live.holidays||[]).slice(0,3).map(x=>({name:x.name||x.localName,date:x.date}))};
+ if(enabled.includes('holidays')&&(crossBorderRelevant||currentCountry==='SG'||destinationCountry==='SG'))c.holidays={source:'Singapore public holiday feed',items:(live.holidays||[]).slice(0,3).map(x=>({name:x.name||x.localName,date:x.date}))};
  c.signal_inventory={
    causeway_camera:!!c.causeway,
    public_transport:!!c.public_transport,
