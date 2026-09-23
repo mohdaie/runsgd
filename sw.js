@@ -2,7 +2,7 @@ const CACHE='runsgd-shell-v2159';
 const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg'];
 
 async function freshResponse(path){
-  const req=new Request(path,{cache:'reload'});
+  const req=new Request(new URL(path,self.location.origin).href,{cache:'reload'});
   const res=await fetch(req);
   if(!res.ok)throw new Error('HTTP '+res.status+' '+path);
   return res;
