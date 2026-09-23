@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v21510';
+const CACHE='runsgd-shell-v21511';
 const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg'];
 
 async function freshResponse(path){
@@ -56,6 +56,9 @@ self.addEventListener('fetch',event=>{
   if(req.method!=='GET')return;
   const url=new URL(req.url);
   if(url.origin!==self.location.origin)return;
+
+  // The rescue page must always bypass the service worker, including during stale-cache recovery.
+  if(url.pathname==='/update'||url.pathname.startsWith('/update/'))return;
 
   // Auth callbacks must reach the app untouched.
   if(url.searchParams.has('auth')||url.searchParams.has('code')||url.searchParams.has('error'))return;
