@@ -14,7 +14,21 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icon.svg">
-<title>RunSGD</title>
+<title>RunSGD — Singapore ↔ Johor Bahru Commuter Companion</title>
+<meta name="description" content="RunSGD is a Singapore ↔ Johor Bahru commuter companion for journey planning, checkpoint travel, cross-border buses, driving, weather, currency and practical travel guides.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://runsgd.site/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RunSGD">
+<meta property="og:title" content="RunSGD — Singapore ↔ Johor Bahru Commuter Companion">
+<meta property="og:description" content="Plan SG ↔ JB journeys and get practical checkpoint, bus, driving and commuter information in one place.">
+<meta property="og:url" content="https://runsgd.site/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RunSGD — Singapore ↔ Johor Bahru Commuter Companion">
+<meta name="twitter:description" content="Plan SG ↔ JB journeys and get practical checkpoint, bus, driving and commuter information in one place.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"RunSGD","url":"https://runsgd.site/","applicationCategory":"TravelApplication","operatingSystem":"Web","description":"Singapore ↔ Johor Bahru commuter companion for multimodal journey planning, checkpoint travel, public transport, driving and practical travel information.","inLanguage":"en-SG","featureList":["Singapore ↔ Johor Bahru journey planning","Cross-border public transport guidance","Checkpoint travel information","Driving and VEP guidance","SGD ↔ MYR commuter tools"]}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -349,7 +363,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.0</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.1</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -720,7 +734,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.1</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -773,7 +787,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.0</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.1</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -815,7 +829,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.16.0';
+const RUNSGD_VERSION='2.16.1';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -3925,7 +3939,7 @@ const knowledgeBase=[
  {icon:'💱',title:'SGD ↔ MYR money basics',summary:'Reference rate is not the same as your cash rate.',body:['RunSGD shows a reference SGD/MYR market rate for comparison.','Money changers, cards and remittance services use their own spread or fees, so the final rate can differ.','Compare the amount you actually receive, not only the advertised headline rate.'],source:'',sourceLabel:''}
 ];
 function toggleKb(i){let c=document.querySelector('[data-kb="'+i+'"]');if(c)c.classList.toggle('open')}
-async function renderKnowledge(){let f=$('exploreFeed');if(!f)return;txt('feedStatus','Knowledge base');let list=knowledgeBase;try{let {data,error}=await sb.from('knowledge_articles').select('title,category,summary,content,source_url,source_label,checked_at').eq('active',true).order('id');if(!error&&data?.length)list=data.map(a=>({icon:({border:'🚦',transport:'🚌',immigration:'🛂',driving:'🚗',shopping:'🛍️',money:'💱'})[a.category]||'📚',title:a.title,summary:a.summary,body:String(a.content||'').split(/(?<=[.!?])\s+/).filter(Boolean),source:a.source_url||'',sourceLabel:a.source_label||''}))}catch{}f.innerHTML='<div class="kbIntro"><strong>📚 SG ↔ JB commuter knowledge</strong><div class="sub">Short guides stored in RunSGD and searchable by the v2.0 AI.</div></div><div class="kbGrid">'+list.map((a,i)=>`<article class="kbCard" data-kb="${i}"><div class="kbHead" onclick="toggleKb(${i})"><div class="kbIcon">${a.icon}</div><div class="kbMain"><div class="kbTitle">${esc(a.title)}</div><div class="kbSummary">${esc(a.summary)}</div></div><div class="kbChevron">⌄</div></div><div class="kbBody"><ul>${a.body.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${a.source?`<a class="kbSource" target="_blank" rel="noopener" href="${a.source}">${esc(a.sourceLabel)} ↗</a>`:''}<div class="kbChecked">RunSGD knowledge · rules can change</div></div></article>`).join('')+'</div>'}
+async function renderKnowledge(){let f=$('exploreFeed');if(!f)return;txt('feedStatus','Knowledge base');let list=knowledgeBase;try{let {data,error}=await sb.from('knowledge_articles').select('title,category,summary,content,source_url,source_label,checked_at').eq('active',true).order('id');if(!error&&data?.length)list=data.map(a=>({icon:({border:'🚦',transport:'🚌',immigration:'🛂',driving:'🚗',shopping:'🛍️',money:'💱'})[a.category]||'📚',title:a.title,summary:a.summary,body:String(a.content||'').split(/(?<=[.!?])\s+/).filter(Boolean),source:a.source_url||'',sourceLabel:a.source_label||''}))}catch{}let guideMap={'Crossing timing & queue':'/guides/woodlands-vs-tuas/','Woodlands / First Link bus types':'/guides/woodlands-checkpoint-bus/','Tuas / Second Link bus cheat sheet':'/guides/tuas-second-link-bus/','Checkpoint apps: MyICA & MyNIISe':'/guides/myica-myniise-checkpoint-apps/','Driving to JB: VEP basics':'/guides/malaysia-vep-singapore-car/'};f.innerHTML='<div class="kbIntro"><strong>📚 SG ↔ JB commuter knowledge</strong><div class="sub">Short guides stored in RunSGD and searchable by RunSGD AI.</div><a class="kbSource" href="/guides/">Browse public commuter guides →</a></div><div class="kbGrid">'+list.map((a,i)=>`<article class="kbCard" data-kb="${i}"><div class="kbHead" onclick="toggleKb(${i})"><div class="kbIcon">${a.icon}</div><div class="kbMain"><div class="kbTitle">${esc(a.title)}</div><div class="kbSummary">${esc(a.summary)}</div></div><div class="kbChevron">⌄</div></div><div class="kbBody"><ul>${a.body.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${guideMap[a.title]?`<a class="kbSource" href="${guideMap[a.title]}">Read full guide →</a>`:''}${a.source?`<a class="kbSource" target="_blank" rel="noopener" href="${a.source}">${esc(a.sourceLabel)} ↗</a>`:''}<div class="kbChecked">RunSGD knowledge · rules can change</div></div></article>`).join('')+'</div>'}
 
 
 let landmarkCatalog=[],landmarkCollected=new Map();
