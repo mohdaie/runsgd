@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v21521';
+const CACHE='runsgd-shell-v21522';
 const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg','/admin/','/admin/health/','/admin/keys/','/admin/developer/','/admin/people/','/admin/ui/','/admin/affiliate-members/','/admin/community-business/','/admin/detailed-health/'];
 
 async function freshResponse(path){
@@ -35,7 +35,11 @@ self.addEventListener('activate',event=>{
     await Promise.all(windows.map(async client=>{
       try{
         const url=new URL(client.url);
-        if(url.pathname==='/admin'||url.pathname.startsWith('/admin/')||url.pathname.startsWith('/jb-test/')||url.hash==='#journey')return;
+        if(url.pathname==='/admin'||url.pathname.startsWith('/admin/')||url.pathname.startsWith('/jb-test/'))return;
+        if(url.hash==='#journey'){
+          client.postMessage({type:'RUNSGD_SHELL_READY',cache:CACHE});
+          return;
+        }
         url.searchParams.set('_sw',CACHE);
         url.searchParams.set('_refresh',String(Date.now()));
         await client.navigate(url.toString());
