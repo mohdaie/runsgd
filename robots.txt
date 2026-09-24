@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /jb-test/
+Disallow: /update/
+Disallow: /update.html
+
+Sitemap: https://runsgd.site/sitemap.xml
