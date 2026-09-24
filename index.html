@@ -327,7 +327,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.13</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.14</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -681,7 +681,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.13</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.14</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -734,7 +734,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.13</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.14</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -776,7 +776,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.15.13';
+const RUNSGD_VERSION='2.15.14';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -3662,11 +3662,12 @@ function showPage(n,opts={}){
  scrollPageTop()
 }
 const knowledgeBase=[
- {icon:'🚦',title:'Crossing timing & queue',summary:'When should I cross Woodlands or Tuas?',body:['There is no fixed “best time” — queues change quickly with peak hours, weekends and holidays.','Check the RunSGD Causeway snapshot before leaving and add buffer when traffic looks heavy.','For time-sensitive trips, compare both Woodlands and Tuas before committing.'],source:'https://www.ica.gov.sg/news-and-publications/newsroom/media-release/105',sourceLabel:'ICA travel tips'},
- {icon:'🚌',title:'Bus, train or car?',summary:'Pick the option that matches your trip.',body:['Bus is the most flexible option and serves both First Link and Second Link.','Train can avoid road congestion but depends on ticket availability and fixed departure times.','Driving gives flexibility, but you need vehicle-entry requirements, toll/payment readiness and parking.'],source:'https://www.causewaylink.com.my/cross-border-travel-guide/',sourceLabel:'Causeway Link guide'},
- {icon:'🛂',title:'Passport, MDAC & e-Gate',summary:'Keep immigration simple before you leave.',body:['Carry your own valid passport and check its remaining validity before travelling.','Foreign visitors who need MDAC should submit it through the official Malaysia Immigration portal within the required window.','Malaysia e-Gate eligibility depends on nationality, passport type and traveller status — check before relying on it.'],source:'https://imigresen-online.imi.gov.my/mdac/main',sourceLabel:'Official MDAC portal'},
+ {icon:'🚦',title:'Crossing timing & queue',summary:'When should I cross Woodlands or Tuas?',body:['There is no fixed “best time” — queues change quickly with peak hours, weekends and holidays.','Check the RunSGD Causeway snapshot before leaving and add buffer when traffic looks heavy.','For time-sensitive trips, compare both Woodlands and Tuas before committing.'],source:'https://www.ica.gov.sg/news-and-publications/newsroom/media-release/heavy-traffic-expected-at-land-checkpoints-during-upcoming-september-school-holidays',sourceLabel:'ICA travel advisory'},
+ {icon:'🚌',title:'Woodlands / First Link bus types',summary:'Check the operator and route number before you board.',body:['Singapore-operated cross-border services include SBS Transit 160, 170 and 170X and SMRT 950, alongside authorised private or express services.','Causeway Link is a separate Malaysian-operated network: CW1 serves Kranji, CW2 Queen Street and CW5 Newton on the Singapore side.','At the checkpoint, do not assume every bus is interchangeable or that you will reboard the same physical vehicle; follow the route and operator rules.'],source:'https://www.lta.gov.sg/content/ltagov/en/getting_around/point_to_point_transport_and_cross_border_services/cross-border-services.html',sourceLabel:'LTA cross-border services'},
+ {icon:'🌉',title:'Tuas / Second Link bus cheat sheet',summary:'Different CW numbers continue to different Singapore destinations.',body:['Causeway Link routes serving the Second Link include CW3, CW4 and CW4S toward Jurong East, CW6 toward Boon Lay and CW7 toward Tuas Link.','Some Malaysia-side feeder variants terminate at CIQ 2nd Link, so check whether a transfer is required.','After immigration, read the route number and destination board instead of taking the first yellow bus.'],source:'https://www.causewaylink.com.my/help/knowledge-base/transit-pass-frequently-asked-questions/',sourceLabel:'Causeway Link'},
+ {icon:'📲',title:'Checkpoint apps: MyICA & MyNIISe',summary:'Passport first; apps can make land-border clearance faster.',body:['Keep your physical passport with you even when using QR clearance.','MyICA Mobile supports QR clearance at Woodlands and Tuas, including bus passenger lanes, for eligible travellers.','MyNIISe supports Malaysia digital immigration workflows at BSI and KSAB, and MDAC can be completed through MyNIISe for travellers who need it.','No single phone app is universally mandatory for every traveller; immigration form requirements still depend on citizenship and status.'],source:'https://www.ica.gov.sg/enter-transit-depart/at-our-checkpoints/use-of-qr-code-for-immigration-clearance-at-woodlands-and-tuas-checkpoints',sourceLabel:'ICA Singapore'},
  {icon:'🚗',title:'Driving to JB: VEP basics',summary:'The short checklist for Singapore vehicles.',body:['Foreign vehicles entering Malaysia must be registered for VEP with JPJ.','Keep valid vehicle insurance and required vehicle documents current.','Your VEP RFID tag is vehicle-specific; check its status before a driving trip.'],source:'https://www.jpj.gov.my/pelaksanaan-sistem-kutipan-caj-jalan-rc-dan-rekod-kemasukan-kenderaan-asing-vep/',sourceLabel:'JPJ VEP'},
- {icon:'🛍️',title:'Shopping & bringing items back',summary:'Know the Singapore GST relief before buying.',body:['For eligible travellers, GST import relief is up to S$100 when away for less than 48 hours and up to S$500 for 48 hours or more.','Some Singapore pass holders are not eligible for this GST import relief.','Keep receipts and declare taxable or dutiable goods when required; Customs@SG can be used before arrival.'],source:'https://www.customs.gov.sg/at-customs/arriving-in-singapore/duty-free-concession-gst-relief/',sourceLabel:'Singapore Customs'},
+ {icon:'🛍️',title:'Shopping & bringing items back',summary:'Know the Singapore GST relief before buying.',body:['For eligible travellers, GST import relief depends on time spent outside Singapore.','Some Singapore pass holders are not eligible for GST import relief.','Keep receipts and declare taxable or dutiable goods when required; Customs@SG can be used before arrival.'],source:'https://www.customs.gov.sg/at-customs/arriving-in-singapore/duty-free-concession-gst-relief/',sourceLabel:'Singapore Customs'},
  {icon:'💱',title:'SGD ↔ MYR money basics',summary:'Reference rate is not the same as your cash rate.',body:['RunSGD shows a reference SGD/MYR market rate for comparison.','Money changers, cards and remittance services use their own spread or fees, so the final rate can differ.','Compare the amount you actually receive, not only the advertised headline rate.'],source:'',sourceLabel:''}
 ];
 function toggleKb(i){let c=document.querySelector('[data-kb="'+i+'"]');if(c)c.classList.toggle('open')}
