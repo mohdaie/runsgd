@@ -327,7 +327,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.14</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.15</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -593,7 +593,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
     <div id="sgJourneyNext" class="journeyNext"></div>
     <div class="journeyButtons">
       <button class="journeyBtn" onclick="toggleSgJourneyHops(this)">View trip steps</button>
-      <button id="sgJourneyRerouteBtn" class="journeyBtn reroute" onclick="manualSgJourneyReroute(this)">↻ I’m lost · Reroute</button>
+      <button id="sgJourneyRerouteBtn" class="journeyBtn reroute" onclick="manualSgJourneyReroute(this)">↻ Reroute from here</button>
       <button id="sgJourneyHopDoneBtn" class="journeyBtn" onclick="completeSgJourneyHop()">Hop done</button>
       <button class="journeyBtn danger" onclick="endSgJourney()">End trip</button>
     </div>
@@ -681,7 +681,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.14</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.15</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -734,7 +734,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.14</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.15</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -776,7 +776,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.15.14';
+const RUNSGD_VERSION='2.15.15';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -2651,7 +2651,7 @@ function reconcileWalkProgress(p,lat,lon,leg,distance,moved,now){
   setJourneyTurnState('Confirming walking arrival · '+Math.min(need,sgJourneyRuntime.walkArrivalCount)+'/'+need,'confirm');
   if(sgJourneyRuntime.walkArrivalCount>=need){advanceSgJourneyHop();return true}
  }else sgJourneyRuntime.walkArrivalCount=0;
- if(sgJourneyRuntime.walkOffPath)setJourneyTurnState('Off walking path · '+routeDistance(proj.distance_m),'weak');
+ if(sgJourneyRuntime.walkOffPath)setJourneyTurnState('Off walking path · '+routeDistance(proj.distance_m)+' · tap Reroute','weak');
  else if(next&&sgJourneyRuntime.walkNextInstruction.distance_m<=140)setJourneyTurnState(String(next.instruction||next.action||'Continue')+' · '+routeDistance(sgJourneyRuntime.walkNextInstruction.distance_m),'confirm');
  else setJourneyTurnState('On pedestrian path','good');
  return true
@@ -2796,7 +2796,7 @@ function sgJourneyCompanionMessage(leg,distance,road,legs,idx){
  if(['IMMIGRATION','LOCAL_TRANSFER','CROSS_BORDER_BUS'].includes(mode))return sgJourneyDefaultCoach(leg,distance);
  let next=legs?.[idx+1],stepRemain=Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?sgJourneyRuntime.currentStepRemainingM:null;
  if(road&&next&&!journeyRoadMode(next.mode)&&Number.isFinite(stepRemain)&&stepRemain<=350)return 'Driving segment almost complete. Next: '+sgJourneyInstruction(next);
- if(mode==='WALK'&&sgJourneyRuntime.walkOffPath)return 'You are off the planned pedestrian path by about '+routeDistance(sgJourneyRuntime.walkOffPathM||0)+'. Head back toward the path; indoor GPS may be less precise.';
+ if(mode==='WALK'&&sgJourneyRuntime.walkOffPath)return 'You are off the planned pedestrian path by about '+routeDistance(sgJourneyRuntime.walkOffPathM||0)+'. Tap Reroute to calculate a new walking path from your current position; indoor GPS may be less precise.';
  if(mode==='WALK'&&(Number.isFinite(sgJourneyRuntime.walkRemainingM)||distance!=null)&&((sgJourneyRuntime.walkRemainingM??distance)<130))return sgJourneyDefaultCoach(leg,distance);
  return ''
 }
@@ -3068,6 +3068,8 @@ function renderSgJourney(distance=null){
    else setJourneyTurnState(up?(cue.kind==='continue'?'On route · '+cue.action.toLowerCase():'On route · next '+cue.action.toLowerCase()):'On route · destination ahead','turn');
    $('sgJourneyRerouteBtn')?.classList.toggle('offroute',lost)
   }
+ }else{
+  $('sgJourneyRerouteBtn')?.classList.toggle('offroute',walkMatched&&!!sgJourneyRuntime.walkOffPath)
  }
  renderJourneyBeacon(distance);
  if($('sgJourneyProgressBar'))$('sgJourneyProgressBar').style.width=pct+'%';
@@ -3184,51 +3186,83 @@ function freshJourneyGps(){
   },8000)
  })
 }
-function currentRoadBlock(legs,idx){
- let first=legs?.[idx],mode=String(first?.mode||'').toUpperCase();if(!journeyRoadMode(mode))return null;
- let end=idx;while(end+1<legs.length&&String(legs[end+1]?.mode||'').toUpperCase()===mode)end++;
+function journeyTransitMode(v){
+ v=String(v||'').toUpperCase();
+ return ['TRANSIT','BUS','SUBWAY','RAIL','TRAIN','TRAM'].includes(v)
+}
+function currentRerouteBlock(legs,idx){
+ let first=legs?.[idx],mode=String(first?.mode||'').toUpperCase();if(!first)return null;
+ let apiMode='',kind='',end=idx;
+ if(journeyRoadMode(mode)){
+  apiMode=mode;kind=mode==='TWO_WHEELER'?'motorcycle':'driving';
+  while(end+1<legs.length&&String(legs[end+1]?.mode||'').toUpperCase()===mode)end++
+ }else if(mode==='WALK'){
+  apiMode='WALK';kind='walking';
+  while(end+1<legs.length&&String(legs[end+1]?.mode||'').toUpperCase()==='WALK')end++
+ }else if(journeyTransitMode(mode)){
+  apiMode='TRANSIT';kind='public transport';
+  while(end+1<legs.length){
+   let nextMode=String(legs[end+1]?.mode||'').toUpperCase();
+   if(nextMode==='WALK'||journeyTransitMode(nextMode))end++;else break
+  }
+ }else return null;
  let target=legs[end]?.to||null,lat=Number(target?.lat),lon=Number(target?.lon);
  if(!Number.isFinite(lat)||!Number.isFinite(lon))return null;
- return {mode,end,target:{...target,lat,lon}}
+ return {mode,apiMode,kind,end,target:{...target,lat,lon}}
+}
+function rerouteProviderForBlock(block,pos){
+ if(journeyRoadMode(block?.apiMode))return routeProviderFor('jb');
+ let fromCountry=classify(Number(pos?.lat),Number(pos?.lon))?.country||'',toCountry=classify(Number(block?.target?.lat),Number(block?.target?.lon))?.country||'';
+ return fromCountry==='SG'&&toCountry==='SG'?routeProviderFor('sg'):routeProviderFor('jb')
 }
 async function manualSgJourneyReroute(btn){
  if(!sgJourney||sgJourney.status!=='active')return;$('sgJourneyAiCard')?.classList.add('show');
- let legs=sgJourney.route?.legs||[],idx=Math.max(0,Number(sgJourney.current_hop)||0),block=currentRoadBlock(legs,idx);
+ let legs=sgJourney.route?.legs||[],idx=Math.max(0,Number(sgJourney.current_hop)||0),block=currentRerouteBlock(legs,idx);
  if(!block){
-  txt('sgJourneyAiText','Reroute from here is available while RunSGD is guiding a driving or motorcycle road segment. For this hop, use the trip steps or Hop done when appropriate.');
-  setJourneyTurnState('Current hop is not a road-navigation segment','fair');return
+  txt('sgJourneyAiText','Reroute supports driving, motorcycle, walking and local public transport. Immigration, checkpoint and other manual transfer hops continue manually.');
+  setJourneyTurnState('This manual hop cannot be recalculated','fair');return
  }
- prodNavDiagEvent('reroute_requested',{hop:idx+1,mode:block.mode,route_offset_m:Number.isFinite(sgJourneyRuntime.offRouteM)?Math.round(sgJourneyRuntime.offRouteM):null});
+ let offset=block.apiMode==='WALK'?sgJourneyRuntime.walkOffPathM:sgJourneyRuntime.offRouteM;
+ prodNavDiagEvent('reroute_requested',{hop:idx+1,mode:block.apiMode,route_offset_m:Number.isFinite(Number(offset))?Math.round(Number(offset)):null});
  setBusy(btn,true);btn.disabled=true;
- let ai=$('sgJourneyAiText');if(ai){ai.dataset.aiLock='1';ai.textContent='Getting a fresh GPS fix and calculating a new route…'}
+ let ai=$('sgJourneyAiText');if(ai){ai.dataset.aiLock='1';ai.textContent='Getting a fresh GPS fix and recalculating '+block.kind+' from here…'}
  txt('sgJourneyAction','REROUTING…');txt('sgJourneyDistance','Getting your exact current position…');setJourneyTurnState('Rerouting from here…','confirm');
  try{
-  let pos=await freshJourneyGps(),fromClass=classify(pos.lat,pos.lon),roadProvider=routeProviderFor('jb'),originPoint={name:'Current GPS position',lat:pos.lat,lon:pos.lon};
-  txt('sgJourneyDistance','Current GPS · '+pos.lat.toFixed(5)+', '+pos.lon.toFixed(5)+(Number.isFinite(pos.accuracy)?' · ±'+Math.round(pos.accuracy)+' m':'')+' · recalculating '+(block.mode==='TWO_WHEELER'?'motorcycle':'driving')+' route…');
-  let j=await sgRouteApi({
+  let pos=await freshJourneyGps(),fromClass=classify(pos.lat,pos.lon),provider=rerouteProviderForBlock(block,pos),originPoint={name:'Current GPS position',lat:pos.lat,lon:pos.lon};
+  txt('sgJourneyDistance','Current GPS · '+pos.lat.toFixed(5)+', '+pos.lon.toFixed(5)+(Number.isFinite(pos.accuracy)?' · ±'+Math.round(pos.accuracy)+' m':'')+' · recalculating '+block.kind+' route…');
+  let payload={
    action:'route',
-   travel_mode:block.mode,
-   from:{lat:pos.lat,lon:pos.lon},
+   travel_mode:block.apiMode,
+   from:{lat:pos.lat,lon:pos.lon,name:'Current GPS position'},
    to:{lat:block.target.lat,lon:block.target.lon,name:block.target.name||'',address:block.target.address||''}
-  },roadProvider);
-  let fresh=(j.routes||[])[0];
-  if(!fresh?.legs?.length)throw Error('No replacement road route was returned.');
-  let roadLegs=(fresh.legs||[]).map((l,n)=>{
+  };
+  if(block.apiMode==='TRANSIT')payload.max_walk_m=1200;
+  let j=await sgRouteApi(payload,provider),fresh=(j.routes||[])[0];
+  if(!fresh?.legs?.length)throw Error('No replacement '+block.kind+' route was returned.');
+
+  let replacementLegs=(fresh.legs||[]).map((l,n)=>{
    let m=String(l?.mode||'').toUpperCase();
-   if(m&&m!==block.mode)throw Error('Reroute tried to switch from '+(block.mode==='TWO_WHEELER'?'motorcycle':'driving')+' to '+routeModeLabel({mode:m})+'. Keeping the current journey instead.');
-   return {...l,mode:block.mode,from:n===0?{...(l.from||{}),...originPoint}:l.from}
+   if(journeyRoadMode(block.apiMode)&&m&&m!==block.apiMode)throw Error('Reroute tried to switch travel mode. Keeping the current journey instead.');
+   if(block.apiMode==='WALK'&&m&&m!=='WALK')throw Error('Walking reroute returned a non-walking segment. Keeping the current journey instead.');
+   if(block.apiMode==='TRANSIT'&&m&&m!=='WALK'&&!journeyTransitMode(m))throw Error('Public-transport reroute returned an unsupported segment. Keeping the current journey instead.');
+   return {...l,mode:m||block.apiMode,from:n===0?{...(l.from||{}),...originPoint}:l.from}
   });
 
-  // Discard the already-travelled road instructions. Keep the remaining non-road journey intact.
-  let future=legs.slice(block.end+1),futureDuration=future.reduce((n,x)=>n+Number(x.duration_sec||0),0),futureDistance=future.reduce((n,x)=>n+Number(x.distance_m||0),0),old=sgJourney.route||{};
+  // Replace only the active navigable block. Later multimodal/manual stages remain intact.
+  let future=legs.slice(block.end+1),newLegs=[...replacementLegs,...future],old=sgJourney.route||{};
+  let totalDuration=newLegs.reduce((n,x)=>n+Number(x.duration_sec||0),0),totalDistance=newLegs.reduce((n,x)=>n+Number(x.distance_m||0),0),walkDistance=newLegs.filter(x=>String(x?.mode||'').toUpperCase()==='WALK').reduce((n,x)=>n+Number(x.distance_m||0),0);
   sgJourney.route={
    ...old,
-   travel_mode:block.mode,
-   polyline:fresh.polyline||'',
-   legs:[...roadLegs,...future],
+   travel_mode:block.apiMode,
+   polyline:fresh.polyline||old.polyline||'',
+   legs:newLegs,
    reroute_origin:{...originPoint,accuracy_m:pos.accuracy||null,source:pos.source||'gps'},
-   duration_sec:Number(fresh.duration_sec||0)+futureDuration,
-   distance_m:Number(fresh.distance_m||0)+futureDistance,
+   duration_sec:totalDuration,
+   distance_m:totalDistance,
+   walk_distance_m:walkDistance,
+   transfers:block.apiMode==='TRANSIT'&&fresh.transfers!=null?fresh.transfers:old.transfers,
+   fare_sgd:block.apiMode==='TRANSIT'&&fresh.fare_sgd!=null?fresh.fare_sgd:old.fare_sgd,
+   fare_myr:block.apiMode==='TRANSIT'&&fresh.fare_myr!=null?fresh.fare_myr:old.fare_myr,
    rerouted_at:Date.now(),
    reroute_count:Number(old.reroute_count||0)+1
   };
@@ -3237,16 +3271,16 @@ async function manualSgJourneyReroute(btn){
   sgJourney.reroute_count=Number(sgJourney.reroute_count||0)+1;sgJourney.last_reroute_at=Date.now();
   live.location={...fromClass,lat:pos.lat,lon:pos.lon,accuracy_m:pos.accuracy,detected_at:Date.now()};localStorage.setItem('runsgdLocation',JSON.stringify(live.location));updateSgRouteOrigin();
   persistSgJourney();
-  prodNavDiagEvent('reroute_applied',{mode:block.mode,new_road_legs:roadLegs.length,reroute_count:Number(sgJourney.reroute_count||0)});
+  prodNavDiagEvent('reroute_applied',{mode:block.apiMode,new_legs:replacementLegs.length,reroute_count:Number(sgJourney.reroute_count||0)});
 
   stopSgJourneyTracking();startSgJourneyTracking();
-  if(ai){ai.textContent='✓ Route rebuilt from your current position. Follow the new turn instructions.';setTimeout(()=>{if(ai){delete ai.dataset.aiLock;renderSgJourney()}},12000)}
+  if(ai){ai.textContent='✓ '+(block.apiMode==='TRANSIT'?'Public-transport plan':block.apiMode==='WALK'?'Walking path':'Route')+' rebuilt from your current position.';setTimeout(()=>{if(ai){delete ai.dataset.aiLock;renderSgJourney()}},12000)}
   setJourneyTurnState('✓ New route active','good');$('sgJourneyRerouteBtn')?.classList.remove('offroute');
   renderSgJourney();
  }catch(e){
-  prodNavDiagEvent('reroute_failed',{message:String(e?.message||'Unknown reroute error').slice(0,180)});
-  if(ai){ai.textContent=e.message||'Reroute failed. Keep somewhere safe and try again.';setTimeout(()=>{if(ai){delete ai.dataset.aiLock;renderSgJourney()}},15000)}
-  setJourneyTurnState('Reroute failed · try again safely','weak');
+  prodNavDiagEvent('reroute_failed',{mode:block.apiMode,message:String(e?.message||'Unknown reroute error').slice(0,180)});
+  if(ai){ai.textContent=e.message||'Reroute failed. Try again when you have a clear GPS position.';setTimeout(()=>{if(ai){delete ai.dataset.aiLock;renderSgJourney()}},15000)}
+  setJourneyTurnState('Reroute failed · try again','weak');
   txt('sgJourneyDistance',e.message||'Could not calculate a new route.')
  }finally{setBusy(btn,false);btn.disabled=false}
 }
