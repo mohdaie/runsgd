@@ -327,7 +327,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.18</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.19</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -681,7 +681,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.18</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.19</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -734,7 +734,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.18</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.19</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -776,7 +776,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.15.18';
+const RUNSGD_VERSION='2.15.19';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -1934,10 +1934,13 @@ function localJourneyIntent(q){
  let parkedMatch=raw.match(/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?(?:parked|parking)\s+(?:at|near|in)\s+(.+?)(?=\s+(?:then|and then|after|before|from there|so i|so we)\b|[,.;]|$)/i)
   ||raw.match(/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?(?:at|near|in)\s+(.+?)(?=\s+(?:then|and then|after|before|from there|so i|so we)\b|[,.;]|$)/i);
  let pickupCarFirst=/\b(?:need|have|got|want)\s+to\s+(?:take|get|pick\s*up|pickup|retrieve|collect)\s+(?:my\s+|the\s+)?(?:car|kereta)\s*(?:first|before\b)?|\b(?:take|get|pick\s*up|pickup|retrieve|collect)\s+(?:my\s+|the\s+)?(?:car|kereta)\s+(?:first|before)\b/.test(s);
+ let vehicleHandoffMatch=raw.match(/(?:\bto\b|\breach(?:ing)?\b|\barrive(?:\s+at)?\b|\bonce\s+(?:i|we)\s+(?:reach|arrive(?:\s+at)?)\b|\bwhen\s+(?:i|we)\s+(?:reach|arrive(?:\s+at)?)\b)\s+(.+?)\s+(?:then|and\s+then|after(?:\s+that)?)\s+(?:(?:i|we)\s+)?(?:(?:will|want\s+to|can)\s+)?(?:drive|take|use|get\s+into|pick\s*up|pickup|retrieve|collect)\s+(?:my\s+|the\s+)?(?:car|kereta)\b/i);
  let impliedParkedMatch=pickupCarFirst?(raw.match(/(?:i\s+)?(?:park|parked)\s+(?:my\s+|the\s+)?(?:car\s+)?(?:at|near|in)\s+(.+?)(?=\s*(?:,|;|\.|\bthen\b|\band then\b|\bafter\b|\bbefore\b|$))/i)
   ||raw.match(/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?(?:over\s+)?(?:at|near|in)\s+(.+?)(?=\s*(?:,|;|\.|\bthen\b|\band then\b|\bafter\b|\bbefore\b|$))/i)):null;
- let vehicleAccessLocation=(parkedMatch?.[1]||impliedParkedMatch?.[1]||'').trim();
- let vehicleAccess=!!vehicleAccessLocation||pickupCarFirst||/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?parked\b|parked\s+(?:my\s+)?(?:car|kereta)\b/.test(s);
+ let vehicleAccessLocation=(parkedMatch?.[1]||impliedParkedMatch?.[1]||vehicleHandoffMatch?.[1]||'').trim();
+ let vehicleAccess=!!vehicleAccessLocation||pickupCarFirst||!!vehicleHandoffMatch||/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?parked\b|parked\s+(?:my\s+)?(?:car|kereta)\b/.test(s);
+ let accessBeforeCar=vehicleHandoffMatch?raw.slice(0,vehicleHandoffMatch.index+vehicleHandoffMatch[0].indexOf(vehicleHandoffMatch[1])+vehicleHandoffMatch[1].length):raw;
+ let vehicleAccessMode=/\b(?:mrt|bus|train|ktm|public\s+transport|transit)\b/i.test(accessBeforeCar)?'TRANSIT':/\b(?:motorcycle|motorbike|bike|motosikal)\b/i.test(accessBeforeCar)?'TWO_WHEELER':'WALK';
  let hasCar=/\bcar\b|\bdrive\b|\bdriving\b|kereta/.test(s)||vehicleAccess,hasMotorcycle=/motor|motorcycle|bike|motosikal/.test(s),preferKtm=/\bktm\b|shuttle tebrau|train/.test(s);
  let roadMention=/\b(?:drive|driving|car|kereta)\b/.test(s),transitMention=/\b(?:walk|walking|mrt|bus|train|ktm|public transport|transit|taxi|grab|ride.?hail)\b/.test(s);
  let mixedRoadTransit=vehicleAccess||/(drive|driving|kereta|\bcar\b).*(ciq|checkpoint|park|parking).*(bus|mrt|train|ktm|public transport)|(?:then|after|lepas|kemudian).*(bus|mrt|train|ktm|public transport)/.test(s)||(roadMention&&transitMention&&/\b(?:then|after|and|plus|combine|switch|park|before|first)\b/.test(s));
@@ -1948,11 +1951,11 @@ function localJourneyIntent(q){
  let allowBus=directDrive?false:!/no bus|avoid bus/.test(s),allowMrt=directDrive?false:!/no mrt|avoid mrt/.test(s),allowBorder=directDrive?false:!/no border bus/.test(s);
  let requestedActions=[];
  if(vehicleAccess){
-  requestedActions.push({order:1,action:'reach parked vehicle',mode:'WALK',location:vehicleAccessLocation,relation:'before driving',purpose:'access vehicle',required:true,details:'Vehicle is not assumed to be at current GPS.'});
+  requestedActions.push({order:1,action:'reach parked vehicle',mode:vehicleAccessMode,location:vehicleAccessLocation,relation:'before driving',purpose:'access vehicle',required:true,details:'Vehicle is not assumed to be at current GPS.'});
   requestedActions.push({order:2,action:'retrieve vehicle',mode:'CAR',location:vehicleAccessLocation,relation:'at vehicle location',purpose:'start vehicle leg',required:true,details:''});
   if(roadMention)requestedActions.push({order:3,action:'drive',mode:'DRIVE',location:'',relation:'after retrieving vehicle',purpose:'continue journey',required:true,details:''})
  }
- return {answer:vehicleAccess?'I’ll first route you to your parked car, then continue the journey from the car location.':directDrive?'Driving route only — I’ll keep this journey on the road from your current GPS position.':'Got it — I’ll compare the combinations that fit your plan.',priority,has_car:hasCar||directDrive,has_motorcycle:hasMotorcycle,prefer_ktm:directDrive?false:preferKtm,avoid_sg_driving:avoidSg,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,mixed_road_transit:mixedRoadTransit,explicit_road_request:explicitDrive,vehicle_access_required:vehicleAccess,vehicle_access_mode:vehicleAccess?'WALK':'',vehicle_access_location:vehicleAccessLocation,vehicle_access_details:vehicleAccess?'Reach the parked vehicle before any driving leg.':'',must_preserve_sequence:vehicleAccess||mixedRoadTransit,requested_actions:requestedActions,resources:vehicleAccess?[{type:'vehicle',name:'car',status:'parked',location:vehicleAccessLocation,details:''}]:[],constraints:[],preferences:[],semantic_facts:[],assumptions:[],unresolved:vehicleAccess&&!vehicleAccessLocation?['Exact parked-car location was not extracted locally; AI should resolve it.']:[],avoid_modes:[],prefer_modes:[],parking_required:false,parking_location:'',parking_purpose:'',timing:{depart_at:'',arrive_by:'',flexibility:'',details:''},notes:'',ai:false}
+ return {answer:vehicleAccess?('I’ll route you to '+(vehicleAccessLocation||'your parked car')+' first, then start the driving leg from your car there.'):directDrive?'Driving route only — I’ll keep this journey on the road from your current GPS position.':'Got it — I’ll compare the combinations that fit your plan.',priority,has_car:hasCar||directDrive,has_motorcycle:hasMotorcycle,prefer_ktm:directDrive?false:preferKtm,avoid_sg_driving:avoidSg,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,mixed_road_transit:mixedRoadTransit,explicit_road_request:explicitDrive,vehicle_access_required:vehicleAccess,vehicle_access_mode:vehicleAccess?vehicleAccessMode:'',vehicle_access_location:vehicleAccessLocation,vehicle_access_details:vehicleAccess?'Reach the parked vehicle before any driving leg.':'',must_preserve_sequence:vehicleAccess||mixedRoadTransit,requested_actions:requestedActions,resources:vehicleAccess?[{type:'vehicle',name:'car',status:'parked',location:vehicleAccessLocation,details:''}]:[],constraints:[],preferences:[],semantic_facts:[],assumptions:[],unresolved:vehicleAccess&&!vehicleAccessLocation?['Exact parked-car location was not extracted locally; AI should resolve it.']:[],avoid_modes:[],prefer_modes:[],parking_required:false,parking_location:'',parking_purpose:'',timing:{depart_at:'',arrive_by:'',flexibility:'',details:''},notes:'',ai:false}
 }
 function parseEmbeddedJourneyIntent(v){
  let s=String(v||'').trim();if(!s)return null;
@@ -1969,12 +1972,22 @@ async function interpretJourneyIntent(q,origin,destination){
   let j=await r.json();if(!r.ok)throw Error(j.error||'AI unavailable');
   let embedded=parseEmbeddedJourneyIntent(j?.answer);
   if(embedded)j={...j,...embedded,configured:j?.configured,model:j?.model};
-  let actionVehicleAccess=Array.isArray(j.requested_actions)&&j.requested_actions.some(a=>/retrieve|access.*vehicle|parked vehicle/i.test(String(a?.action||'')+' '+String(a?.purpose||'')));
+  let requestedActions=Array.isArray(j.requested_actions)?j.requested_actions:fallback.requested_actions;
+  let actionVehicleAccess=requestedActions.some(a=>/retrieve|access.*vehicle|parked vehicle/i.test(String(a?.action||'')+' '+String(a?.purpose||'')));
   let vehicleAccess=fallback.vehicle_access_required||j.vehicle_access_required===true||actionVehicleAccess;
   let vehicleAccessLocation=String(j.vehicle_access_location||fallback.vehicle_access_location||'').trim();
+  let vehicleAccessMode=String(j.vehicle_access_mode||fallback.vehicle_access_mode||'WALK').toUpperCase();
+  if(vehicleAccess&&requestedActions.length){
+   let ordered=[...requestedActions].sort((a,b)=>Number(a?.order||0)-Number(b?.order||0));
+   let cut=ordered.findIndex(a=>/retrieve|access.*vehicle|parked vehicle|\bcar\b|\bdrive\b/i.test(String(a?.action||'')+' '+String(a?.purpose||'')+' '+String(a?.mode||'')));
+   let before=(cut>=0?ordered.slice(0,cut):ordered).map(a=>String(a?.mode||a?.action||'')).join(' ').toUpperCase();
+   if(/MRT|BUS|TRAIN|KTM|TRANSIT|PUBLIC/.test(before))vehicleAccessMode='TRANSIT';
+   else if(/MOTOR|BIKE|TWO_WHEELER/.test(before))vehicleAccessMode='TWO_WHEELER';
+   else if(/WALK/.test(before))vehicleAccessMode='WALK';
+  }
   let directDrive=!vehicleAccess&&!fallback.mixed_road_transit&&(fallback.direct_drive||j.direct_drive===true),hasCar=fallback.has_car||j.has_car===true||directDrive||vehicleAccess;
   let allowBus=directDrive?false:(fallback.allow_bus===false?false:j.allow_bus!==false),allowMrt=directDrive?false:(fallback.allow_mrt===false?false:j.allow_mrt!==false),allowBorder=directDrive?false:(fallback.allow_cross_border_bus===false?false:j.allow_cross_border_bus!==false);
-  return {...fallback,...j,priority:['balanced','fastest','cheapest','easiest'].includes(j.priority)?j.priority:fallback.priority,has_car:hasCar,has_motorcycle:fallback.has_motorcycle||j.has_motorcycle===true,prefer_ktm:directDrive?false:(fallback.prefer_ktm||j.prefer_ktm===true),avoid_sg_driving:fallback.avoid_sg_driving||j.avoid_sg_driving===true,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,vehicle_access_required:vehicleAccess,vehicle_access_location:vehicleAccessLocation,vehicle_access_mode:String(j.vehicle_access_mode||fallback.vehicle_access_mode||'WALK'),must_preserve_sequence:fallback.must_preserve_sequence||j.must_preserve_sequence===true,requested_actions:Array.isArray(j.requested_actions)?j.requested_actions:fallback.requested_actions,answer:j.answer||fallback.answer,ai:true}
+  return {...fallback,...j,priority:['balanced','fastest','cheapest','easiest'].includes(j.priority)?j.priority:fallback.priority,has_car:hasCar,has_motorcycle:fallback.has_motorcycle||j.has_motorcycle===true,prefer_ktm:directDrive?false:(fallback.prefer_ktm||j.prefer_ktm===true),avoid_sg_driving:fallback.avoid_sg_driving||j.avoid_sg_driving===true,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,vehicle_access_required:vehicleAccess,vehicle_access_location:vehicleAccessLocation,vehicle_access_mode:vehicleAccessMode,must_preserve_sequence:vehicleAccess||fallback.must_preserve_sequence||j.must_preserve_sequence===true,requested_actions:requestedActions,answer:j.answer||fallback.answer,ai:true}
  }catch{return fallback}
 }
 function renderJourneyIntent(intent){
@@ -2222,6 +2235,9 @@ function applyActiveRoadContext(intent,q){
 }
 function chooseJourneyRouteSet(routes,intent,limit=4){
  let ranked=rankJourneyRoutes(routes,intent);
+ if(intent.vehicle_access_required&&intent.must_preserve_sequence){
+  return ranked.filter(r=>r.access_vehicle===true).slice(0,limit)
+ }
  if(intent.direct_drive||intent.active_road_mode==='DRIVE'){
   return ranked.filter(r=>r.kind==='direct_drive'||String(r.travel_mode||'').toUpperCase()==='DRIVE').slice(0,limit)
  }
