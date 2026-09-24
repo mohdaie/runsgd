@@ -1,5 +1,5 @@
-const CACHE='runsgd-shell-v21522';
-const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg','/admin/','/admin/health/','/admin/keys/','/admin/developer/','/admin/people/','/admin/ui/','/admin/affiliate-members/','/admin/community-business/','/admin/detailed-health/'];
+const CACHE='runsgd-shell-v21600';
+const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg','/assets/landmarks/jb/bangunan-sultan-iskandar.webp','/assets/landmarks/jb/sultan-ibrahim-stadium.webp','/assets/landmarks/jb/istana-besar-johor.webp','/assets/landmarks/jb/sultan-abu-bakar-state-mosque.webp','/assets/landmarks/jb/johor-bahru-old-chinese-temple.webp','/admin/','/admin/health/','/admin/keys/','/admin/developer/','/admin/people/','/admin/ui/','/admin/affiliate-members/','/admin/community-business/','/admin/detailed-health/'];
 
 async function freshResponse(path){
   const req=new Request(new URL(path,self.location.origin).href,{cache:'reload'});

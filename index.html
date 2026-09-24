@@ -322,12 +322,34 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 .journeyNow.walkFocus .journeyBeacon{order:3;position:relative;left:auto;right:auto;bottom:auto;z-index:auto;margin-top:10px;padding:13px;background:linear-gradient(135deg,#f8fffb,#effaf4);box-shadow:none;grid-template-columns:72px 1fr}
 .journeyNow.walkFocus .journeyBeaconDial{width:68px;height:68px}.journeyNow.walkFocus .journeyBeaconArrow{font-size:36px}
 .journeyNow.walkFocus .journeyProdMapFade{height:56px}
+
+/* JB Genesis landmark collectibles */
+.landmarkCollectionCard{overflow:hidden}
+.landmarkCollectionCard .head{align-items:flex-start}
+.landmarkCollectionIntro{margin-top:3px}
+.landmarkWallet{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:800;margin:10px 0 2px}
+.landmarkWallet span{padding:6px 9px;border:1px solid var(--line);border-radius:999px;background:var(--soft)}
+.landmarkLegend{font-size:11px;color:var(--muted);margin-bottom:10px}
+.landmarkGrid{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.landmarkGrid::-webkit-scrollbar{height:0}
+.landmarkTile{position:relative;flex:0 0 154px;scroll-snap-align:start;border:1px solid var(--line);border-radius:18px;padding:10px;background:linear-gradient(180deg,rgba(177,112,47,.10),rgba(255,255,255,.02));min-height:245px}
+.landmarkTile.collected{border-color:rgba(183,121,54,.55);box-shadow:inset 0 0 0 1px rgba(183,121,54,.12)}
+.landmarkIconWrap{height:118px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.12),transparent 68%)}
+.landmarkIcon{width:112px;height:112px;object-fit:contain;display:block}
+.landmarkName{font-size:13px;font-weight:850;line-height:1.2;margin-top:7px;min-height:32px}
+.landmarkMeta{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.3}
+.landmarkReward{font-size:11px;font-weight:800;margin-top:6px}
+.landmarkCollectBtn{width:100%;margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:7px 8px;font:inherit;font-size:11px;font-weight:800;background:var(--soft);color:var(--text)}
+.landmarkCollectBtn:disabled{opacity:.7}
+.landmarkCollectedSeal{position:absolute;top:8px;right:8px;background:#8b5a2b;color:#fff;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900;letter-spacing:.02em}
+.landmarkStatusRow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+@media(max-width:420px){.landmarkTile{flex-basis:146px}.landmarkIconWrap{height:112px}}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.22</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.0</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -615,6 +637,23 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
   <div id="aiAnswer" class="aiAnswer"><div id="aiAnswerMain" class="aiAnswerMain"></div><div id="aiAnswerReason" class="aiAnswerReason"></div><div id="aiSources" class="aiSources"></div></div>
   <div id="aiAskStatus" class="status">Guest AI available · app data only · sign-in not required.</div>
 </article>
+
+<article class="card landmarkCollectionCard">
+  <div class="head">
+    <div>
+      <div class="title">🏛️ JB Landmark Collection</div>
+      <div class="sub landmarkCollectionIntro">Genesis set · collect a landmark when you are physically nearby.</div>
+    </div>
+    <span id="jbLandmarkProgress" class="tag">0 / 5</span>
+  </div>
+  <div id="jbLandmarkWallet" class="landmarkWallet"><span>0 ⭐</span><span>0 tokens</span></div>
+  <div class="landmarkLegend">Common · Bronze · 10⭐ + 2 tokens each</div>
+  <div id="jbLandmarkGrid" class="landmarkGrid"><div class="status">Loading JB landmarks…</div></div>
+  <div class="landmarkStatusRow">
+    <button class="miniBtn" onclick="refreshLandmarkLocation(this)">📍 Check nearby landmarks</button>
+    <div id="landmarkStatus" class="status">GPS is checked only when you ask to check or collect.</div>
+  </div>
+</article>
 <div class="feedbar"><span id="feedStatus" class="sub">Knowledge base</span></div>
 <div id="exploreFeed" class="feed"></div>
 </section>
@@ -681,7 +720,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.22</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.0</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -734,7 +773,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.22</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.0</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -776,7 +815,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.15.22';
+const RUNSGD_VERSION='2.16.0';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -1799,7 +1838,7 @@ function requestLocation(btn){
  navigator.geolocation.getCurrentPosition(async p=>{
    live.location={...classify(p.coords.latitude,p.coords.longitude),detected_at:Date.now(),accuracy_m:Number(p.coords.accuracy)||null};
    localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
-   txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);updateSgRouteOrigin();
+   txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);updateSgRouteOrigin();if(landmarkCatalog.length)renderLandmarks();
    await Promise.allSettled([loadPrayer(),loadNearbyPrayer(),loadAir(),loadPublicTransport()]);
    setBusy(btn,false);updateBrief();
  },e=>{
@@ -3871,7 +3910,7 @@ function showPage(n,opts={}){
   }
  }
  if(n==='signin')renderSignInContext();
- if(n==='explore')renderKnowledge();
+ if(n==='explore'){renderKnowledge();loadLandmarks()}
  if(n==='journey'){applyJourneyAuthState();if(communityUser)loadJourneyProfileData()}
  if(n==='community'&&!communityThreadPostId)loadCommunityFeed();
  scrollPageTop()
@@ -3887,6 +3926,112 @@ const knowledgeBase=[
 ];
 function toggleKb(i){let c=document.querySelector('[data-kb="'+i+'"]');if(c)c.classList.toggle('open')}
 async function renderKnowledge(){let f=$('exploreFeed');if(!f)return;txt('feedStatus','Knowledge base');let list=knowledgeBase;try{let {data,error}=await sb.from('knowledge_articles').select('title,category,summary,content,source_url,source_label,checked_at').eq('active',true).order('id');if(!error&&data?.length)list=data.map(a=>({icon:({border:'🚦',transport:'🚌',immigration:'🛂',driving:'🚗',shopping:'🛍️',money:'💱'})[a.category]||'📚',title:a.title,summary:a.summary,body:String(a.content||'').split(/(?<=[.!?])\s+/).filter(Boolean),source:a.source_url||'',sourceLabel:a.source_label||''}))}catch{}f.innerHTML='<div class="kbIntro"><strong>📚 SG ↔ JB commuter knowledge</strong><div class="sub">Short guides stored in RunSGD and searchable by the v2.0 AI.</div></div><div class="kbGrid">'+list.map((a,i)=>`<article class="kbCard" data-kb="${i}"><div class="kbHead" onclick="toggleKb(${i})"><div class="kbIcon">${a.icon}</div><div class="kbMain"><div class="kbTitle">${esc(a.title)}</div><div class="kbSummary">${esc(a.summary)}</div></div><div class="kbChevron">⌄</div></div><div class="kbBody"><ul>${a.body.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${a.source?`<a class="kbSource" target="_blank" rel="noopener" href="${a.source}">${esc(a.sourceLabel)} ↗</a>`:''}<div class="kbChecked">RunSGD knowledge · rules can change</div></div></article>`).join('')+'</div>'}
+
+
+let landmarkCatalog=[],landmarkCollected=new Map();
+
+function landmarkMeters(lat1,lon1,lat2,lon2){
+ const r=6371000,toRad=x=>x*Math.PI/180,dLat=toRad(Number(lat2)-Number(lat1)),dLon=toRad(Number(lon2)-Number(lon1));
+ const a=Math.sin(dLat/2)**2+Math.cos(toRad(Number(lat1)))*Math.cos(toRad(Number(lat2)))*Math.sin(dLon/2)**2;
+ return r*2*Math.asin(Math.sqrt(Math.min(1,Math.max(0,a))))
+}
+function landmarkDistanceLabel(m){
+ if(!Number.isFinite(m))return 'Check location';
+ if(m<1000)return Math.max(1,Math.round(m))+' m away';
+ return (m/1000).toFixed(m<10000?1:0)+' km away'
+}
+function landmarkGpsUsable(){
+ if(!live.location||!Number.isFinite(Number(live.location.lat))||!Number.isFinite(Number(live.location.lon)))return false;
+ return !live.location.detected_at||Date.now()-Number(live.location.detected_at)<15*60*1000
+}
+function renderLandmarks(){
+ const grid=$('jbLandmarkGrid');if(!grid)return;
+ const total=landmarkCatalog.length,collectedCount=landmarkCatalog.filter(x=>landmarkCollected.has(x.code)).length;
+ txt('jbLandmarkProgress',collectedCount+' / '+total);
+ let stars=0,tokens=0;
+ landmarkCatalog.forEach(x=>{if(landmarkCollected.has(x.code)){stars+=Number(x.star_reward)||0;tokens+=Number(x.token_reward)||0}});
+ const wallet=$('jbLandmarkWallet');if(wallet)wallet.innerHTML='<span>'+stars+' ⭐</span><span>'+tokens+' tokens</span>';
+ if(!total){grid.innerHTML='<div class="status">JB landmark collection is unavailable right now.</div>';return}
+ const hasGps=landmarkGpsUsable(),lat=Number(live.location?.lat),lon=Number(live.location?.lon),acc=Math.min(Math.max(Number(live.location?.accuracy_m)||0,0),75);
+ grid.innerHTML=landmarkCatalog.map(x=>{
+   const got=landmarkCollected.has(x.code);
+   const dist=hasGps?landmarkMeters(lat,lon,Number(x.latitude),Number(x.longitude)):NaN;
+   const close=Number.isFinite(dist)&&dist<=Number(x.collect_radius_m||200)+acc;
+   let button=got?'✓ Collected':!communityUser?'Sign in to collect':!hasGps?'Check location':close?'Collect now':landmarkDistanceLabel(dist);
+   let meta=(x.category||'Landmark')+' · '+String(x.rarity||'common').replace(/^./,c=>c.toUpperCase());
+   return '<article class="landmarkTile '+(got?'collected ':'')+esc(x.tier_color||'bronze')+'">'+
+    (got?'<span class="landmarkCollectedSeal">COLLECTED</span>':'')+
+    '<div class="landmarkIconWrap"><img class="landmarkIcon" loading="lazy" src="'+esc(x.image_url||'')+'" alt="'+esc(x.name)+'"></div>'+
+    '<div class="landmarkName">'+esc(x.name)+'</div>'+
+    '<div class="landmarkMeta">'+esc(meta)+'</div>'+
+    '<div class="landmarkReward">'+(Number(x.star_reward)||0)+'⭐ · '+(Number(x.token_reward)||0)+' tokens</div>'+
+    '<button class="landmarkCollectBtn" '+(got?'disabled':'')+' onclick="attemptCollectLandmark(\''+esc(x.code)+'\',this)">'+esc(button)+'</button>'+
+   '</article>'
+ }).join('')
+}
+async function loadLandmarks(){
+ const grid=$('jbLandmarkGrid');if(!grid)return;
+ try{
+  const {data,error}=await sb.from('landmarks')
+   .select('code,name,category,rarity,tier_color,edition,star_reward,token_reward,latitude,longitude,collect_radius_m,unlock_hint,image_url,sort_order')
+   .eq('collection_key','jb-genesis').eq('active',true).order('sort_order');
+  if(error)throw error;
+  landmarkCatalog=data||[];landmarkCollected=new Map();
+  if(communityUser&&landmarkCatalog.length){
+   const codes=landmarkCatalog.map(x=>x.code);
+   const {data:owned,error:ownedError}=await sb.from('user_landmark_collectibles')
+    .select('landmark_code,collected_at').eq('user_id',communityUser.id).in('landmark_code',codes);
+   if(ownedError)throw ownedError;
+   landmarkCollected=new Map((owned||[]).map(x=>[x.landmark_code,x]))
+  }
+  renderLandmarks()
+ }catch(e){
+  console.warn('RunSGD landmarks',e);
+  if(grid)grid.innerHTML='<div class="status">Could not load JB landmarks. Try Refresh app & live data.</div>'
+ }
+}
+async function getLandmarkGps(){
+ if(!navigator.geolocation)throw Error('Location is unavailable in this browser.');
+ return await new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(p=>{
+  const lat=Number(p.coords.latitude),lon=Number(p.coords.longitude),accuracy=Number(p.coords.accuracy)||null;
+  if(!Number.isFinite(lat)||!Number.isFinite(lon))return reject(Error('Could not read GPS location.'));
+  resolve({lat,lon,accuracy,timestamp:Number(p.timestamp)||Date.now()})
+ },reject,{enableHighAccuracy:true,timeout:12000,maximumAge:0}))
+}
+async function refreshLandmarkLocation(btn){
+ setBusy(btn,true);txt('landmarkStatus','Checking your GPS…');
+ try{
+  const p=await getLandmarkGps();
+  live.location={...classify(p.lat,p.lon),lat:p.lat,lon:p.lon,detected_at:p.timestamp,accuracy_m:p.accuracy};
+  localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
+  txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);
+  renderLandmarks();
+  const nearest=landmarkCatalog.map(x=>({x,d:landmarkMeters(p.lat,p.lon,x.latitude,x.longitude)})).sort((a,b)=>a.d-b.d)[0];
+  txt('landmarkStatus',nearest?'Nearest: '+nearest.x.name+' · '+landmarkDistanceLabel(nearest.d):'GPS ready.')
+ }catch(e){txt('landmarkStatus',e?.message||'Could not refresh location. Check location permission and try again.')}
+ finally{setBusy(btn,false)}
+}
+async function attemptCollectLandmark(code,btn){
+ if(!communityUser){openSignIn('explore','landmark');return}
+ const item=landmarkCatalog.find(x=>x.code===code);if(!item)return;
+ setBusy(btn,true);txt('landmarkStatus','Checking GPS for '+item.name+'…');
+ try{
+  const p=await getLandmarkGps();
+  live.location={...classify(p.lat,p.lon),lat:p.lat,lon:p.lon,detected_at:p.timestamp,accuracy_m:p.accuracy};
+  localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
+  const {data,error}=await sb.rpc('collect_landmark',{p_code:code,p_lat:p.lat,p_lon:p.lon,p_accuracy_m:p.accuracy});
+  if(error)throw error;
+  if(!data?.ok){
+   const extra=Number(data?.distance_m)>0?' · '+landmarkDistanceLabel(Number(data.distance_m)):'';
+   txt('landmarkStatus',(data?.message||'Move closer to collect this landmark.')+extra);
+   renderLandmarks();return
+  }
+  if(data.already_collected)txt('landmarkStatus',item.name+' is already in your collection.');
+  else txt('landmarkStatus','Collected '+item.name+' · +'+(data.stars||0)+'⭐ · +'+(data.tokens||0)+' tokens');
+  await loadLandmarks()
+ }catch(e){txt('landmarkStatus',e?.message||'Could not collect this landmark. Try again.')}
+ finally{if(btn?.isConnected)setBusy(btn,false)}
+}
 
 const HOME_WIDGETS=[
  {id:'traffic',label:'🚦 Causeway snapshot'},
