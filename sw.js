@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v21515';
+const CACHE='runsgd-shell-v21516';
 const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg'];
 
 async function freshResponse(path){
