@@ -1,5 +1,5 @@
-const CACHE='runsgd-shell-v21516';
-const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg'];
+const CACHE='runsgd-shell-v21517';
+const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg','/admin/','/admin/health/','/admin/keys/','/admin/developer/','/admin/people/','/admin/ui/'];
 
 async function freshResponse(path){
   const req=new Request(new URL(path,self.location.origin).href,{cache:'reload'});
@@ -60,8 +60,21 @@ self.addEventListener('fetch',event=>{
   // The rescue page must always bypass the service worker, including during stale-cache recovery.
   if(url.pathname==='/update'||url.pathname.startsWith('/update/'))return;
 
-  // Admin pages must stay live and must never fall into the cached app-shell offline page.
-  if(url.pathname==='/admin'||url.pathname.startsWith('/admin/'))return;
+  // Admin shell is network-first, with a cached fallback. This keeps the admin UI
+  // reachable from the installed PWA when a fresh navigation is temporarily blocked,
+  // while all admin data/auth checks still run live against Supabase.
+  if(url.pathname==='/admin'||url.pathname.startsWith('/admin/')){
+    const key=url.pathname.endsWith('/')?url.pathname:(url.pathname+'/');
+    event.respondWith(fetch(req,{cache:'no-store'}).then(res=>{
+      if(res.ok&&req.mode==='navigate'){const copy=res.clone();caches.open(CACHE).then(c=>c.put(key,copy));}
+      return res;
+    }).catch(async()=>{
+      const cached=await caches.match(key);
+      if(cached)return cached;
+      return new Response('RunSGD Admin is temporarily unreachable. Reconnect and try again.',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8'}});
+    }));
+    return;
+  }
 
   // Auth callbacks must reach the app untouched.
   if(url.searchParams.has('auth')||url.searchParams.has('code')||url.searchParams.has('error'))return;
