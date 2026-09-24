@@ -18,7 +18,7 @@
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="../#community">← Back to Community</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.15.18</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">ADMIN · v2.16.3</span></div>
 <section class="hero"><h1>Admin</h1><p class="sub">RunSGD control centre. Detailed tools now live in dedicated pages.</p></section>
 <div id="adminProfileCard" class="adminProfile">
   <img id="adminAvatar" class="adminAvatar" alt="Admin profile">
@@ -37,7 +37,7 @@
 </article>
 
 <div class="links">
- <a class="navCard" href="/admin/health/"><div class="navIcon">🩺</div><div class="navTitle">Detailed System Health</div><div class="navText">API health, Google Maps query usage, credential readiness, Extensive Test and full history.</div></a>
+ <a class="navCard" href="/admin/health/"><div class="navIcon">🩺</div><div class="navTitle">Monitoring & System Health</div><div class="navText">Search Console SEO, indexing, API health, Google Maps usage, credentials, Extensive Test and history.</div></a>
  <a class="navCard" href="/admin/keys/"><div class="navIcon">🔐</div><div class="navTitle">Keys & Credentials</div><div class="navText">LTA, OneMap, Gemini, Google Maps and Twelve Data credentials in one place.</div></a>
  <a class="navCard" href="/admin/developer/"><div class="navIcon">🧪</div><div class="navTitle">Developer's World</div><div class="navText">Navigation Lab, production navigation diagnostics and RunSGD AI developer console.</div></a>
  <a class="navCard" href="/admin/people/"><div class="navIcon">👥</div><div class="navTitle">Affiliate & Members</div><div class="navText">Affiliate click monitoring and RunSGD member directory.</div></a>
@@ -76,7 +76,7 @@ guard();
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/sw.js?v=2.15.18',{scope:'/',updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
+    navigator.serviceWorker.register('/sw.js?v=2.16.3',{scope:'/',updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
   });
 }
 </script>

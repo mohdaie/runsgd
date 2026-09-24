@@ -14,7 +14,7 @@
 </style></head><body>
 <div id="gate" class="app"><section class="hero"><h1>Detailed System Health</h1><p id="gateText" class="sub">Checking admin access…</p><a class="back" href="/admin/">← Admin</a></section></div>
 <main id="app" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">SYSTEM HEALTH · v2.15.18</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">SYSTEM HEALTH · v2.16.3</span></div>
 <section class="hero"><h1>Detailed System Health</h1><p class="sub">Fast API checks plus the deeper Extensive Test. Extensive runs are kept in Supabase and automatically execute once every 72 hours.</p></section>
 <div class="stack">
 <article class="card">
@@ -30,6 +30,22 @@
 </article>
 <article class="card">
  <div class="head"><div><div class="title">🔑 API keys monitoring</div><div class="sub">Configuration status only. Secret values stay on the Keys & Credentials page.</div></div><a class="pill" href="/admin/keys/" style="text-decoration:none">Open keys →</a></div><div id="credGrid" class="credGrid"></div>
+</article>
+<article class="card">
+ <div class="head"><div><div class="title">🔎 Search & SEO monitoring</div><div class="sub">Google Search Console snapshot for RunSGD search performance, sitemap and guide indexing.</div></div><span id="seoState" class="pill">Loading</span></div>
+ <div class="metrics">
+  <div class="metric"><strong id="seoClicks">—</strong><span>Clicks · 28d</span></div>
+  <div class="metric"><strong id="seoImpressions">—</strong><span>Impressions · 28d</span></div>
+  <div class="metric"><strong id="seoCtr">—</strong><span>CTR · 28d</span></div>
+  <div class="metric"><strong id="seoPosition">—</strong><span>Avg position</span></div>
+  <div class="metric"><strong id="seoIndexed">—</strong><span>Indexed</span></div>
+ </div>
+ <div id="seoMeta" class="status">Loading Search Console snapshot…</div>
+ <div id="seoIndexList" class="history"></div>
+ <div class="actions">
+  <button class="btn soft" onclick="loadSeo(this)">↻ Refresh snapshot</button>
+  <a class="btn soft" href="https://search.google.com/search-console?resource_id=https%3A%2F%2Frunsgd.site%2F" target="_blank" rel="noopener" style="text-decoration:none">Open Search Console ↗</a>
+ </div>
 </article>
 <article class="card">
  <div class="head"><div><div class="title">📈 Google Maps query monitor</div><div class="sub">Places, Routes and Dynamic Maps app counters. Google Cloud Billing is still the billing source of truth.</div></div><span id="gmState" class="pill ok">Tracking</span></div>
@@ -51,13 +67,37 @@ async function runExtensive(btn){btn.disabled=true;btn.textContent='Running…';
 async function loadApi(){try{let j=await call('last'),rows=j.checks||[],h=rows.filter(x=>x.ok).length;$('apiSummary').textContent=h+'/'+rows.length+' healthy';$('apiSummary').className='pill '+(h===rows.length?'ok':'warn');$('apiGrid').innerHTML=rows.map(x=>'<div class="item"><div class="itemName"><span class="dot '+(x.ok?'ok':'bad')+'"></span>'+x.name+'</div><div class="itemDetail">'+(x.detail||'')+' · '+fmt(x.latency_ms)+' ms · '+sg(x.checked_at)+'</div></div>').join('');$('apiMeta').textContent='Latest saved API result '+sg(j.checked_at)}catch(e){$('apiMeta').textContent='API health unavailable · '+e.message}}
 async function refreshApi(btn){btn.disabled=true;btn.textContent='Checking…';try{await call();await loadApi()}catch(e){$('apiMeta').textContent='Refresh failed · '+e.message}finally{btn.disabled=false;btn.textContent='↻ Refresh all APIs'}}
 async function loadCreds(){let defs=[['lta_account_key','LTA DataMall'],['onemap_email','OneMap email'],['onemap_password','OneMap password'],['google_maps_api_key','Google Places + Routes'],['google_maps_browser_key','Google Dynamic Maps'],['gemini_api_key','Gemini AI'],['twelve_data_api_key','Twelve Data FX']];try{let j=await call('credential_status'),m=j.credentials||{};$('credGrid').innerHTML=defs.map(([k,n])=>{let r=m[k]||{},ok=r.configured===true;return '<div class="cred"><b><span class="dot '+(ok?'ok':'bad')+'"></span>'+n+'</b><div>'+(ok?'Configured'+(r.updated_at?' · '+sg(r.updated_at):''):'Not configured')+'</div></div>'}).join('')}catch(e){$('credGrid').innerHTML='<div class="sub">Credential status unavailable.</div>'}}
+function seoEsc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+async function loadSeo(btn){
+ if(btn){btn.disabled=true;btn.textContent='Refreshing…'}
+ try{
+  let {data,error}=await sb.from('app_settings').select('secret_value,updated_at').eq('key','seo_monitor_snapshot').maybeSingle();
+  if(error)throw error;
+  if(!data?.secret_value)throw Error('No Search Console snapshot saved yet');
+  let s=JSON.parse(data.secret_value),p=s.performance_28d||{},sm=s.sitemap||{},ix=s.indexing||{},rows=Array.isArray(ix.urls)?ix.urls:[];
+  $('seoClicks').textContent=fmt(p.clicks);
+  $('seoImpressions').textContent=fmt(p.impressions);
+  let ctr=Number(p.ctr_pct??p.ctr),pos=Number(p.average_position);
+  $('seoCtr').textContent=p.has_data&&Number.isFinite(ctr)?ctr.toFixed(1)+'%':'—';
+  $('seoPosition').textContent=p.has_data&&Number.isFinite(pos)&&pos>0?pos.toFixed(1):'—';
+  $('seoIndexed').textContent=fmt(ix.indexed)+'/'+fmt(ix.inspected);
+  let errors=Number(sm.errors||0),warnings=Number(sm.warnings||0),unknown=Number(ix.unknown_to_google||0),pending=sm.pending===true;
+  $('seoState').textContent=errors?'ERROR':pending?'SITEMAP PENDING':unknown?'WATCH':'HEALTHY';
+  $('seoState').className='pill '+(errors?'bad':(pending||unknown)?'warn':'ok');
+  let perf=p.has_data?(fmt(p.clicks)+' clicks · '+fmt(p.impressions)+' impressions'):'No Google Search performance data yet';
+  $('seoMeta').textContent=perf+' · Sitemap '+(pending?'pending':'submitted')+' · '+warnings+' warning · '+errors+' error · '+fmt(ix.discovered_not_indexed)+' discovered · '+unknown+' unknown · synced '+sg(s.synced_at||data.updated_at);
+  $('seoIndexList').innerHTML=rows.map(x=>{let st=String(x.state||''),dot=st==='indexed'?'ok':st==='discovered'?'warn':'na';return '<div class="item"><div class="itemName"><span class="dot '+dot+'"></span><a href="'+seoEsc(x.url)+'" target="_blank" rel="noopener">'+seoEsc(x.label||x.url)+'</a></div><div class="itemDetail">'+seoEsc(x.coverage||st)+'</div></div>'}).join('');
+ }catch(e){
+  $('seoState').textContent='UNAVAILABLE';$('seoState').className='pill bad';$('seoMeta').textContent='SEO monitoring unavailable · '+e.message;$('seoIndexList').innerHTML='';
+ }finally{if(btn){btn.disabled=false;btn.textContent='↻ Refresh snapshot'}}
+}
 async function loadGoogle(btn){if(btn){btn.disabled=true;btn.textContent='Refreshing…'}try{let j=await call('google_maps_usage'),p=Number(j.month?.places||0),r=Number(j.month?.routes||0),m=Number(j.month?.maps||0),mx=Math.max(p/5000,r/5000,m/10000)*100;$('gmToday').textContent=fmt(j.today?.total);$('gmMonth').textContent=fmt(j.month?.total);$('gmPlaces').textContent=fmt(p);$('gmRoutes').textContent=fmt(r);$('gmMaps').textContent=fmt(m);$('gmMeta').textContent='Places '+Math.round(p/5000*100)+'% · Routes '+Math.round(r/5000*100)+'% · Dynamic Maps '+Math.round(m/10000*100)+'% of tracked monthly free thresholds · updated '+sg(j.generated_at);$('gmState').textContent=mx>=85?'CHECK':mx>=70?'WATCH':'TRACKING';$('gmState').className='pill '+(mx>=85?'bad':mx>=70?'warn':'ok')}catch(e){$('gmMeta').textContent='Google usage unavailable · '+e.message}finally{if(btn){btn.disabled=false;btn.textContent='↻ Refresh usage'}}}
-async function guard(){try{let {data:{session}}=await sb.auth.getSession();if(!session){$('gateText').textContent='Sign in with the RunSGD admin account first.';return}let {data,error}=await sb.from('profiles').select('role').eq('id',session.user.id).maybeSingle();if(error||data?.role!=='admin'){$('gateText').textContent='Admin access required.';return}$('gate').style.display='none';$('app').style.display='block';await Promise.all([loadExtensive(),loadApi(),loadCreds(),loadGoogle()])}catch(e){$('gateText').textContent='Could not verify admin access.'}}
+async function guard(){try{let {data:{session}}=await sb.auth.getSession();if(!session){$('gateText').textContent='Sign in with the RunSGD admin account first.';return}let {data,error}=await sb.from('profiles').select('role').eq('id',session.user.id).maybeSingle();if(error||data?.role!=='admin'){$('gateText').textContent='Admin access required.';return}$('gate').style.display='none';$('app').style.display='block';await Promise.all([loadExtensive(),loadApi(),loadCreds(),loadSeo(),loadGoogle()])}catch(e){$('gateText').textContent='Could not verify admin access.'}}
 guard();
 </script><script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/sw.js?v=2.15.18',{scope:'/',updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
+    navigator.serviceWorker.register('/sw.js?v=2.16.3',{scope:'/',updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
   });
 }
 </script>
