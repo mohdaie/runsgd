@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="RunSGD">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon.svg">
 <title>RunSGD · UI Page Editor</title>
 <style>
 :root{--ink:#1c2844;--muted:#7c879c;--line:#e6eaf2;--blue:#4b82f5;--violet:#8265ef}
@@ -19,7 +26,7 @@ textarea{width:100%;min-height:96px;resize:vertical;border:1px solid #dfe5ef;bor
 <body>
 <div id="adminGate" class="app"><section class="hero"><h1>Admin access</h1><p id="gateText" class="sub">Checking your RunSGD account…</p><a class="back" href="/admin/">← Back to Admin</a></section></div>
 <main id="adminApp" class="app" style="display:none">
-  <div class="top"><div class="brand">runSGD</div><span class="badge">UI EDITOR · v2.15.12</span></div>
+  <div class="top"><div class="brand">runSGD</div><span class="badge">UI EDITOR · v2.15.18</span></div>
   <section class="hero"><h1>UI Page Editor</h1><p class="sub">Change selected user-facing text without editing code. Values are read from the RunSGD database, not browser storage.</p></section>
   <article class="card">
     <div class="title">Home</div>
@@ -84,6 +91,13 @@ async function guard(){
  }catch(e){$('gateText').textContent='Could not verify admin access.'}
 }
 guard();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/sw.js?v=2.15.18',{scope:'/',updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>
