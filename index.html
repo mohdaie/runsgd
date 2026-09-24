@@ -327,7 +327,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.20</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.15.21</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -681,7 +681,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.20</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.15.21</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -734,7 +734,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.20</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.15.21</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -776,7 +776,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.15.20';
+const RUNSGD_VERSION='2.15.21';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -2280,7 +2280,7 @@ async function planAiJourney(btn){
  if(!destP)return txt('sgRouteStatus','Choose Malaysia or Singapore first.');
  if(!sgRouteSelection||sgRouteSelection._provider!==destP.id)return txt('sgRouteStatus','Choose your destination from the suggestions first.');
  if(q.length<2)return txt('sgRouteStatus','Tell RunSGD how you want to travel.');
- setBusy(btn,true);txt('sgRouteBadge','Planning');$('sgRouteOptions').innerHTML='';$('sgRouteSelectedNote').classList.remove('show');
+ setBusy(btn,true);txt('sgRouteBadge','Planning');$('sgRouteSelectedNote').classList.remove('show');
  try{
   let origin=await plannerGps(),originP=routeProvider();
   txt('sgRouteStatus','Understanding your plan…');
@@ -2321,16 +2321,23 @@ async function planAiJourney(btn){
   txt('sgRouteBadge',originP.id===destP.id?'Local mix':'Cross-border mix');
   txt('sgRouteProviderNote','RunSGD combines OneMap and Google Maps where needed. AI interprets your preference; routing APIs calculate the legs.');
   txt('sgRouteStatus',sgRouteResults.length+' journey combination'+(sgRouteResults.length===1?'':'s')+' found. Checkpoint and immigration time stays separate.')
- }catch(e){txt('sgRouteBadge','Unavailable');txt('sgRouteStatus',e.message||'Journey planning unavailable.')}
+ }catch(e){txt('sgRouteBadge',sgRouteResults.length?'Previous routes kept':'Unavailable');txt('sgRouteStatus',(e.message||'Journey planning unavailable.')+(sgRouteResults.length?' · Previous route suggestions are still shown.':''))}
  finally{setBusy(btn,false)}
 }
 async function plannerGps(){
- let cached=live.location?.lat&&live.location?.lon?live.location:null,cachedAge=cached?.detected_at?Date.now()-Number(cached.detected_at):Infinity;
+ let cached=live.location?.lat&&live.location?.lon?live.location:null,cachedAge=cached?.detected_at?Date.now()-Number(cached.detected_at):Infinity,cachedAcc=Number(cached?.accuracy_m??cached?.accuracy);
+ let cachedUsable=!!cached&&cachedAge<=900000&&(!Number.isFinite(cachedAcc)||cachedAcc<=150);
+ const useCached=()=>{
+  if(!cachedUsable)return null;
+  txt('sgRouteStatus','Using your last known GPS'+(Number.isFinite(cachedAcc)?' · ±'+Math.round(cachedAcc)+' m':'')+' while a fresh fix is unavailable.');
+  updateSgRouteOrigin();
+  return {...cached,_planner_location_fallback:true}
+ };
  if(!navigator.geolocation){
-  if(cached&&cachedAge<=30000)return cached;
+  let fallback=useCached();if(fallback)return fallback;
   throw Error('Location is unavailable in this browser.')
  }
- txt('sgRouteStatus','Refreshing your exact current GPS position…');
+ txt('sgRouteStatus','Refreshing your current GPS position…');
  try{
   let p=await freshJourneyGps(),loc={...classify(p.lat,p.lon),lat:p.lat,lon:p.lon,detected_at:p.timestamp||Date.now(),accuracy_m:Number(p.accuracy)||null};
   live.location=loc;localStorage.setItem('runsgdLocation',JSON.stringify(live.location));
@@ -2338,8 +2345,17 @@ async function plannerGps(){
   Promise.allSettled([loadPrayer(),loadNearbyPrayer(),loadAir(),loadPublicTransport()]);
   return loc
  }catch(e){
-  if(cached&&cachedAge<=30000)return cached;
-  throw Error(e?.message||'Could not get a fresh GPS position. Allow precise location and try again.')
+  let fallback=useCached();if(fallback)return fallback;
+  try{
+   let p=await new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:false,maximumAge:300000,timeout:5000}));
+   let lat=Number(p.coords.latitude),lon=Number(p.coords.longitude),acc=Number(p.coords.accuracy);
+   if(!Number.isFinite(lat)||!Number.isFinite(lon)||(Number.isFinite(acc)&&acc>250))throw Error('Approximate location is too broad for route planning.');
+   let loc={...classify(lat,lon),lat,lon,detected_at:Number(p.timestamp)||Date.now(),accuracy_m:Number.isFinite(acc)?acc:null,_planner_location_fallback:true};
+   live.location=loc;localStorage.setItem('runsgdLocation',JSON.stringify(live.location));updateSgRouteOrigin();
+   txt('sgRouteStatus','Using approximate GPS'+(Number.isFinite(acc)?' · ±'+Math.round(acc)+' m':'')+' for route suggestions.');
+   return loc
+  }catch{}
+  throw Error(e?.message||'Could not get a usable GPS position. Check location permission and try again.')
  }
 }
 function routeMinutes(s){let m=Math.max(1,Math.round(Number(s||0)/60));return m>=60?Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m':m+' min'}
