@@ -1,5 +1,12 @@
 <!doctype html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f8fbff">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="RunSGD">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon.svg"><meta name="theme-color" content="#f8fbff">
 <title>Detailed System Health · RunSGD</title>
 <style>
 :root{--ink:#17213b;--muted:#748097;--blue:#4b82f5;--violet:#8b67ef;--green:#20a36a;--red:#d84c5c;--amber:#b07a13}
@@ -7,7 +14,7 @@
 </style></head><body>
 <div id="gate" class="app"><section class="hero"><h1>Detailed System Health</h1><p id="gateText" class="sub">Checking admin access…</p><a class="back" href="/admin/">← Admin</a></section></div>
 <main id="app" class="app" style="display:none">
-<div class="top"><div class="brand">runSGD</div><span class="badge">SYSTEM HEALTH · v2.15.12</span></div>
+<div class="top"><div class="brand">runSGD</div><span class="badge">SYSTEM HEALTH · v2.15.18</span></div>
 <section class="hero"><h1>Detailed System Health</h1><p class="sub">Fast API checks plus the deeper Extensive Test. Extensive runs are kept in Supabase and automatically execute once every 72 hours.</p></section>
 <div class="stack">
 <article class="card">
@@ -47,4 +54,11 @@ async function loadCreds(){let defs=[['lta_account_key','LTA DataMall'],['onemap
 async function loadGoogle(btn){if(btn){btn.disabled=true;btn.textContent='Refreshing…'}try{let j=await call('google_maps_usage'),p=Number(j.month?.places||0),r=Number(j.month?.routes||0),m=Number(j.month?.maps||0),mx=Math.max(p/5000,r/5000,m/10000)*100;$('gmToday').textContent=fmt(j.today?.total);$('gmMonth').textContent=fmt(j.month?.total);$('gmPlaces').textContent=fmt(p);$('gmRoutes').textContent=fmt(r);$('gmMaps').textContent=fmt(m);$('gmMeta').textContent='Places '+Math.round(p/5000*100)+'% · Routes '+Math.round(r/5000*100)+'% · Dynamic Maps '+Math.round(m/10000*100)+'% of tracked monthly free thresholds · updated '+sg(j.generated_at);$('gmState').textContent=mx>=85?'CHECK':mx>=70?'WATCH':'TRACKING';$('gmState').className='pill '+(mx>=85?'bad':mx>=70?'warn':'ok')}catch(e){$('gmMeta').textContent='Google usage unavailable · '+e.message}finally{if(btn){btn.disabled=false;btn.textContent='↻ Refresh usage'}}}
 async function guard(){try{let {data:{session}}=await sb.auth.getSession();if(!session){$('gateText').textContent='Sign in with the RunSGD admin account first.';return}let {data,error}=await sb.from('profiles').select('role').eq('id',session.user.id).maybeSingle();if(error||data?.role!=='admin'){$('gateText').textContent='Admin access required.';return}$('gate').style.display='none';$('app').style.display='block';await Promise.all([loadExtensive(),loadApi(),loadCreds(),loadGoogle()])}catch(e){$('gateText').textContent='Could not verify admin access.'}}
 guard();
-</script></body></html>
+</script><script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/sw.js?v=2.15.18',{scope:'/',updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
+  });
+}
+</script>
+</body></html>
