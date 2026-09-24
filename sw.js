@@ -1,5 +1,5 @@
-const CACHE='runsgd-shell-v21517';
-const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg','/admin/','/admin/health/','/admin/keys/','/admin/developer/','/admin/people/','/admin/ui/'];
+const CACHE='runsgd-shell-v21518';
+const SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg','/admin/','/admin/health/','/admin/keys/','/admin/developer/','/admin/people/','/admin/ui/','/admin/affiliate-members/','/admin/community-business/','/admin/detailed-health/'];
 
 async function freshResponse(path){
   const req=new Request(new URL(path,self.location.origin).href,{cache:'reload'});
