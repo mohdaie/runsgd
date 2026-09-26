@@ -364,7 +364,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.3</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.5</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -735,7 +735,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.3</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.5</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -788,7 +788,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.3</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.5</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -830,7 +830,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.16.3';
+const RUNSGD_VERSION='2.16.5';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -2028,11 +2028,26 @@ async function interpretJourneyIntent(q,origin,destination){
   let j=await r.json();if(!r.ok)throw Error(j.error||'AI unavailable');
   let embedded=parseEmbeddedJourneyIntent(j?.answer);
   if(embedded)j={...j,...embedded,configured:j?.configured,model:j?.model};
+
+  // User intent is authoritative for physical vehicle state. The AI may describe
+  // or refine an explicitly mentioned parked-car handoff, but it must never invent
+  // a vehicle pickup from origin/destination context.
+  let prompt=String(q||'');
+  let userVehicleAccessEvidence=fallback.vehicle_access_required||
+   /\b(?:my\s+|the\s+)?(?:car|kereta)\s+(?:is\s+)?(?:parked\s+)?(?:at|near|in)\b/i.test(prompt)||
+   /\b(?:take|get|pick\s*up|pickup|retrieve|collect)\s+(?:my\s+|the\s+)?(?:car|kereta)\b/i.test(prompt)||
+   /\b(?:parked|parking)\s+(?:my\s+|the\s+)?(?:car|kereta)\b/i.test(prompt);
+  let hardDirectDrive=fallback.direct_drive===true&&
+   !fallback.vehicle_access_required&&!fallback.mixed_road_transit&&!fallback.avoid_sg_driving&&
+   !/\b(?:don't|dont|do\s+not|not|avoid|without)\b.{0,24}\b(?:drive|driving|car)\b/i.test(prompt);
+
   let requestedActions=Array.isArray(j.requested_actions)?j.requested_actions:fallback.requested_actions;
   let actionVehicleAccess=requestedActions.some(a=>/retrieve|access.*vehicle|parked vehicle/i.test(String(a?.action||'')+' '+String(a?.purpose||'')));
-  let vehicleAccess=fallback.vehicle_access_required||j.vehicle_access_required===true||actionVehicleAccess;
-  let vehicleAccessLocation=String(j.vehicle_access_location||fallback.vehicle_access_location||'').trim();
-  let vehicleAccessMode=String(j.vehicle_access_mode||fallback.vehicle_access_mode||'WALK').toUpperCase();
+  let aiVehicleAccess=j.vehicle_access_required===true||actionVehicleAccess;
+  let vehicleAccess=hardDirectDrive?false:(fallback.vehicle_access_required||(userVehicleAccessEvidence&&aiVehicleAccess));
+  let vehicleAccessLocation=vehicleAccess?String(j.vehicle_access_location||fallback.vehicle_access_location||'').trim():'';
+  let vehicleAccessMode=vehicleAccess?String(j.vehicle_access_mode||fallback.vehicle_access_mode||'WALK').toUpperCase():'';
+
   if(vehicleAccess&&requestedActions.length){
    let ordered=[...requestedActions].sort((a,b)=>Number(a?.order||0)-Number(b?.order||0));
    let cut=ordered.findIndex(a=>/retrieve|access.*vehicle|parked vehicle|\bcar\b|\bdrive\b/i.test(String(a?.action||'')+' '+String(a?.purpose||'')+' '+String(a?.mode||'')));
@@ -2041,9 +2056,37 @@ async function interpretJourneyIntent(q,origin,destination){
    else if(/MOTOR|BIKE|TWO_WHEELER/.test(before))vehicleAccessMode='TWO_WHEELER';
    else if(/WALK/.test(before))vehicleAccessMode='WALK';
   }
-  let directDrive=!vehicleAccess&&!fallback.mixed_road_transit&&(fallback.direct_drive||j.direct_drive===true),hasCar=fallback.has_car||j.has_car===true||directDrive||vehicleAccess;
-  let allowBus=directDrive?false:(fallback.allow_bus===false?false:j.allow_bus!==false),allowMrt=directDrive?false:(fallback.allow_mrt===false?false:j.allow_mrt!==false),allowBorder=directDrive?false:(fallback.allow_cross_border_bus===false?false:j.allow_cross_border_bus!==false);
-  return {...fallback,...j,priority:['balanced','fastest','cheapest','easiest'].includes(j.priority)?j.priority:fallback.priority,has_car:hasCar,has_motorcycle:fallback.has_motorcycle||j.has_motorcycle===true,prefer_ktm:directDrive?false:(fallback.prefer_ktm||j.prefer_ktm===true),avoid_sg_driving:fallback.avoid_sg_driving||j.avoid_sg_driving===true,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,vehicle_access_required:vehicleAccess,vehicle_access_location:vehicleAccessLocation,vehicle_access_mode:vehicleAccessMode,must_preserve_sequence:vehicleAccess||fallback.must_preserve_sequence||j.must_preserve_sequence===true,requested_actions:requestedActions,answer:j.answer||fallback.answer,ai:true}
+
+  let directDrive=hardDirectDrive||(!vehicleAccess&&!fallback.mixed_road_transit&&!fallback.avoid_sg_driving&&(fallback.direct_drive||j.direct_drive===true));
+  if(directDrive){
+   vehicleAccess=false;vehicleAccessLocation='';vehicleAccessMode='';requestedActions=[];
+  }
+
+  let mixedRoadTransit=directDrive?false:(fallback.mixed_road_transit||j.mixed_road_transit===true);
+  let hasCar=fallback.has_car||j.has_car===true||directDrive||vehicleAccess;
+  let allowBus=directDrive?false:(fallback.allow_bus===false?false:j.allow_bus!==false);
+  let allowMrt=directDrive?false:(fallback.allow_mrt===false?false:j.allow_mrt!==false);
+  let allowBorder=directDrive?false:(fallback.allow_cross_border_bus===false?false:j.allow_cross_border_bus!==false);
+  let mustPreserve=directDrive?false:(vehicleAccess||fallback.must_preserve_sequence||j.must_preserve_sequence===true);
+
+  return {...fallback,...j,
+   priority:['balanced','fastest','cheapest','easiest'].includes(j.priority)?j.priority:fallback.priority,
+   has_car:hasCar,
+   has_motorcycle:fallback.has_motorcycle||j.has_motorcycle===true,
+   prefer_ktm:directDrive?false:(fallback.prefer_ktm||j.prefer_ktm===true),
+   avoid_sg_driving:fallback.avoid_sg_driving||j.avoid_sg_driving===true,
+   allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,
+   direct_drive:directDrive,mixed_road_transit:mixedRoadTransit,
+   vehicle_access_required:vehicleAccess,
+   vehicle_access_location:vehicleAccessLocation,
+   vehicle_access_mode:vehicleAccessMode,
+   vehicle_access_details:vehicleAccess?(j.vehicle_access_details||fallback.vehicle_access_details||'Reach the parked vehicle before any driving leg.'):'',
+   must_preserve_sequence:mustPreserve,
+   requested_actions:requestedActions,
+   resources:directDrive?[]:(Array.isArray(j.resources)?j.resources:fallback.resources),
+   unresolved:directDrive?[]:(Array.isArray(j.unresolved)?j.unresolved:fallback.unresolved),
+   answer:hardDirectDrive?fallback.answer:(j.answer||fallback.answer),
+   ai:true}
  }catch{return fallback}
 }
 function renderJourneyIntent(intent){
@@ -2116,7 +2159,7 @@ async function buildCrossBorderVehicleAccess(origin,point,travelMode){
  return null
 }
 async function resolveJourneyPhysicalContext(origin,intent){
- let out={...intent};if(!out.vehicle_access_required||!String(out.vehicle_access_location||'').trim())return out;
+ let out={...intent};if(out.direct_drive||!out.vehicle_access_required||!String(out.vehicle_access_location||'').trim())return out;
  let query=String(out.vehicle_access_location).trim(),originP=routeProvider(),alt=routeProviderFor(originP.id==='sg'?'jb':'sg'),providers=[originP,alt].filter((p,i,a)=>p&&a.findIndex(x=>x.id===p.id)===i),point=null;
  if(/^(?:jb\s+|johor\s+)?ciq$|bangunan\s+sultan\s+iskandar|sultan\s+iskandar\s+ciq/i.test(query))point={...JB_CIQ,_provider:'jb'};
  for(const p of providers){if(point)break;point=await resolveRoutePlace(query,p,{lat:origin.lat,lon:origin.lon});if(point)break}
@@ -2129,10 +2172,11 @@ async function resolveJourneyPhysicalContext(origin,intent){
  return {...out,direct_drive:false,has_car:true,_vehicle_access_point:point,_vehicle_access_route:access?.routes?.[0]||null,_vehicle_access_mode:travelMode,answer:out.answer||('First '+(travelMode==='WALK'?'walk':'travel')+' to '+(point.name||query)+', then continue from your car.')}
 }
 function journeyRoadStart(origin,intent){
+ if(intent?.direct_drive||!intent?.vehicle_access_required)return origin;
  let p=intent?._vehicle_access_point;return p?{lat:p.lat,lon:p.lon,name:p.name||intent.vehicle_access_location,address:p.address||''}:origin
 }
 function withVehicleAccessCandidate(route,intent){
- let point=intent?._vehicle_access_point;if(!route||!point)return route;
+ let point=intent?._vehicle_access_point;if(!route||intent?.direct_drive||!intent?.vehicle_access_required||!point)return route;
  let a=intent._vehicle_access_route,mode=String(intent._vehicle_access_mode||'WALK').toUpperCase(),accessLegs=a?.legs?.length?[...a.legs]:[{mode:mode==='WALK'?'WALK':'ACCESS_VEHICLE',manual:true,duration_sec:0,distance_m:0,from:{name:'Current location'},to:{name:point.name||intent.vehicle_access_location,lat:point.lat,lon:point.lon},instruction:(mode==='WALK'?'Walk':'Make your way')+' to your parked vehicle at '+(point.name||intent.vehicle_access_location)}];
  accessLegs.push({mode:'VEHICLE_PICKUP',manual:true,duration_sec:0,distance_m:0,from:{name:point.name||intent.vehicle_access_location,lat:point.lat,lon:point.lon},to:{name:point.name||intent.vehicle_access_location,lat:point.lat,lon:point.lon},instruction:'Reach your parked car and start the driving leg'});
  let accessMinutes=Number(a?.duration_sec||0),accessWalk=Number(a?.walk_distance_m||0);
