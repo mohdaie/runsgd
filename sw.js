@@ -7,7 +7,7 @@ async function publicShellResponse(res){
   if(!type.includes('text/html'))return res;
   let html=await res.text();
   html=html.replace('<article class="card landmarkCollectionCard">','<article class="card landmarkCollectionCard" hidden>');
-  html=html.replaceAll('2.16.5','2.16.5');
+  html=html.replaceAll('2.16.3','2.16.5').replaceAll('2.16.4','2.16.5');
   const headers=new Headers(res.headers);headers.delete('content-length');
   return new Response(html,{status:res.status,statusText:res.statusText,headers});
 }
