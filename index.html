@@ -2352,7 +2352,7 @@ function applyActiveRoadContext(intent,q){
  if(!mode)return intent;
  let wantsModeChange=/\b(walk|walking|mrt|bus|train|public transport|transit|park here|stop driving|switch mode)\b/.test(s);
  if(wantsModeChange)return intent;
- if(mode==='DRIVE')return {...intent,has_car:true,direct_drive:true,allow_bus:false,allow_mrt:false,active_road_mode:'DRIVE',answer:'You are currently driving, so this recalculation will stay in driving mode from your live GPS position.'};
+ if(mode==='DRIVE')return {...intent,has_car:true,direct_drive:true,mixed_road_transit:false,vehicle_access_required:false,vehicle_access_location:'',vehicle_access_mode:'',vehicle_access_details:'',must_preserve_sequence:false,requested_actions:[],resources:[],unresolved:[],_vehicle_access_point:null,_vehicle_access_route:null,_vehicle_access_mode:'',allow_bus:false,allow_mrt:false,allow_cross_border_bus:false,active_road_mode:'DRIVE',answer:'You are currently driving, so this recalculation will stay in driving mode from your live GPS position.'};
  if(mode==='TWO_WHEELER')return {...intent,has_motorcycle:true,allow_bus:false,allow_mrt:false,active_road_mode:'TWO_WHEELER',answer:'You are currently riding, so this recalculation will stay in motorcycle mode from your live GPS position.'};
  return intent
 }
