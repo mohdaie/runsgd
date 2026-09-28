@@ -364,7 +364,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.6</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.7</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -735,7 +735,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.6</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.7</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -788,7 +788,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.6</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.7</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -830,7 +830,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.16.6';
+const RUNSGD_VERSION='2.16.7';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -2672,21 +2672,43 @@ function journeyRoutePointAt(cache,progressM){
  let a=cache.points[i],b=cache.points[Math.min(cache.points.length-1,i+1)],da=Number(cache.cum[i]||0),db=Number(cache.cum[Math.min(cache.cum.length-1,i+1)]||da),t=db>da?Math.max(0,Math.min(1,(p-da)/(db-da))):0;
  return {lat:a.lat+(b.lat-a.lat)*t,lon:a.lon+(b.lon-a.lon)*t,index:i}
 }
+function journeyWalkGuidanceHeading(cache,progress,routeHeading=null){
+ if(!Number.isFinite(routeHeading)&&cache&&Number.isFinite(progress)){
+  let here=journeyRoutePointAt(cache,progress),look=Math.max(14,Math.min(30,Number(sgJourneyRuntime.walkNextInstruction?.distance_m)||24)),ahead=journeyRoutePointAt(cache,progress+look);
+  if(here&&ahead)routeHeading=journeyBearing(here.lat,here.lon,ahead.lat,ahead.lon)
+ }
+ let off=Number(sgJourneyRuntime.walkOffPathM),acc=Number(sgJourneyRuntime.gpsAccuracy),tolerance=Math.min(70,Math.max(30,Number.isFinite(acc)?acc*1.6:38));
+ let movement=Number(sgJourneyRuntime.movementBearing),speed=Number(sgJourneyRuntime.gpsSpeed),movementFresh=Number.isFinite(movement)&&(speed>.55||Date.now()-Number(sgJourneyRuntime.lastMovedAt||0)<15000);
+ let phone=Number(sgJourneyHeading);
+ // On a matched pedestrian path the route tangent owns the camera. This keeps "straight"
+ // visually at 12 o'clock and avoids low-speed GPS/compass jitter rotating the map.
+ if(Number.isFinite(routeHeading)&&(!Number.isFinite(off)||off<=tolerance))return routeHeading;
+ if(movementFresh)return movement;
+ if(Number.isFinite(phone))return phone;
+ return Number.isFinite(routeHeading)?routeHeading:null
+}
 function journeyGoogleCameraState(lat,lon){
- let walking=String(sgJourneyLeg()?.mode||'').toUpperCase()==='WALK';
- let cache=walking?sgJourneyRuntime.walkCache:sgJourneyRuntime.roadCache,progress=walking?Number(sgJourneyRuntime.walkProgressM):Number(sgJourneyRuntime.routeProgressM),speed=Math.max(0,Number(sgJourneyRuntime.gpsSpeed)||0),stepRemain=walking?Number(sgJourneyRuntime.walkNextInstruction?.distance_m):Number(sgJourneyRuntime.currentStepRemainingM);
- let matched=journeyRoutePointAt(cache,progress),display=matched&&Number(sgJourneyRuntime.offRouteM)<=90?{lat:matched.lat,lng:matched.lon}:{lat,lng:lon};
- let lookAhead=stepRemain<180?Math.max(38,Math.min(70,stepRemain*.42)):Math.max(65,Math.min(125,72+speed*2.2));
+ let walking=String(sgJourneyLeg()?.mode||'').toUpperCase()==='WALK',idx=Math.max(0,Number(sgJourney?.current_hop)||0);
+ let cache=walking?sgJourneyRuntime.walkCaches?.[idx]:sgJourneyRuntime.roadCache,progress=walking?Number(sgJourneyRuntime.walkProgressM):Number(sgJourneyRuntime.routeProgressM),speed=Math.max(0,Number(sgJourneyRuntime.gpsSpeed)||0),stepRemain=walking?Number(sgJourneyRuntime.walkNextInstruction?.distance_m):Number(sgJourneyRuntime.currentStepRemainingM);
+ let matched=journeyRoutePointAt(cache,progress),routeOffset=walking?Number(sgJourneyRuntime.walkOffPathM):Number(sgJourneyRuntime.offRouteM),display=matched&&(!Number.isFinite(routeOffset)||routeOffset<=90)?{lat:matched.lat,lng:matched.lon}:{lat,lng:lon};
+ // Walking uses a shorter look-ahead so the position marker sits around the lower third
+ // while still showing enough path before the next maneuver.
+ let lookAhead=walking?(Number.isFinite(stepRemain)?Math.max(18,Math.min(42,stepRemain*.32)):32):(stepRemain<180?Math.max(38,Math.min(70,stepRemain*.42)):Math.max(65,Math.min(125,72+speed*2.2)));
  let ahead=journeyRoutePointAt(cache,progress+lookAhead),center=ahead?{lat:ahead.lat,lng:ahead.lon}:display;
  let routeHeading=matched&&ahead?journeyBearing(matched.lat,matched.lon,ahead.lat,ahead.lon):null;
- let heading=Number.isFinite(routeHeading)?routeHeading:Number.isFinite(Number(sgJourneyRuntime.movementBearing))?Number(sgJourneyRuntime.movementBearing):Number.isFinite(Number(sgJourneyHeading))?Number(sgJourneyHeading):0;
- let zoom=walking?18.0:(stepRemain<180?17.6:speed>24?16.8:speed>15?17.0:17.25);
- return {display,center,heading,zoom}
+ let heading=walking?journeyWalkGuidanceHeading(cache,progress,routeHeading):(Number.isFinite(routeHeading)?routeHeading:Number.isFinite(Number(sgJourneyRuntime.movementBearing))?Number(sgJourneyRuntime.movementBearing):Number.isFinite(Number(sgJourneyHeading))?Number(sgJourneyHeading):0);
+ if(!Number.isFinite(heading))heading=0;
+ let zoom=walking?18.15:(stepRemain<180?17.6:speed>24?16.8:speed>15?17.0:17.25);
+ return {display,center,heading,zoom,walking}
 }
 function journeyGoogleMapCourseHeading(target,force=false){
  target=Number(target);if(!Number.isFinite(target))target=0;target=((target%360)+360)%360;
+ let walking=String(sgJourneyLeg()?.mode||'').toUpperCase()==='WALK';
  if(force||!Number.isFinite(sgJourneyGoogleMapHeading)){sgJourneyGoogleMapHeading=target;return target}
- let delta=((target-sgJourneyGoogleMapHeading+540)%360)-180,factor=Math.abs(delta)>55?.55:.34;
+ let delta=((target-sgJourneyGoogleMapHeading+540)%360)-180,abs=Math.abs(delta);
+ // Walking deadband prevents the map from twitching with every compass/GPS sample.
+ if(walking&&abs<8)return sgJourneyGoogleMapHeading;
+ let factor=walking?(abs>70?.55:abs>35?.38:.22):(abs>55?.55:.34);
  sgJourneyGoogleMapHeading=(sgJourneyGoogleMapHeading+delta*factor+360)%360;
  return sgJourneyGoogleMapHeading
 }
@@ -3144,7 +3166,14 @@ function journeyOrientation(e){
  let h=null;
  if(Number.isFinite(Number(e.webkitCompassHeading)))h=Number(e.webkitCompassHeading);
  else if(Number.isFinite(Number(e.alpha)))h=(360-Number(e.alpha))%360;
- if(Number.isFinite(h)){sgJourneyHeading=h;let now=Date.now();if(now-Number(journeyOrientation.lastRenderAt||0)>=120){journeyOrientation.lastRenderAt=now;renderJourneyBeacon()}}
+ if(Number.isFinite(h)){
+  sgJourneyHeading=h;let now=Date.now(),walking=String(sgJourneyLeg()?.mode||'').toUpperCase()==='WALK';
+  // Compass changes must drive the walking camera too, not only the separate beacon.
+  if(walking&&sgJourneyGoogleMapFollowing&&now-Number(journeyOrientation.lastMapAt||0)>=220){
+   journeyOrientation.lastMapAt=now;updateJourneyGoogleMapLive(Number(sgJourneyRuntime.lastLat),Number(sgJourneyRuntime.lastLon))
+  }
+  if(now-Number(journeyOrientation.lastRenderAt||0)>=120){journeyOrientation.lastRenderAt=now;renderJourneyBeacon()}
+ }
 }
 function attachJourneyCompass(){
  if(sgJourneyCompassListening)return;
@@ -3188,11 +3217,12 @@ function renderJourneyBeacon(distance=null){
  let address=walkNext?(walkNext.path_name||''):(isFinal?(sgJourney.destination?.address||''):'');
  txt('sgJourneyBeaconTarget',target);
  txt('sgJourneyBeaconAddress',address&&address!==target?'Path: '+address:'');
- let bearing=[lat,lon,tlat,tlon].every(Number.isFinite)?journeyBearing(lat,lon,tlat,tlon):null;
+ let bearing=[lat,lon,tlat,tlon].every(Number.isFinite)?journeyBearing(lat,lon,tlat,tlon):null,cache=sgJourneyRuntime.walkCaches?.[idx],guidanceHeading=journeyWalkGuidanceHeading(cache,Number(sgJourneyRuntime.walkProgressM));
  let arrow=$('sgJourneyBeaconArrow'),guide=$('sgJourneyBeaconGuide'),btn=$('sgJourneyCompassBtn');
  if(btn)btn.classList.toggle('show',sgJourneyCompassPermissionNeeded&&!Number.isFinite(sgJourneyHeading));
- if(Number.isFinite(bearing)&&Number.isFinite(sgJourneyHeading)){
-  let delta=((bearing-sgJourneyHeading+540)%360)-180;
+ // Use the same fused/path heading as the map camera so the beacon cannot contradict the map.
+ if(Number.isFinite(bearing)&&Number.isFinite(guidanceHeading)){
+  let delta=((bearing-guidanceHeading+540)%360)-180;
   if(arrow)arrow.style.transform='rotate('+delta+'deg)';
   if(guide)guide.textContent=journeyRelative(delta)+(distance!=null?' · '+routeDistance(distance):'')+' · target '+journeyCardinal(bearing);
  }else if(Number.isFinite(bearing)){
@@ -3449,8 +3479,11 @@ function handleSgJourneyPosition(p){
   if(navChanged)return;
   persistSgJourneyThrottled();if(!document.hidden)renderSgJourney(distance);return
  }
- if(mode==='WALK'&&reconcileWalkProgress(p,lat,lon,leg,distance,moved,now)){
-  persistSgJourneyThrottled();if(!document.hidden)renderSgJourney(distance);return
+ if(mode==='WALK'){
+  let walkChanged=reconcileWalkProgress(p,lat,lon,leg,distance,moved,now);
+  // Walking GPS must advance the heading-up camera on every accepted fix.
+  updateJourneyGoogleMapLive(lat,lon);
+  if(walkChanged){persistSgJourneyThrottled();if(!document.hidden)renderSgJourney(distance);return}
  }
  if(distance!=null){
   if(distance<sgJourneyRuntime.bestDistance-12){sgJourneyRuntime.bestDistance=distance;sgJourneyRuntime.worseCount=0}
