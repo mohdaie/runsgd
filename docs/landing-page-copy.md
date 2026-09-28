@@ -96,25 +96,17 @@ Short, practical guides with links to the official sources:
 
 ---
 
-## 8. Community
-
-### The people who make the same crossing.
-Read what other commuters are saying about queues, closures and tips. Sign in to post, like and reply.
-
----
-
-## 9. Guest vs signed in  *(simple two-column comparison)*
+## 8. Guest vs signed in  *(simple two-column comparison)*
 
 | Free, no account | Sign in (free) |
 |---|---|
 | Home dashboard and live data | Everything on the left |
 | Ask RunSGD AI | **AI Journey Planner** with live guidance |
 | All guides | Saved journey history and your commute profile |
-| Read Community | Post and reply in Community |
 
 ---
 
-## 10. Privacy, in plain English
+## 9. Privacy, in plain English
 
 - Location is used only when you allow it. RunSGD never asks for your home address.
 - Journey history is private to your profile, and you can clear it anytime from **More → Journey personalization**.
@@ -125,7 +117,7 @@ Read what other commuters are saying about queues, closures and tips. Sign in to
 
 ---
 
-## 11. FAQ
+## 10. FAQ
 
 **Is RunSGD free?**
 Yes. It's in open beta.
@@ -147,7 +139,7 @@ Use **More → Beta feedback** in the app. It goes straight to the team.
 
 ---
 
-## 12. Final CTA
+## 11. Final CTA
 
 # Your next crossing, sorted.
 **[ Open RunSGD — it's free ]**
@@ -164,7 +156,7 @@ _Singapore ↔ Johor Bahru · Built for people who make the trip every day._
 
 ## Open decisions
 
-1. **Where does the landing page live?** Right now `/` *is* the app. Options: (a) a new `/about` or `/welcome` page, or (b) first-time visitors see the landing page at `/` and returning users go straight into the app.
+1. **Where does the landing page live?** Built at `/about/` for now. Right now `/` *is* the app. Options: (a) a new `/about` or `/welcome` page, or (b) first-time visitors see the landing page at `/` and returning users go straight into the app.
 2. **Screenshots:** the hero and the Plan · Choose · Go section need 3 phone mockups (Home dashboard, Journey options, live guidance).
 3. **JB Landmark Collection** is left out on purpose, because it's hidden from the public app for now.
 4. **Affiliate:** the Wise referral card in the app isn't mentioned here. Keep it off the landing page.

@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en-SG">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RunSGD — Singapore ↔ JB Journey Planner &amp; Commuter Companion</title>
+<meta name="description" content="Plan Singapore ↔ Johor Bahru trips from your live location, see Causeway traffic cameras, bus and MRT status and SGD/MYR rates, and follow step-by-step guidance through the checkpoint. Free, no download.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://runsgd.site/about/"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/icon.svg">
+<meta name="theme-color" content="#f8fbff">
+<meta property="og:type" content="website"><meta property="og:site_name" content="RunSGD">
+<meta property="og:title" content="RunSGD — Cross the Causeway without the guesswork">
+<meta property="og:description" content="Plan SG ↔ JB journeys from your live location and get step-by-step guidance, live Causeway cameras, MRT and bus status and SGD/MYR rates in one place.">
+<meta property="og:url" content="https://runsgd.site/about/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"RunSGD","url":"https://runsgd.site/","applicationCategory":"TravelApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"SGD"},"description":"Singapore ↔ Johor Bahru commuter companion for journey planning, live checkpoint information, public transport, driving and practical travel guides."}</script>
+<style>
+:root{--ink:#17213b;--muted:#6f7b90;--soft:#536078;--blue:#4b82f5;--violet:#8b67ef;--pink:#e77da8;--line:#e7ebf3;--link:#4965c7;--card:#ffffffed}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 3%,#dff2ff 0,transparent 29%),radial-gradient(circle at 92% 8%,#efe5ff 0,transparent 28%),linear-gradient(180deg,#fbfdff,#faf9ff 55%,#fffaf7);min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:var(--link)}
+.wrap{width:min(1040px,calc(100% - 32px));margin:auto}
+.grad{background:linear-gradient(90deg,#17447f,#3981f6,#8b5cf6,#ef78ad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Header */
+.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0;gap:12px}
+.brandwrap{display:flex;align-items:center;gap:9px;text-decoration:none}
+.brandwrap img{width:32px;height:32px}
+.brand{font-size:27px;font-weight:950;letter-spacing:-1.5px}
+.tag{font-size:10px;font-weight:800;color:#65718a;background:#ffffffcc;border:1px solid #fff;padding:5px 8px;border-radius:99px}
+.topLinks{display:flex;align-items:center;gap:8px}
+.topLinks .ghost{font-size:13px;font-weight:800;color:#62708a;text-decoration:none;padding:9px 6px}
+.pill{font-size:12px;font-weight:850;text-decoration:none;background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:999px;color:var(--link)}
+
+/* Buttons */
+.cta{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:900;border-radius:16px;padding:14px 18px;background:linear-gradient(120deg,var(--blue),var(--violet));color:#fff;box-shadow:0 10px 24px #5b6fe433;transition:transform .14s ease,filter .18s ease}
+.cta:hover{filter:brightness(1.05)}.cta:active{transform:scale(.97)}
+.cta.secondary{background:#eef3ff;color:#4964ba;box-shadow:none}
+.cta.big{font-size:17px;padding:16px 22px;border-radius:18px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1fr;gap:28px;align-items:center;padding:18px 0 34px}
+@media(min-width:860px){.hero{grid-template-columns:1.1fr .9fr;padding:34px 0 50px}}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:900;color:#5770c9;text-transform:uppercase;letter-spacing:.55px;background:#ffffffcc;border:1px solid #fff;padding:7px 11px;border-radius:99px}
+.hero h1{font-size:clamp(38px,7.2vw,64px);line-height:1.02;letter-spacing:-2px;margin:16px 0 16px;font-weight:900}
+.lede{font-size:18px;line-height:1.58;color:#56637a;margin:0;max-width:540px}
+.ctaRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.note{font-size:12px;color:#8792a6;margin-top:14px;line-height:1.5}
+
+/* Phone mockup (built in app style) */
+.phone{width:min(330px,100%);margin:auto;border-radius:42px;padding:12px;background:#17213b;box-shadow:0 30px 60px #2b35602e,0 0 0 1px #2a3456}
+.screen{border-radius:32px;overflow:hidden;background:radial-gradient(circle at 8% 3%,#dff2ff 0,transparent 35%),radial-gradient(circle at 92% 8%,#efe5ff 0,transparent 34%),linear-gradient(180deg,#fbfdff,#faf9ff 55%,#fffaf7);padding:18px 13px 0;position:relative}
+.sTop{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sBrand{font-weight:900;font-size:21px;letter-spacing:-1.3px}
+.sLoc{font-size:10px;font-weight:750;color:#34415e;background:#ffffffcc;border-radius:99px;padding:6px 9px}
+.sCard{background:#fffffff0;border:1px solid #fff;border-radius:18px;padding:12px;box-shadow:0 8px 22px #46537d12;margin-bottom:10px}
+.sTitle{font-size:12px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.sTitle span{font-size:9px;font-weight:800;color:#65718a;background:#f2f5fb;border-radius:99px;padding:3px 7px}
+.sSoft{margin-top:8px;padding:10px;border-radius:13px;background:linear-gradient(120deg,#eff8ff,#f7f0ff,#fff5ef);font-size:12px;font-weight:800;line-height:1.35}
+.sSoft small{display:block;font-weight:600;color:var(--muted);margin-top:4px;font-size:10px}
+.sGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sBig{font-size:22px;font-weight:900;margin-top:4px}
+.sSub{font-size:10px;color:var(--muted)}
+.sHop{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:750;padding:7px 0;border-top:1px solid #edf0f5}
+.sHop:first-of-type{border-top:0}
+.sDot{width:22px;height:22px;border-radius:8px;display:grid;place-items:center;font-size:11px;background:linear-gradient(120deg,#eef7ff,#f6efff);flex:0 0 auto}
+.sHop em{margin-left:auto;font-style:normal;color:var(--muted);font-size:10px}
+.sHop.unk em{color:#984b12;background:#ffead0;border-radius:99px;padding:2px 6px}
+.sNav{display:flex;justify-content:space-around;background:#ffffffec;border-top:1px solid #edf0f5;margin:6px -13px 0;padding:9px 0 13px}
+.sNav div{font-size:9px;color:#8a94aa;text-align:center;padding:5px 8px;border-radius:12px}
+.sNav div.on{color:#4669dd;background:linear-gradient(120deg,#edf6ff,#f3efff)}
+.sNav i{display:block;font-style:normal;font-size:14px;margin-bottom:2px}
+
+/* Sections */
+section.block{padding:34px 0}
+.secHead{max-width:640px;margin-bottom:22px}
+.secHead .eyebrow{background:transparent;border:0;padding:0}
+.secHead h2{font-size:clamp(28px,4.6vw,40px);letter-spacing:-1.2px;line-height:1.08;margin:8px 0 10px}
+.secHead p{font-size:16px;line-height:1.6;color:var(--soft);margin:0}
+.card{background:var(--card);border:1px solid #fff;border-radius:25px;box-shadow:0 12px 32px #46537d12;padding:22px}
+
+/* Problem strip */
+.problem{padding:26px 28px;border-radius:25px;background:linear-gradient(120deg,#eff8ff,#f7f0ff,#fff5ef);border:1px solid #fff}
+.problem q{display:block;quotes:none;font-size:clamp(19px,2.6vw,24px);font-weight:850;line-height:1.35;letter-spacing:-.4px}
+.problem p{margin:12px 0 0;color:var(--soft);font-size:16px;line-height:1.55}
+
+/* Steps */
+.steps{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.stepNum{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;font-weight:900;color:#fff;background:linear-gradient(120deg,var(--blue),var(--violet),var(--pink));margin-bottom:14px}
+.card h3{font-size:19px;letter-spacing:-.3px;margin:0 0 8px}
+.card p{color:var(--soft);line-height:1.58;font-size:15px;margin:0}
+.quote{margin-top:12px;padding:11px 12px;border-radius:14px;background:#f4f7fd;border:1px solid #edf0f6;font-size:13px;color:#46536d;font-style:italic;line-height:1.45}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{font-size:12px;font-weight:800;border-radius:99px;padding:7px 11px;background:#fff;color:#68748b;border:1px solid #e9edf5}
+.chip.on{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--blue),var(--violet),var(--pink))}
+
+/* Honest */
+.honest{display:grid;gap:22px;grid-template-columns:1fr;align-items:center}
+@media(min-width:860px){.honest{grid-template-columns:1fr 1fr}}
+.checks{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:10px}
+.checks li{display:flex;gap:10px;align-items:flex-start;font-size:15px;color:var(--soft);line-height:1.5}
+.checks li::before{content:"✓";flex:0 0 auto;width:22px;height:22px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:900;color:#2f7852;background:#e3f5e9;margin-top:1px}
+.legs .sHop{font-size:14px;padding:12px 0}
+.legs .sDot{width:34px;height:34px;border-radius:12px;font-size:17px}
+.legs .sHop em{font-size:12px}
+.legTotal{margin-top:10px;padding:12px;border-radius:14px;background:#edf7ff;color:#31517c;font-size:13px;font-weight:700;line-height:1.45}
+
+/* Widgets */
+.widgets{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:620px){.widgets{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.widgets{grid-template-columns:repeat(3,1fr)}}
+.wIcon{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;font-size:22px;background:linear-gradient(120deg,#eef7ff,#f6efff);margin-bottom:12px}
+.widgets .card{padding:19px}
+.widgets h3{font-size:17px}
+.widgets p{font-size:14px}
+.tools{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tools strong{font-size:14px;margin-right:4px}
+
+/* Ask */
+.ask{display:grid;gap:22px;grid-template-columns:1fr;align-items:center}
+@media(min-width:860px){.ask{grid-template-columns:1fr 1fr}}
+.askBox{display:flex;gap:8px;margin-top:4px}
+.askBox div{flex:1;border:1px solid #e2e7f1;background:#fff;border-radius:14px;padding:13px;font-size:15px;color:#8a95aa}
+.askBox b{border-radius:14px;padding:13px 16px;background:linear-gradient(120deg,var(--blue),var(--violet));color:#fff}
+.askAnswer{margin-top:12px;padding:14px;border-radius:18px;background:linear-gradient(120deg,#eff8ff,#f7f0ff,#fff5ef);font-size:14px;line-height:1.5;color:#34415e}
+.askAnswer .aiPill{display:inline-flex;padding:4px 8px;border-radius:999px;background:#e7efff;color:#4964c4;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px}
+
+/* Guides */
+.guideGrid{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:650px){.guideGrid{grid-template-columns:1fr 1fr}}
+.linkCard{display:block;text-decoration:none;padding:16px;border:1px solid var(--line);border-radius:18px;background:#fff;transition:box-shadow .18s ease,transform .14s ease}
+.linkCard:hover{box-shadow:0 10px 26px #46537d14;transform:translateY(-1px)}
+.linkCard b{display:block;color:var(--ink);font-size:15px;line-height:1.3}
+.linkCard span{display:block;color:var(--muted);font-size:13px;line-height:1.45;margin-top:4px}
+
+/* Compare */
+.compare{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:700px){.compare{grid-template-columns:1fr 1fr}}
+.compare ul{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:9px}
+.compare li{font-size:15px;color:var(--soft);display:flex;gap:9px}
+.compare li::before{content:"•";color:var(--violet);font-weight:900}
+.compare .member{background:linear-gradient(120deg,#eefaf3,#f4f7ff);border-color:#dcefe4}
+.badge{display:inline-flex;border-radius:99px;padding:5px 9px;font-size:10px;font-weight:900;background:#eef3ff;color:#5067b4;text-transform:uppercase;letter-spacing:.3px}
+.member .badge{background:#e3f5e9;color:#2f7852}
+
+/* Privacy */
+.privacy{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:700px){.privacy{grid-template-columns:1fr 1fr}}
+.privacy .card{display:flex;gap:13px;align-items:flex-start;padding:18px}
+.privacy .wIcon{margin:0;flex:0 0 auto}
+
+/* FAQ */
+.faq{display:grid;gap:10px}
+.faq details{background:#fffffff2;border:1px solid #fff;border-radius:20px;padding:4px 18px;box-shadow:0 8px 24px #46537d0d}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:850;font-size:16px;padding:14px 0}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"⌄";color:#8190aa;font-size:18px;transition:transform .18s ease}
+.faq details[open] summary::after{transform:rotate(180deg)}
+.faq details p{margin:0 0 16px;color:var(--soft);line-height:1.6;font-size:15px}
+
+/* Final CTA */
+.final{text-align:center;padding:44px 24px;border-radius:30px;background:linear-gradient(120deg,#eff8ff,#f7f0ff,#fff5ef);border:1px solid #fff;box-shadow:0 12px 32px #46537d12}
+.final img{width:64px;height:64px;margin-bottom:10px}
+.final h2{font-size:clamp(30px,5vw,46px);letter-spacing:-1.4px;margin:0 0 10px}
+.final p{color:var(--soft);margin:0 0 22px;font-size:16px}
+
+.footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;padding:30px 2px 46px;color:#8590a3;font-size:12px;line-height:1.5}
+.footer a{color:#6f7b90;text-decoration:none;font-weight:750;margin-left:14px}
+.footer a:first-child{margin-left:0}
+@media(max-width:520px){.topLinks .ghost{display:none}.problem{padding:22px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header class="top">
+  <a class="brandwrap" href="/"><img src="/icon.svg" alt=""><span class="brand grad">RunSGD</span><span class="tag">Beta</span></a>
+  <nav class="topLinks"><a class="ghost" href="/guides/">Guides</a><a class="pill" href="/">Open app →</a></nav>
+</header>
+
+<!-- 1. Hero -->
+<section class="hero">
+  <div>
+    <span class="eyebrow">🇸🇬 Singapore ↔ Johor Bahru 🇲🇾 · Free beta</span>
+    <h1>Cross the Causeway <span class="grad">without the guesswork.</span></h1>
+    <p class="lede">RunSGD is a daily companion for people who live, work and travel between Singapore and JB. Tell it where you're going and how you'd like to get there. It plans the trip from your live location and then guides you through each leg, including the checkpoint.</p>
+    <div class="ctaRow"><a class="cta big" href="/">Open RunSGD →</a><a class="cta big secondary" href="/guides/">Read the SG ↔ JB guides</a></div>
+    <p class="note">Works in your browser. Add it to your home screen to use it like an app. No download needed.</p>
+  </div>
+  <div class="phone" aria-hidden="true"><div class="screen">
+    <div class="sTop"><span class="sBrand grad">RunSGD</span><span class="sLoc">📍 Woodlands</span></div>
+    <div class="sCard"><div class="sTitle">✨ Ready to go? <span>Live</span></div><div class="sSoft">Check the Causeway snapshot before you head out.<small>Your daily brief</small></div></div>
+    <div class="sGrid">
+      <div class="sCard"><div class="sTitle">💱 SGD / MYR</div><div class="sBig">S$→RM</div><div class="sSub">Reference rate</div></div>
+      <div class="sCard"><div class="sTitle">🌦 Weather</div><div class="sBig">31°</div><div class="sSub">SG · JB side by side</div></div>
+    </div>
+    <div class="sCard"><div class="sTitle">🚌 MRT &amp; Bus <span>Nearby</span></div>
+      <div class="sHop"><span class="sDot">🚌</span>950 → JB Sentral<em>4 min</em></div>
+      <div class="sHop"><span class="sDot">🚇</span>Woodlands MRT<em>Normal</em></div>
+    </div>
+    <div class="sNav"><div class="on"><i>⌂</i>Home</div><div><i>➤</i>Journey</div><div><i>✦</i>Explore</div><div><i>⋯</i>More</div></div>
+  </div></div>
+</section>
+
+<!-- 2. Problem -->
+<section class="block" style="padding-top:0">
+  <div class="problem">
+    <q>Bus to Kranji or Woodlands? Drive, or park in JB and take the train? Is the Causeway jammed right now? What's the rate today?</q>
+    <p>The answers are spread across five apps and a group chat. RunSGD puts them on one screen.</p>
+  </div>
+</section>
+
+<!-- 3. Plan · Choose · Go -->
+<section class="block" id="how">
+  <div class="secHead"><span class="eyebrow">How it works</span><h2>Plan · Choose · <span class="grad">Go</span></h2><p>Your start point is always where you are. From there, it takes three steps.</p></div>
+  <div class="steps">
+    <div class="card"><div class="stepNum">1</div><h3>Plan it in plain words</h3><p>Pick a destination and describe the trip the way you'd say it.</p><div class="quote">"I have a car, but park in JB if it makes sense. KTM is okay if it's easier."</div><div class="quote">"I'm riding a motorcycle."</div></div>
+    <div class="card"><div class="stepNum">2</div><h3>Choose your route</h3><p>RunSGD shows options that fit what you asked for. Each option is split into clear legs ("hops").</p><div class="chips"><span class="chip on">🚇 MRT &amp; bus</span><span class="chip">🚌 Cross-border bus</span><span class="chip">🚗 Driving</span><span class="chip">🏍️ Motorcycle</span><span class="chip">🚆 KTM Shuttle Tebrau</span></div></div>
+    <div class="card"><div class="stepNum">3</div><h3>Let it guide you</h3><p>Start the trip and RunSGD follows your GPS step by step. Walking legs use a heading-up map that turns with you. Tick off each hop as you finish it. If plans change, tap <b>↻ Reroute from here</b>.</p></div>
+  </div>
+</section>
+
+<!-- 4. Honest about the border -->
+<section class="block">
+  <div class="honest">
+    <div>
+      <div class="secHead" style="margin-bottom:0"><span class="eyebrow">Honest about the border</span><h2>We tell you what we know, and say what we don't.</h2><p>Checkpoint queues, border bus waits and parking times aren't published live anywhere. RunSGD won't make up a door-to-door ETA for a cross-border trip. It shows the <b>known legs</b> with real times and marks immigration, border buses and transfers as their own steps. You can see exactly where the uncertainty is.</p></div>
+      <ul class="checks">
+        <li>Woodlands Checkpoint ↔ Kranji MRT (170X / 170) and ↔ Marsiling / Woodlands MRT (950) are built in</li>
+        <li>Onward Singapore and Johor legs are routed with live transit and road data</li>
+        <li>KTM Shuttle Tebrau is shown as its own clearly labelled option</li>
+      </ul>
+    </div>
+    <div class="card legs" aria-label="Example cross-border journey">
+      <div class="sTitle" style="font-size:15px;margin-bottom:6px">Example: JB Sentral → Orchard <span>Illustration</span></div>
+      <div class="sHop"><span class="sDot">🚶</span>Walk to JB CIQ<em>6 min</em></div>
+      <div class="sHop unk"><span class="sDot">🛂</span>Malaysia immigration<em>Not measured</em></div>
+      <div class="sHop unk"><span class="sDot">🚌</span>Border bus to Woodlands<em>Not measured</em></div>
+      <div class="sHop unk"><span class="sDot">🛂</span>Singapore immigration<em>Not measured</em></div>
+      <div class="sHop"><span class="sDot">🚌</span>170X to Kranji MRT<em>Known leg</em></div>
+      <div class="sHop"><span class="sDot">🚇</span>MRT to Orchard<em>Known leg</em></div>
+      <div class="legTotal">Times shown are for the known legs only. The checkpoint steps are marked so you can plan a buffer.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Daily dashboard -->
+<section class="block">
+  <div class="secHead"><span class="eyebrow">Home</span><h2>Everything you check before leaving the house.</h2><p>You can rearrange the Home screen or hide any card you don't need.</p></div>
+  <div class="widgets">
+    <div class="card"><div class="wIcon">🚦</div><h3>Causeway snapshot</h3><p>Live LTA traffic camera images of the checkpoint approaches.</p></div>
+    <div class="card"><div class="wIcon">🚌</div><h3>MRT &amp; Bus</h3><p>Nearest MRT status, crowding and disruptions, plus live bus arrivals near you in Singapore.</p></div>
+    <div class="card"><div class="wIcon">💱</div><h3>SGD / MYR</h3><p>Today's reference rate and a quick converter.</p></div>
+    <div class="card"><div class="wIcon">🌦</div><h3>Weather</h3><p>Singapore and Johor Bahru side by side.</p></div>
+    <div class="card"><div class="wIcon">🌫</div><h3>Air quality / IPU</h3><p>Air quality for where you are right now.</p></div>
+    <div class="card"><div class="wIcon">🕌</div><h3>Prayer</h3><p>Current and next prayer times, plus the nearest mosque or surau.</p></div>
+    <div class="card"><div class="wIcon">📅</div><h3>Coming up</h3><p>Upcoming Singapore and Malaysia public holidays, so you can plan around the rush.</p></div>
+  </div>
+  <div class="tools"><strong>Small tools that help:</strong><span class="chip">🚪 Leave-time buffer</span><span class="chip">🕒 SG / JB live clock</span><span class="chip">⏱ Quick timer</span><span class="chip">🏃 Trip stopwatch</span></div>
+</section>
+
+<!-- 6. Ask RunSGD -->
+<section class="block">
+  <div class="ask">
+    <div class="secHead" style="margin-bottom:0"><span class="eyebrow">✨ Ask RunSGD</span><h2>Just ask.</h2><p>Ask RunSGD answers using the app's live data and its own commuter knowledge base. It works without an account.</p></div>
+    <div class="card" aria-hidden="true">
+      <div class="askBox"><div>Is the Causeway busy? Do I need MDAC?</div><b>➤</b></div>
+      <div class="askAnswer"><span class="aiPill">RunSGD AI</span><br>Short answers from live RunSGD data and the guides, with a pointer to official sources when it matters.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Guides -->
+<section class="block" id="guides">
+  <div class="secHead"><span class="eyebrow">Guides</span><h2>SG ↔ JB, explained properly.</h2><p>Short, practical guides with links to the official sources.</p></div>
+  <div class="guideGrid">
+    <a class="linkCard" href="/guides/singapore-to-jb-public-transport/"><b>Singapore to Johor Bahru by public transport</b><span>MRT links, cross-border buses, CIQ and onward travel</span></a>
+    <a class="linkCard" href="/guides/woodlands-checkpoint-bus/"><b>Woodlands Checkpoint bus guide</b><span>160, 170, 170X, 950, CW1, CW2, CW5</span></a>
+    <a class="linkCard" href="/guides/tuas-second-link-bus/"><b>Tuas Second Link bus guide</b><span>CW3, CW4, CW4S, CW6, CW7</span></a>
+    <a class="linkCard" href="/guides/woodlands-vs-tuas/"><b>Woodlands vs Tuas</b><span>Which checkpoint suits your trip</span></a>
+    <a class="linkCard" href="/guides/myica-myniise-checkpoint-apps/"><b>MyICA, MyNIISe and checkpoint apps</b><span>A phone checklist before you cross</span></a>
+    <a class="linkCard" href="/guides/malaysia-vep-singapore-car/"><b>Malaysia VEP for Singapore cars</b><span>Registration, RFID, insurance, Road Charge</span></a>
+  </div>
+  <div class="ctaRow"><a class="cta secondary" href="/guides/">Browse all guides →</a></div>
+</section>
+
+<!-- 8. Guest vs signed in -->
+<section class="block">
+  <div class="secHead"><span class="eyebrow">Free to use</span><h2>Start as a guest. Sign in when you want more.</h2></div>
+  <div class="compare">
+    <div class="card"><span class="badge">Free, no account</span><ul><li>Home dashboard and live data</li><li>Ask RunSGD AI</li><li>All guides</li></ul></div>
+    <div class="card member"><span class="badge">Sign in · free</span><ul><li>Everything on the left</li><li><b>AI Journey Planner</b> with live guidance</li><li>Saved journey history and your commute profile</li></ul></div>
+  </div>
+</section>
+
+<!-- 9. Privacy -->
+<section class="block">
+  <div class="secHead"><span class="eyebrow">🔒 Privacy</span><h2>Privacy, in plain English.</h2></div>
+  <div class="privacy">
+    <div class="card"><div class="wIcon">📍</div><p>Location is used only when you allow it. RunSGD never asks for your home address.</p></div>
+    <div class="card"><div class="wIcon">🕘</div><p>Journey history is private to your profile, and you can clear it anytime from <b>More → Journey personalization</b>.</p></div>
+    <div class="card"><div class="wIcon">🗺️</div><p>Detailed driving paths are not stored.</p></div>
+    <div class="card"><div class="wIcon">🔑</div><p>AI keys stay on the server. External web search is off.</p></div>
+  </div>
+  <p class="note"><a href="/privacy.html">Read the full privacy &amp; beta notice →</a></p>
+</section>
+
+<!-- 10. FAQ -->
+<section class="block" id="faq">
+  <div class="secHead"><span class="eyebrow">FAQ</span><h2>Good questions.</h2></div>
+  <div class="faq">
+    <details open><summary>Is RunSGD free?</summary><p>Yes. It's in open beta.</p></details>
+    <details><summary>Do I need to install anything?</summary><p>No. Open runsgd.site in your phone browser. To use it like an app, choose "Add to Home Screen".</p></details>
+    <details><summary>Does it work in Johor as well as Singapore?</summary><p>Yes. Search, weather, prayer times and routing cover both sides. Live nearby bus arrivals are Singapore-only for now and turn on automatically once you're in Singapore.</p></details>
+    <details><summary>Can it tell me how long the checkpoint queue is?</summary><p>Not yet, because no reliable live source exists. RunSGD shows the live Causeway camera snapshots and gives accurate times for every leg it can measure.</p></details>
+    <details><summary>Is the information official?</summary><p>No. RunSGD pulls from public sources such as LTA DataMall and OneMap. Always check official sources for immigration, legal and safety decisions.</p></details>
+    <details><summary>Found a bug or have an idea?</summary><p>Use <b>More → 🧪 Beta feedback</b> in the app. It goes straight to the team.</p></details>
+  </div>
+</section>
+
+<!-- 11. Final CTA -->
+<section class="block">
+  <div class="final">
+    <img src="/icon.svg" alt="">
+    <h2>Your next crossing, <span class="grad">sorted.</span></h2>
+    <p>Singapore ↔ Johor Bahru · Built for people who make the trip every day.</p>
+    <a class="cta big" href="/">Open RunSGD — it's free →</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <span>© RunSGD · Beta. Information is for guidance only.</span>
+  <span><a href="/">App</a><a href="/guides/">Guides</a><a href="/privacy.html">Privacy</a></span>
+</footer>
+
+</main>
+</body>
+</html>
