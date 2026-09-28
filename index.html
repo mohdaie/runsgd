@@ -364,7 +364,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.7</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.8</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -735,7 +735,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.7</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.8</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -788,7 +788,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.7</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.8</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -830,7 +830,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.16.7';
+const RUNSGD_VERSION='2.16.8';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -2677,9 +2677,9 @@ function journeyWalkGuidanceHeading(cache,progress,routeHeading=null){
   let here=journeyRoutePointAt(cache,progress),look=Math.max(14,Math.min(30,Number(sgJourneyRuntime.walkNextInstruction?.distance_m)||24)),ahead=journeyRoutePointAt(cache,progress+look);
   if(here&&ahead)routeHeading=journeyBearing(here.lat,here.lon,ahead.lat,ahead.lon)
  }
- let off=Number(sgJourneyRuntime.walkOffPathM),acc=Number(sgJourneyRuntime.gpsAccuracy),tolerance=Math.min(70,Math.max(30,Number.isFinite(acc)?acc*1.6:38));
- let movement=Number(sgJourneyRuntime.movementBearing),speed=Number(sgJourneyRuntime.gpsSpeed),movementFresh=Number.isFinite(movement)&&(speed>.55||Date.now()-Number(sgJourneyRuntime.lastMovedAt||0)<15000);
- let phone=Number(sgJourneyHeading);
+ let offRaw=sgJourneyRuntime.walkOffPathM,off=offRaw==null?null:Number(offRaw),accRaw=sgJourneyRuntime.gpsAccuracy,acc=accRaw==null?null:Number(accRaw),tolerance=Math.min(70,Math.max(30,Number.isFinite(acc)?acc*1.6:38));
+ let movementRaw=sgJourneyRuntime.movementBearing,movement=movementRaw==null?null:Number(movementRaw),speedRaw=sgJourneyRuntime.gpsSpeed,speed=speedRaw==null?null:Number(speedRaw),movementFresh=Number.isFinite(movement)&&((Number.isFinite(speed)&&speed>.55)||Date.now()-Number(sgJourneyRuntime.lastMovedAt||0)<15000);
+ let phoneRaw=sgJourneyHeading,phone=phoneRaw==null?null:Number(phoneRaw);
  // On a matched pedestrian path the route tangent owns the camera. This keeps "straight"
  // visually at 12 o'clock and avoids low-speed GPS/compass jitter rotating the map.
  if(Number.isFinite(routeHeading)&&(!Number.isFinite(off)||off<=tolerance))return routeHeading;

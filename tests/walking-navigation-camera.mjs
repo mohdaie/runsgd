@@ -48,21 +48,25 @@ const context={
   gpsSpeed:1,
   lastMovedAt:now,
  },
+ cache:{points:[{lat:1.30,lon:103.80},{lat:1.30,lon:103.81}],cum:[0,1113],total:1113,lastIndex:0},
 };
 runInNewContext(code,context);
 
-const cache={points:[{lat:1.30,lon:103.80},{lat:1.30,lon:103.81}],cum:[0,1113],total:1113,lastIndex:0};
-let h=runInNewContext('journeyWalkGuidanceHeading(cache,0)',{...context,cache});
+let h=runInNewContext('journeyWalkGuidanceHeading(cache,0)',context);
 assert.ok(h>89&&h<91,'matched walking path should own camera heading');
 
 context.sgJourneyRuntime.walkOffPathM=100;
-h=runInNewContext('journeyWalkGuidanceHeading(cache,0)',{...context,cache});
+h=runInNewContext('journeyWalkGuidanceHeading(cache,0)',context);
 assert.equal(h,135,'off-path camera should fall back to recent movement bearing');
 
-context.sgJourneyRuntime.movementBearing=NaN;
+context.sgJourneyRuntime.movementBearing=null;
 context.sgJourneyRuntime.gpsSpeed=0;
 context.sgJourneyRuntime.lastMovedAt=0;
-h=runInNewContext('journeyWalkGuidanceHeading(cache,0)',{...context,cache});
+h=runInNewContext('journeyWalkGuidanceHeading(cache,0)',context);
 assert.equal(h,210,'without usable movement, phone compass should be the fallback');
+
+context.sgJourneyHeading=null;
+h=runInNewContext('journeyWalkGuidanceHeading(null,0)',context);
+assert.equal(h,null,'missing route, movement and compass must not invent north');
 
 console.log('Walking heading-up camera regression passed');
