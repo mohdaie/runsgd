@@ -50,3 +50,17 @@ for(const page of pages.filter(p=>p.startsWith('admin/'))){
  if(src.includes('data-runsgd-badge'))assert.ok(src.includes('<script src="/assets/version-badge.js" defer></script>'),page+' loads the version badge script');
 }
 console.log('Admin version badges follow /VERSION.');
+
+// App icons: real PNGs at the declared sizes, separate "any" and "maskable" entries, and an iOS touch icon.
+const pngSize=p=>{const b=readFileSync(new URL('../'+p.replace(/^\//,''),import.meta.url));assert.equal(b.toString('ascii',1,4),'PNG',p+' is a PNG');return b.readUInt32BE(16)+'x'+b.readUInt32BE(20)};
+const manifest=JSON.parse(read('manifest.webmanifest'));
+for(const icon of manifest.icons.filter(i=>i.type==='image/png'))assert.equal(pngSize(icon.src),icon.sizes,icon.src+' matches its declared size');
+for(const purpose of ['any','maskable'])for(const size of ['192x192','512x512'])
+ assert.ok(manifest.icons.some(i=>i.purpose===purpose&&i.sizes===size&&i.type==='image/png'),`manifest has a ${size} ${purpose} PNG`);
+assert.ok(!manifest.icons.some(i=>/any maskable|maskable any/.test(i.purpose||'')),'no icon is shared between any and maskable');
+assert.equal(pngSize('/icons/apple-touch-icon.png'),'180x180');
+for(const page of pages){
+ const src=read(page);
+ if(src.includes('rel="icon"'))assert.ok(src.includes('<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180">'),page+' has the PNG apple-touch-icon');
+}
+console.log('App icons: PNG sizes match the manifest, any + maskable split, iOS touch icon on every page.');
