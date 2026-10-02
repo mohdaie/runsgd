@@ -1,0 +1,7 @@
+{
+  "package": "@supabase/supabase-js",
+  "version": "2.117.2",
+  "source": "npm dist/umd/supabase.js (same file jsdelivr serves for @2)",
+  "file": "assets/vendor/supabase-js-2.117.2.js",
+  "integrity": "sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok"
+}
