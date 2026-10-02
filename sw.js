@@ -1,22 +1,11 @@
-const CACHE='runsgd-shell-v21610';
-const SHELL=['/','/index.html','/assets/regions.js','/assets/vendor/supabase-js-2.117.2.js','/manifest.webmanifest','/icon.svg','/assets/landmarks/jb/bangunan-sultan-iskandar.webp','/assets/landmarks/jb/sultan-ibrahim-stadium.webp','/assets/landmarks/jb/istana-besar-johor.webp','/assets/landmarks/jb/sultan-abu-bakar-state-mosque.webp','/assets/landmarks/jb/johor-bahru-old-chinese-temple.webp','/admin/','/admin/health/','/admin/keys/','/admin/developer/','/admin/people/','/admin/ui/','/admin/affiliate-members/','/admin/community-business/','/admin/detailed-health/'];
-
-async function publicShellResponse(res){
-  if(!res?.ok)return res;
-  const type=res.headers.get('content-type')||'';
-  if(!type.includes('text/html'))return res;
-  let html=await res.text();
-  html=html.replace('<article class="card landmarkCollectionCard">','<article class="card landmarkCollectionCard" hidden>');
-  html=html.replaceAll('2.16.3','2.16.10').replaceAll('2.16.4','2.16.10').replaceAll('2.16.5','2.16.10').replaceAll('2.16.6','2.16.10').replaceAll('2.16.7','2.16.10').replaceAll('2.16.8','2.16.10').replaceAll('2.16.9','2.16.10');
-  const headers=new Headers(res.headers);headers.delete('content-length');
-  return new Response(html,{status:res.status,statusText:res.statusText,headers});
-}
+const CACHE='runsgd-shell-v21611';
+const SHELL=['/','/index.html','/assets/regions.js','/assets/vendor/supabase-js-2.117.2.js','/manifest.webmanifest','/icon.svg','/assets/landmarks/jb/bangunan-sultan-iskandar.webp','/assets/landmarks/jb/sultan-ibrahim-stadium.webp','/assets/landmarks/jb/istana-besar-johor.webp','/assets/landmarks/jb/sultan-abu-bakar-state-mosque.webp','/assets/landmarks/jb/johor-bahru-old-chinese-temple.webp'];
 
 async function freshResponse(path){
   const req=new Request(new URL(path,self.location.origin).href,{cache:'reload'});
   const res=await fetch(req);
   if(!res.ok)throw new Error('HTTP '+res.status+' '+path);
-  return (path==='/'||path==='/index.html')?publicShellResponse(res):res;
+  return res;
 }
 
 self.addEventListener('install',event=>{
@@ -103,10 +92,9 @@ self.addEventListener('fetch',event=>{
   // HTML probes and navigations are always network-first.
   if(req.mode==='navigate'||url.pathname==='/'||url.pathname==='/index.html'){
     const key=url.pathname||'/';
-    event.respondWith(fetch(req,{cache:'no-store'}).then(async res=>{
-      const served=(key==='/'||key==='/index.html')?await publicShellResponse(res):res;
-      if(served.ok){const copy=served.clone();caches.open(CACHE).then(c=>c.put(key,copy));}
-      return served;
+    event.respondWith(fetch(req,{cache:'no-store'}).then(res=>{
+      if(res.ok){const copy=res.clone();caches.open(CACHE).then(c=>c.put(key,copy));}
+      return res;
     }).catch(async()=>{
       if(url.searchParams.has('appv')||url.searchParams.has('_runsgd_probe')){
         return new Response('RunSGD is updating. Reconnect and refresh to load the latest version.',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
