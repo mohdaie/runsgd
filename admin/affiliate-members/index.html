@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="/icon.svg"><meta http-equiv="refresh" content="0;url=/admin/people/"><title>Affiliate & Members · RunSGD</title><script>location.replace('/admin/people/')</script></head><body><a href="/admin/people/">Open Affiliate & Members</a><script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/sw.js?v=2.15.18',{scope:'/',updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
+    navigator.serviceWorker.getRegistration('/').then(r=>r?r.update():navigator.serviceWorker.register('/sw.js',{scope:'/',updateViaCache:'none'})).catch(()=>{});
   });
 }
 </script>

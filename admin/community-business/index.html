@@ -34,10 +34,11 @@
 <a class="back" href="/admin/">← Back to Admin</a>
 </div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/vendor/supabase-js-2.117.2.js"></script>
+<script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"><\/script>')</script>
 <script>
-const URL='https://gdycbluljgfezhgslppe.supabase.co',KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
-const sb=window.supabase.createClient(URL,KEY),$=id=>document.getElementById(id);
+const SB_URL='https://gdycbluljgfezhgslppe.supabase.co',KEY='sb_publishable_ke21EcVtLjGPLwX2T_-xng_CnhM6HBM';
+const sb=window.supabase.createClient(SB_URL,KEY),$=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const fmt=v=>new Intl.NumberFormat('en-SG').format(Number(v||0));
 const when=v=>v?new Date(v).toLocaleString('en-SG',{timeZone:'Asia/Singapore',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'No clicks yet';
@@ -71,7 +72,7 @@ guard();
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/sw.js?v=2.15.18',{scope:'/',updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{});
+    navigator.serviceWorker.getRegistration('/').then(r=>r?r.update():navigator.serviceWorker.register('/sw.js',{scope:'/',updateViaCache:'none'})).catch(()=>{});
   });
 }
 </script>
