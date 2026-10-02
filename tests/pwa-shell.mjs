@@ -24,7 +24,6 @@ const [major,minor,patch]=version.split('.');
 assert.ok(sw.includes(`const CACHE='runsgd-shell-v${major}${minor}${patch.padStart(2,'0')}';`),'sw cache matches VERSION');
 assert.ok(html.includes(`const RUNSGD_VERSION='${version}';`),'index.html version matches VERSION');
 assert.equal((html.match(new RegExp('v'+version.replaceAll('.','\\.')+'<','g'))||[]).length,3,'index.html badges match VERSION');
-assert.ok(read('admin/health/index.html').includes('SYSTEM HEALTH · v'+version),'admin health badge matches VERSION');
 
 console.log('PWA shell checks passed: no admin precache, no HTML rewriting, landmark hidden in shell, versions aligned.');
 
@@ -43,3 +42,11 @@ for(const page of pages){
 }
 console.log(`Checked ${pages.length} pages: pinned self-hosted supabase-js, no stale service worker URLs.`);
 for(const page of pages)assert.ok(!/\b(const|let|var)\s+(URL|URLSearchParams|Request|Response|Headers|fetch)\s*=/.test(read(page)),page+' does not shadow a browser global that supabase-js relies on');
+
+// Admin badges read the deployed version at runtime instead of hard-coding one that drifts.
+for(const page of pages.filter(p=>p.startsWith('admin/'))){
+ const src=read(page);
+ assert.ok(!/class="badge"[^>]*>[^<]*v\d+\.\d+\.\d+/.test(src),page+' has no hard-coded version badge');
+ if(src.includes('data-runsgd-badge'))assert.ok(src.includes('<script src="/assets/version-badge.js" defer></script>'),page+' loads the version badge script');
+}
+console.log('Admin version badges follow /VERSION.');
