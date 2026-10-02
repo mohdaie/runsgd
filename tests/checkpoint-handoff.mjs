@@ -13,7 +13,7 @@ const names=[
  'routeProviderFor','transitRouteProviderFor','journeyTransitPreference','journeyTransitAllowed',
  'makeJbToSgBorderHops','makeBorderHops','sgStationRailRoute','sgCheckpointStationRoutes','routeCandidate',
  'planJbToSgSmart','planLocalSmart','planSgToJb','makeSgToJbRoutes','journeyRoadMode','rerouteProviderForBlock',
- 'rankJourneyRoutes','chooseJourneyRouteSet','routeMinutes','routeDistance','routeModeIcon',
+ 'rankJourneyRoutes','chooseJourneyRouteSet','routeMinutes','routeDistance','routeModeIcon','ico',
  'routeModeLabel','sgRouteSummary','detailedTransitInstruction','sgLegHtml','renderSgRoutes'
 ];
 const stationPoints={
