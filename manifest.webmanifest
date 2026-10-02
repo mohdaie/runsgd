@@ -2,7 +2,7 @@
   "id": "/",
   "name": "RunSGD",
   "short_name": "RunSGD",
-  "description": "Your intelligent Singapore ↔ Johor daily companion",
+  "description": "Singapore ↔ Johor commute planner with live Causeway, bus and weather info",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
