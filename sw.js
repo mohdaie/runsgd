@@ -1,4 +1,4 @@
-const CACHE='runsgd-shell-v21613';
+const CACHE='runsgd-shell-v21614';
 const SHELL=['/','/index.html','/assets/regions.js','/assets/vendor/supabase-js-2.117.2.js','/manifest.webmanifest','/icon.svg','/assets/landmarks/jb/bangunan-sultan-iskandar.webp','/assets/landmarks/jb/sultan-ibrahim-stadium.webp','/assets/landmarks/jb/istana-besar-johor.webp','/assets/landmarks/jb/sultan-abu-bakar-state-mosque.webp','/assets/landmarks/jb/johor-bahru-old-chinese-temple.webp'];
 
 async function freshResponse(path){
