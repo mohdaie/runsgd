@@ -7,7 +7,9 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="theme-color" content="#f8fbff">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1015" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -361,6 +363,427 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 .landmarkStatusRow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
 @media(max-width:420px){.landmarkTile{flex-basis:146px}.landmarkIconWrap{height:112px}}
 .ico{width:1.15em;height:1.15em;flex:none;display:inline-block;vertical-align:-.2em;margin-right:.38em}.ico.solo{margin:0;vertical-align:middle}.title .ico,.transitHead .ico,.moreSectionTitle .ico{color:#4965c7}</style>
+<style id="ui-layer">
+/* RunSGD design layer: tokens + generated overrides. Edit tokens, not the generated block. */
+/* Palette tokens. Default = calm; :root[data-ui] picks the brand or sg variant. */
+:root{color-scheme:light;
+--bg:#f5f6f8;--surface:#fff;--surface-2:#f1f3f6;--ink:#141a24;--muted:#5b6574;--line:#e3e7ed;
+--accent:#2563eb;--accent-text:#1d4ed8;--accent-soft:#eaf1ff;--primary-bg:#2563eb;--on-primary:#fff;
+--success:#15803d;--success-text:#166534;--success-soft:#ebf7ef;
+--warn:#b45309;--warn-text:#92400e;--warn-soft:#fdf5e4;
+--danger:#c62828;--danger-text:#b42318;--danger-soft:#fdeeee;
+--shadow-card:0 0 0 1px rgb(15 23 42/.05),0 1px 2px -1px rgb(15 23 42/.06),0 2px 6px rgb(15 23 42/.04);
+--shadow-1:0 1px 2px rgb(15 23 42/.08);
+--nav-bg:rgb(255 255 255/.92);--nav-active:var(--accent-soft);
+--card:var(--surface);--blue:var(--accent);--violet:var(--accent);--pink:var(--accent);--muted-2:var(--muted)}
+:root[data-ui=brand]{--primary-bg:linear-gradient(120deg,#3b82f6,#8b5cf6);--accent:#4f6ef7;--accent-text:#3f57d8;--nav-active:linear-gradient(120deg,#edf4ff,#f3efff)}
+:root[data-ui=sg]{--ink:#0b1f3a;--muted:#54617a;--primary-bg:#d7263d;--accent:#1d4ed8;--accent-text:#1d4ed8;--bg:#f6f6f7}
+@media (prefers-color-scheme:dark){
+:root,:root[data-ui=brand],:root[data-ui=sg]{color-scheme:dark;
+--bg:#0d1015;--surface:#161a21;--surface-2:#1e232c;--ink:#e7eaf0;--muted:#9aa3b2;--line:#2a303a;
+--accent:#5b8cff;--accent-text:#93b4ff;--accent-soft:#1b2640;--primary-bg:#3b6ef5;
+--success:#1f9a54;--success-text:#63d690;--success-soft:#13261b;
+--warn:#b9730f;--warn-text:#f2bd55;--warn-soft:#2a2113;
+--danger:#d14343;--danger-text:#ff8f8f;--danger-soft:#2d1618;
+--shadow-card:0 0 0 1px rgb(255 255 255/.06);--shadow-1:0 0 0 1px rgb(255 255 255/.07);
+--nav-bg:rgb(13 16 21/.9)}
+:root[data-ui=brand]{--primary-bg:linear-gradient(120deg,#3b6ef5,#7c4ddb);--accent:#7b8cff;--accent-text:#a3b0ff;--nav-active:linear-gradient(120deg,#1b2640,#261d3d)}
+:root[data-ui=sg]{--ink:#ecf0f6;--muted:#9ca8bc;--primary-bg:#e0434f;--accent:#7aa2ff;--accent-text:#93b4ff}
+}
+
+
+/* generated overrides */
+body{background:var(--bg)}
+.version,.tag{font-size:12px;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line)}
+.loc,.btn,.chip,.miniBtn{font-weight:600}
+.loc{background:var(--surface);color:var(--ink)}
+.headerAccount{color:var(--muted);font-size:12px;font-weight:700}
+.headerAccount.guest{color:var(--accent-text)}
+.headerAccount.member{color:var(--muted)}
+.headerSignOut{border-left:1px solid var(--line);color:var(--danger-text);font-size:12px;font-weight:700}
+.hello h1{font-size:28px}
+.sub,.hello p,.status{font-size:12px}
+.card{border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-card)}
+.title{font-weight:600}
+.big{font-weight:700}
+.soft,.result{border-radius:16px;background:var(--surface-2)}
+.briefAction{font-size:18px;font-weight:700}
+.temp{font-weight:700}
+.amount input,.amount select,.toolInput{border:1px solid var(--line);background:var(--surface);border-radius:12px;font-size:14px;color:var(--ink)}
+.result{font-weight:600}
+.refresh{background:var(--primary-bg);color:var(--on-primary)}
+.actionline{border-radius:12px;background:var(--surface-2);color:var(--ink);font-weight:600}
+.aiAccessNote{background:var(--surface-2);border:1px solid var(--line);color:var(--ink)}
+.aiAccessPill{background:var(--surface-2);color:var(--accent-text);font-size:12px;font-weight:700}
+.aiAccessTitle{color:var(--ink)}
+.aiAccessText{font-size:12px;color:var(--muted)}
+.aiAccessLink{color:var(--accent-text);font-size:12px;font-weight:700}
+.aiAccessNote.member{background:var(--surface-2);border-color:var(--line)}
+.aiAccessNote.member .aiAccessPill{background:var(--success-soft);color:var(--success-text)}
+.place{border-top:1px solid var(--line)}
+.place a{color:var(--accent-text);font-weight:600}
+.nearbyBox{border-top:1px solid var(--line)}
+.distance{color:var(--muted)}
+.chip{background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.chip.active{background:var(--primary-bg);color:var(--on-primary)}
+.feedcard{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-card)}
+.feedcard h3{font-size:16px}
+.feedtag{font-size:12px;font-weight:700;color:var(--accent-text)}
+.feedmeta{font-size:12px;color:var(--muted)}
+.feedRefresh{background:var(--surface-2);color:var(--accent-text);font-weight:600;font-size:12px}
+.timerDisplay{font-weight:700}
+.miniBtn{border-radius:12px;background:var(--surface-2);color:var(--ink)}
+.clockFace{border-radius:16px;background:var(--surface-2)}
+.clockTime{font-size:24px;font-weight:700}
+.stopwatch{font-weight:700}
+.nav{background:var(--surface);border-top:1px solid var(--line)}
+.nav button{color:var(--muted);border-radius:16px;font-size:12px}
+.nav button.active{color:var(--accent-text);background:var(--surface-2)}
+.communityAuth input,.communityComposer input,.communityComposer textarea{border:1px solid var(--line);background:var(--surface);border-radius:12px;color:var(--ink)}
+.roomBtn{border:1px solid var(--line);background:var(--surface);color:var(--muted);font-weight:600}
+.roomBtn.active{background:var(--primary-bg);color:var(--on-primary)}
+.chatList{background:var(--surface-2);border:1px solid var(--line);border-radius:22px}
+.chatMsg{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-1)}
+.chatMsg.mine{background:var(--surface-2);border-color:var(--line)}
+.chatMeta{font-size:12px;color:var(--muted)}
+.chatName{font-weight:700;color:var(--ink)}
+.moderateBtn{color:var(--danger-text);font-size:12px;font-weight:700}
+.communityComposer{border-top:1px solid var(--line)}
+.memberName{font-weight:700}
+.smallLink{color:var(--accent-text);font-weight:600}
+.googleBtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:16px;font-weight:700;box-shadow:var(--shadow-card)}
+.googleMark{font-weight:700;color:var(--accent-text)}
+.emailLink{color:var(--accent-text);font-weight:700}
+.emailAuthForm{border-top:1px solid var(--line)}
+.profileAvatar{background:var(--surface-2);border:1px solid var(--line)}
+.profileFields input,.profileFields textarea{border:1px solid var(--line);background:var(--surface);border-radius:12px;color:var(--ink)}
+.badgeTag{font-size:12px;font-weight:700;background:var(--surface-2);color:var(--accent-text)}
+.badgeTag.admin{background:var(--surface-2);color:var(--danger-text)}
+.chatAvatar{background:var(--surface-2)}
+.chatBadge{font-size:12px;font-weight:700;background:var(--surface-2);color:var(--accent-text)}
+.chatBadge.admin{background:var(--surface-2);color:var(--danger-text)}
+.profileBioLine{color:var(--muted)}
+.editProfileLink{color:var(--accent-text);font-weight:700}
+.trafficSnap{border-radius:16px;background:var(--surface-2)}
+.trafficPlaceholder{border-radius:16px;background:var(--surface-2);color:var(--muted)}
+.trafficControls select{border:1px solid var(--line);background:var(--surface);border-radius:12px;color:var(--ink)}
+.trafficMeta{font-size:12px;color:var(--muted)}
+.kbCard{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-card)}
+.kbIcon{border-radius:12px;font-size:20px;background:var(--surface-2)}
+.kbTitle{font-weight:700}
+.kbSummary{color:var(--muted)}
+.kbChevron{font-size:16px;color:var(--muted)}
+.kbBody ul{color:var(--muted);font-size:12px}
+.kbSource{color:var(--accent-text);font-size:12px;font-weight:600}
+.kbChecked{font-size:12px;color:var(--muted)}
+.kbIntro{border-radius:16px;background:var(--surface-2)}
+.kbIntro strong{font-size:14px}
+.homeCustomizeBtn{color:var(--accent-text);font-weight:700}
+.widgetManager{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-card)}
+.widgetManageRow{border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.widgetManageName{font-size:12px;font-weight:600;color:var(--ink)}
+.widgetIconBtn{background:var(--surface-2);color:var(--ink);border-radius:12px;font-weight:700}
+.widgetToggle{font-size:12px;font-weight:700;background:var(--surface-2);color:var(--success-text)}
+.widgetToggle.off{background:var(--surface-2);color:var(--muted)}
+#communityChatCard{background:var(--surface-2);border:1px solid var(--line);box-shadow:var(--shadow-card)}
+.communityLiveDot{background:var(--success-soft)}
+#memberState{color:var(--muted)}
+#signOutBtn{background:var(--surface-2);color:var(--ink)}
+.roomBtn{border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:12px;font-weight:700;box-shadow:var(--shadow-1)}
+.roomBtn.active{background:var(--primary-bg);box-shadow:var(--shadow-card);color:var(--on-primary)}
+.chatList{background:var(--surface-2);border:1px solid var(--line)}
+.chatMsg{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-card)}
+.chatMsg.mine{background:var(--surface-2);border-color:var(--line);box-shadow:var(--shadow-card)}
+.chatMeta{font-size:12px;color:var(--muted)}
+.chatAvatar{border:2px solid var(--line);box-shadow:var(--shadow-1)}
+.chatName{font-size:12px;font-weight:700;color:var(--ink)}
+.chatBadge{font-size:12px;background:var(--surface-2);color:var(--accent-text)}
+.chatBadge.admin{background:var(--surface-2);color:var(--danger-text)}
+.chatText{font-size:14px;color:var(--ink)}
+.moderateBtn{background:var(--surface-2);color:var(--danger-text);font-size:12px;font-weight:700}
+.communityComposer{border-top:1px solid var(--line)}
+.quickChatChip{border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:12px;font-weight:700;box-shadow:var(--shadow-1)}
+.quickChatChip:active{background:var(--surface-2)}
+.composerShell{border:1px solid var(--line);border-radius:22px;background:var(--surface-2);box-shadow:var(--shadow-card)}
+.composerShell:focus-within{border-color:var(--accent)}
+.communityComposer textarea{color:var(--ink)}
+.communityComposer textarea::placeholder{color:var(--muted)}
+.communitySendBtn{background:var(--primary-bg);box-shadow:var(--shadow-card);font-weight:700;color:var(--on-primary)}
+.communityHint{font-size:12px;color:var(--muted)}
+#community .chatMsg,
+#community .chatMsg.mine{background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow-card)}
+#community .chatMsg{border-left:3px solid var(--danger)}
+#community .chatMsg.mine{border-left:1px solid var(--line);border-right:3px solid var(--accent)}
+#community .chatText{color:var(--ink);font-weight:600}
+#community .chatMeta{color:var(--muted)}
+#community .chatName{color:var(--ink)}
+#community .chatMsg,
+#community .chatMsg.mine{border-radius:16px}
+#community .chatMeta{font-size:12px}
+#community .chatName{font-size:12px}
+#community .chatBadge{font-size:12px}
+#community .chatText{font-size:12px;font-weight:600}
+#community .moderateBtn{font-size:12px}
+.aiMeta{font-size:12px;color:var(--muted)}
+.aiMiniBtn{background:var(--surface-2);color:var(--accent-text);font-size:12px;font-weight:700}
+.aiCard{background:var(--surface-2);border:1px solid var(--line)}
+.aiAskShell{border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow-card)}
+.aiAskShell:focus-within{border-color:var(--accent)}
+.aiAskInput{color:var(--ink)}
+.aiAskBtn{font-weight:700;background:var(--primary-bg);box-shadow:var(--shadow-card);color:var(--on-primary)}
+.aiAnswer{border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.aiAnswerMain{font-size:14px;font-weight:700;color:var(--ink)}
+.aiAnswerReason{color:var(--muted)}
+.aiSource{font-size:12px;font-weight:700;background:var(--surface-2);color:var(--accent-text)}
+.journeyChoice{border:1px solid var(--line);background:var(--surface);color:var(--muted);font-weight:600}
+.journeyChoice.active{background:var(--primary-bg);color:var(--on-primary)}
+.journeyCustom{border:1px solid var(--line);background:var(--surface);border-radius:12px;color:var(--ink)}
+.transitPanel{border-radius:16px;background:var(--surface-2)}
+.transitState{font-size:12px;font-weight:700;color:var(--muted)}
+.transitStop{border-top:1px solid var(--line)}
+.busNo{background:var(--surface);border:1px solid var(--line);border-radius:12px;font-weight:700}
+.busTimes{font-weight:600;font-size:12px;color:var(--ink)}
+.busMeta{font-size:12px;color:var(--muted)}
+.journeySelectLabel{font-size:12px;font-weight:700;color:var(--muted)}
+.journeySelect{border:1px solid var(--line);background:var(--surface);border-radius:12px;color:var(--ink);font-weight:600}
+.journeyCheckHint{color:var(--muted);font-size:12px}
+.aiOnlineRow{color:var(--ink);font-weight:700}
+.aiOnlineDot{background:var(--success);color:var(--on-primary)}
+.routeOrigin{border-radius:12px;background:var(--surface-2);color:var(--muted);font-weight:600}
+.routeRegionBtn{border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:12px;font-weight:700}
+.routeRegionBtn.active{background:var(--surface-2);border-color:var(--line);color:var(--accent-text)}
+.routeRegionBtn.jb.active{background:var(--surface-2);border-color:var(--success);color:var(--success-text)}
+.routeModeBtn{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:12px;font-size:12px;font-weight:700}
+.routeModeBtn.active{background:var(--primary-bg);color:var(--on-primary)}
+.routeModeBtn.car.active{background:var(--accent-soft)}
+.routeModeBtn.bike.active{background:var(--success-soft)}
+.routeModeWarning{font-size:12px;color:var(--muted)}
+.routeModeWarning.warn{color:var(--warn-text);background:var(--surface-2);border:1px solid var(--line)}
+.routeBorderMeta{font-size:12px;color:var(--success-text);font-weight:700}
+.routeSuggestions{border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow-card)}
+.routeSuggestion{background:var(--surface);color:var(--ink)}
+.routeSuggestion+.routeSuggestion{border-top:1px solid var(--line)}
+.routeSuggestion b{font-size:12px}
+.routeSuggestion span{font-size:12px;color:var(--muted)}
+.routeOption{border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.routeOption.selected{border-color:var(--accent)}
+.routeDuration{font-size:24px;font-weight:700}
+.routeSummary{font-weight:600;color:var(--muted)}
+.routeStats{font-size:12px;color:var(--muted)}
+.routeLegs{border-top:1px solid var(--line)}
+.routeLegIcon{border-radius:12px;background:var(--surface-2)}
+.routeLegTitle{font-weight:700}
+.routeLegMeta{font-size:12px;color:var(--muted)}
+.routeSelectedNote{border-radius:12px;background:var(--surface-2);color:var(--ink)}
+.journeyLiveCard{border:1px solid var(--line);background:var(--success-soft);box-shadow:var(--shadow-card);color:var(--success-text)}
+.journeyLiveCard:before{background:var(--surface-2)}
+.journeyLiveBack{color:var(--success-text);font-size:12px;font-weight:700}
+.journeyLivePill{background:var(--success-soft);color:var(--success-text);font-size:12px;font-weight:700}
+.journeyLivePill:before{background:var(--success);color:var(--on-primary)}
+.journeyDest{font-weight:700}
+.journeyMeta{font-size:12px;color:var(--muted);font-weight:600}
+.journeyNow{border-radius:16px;border:1px solid var(--line)}
+.journeyNowLabel{font-size:12px;font-weight:700;color:var(--success-text)}
+.journeyAction{font-size:18px;font-weight:700;color:var(--success-text)}
+.journeyDistance{color:var(--muted);font-weight:600}
+.journeyGpsChip{background:var(--surface-2);color:var(--muted);font-size:12px;font-weight:700}
+.journeyGpsChip.good{background:var(--success-soft);color:var(--success-text)}
+.journeyGpsChip.fair{background:var(--warn-soft);color:var(--warn-text)}
+.journeyGpsChip.weak,.journeyGpsChip.stale{background:var(--surface-2);color:var(--danger-text)}
+.journeyGpsChip.turn{background:var(--surface-2);color:var(--accent-text)}
+.journeyGpsChip.confirm{background:var(--surface-2);color:var(--accent-text)}
+.journeyDriveFocus{border-radius:16px;background:var(--success);box-shadow:var(--shadow-card);color:var(--on-primary)}
+.journeyDriveCommand{font-weight:700;color:var(--success-text)}
+.journeyDriveDistance{font-weight:700}
+.journeyDriveUntil{color:var(--success-text);font-weight:700}
+.journeyDriveRoad{font-size:12px;color:var(--success-text)}
+.journeyStepHero{border-top:1px solid var(--line)}
+.journeyStepPercent{font-weight:700;color:var(--success-text)}
+.journeyStepRemaining{font-size:12px;color:var(--success-text);font-weight:600}
+.journeyProgress{background:var(--success-soft)}
+.journeyProgressBar{background:var(--success-soft)}
+.journeyBeacon{border-radius:16px;background:var(--surface-2);border:1px solid var(--line)}
+.journeyBeaconDial{background:var(--surface);border:1px solid var(--line)}
+.journeyBeaconDial:before{font-size:12px;font-weight:700;color:var(--muted)}
+.journeyBeaconArrow{color:var(--success-text)}
+.journeyBeaconTitle{font-size:12px;font-weight:700;color:var(--success-text)}
+.journeyBeaconTarget{font-size:14px;font-weight:700;color:var(--success-text)}
+.journeyBeaconGuide{font-weight:600;color:var(--muted)}
+.journeyBeaconAddress{font-size:12px;color:var(--muted)}
+.journeyCompassBtn{border-radius:12px;background:var(--success-soft);color:var(--success-text);font-size:12px;font-weight:700}
+.journeyAi{background:var(--surface);border:1px solid var(--line)}
+.journeyAiIcon{border-radius:12px;background:var(--success-soft)}
+.journeyAiTitle{font-size:12px;font-weight:700;color:var(--success-text)}
+.journeyAiText{font-size:12px;font-weight:600;color:var(--success-text)}
+.journeyNext{border-radius:12px;background:var(--success-soft);color:var(--success-text);font-size:12px}
+.journeyBtn{background:var(--surface);color:var(--success-text);font-weight:700;font-size:12px;box-shadow:var(--shadow-1)}
+.journeyBtn.reroute{background:var(--warn-soft);color:var(--warn-text);border:1px solid var(--warn)}
+.journeyBtn.reroute.offroute{background:var(--warn-soft);color:var(--warn-text)}
+.journeyBtn.danger{background:var(--surface);color:var(--danger-text)}
+.journeyAllHops{border-top:1px solid var(--line)}
+.journeyAllHops .routeLeg.journeyCurrent{background:var(--surface)}
+.journeyArrival{background:var(--surface-2);border-color:var(--success)}
+.journeyArrival .journeyLivePill{background:var(--success-soft)}
+.journeyNow.walkFocus .journeyAction{font-size:20px}
+.journeyDriveIcon{border-radius:16px;font-weight:700;color:var(--on-primary)}
+.journeyDriveUntil{font-size:12px}
+.journeyDriveRoad{font-size:12px;color:var(--success-text)}
+.journeyStepPercent{font-size:12px;color:var(--success-text)}
+.journeyNext{border-radius:12px;background:var(--success-soft);color:var(--success-text);font-size:12px}
+.journeyLiveTop .journeyDest{font-weight:700}
+.journeyLiveTop .journeyMeta{font-size:12px}
+#sgJourneyEta{font-weight:700}
+.journeyNow.roadFocus .journeyDriveUntil{font-weight:700;color:var(--on-primary)}
+.journeyNow.roadFocus .journeyDriveRoad{font-size:12px}
+.journeyLiveCard .journeyNext.show{font-weight:600;color:var(--success-text)}
+.journeyLiveCard .journeyNext b{font-weight:700;color:var(--success-text)}
+.journeyProdMapWrap{background:var(--success-soft);border:1px solid var(--line)}
+.journeyProdMapFade{background:var(--surface-2)}
+.journeyProdMapBadge{background:var(--surface);color:var(--muted);font-size:12px;font-weight:700;box-shadow:var(--shadow-1)}
+.journeyProdMapRecenter{border:1px solid var(--line);background:var(--surface);color:var(--success-text);font-size:12px;font-weight:700;box-shadow:var(--shadow-card)}
+.journeyLiveBack{font-size:12px}
+.journeyLivePill{font-size:12px}
+.journeyLiveTop .journeyDest{font-size:12px}
+.journeyLiveTop .journeyMeta{font-size:12px}
+#sgJourneyEta{font-size:14px}
+.journeyNow.roadFocus .journeyProgress{background:var(--success);color:var(--on-primary)}
+.journeyNow.roadFocus .journeyProgressBar{background:var(--success-soft);box-shadow:var(--shadow-1)}
+.routePlannerStep{font-size:12px;font-weight:700;color:var(--muted)}
+.routeRegionRow.v23 .routeRegionBtn{border-radius:12px}
+.routeRegionRow.v23 .routeRegionBtn.active{background:var(--primary-bg);box-shadow:var(--shadow-card);color:var(--on-primary)}
+.routeRegionRow.v23 .routeRegionBtn.jb.active{background:var(--success-soft)}
+.routeSearchShell:before{color:var(--muted);font-size:18px}
+.routeSearchShell .toolInput:disabled{background:var(--surface-2);color:var(--muted)}
+.routeSearchShell .routeSearchGo{border-radius:12px}
+.routeDestinationChosen{border-radius:12px;background:var(--surface-2);color:var(--ink);font-size:12px;font-weight:600}
+.routeAiShell{border:1px solid var(--line);background:var(--surface-2);border-radius:16px;box-shadow:var(--shadow-card)}
+.routeAiShell:focus-within{border-color:var(--accent)}
+.routeAiShell textarea{color:var(--ink)}
+.routeAiShell textarea::placeholder{color:var(--muted)}
+.routeAiExamples{border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+.routeAiExamples b{color:var(--muted)}
+.routeAiSend{background:var(--primary-bg);font-weight:700;box-shadow:var(--shadow-card);color:var(--on-primary)}
+.routeAiUnderstood{border-radius:12px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink);font-size:12px}
+.routeAiUnderstood strong{color:var(--ink)}
+.routeOption.bestMatch{border-color:var(--accent)}
+.routeOptionLabel{background:var(--warn-soft);color:var(--warn-text);font-size:12px;font-weight:700}
+.routeOptionExplain{font-size:12px;color:var(--muted)}
+.journeyGateIcon{border-radius:16px;background:var(--surface-2);color:var(--accent-text);font-size:24px;font-weight:700}
+.journeyStage{border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:12px;font-weight:700}
+.journeyStage span{background:var(--surface)}
+.journeyStage.active{background:var(--surface-2);color:var(--accent-text);box-shadow:var(--shadow-card)}
+.journeyStage.active span{background:var(--primary-bg);color:var(--on-primary)}
+.journeyRecentItem{border:1px solid var(--line);background:var(--surface);border-radius:12px;color:var(--ink)}
+.journeyRecentItem b{font-size:12px}
+.journeyRecentMeta{font-size:12px;color:var(--muted)}
+.journeyRecentTags{font-size:12px;color:var(--accent-text)}
+.journeyCompareSummary{border-radius:12px;background:var(--surface-2)}
+.journeyCompareRoute{font-size:12px;font-weight:700;color:var(--ink)}
+.journeyCompareIntent{font-size:12px;color:var(--muted)}
+.moreSectionTitle{font-weight:700;color:var(--muted)}
+.journeyNavBtn .journeyNavDot{background:var(--success);color:var(--on-primary)}
+.journeyNavBtn.active{font-weight:700}
+.signinBack{color:var(--accent-text);font-weight:700}
+.signinLogo{font-weight:700;background:var(--accent-soft)}
+.signinCard h2{font-size:28px}
+.signinClientBadge{background:var(--surface-2);color:var(--accent-text);font-size:12px;font-weight:700}
+.signinDivider{color:var(--muted);font-size:12px;font-weight:600}
+.signinDivider:before,.signinDivider:after{background:var(--accent-soft)}
+.signinFields input{border:1px solid var(--line);background:var(--surface);border-radius:12px;color:var(--ink)}
+media (max-width:600px){.signinCard h2{font-size:24px}}
+.communitySignInStrip .sub{font-size:12px;color:var(--muted)}
+.communitySignInStrip .miniBtn{color:var(--on-primary)}
+.threadComposerLauncher{color:var(--on-primary)}
+.threadAvatarPlaceholder{color:var(--muted)}
+.threadComposerText{color:var(--muted)}
+.threadPostMini{font-size:12px;font-weight:700}
+.composerCloseBtn{color:var(--on-primary);font-size:28px}
+.communityComposerTitle{font-size:16px;font-weight:700}
+.composerChevron{color:var(--muted)}
+.composerTopicInput{color:var(--muted) !important}
+.composerTopicInput::placeholder{color:var(--muted)}
+.communityComposerIdentityMain textarea::placeholder{color:var(--muted)}
+.communityTopicPick span{font-size:12px;font-weight:700}
+.communityTopicPick small{font-size:12px;color:var(--muted)}
+.communityCreateFromPostBtn{color:var(--accent-text);font-weight:700}
+.communityTopicCreator input,.communityTopicCreator textarea{color:var(--on-primary)}
+.communityTopicCreator input::placeholder,.communityTopicCreator textarea::placeholder{color:var(--muted)}
+.communityComposerActions .status{color:var(--muted)}
+.threadTextBtn{color:var(--accent-text);font-size:12px;font-weight:700}
+.threadPrimaryBtn{background:var(--surface);color:var(--ink);font-size:12px;font-weight:700}
+.threadPost.hasFeedReply:before{border-radius:8px}
+.threadName{font-weight:700}
+.threadBadge{font-size:12px;font-weight:700;color:var(--accent-text)}
+.threadBadge.admin{background:var(--danger);color:var(--on-primary)}
+.threadContext{font-size:12px;color:var(--muted)}
+.threadTopicLink{color:var(--accent-text);font-weight:700}
+.threadMore{color:var(--muted)}
+.threadPostMenu{border-radius:12px;box-shadow:var(--shadow-card)}
+.threadPostMenu button{border-radius:12px;font-weight:600}
+.threadPostMenu button.danger{color:var(--danger-text)}
+.threadAction{font-weight:600}
+.threadAction.loved{color:var(--danger-text)}
+.threadActionIcon{font-size:18px}
+.threadFeedReplyTop b{font-size:12px}
+.threadFeedReplyAuthor>span{font-size:12px;color:var(--muted)}
+.threadFeedReplyText{font-size:12px}
+.threadEmpty{color:var(--muted);font-size:12px}
+.communityFeedScope{color:var(--muted);font-weight:700}
+.communityFeedScope button{color:var(--accent-text);font-weight:700}
+.threadRepliesTitle{font-weight:700;color:var(--muted)}
+.threadReplyName{font-weight:700}
+.threadReplyMeta{font-size:12px;color:var(--muted)}
+.threadReplyText{font-size:12px}
+.communityReplyComposer textarea{border:1px solid var(--line);border-radius:16px;color:var(--on-primary);font-size:14px}
+.communityReplyComposer textarea::placeholder{color:var(--muted)}
+.journeyNow.walkFocus .journeyProdMapWrap{border-radius:16px}
+.journeyNow.walkFocus .journeyBeacon{background:var(--surface-2)}
+.landmarkWallet{font-size:12px;font-weight:600}
+.landmarkLegend{font-size:12px}
+.landmarkTile{border-radius:16px;background:var(--surface-2)}
+.landmarkTile.collected{border-color:var(--warn)}
+.landmarkIconWrap{border-radius:12px;background:var(--surface-2)}
+.landmarkName{font-size:12px;font-weight:700}
+.landmarkMeta{font-size:12px}
+.landmarkReward{font-size:12px;font-weight:600}
+.landmarkCollectBtn{border-radius:12px;font-size:12px;font-weight:600}
+.landmarkCollectedSeal{background:var(--warn);font-size:12px;font-weight:700;color:var(--on-primary)}
+.title .ico,.transitHead .ico,.moreSectionTitle .ico{color:var(--accent-text)}
+/* Components (after generated overrides so these win) */
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{background:var(--bg);color:var(--ink)}
+h1,h2,h3,.pageTitle,.title,.journeyGateTitle{text-wrap:balance}
+p,.sub,.status,.aiAccessText{text-wrap:pretty}
+.card{background:var(--surface);border:0;box-shadow:var(--shadow-card)}
+.nav{background:var(--nav-bg);border-top:1px solid var(--line)}
+.nav button{color:var(--muted);font-size:12px}
+.nav button.active{color:var(--accent-text);background:var(--nav-active)}
+.nav button.active .navIcon{filter:none}
+.version,.tag{border:0;background:var(--surface-2);color:var(--muted)}
+input,select,textarea{color:var(--ink)}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.75}
+.title .ico,.transitHead .ico,.moreSectionTitle .ico{color:var(--accent-text)}
+
+/* Steady digits for anything that ticks or updates */
+.big,.temp,#rate,#sgClock,#jbClock,#timerDisplay,#stopwatchDisplay,.busTimes,.routeOptionTime,.journeyDriveDistance,#sgJourneyDistance,#sgJourneyEta,.distance{font-variant-numeric:tabular-nums}
+
+/* Press feedback */
+:is(.btn,.refresh,.miniBtn,.loc,.chip,.journeyBtn,.aiAskBtn,.routeAiSend):not(:disabled):active{transform:scale(.96)}
+:is(.btn,.refresh,.miniBtn,.loc,.chip,.journeyBtn){transition:transform .15s ease-out,background-color .15s ease-out}
+
+/* Overlays created from script keep working in dark mode */
+#runsgdUpdateGate{background:var(--bg)!important;color:var(--ink)!important}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+.aiAccessPill{background:var(--accent-soft);color:var(--accent-text)}
+select,input,textarea,.toolInput{font-weight:500}
+.card .tag,.card .version{border:0}
+@media (prefers-color-scheme:dark){.brand{background:linear-gradient(90deg,#7fb2ff,#5b8cff,#9b7bff,#f08bb7);-webkit-background-clip:text;background-clip:text;color:transparent}}
+@media (prefers-color-scheme:dark){.wiseReferral{background:#13261b;border-color:#1f3a28}.wiseReferralBrand{color:#9fe870}.wiseReferralText{color:var(--ink)}.wiseReferralDisclosure{color:var(--muted)}}
+.wiseReferralText,.wiseReferralDisclosure,.wiseReferralBrand,.wiseReferralCta{font-size:12px}.wiseReferralBrand,.wiseReferralCta{font-weight:700}
+
+</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-badge-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77a4 4 0 0 1 6.74 0a4 4 0 0 1 4.78 4.78a4 4 0 0 1 0 6.74a4 4 0 0 1-4.77 4.78a4 4 0 0 1-6.75 0a4 4 0 0 1-4.78-4.77a4 4 0 0 1 0-6.76"/><path d="m16 9l-5.5 5.5L8 12"/></g></symbol><symbol id="i-banknote" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></g></symbol><symbol id="i-book-open" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v16m8.001-2A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2a5 5 0 0 1 4-2z"/></symbol><symbol id="i-book-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 13a3 3 0 1 0-6 0"/><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><circle cx="12" cy="8" r="2"/></g></symbol><symbol id="i-bot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2m16 0h2m-7-1v2m-6-2v2"/></g></symbol><symbol id="i-building-bridge" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 5v14M18 5v14M2 15h20M3 8a7.5 7.5 0 0 0 3-2a6.5 6.5 0 0 0 12 0a7.5 7.5 0 0 0 3 2m-9 2v5"/></symbol><symbol id="i-building-mosque" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h7v-2a2 2 0 1 1 4 0v2h7M4 21V11m16 10V11M4 16h3v-3h10v3h3m-3-3a5 5 0 0 0-10 0m14-2.5c0-.329-.077-.653-.224-.947L20 8l-.776 1.553A2.1 2.1 0 0 0 19 10.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5m-16 0c0-.329-.077-.653-.224-.947L4 8l-.776 1.553A2.1 2.1 0 0 0 3 10.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5M12 2a2 2 0 1 0 2 2m-2 2v2"/></symbol><symbol id="i-bus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 6v6m7-6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2s-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></g></symbol><symbol id="i-bus-front" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4 6L2 7m8-1h4m8 1l-2-1"/><rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16M8 15h.01M16 15h.01M6 19v2m12 0v-2"/></g></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 2v3m8-3v3"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/></g></symbol><symbol id="i-car" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></g></symbol><symbol id="i-cctv" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.75 12h3.632a1 1 0 0 1 .894 1.447l-2.034 4.069a1 1 0 0 1-1.708.134l-2.124-2.97m1.696-5.627a1 1 0 0 1 .447 1.341l-3.106 6.211a1 1 0 0 1-1.342.447L3.61 12.3a2.92 2.92 0 0 1-1.3-3.91L3.69 5.6a2.92 2.92 0 0 1 3.92-1.3zM2 19h3.76a2 2 0 0 0 1.8-1.1L9 15m-7 6v-4m5-8h.01"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></g></symbol><symbol id="i-cloud-sun" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v2m-7.07.93l1.41 1.41M20 12h2m-2.93-7.07l-1.41 1.41m-1.713 6.31a4 4 0 0 0-5.925-4.128M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6"/></symbol><symbol id="i-door-open" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 21H2m8-18H7a2 2 0 0 0-2 2v16m9-9h.01"/><path d="M19 21V5a2 2 0 0 0-1.675-1.974l-6.163-1.013A1 1 0 0 0 10 3v18a1 1 0 0 0 1.124.992zm3 0h-3"/></g></symbol><symbol id="i-flask-conical" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2M6.453 15h11.094M8.5 2h7"/></symbol><symbol id="i-footprints" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0m16 4v-2.38c0-2.12 1.03-3.12 1-5.62c-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0m-4-3h4M4 13h4"/></symbol><symbol id="i-history" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9a9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5m4-1v5l4 2"/></g></symbol><symbol id="i-key-round" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></g></symbol><symbol id="i-landmark" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 18v-7m1.119-8.795a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949zM14 18v-7m4 7v-7M3 22h18M6 18v-7"/></symbol><symbol id="i-locate-fixed" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2 12h3m14 0h3M12 2v3m0 14v3"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></g></symbol><symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></g></symbol><symbol id="i-map" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0zm.894.211v15M9 3.236v15"/></symbol><symbol id="i-map-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></g></symbol><symbol id="i-message-circle-question" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092a10 10 0 1 0-4.777-4.719"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3m.08 4h.01"/></g></symbol><symbol id="i-motorbike" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2 16a3 3 0 1 0 6 0a3 3 0 1 0-6 0m14 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-8.5-2h5l4-4H6m1.5 4l4-4"/><path d="M13 6h2l1.5 3l2 4"/></g></symbol><symbol id="i-navigation" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 11l19-9l-9 19l-2-8z"/></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9a9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5m5 4a9 9 0 0 1-9 9a9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></g></symbol><symbol id="i-route" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></g></symbol><symbol id="i-send-horizontal" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904zM6 12h16"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></g></symbol><symbol id="i-shopping-bag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 10a4 4 0 0 1-8 0M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></g></symbol><symbol id="i-signpost" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13v8m0-18v3m-9.646 4.354a1.207 1.207 0 0 1 0-1.708l2.06-2.06A2 2 0 0 1 5.828 6h12.344a2 2 0 0 1 1.414.586l2.06 2.06a1.207 1.207 0 0 1 0 1.708l-2.06 2.06a2 2 0 0 1-1.414.586H5.828a2 2 0 0 1-1.414-.586z"/></symbol><symbol id="i-sliders-horizontal" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 5H3m9 14H3M14 3v4m2 10v4m5-9h-9m9 7h-5m5-14h-7m-6 5v4m0-2H3"/></symbol><symbol id="i-smartphone" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></g></symbol><symbol id="i-square-parking" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></g></symbol><symbol id="i-stopwatch" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13a7 7 0 1 0 14 0a7 7 0 0 0-14 0m9.5-2.5L12 13m5-5l1-1m-4-4h-4"/></symbol><symbol id="i-timer" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 2h4m-2 12l3-3"/><circle cx="12" cy="14" r="8"/></g></symbol><symbol id="i-traffic-cone" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16.05 10.966a5 2.5 0 0 1-8.1 0m8.973 3.083l4.48 2.04a1 1 0 0 1 .001 1.831l-8.574 3.9a2 2 0 0 1-1.66 0l-8.574-3.91a1 1 0 0 1 0-1.83l4.484-2.04"/><path d="M16.949 14.14a5 2.5 0 1 1-9.9 0L10.063 3.5a2 2 0 0 1 3.874 0z"/><path d="M9.194 6.57a5 2.5 0 0 0 5.61 0"/></g></symbol><symbol id="i-train-front" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 3.1V7a4 4 0 0 0 8 0V3.1M9 15l-1-1m7 1l1-1"/><path d="M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Zm-1 0l-2 3m10-3l2 3"/></g></symbol><symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g></symbol><symbol id="i-user-cog" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 15H6a4 4 0 0 0-4 4v2m12.305-4.47l.923-.382m0-2.296l-.923-.383m2.547-1.241l-.383-.923m.383 6.467l-.383.924m2.679-6.468l.383-.923m-.001 7.391l-.382-.924m1.624-3.92l.924-.383m-.924 2.679l.924.383"/><circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/></g></symbol><symbol id="i-wind" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.8 19.6A2 2 0 1 0 14 16H2m15.5-8a2.5 2.5 0 1 1 2 4H2m7.8-7.6A2 2 0 1 1 11 8H2"/></symbol><symbol id="i-wrench" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></symbol></svg>
@@ -797,9 +1220,9 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
   <button class="btn refresh" onclick="submitBetaFeedback(this)">Send feedback</button>
   <div id="betaFeedbackStatus" class="status">Sign in to submit feedback.</div>
 </article>
-<article class="card toolbox"><div class="title"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg>Privacy & beta notice</div><p class="sub">See what RunSGD stores, how location and AI are used, and beta limitations.</p><a class="feedcard" style="margin-top:12px;text-align:center;font-weight:800;color:#4965c7" href="./privacy.html">Read notice →</a></article>
+<article class="card toolbox"><div class="title"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg>Privacy & beta notice</div><p class="sub">See what RunSGD stores, how location and AI are used, and beta limitations.</p><a class="feedcard" style="margin-top:12px;text-align:center;font-weight:600;color:var(--accent-text)" href="./privacy.html">Read notice →</a></article>
 
-<article id="adminSettingsCard" class="card toolbox" style="display:none"><div class="title"><svg class="ico" aria-hidden="true"><use href="#i-settings"/></svg>Admin settings</div><p class="sub">Admin-only settings and integrations.</p><a class="feedcard" style="margin-top:12px;text-align:center;font-weight:800;color:#4965c7" href="/admin/" target="_self">Open Admin →</a></article>
+<article id="adminSettingsCard" class="card toolbox" style="display:none"><div class="title"><svg class="ico" aria-hidden="true"><use href="#i-settings"/></svg>Admin settings</div><p class="sub">Admin-only settings and integrations.</p><a class="feedcard" style="margin-top:12px;text-align:center;font-weight:600;color:var(--accent-text)" href="/admin/" target="_self">Open Admin →</a></article>
 </section>
 </main>
 
@@ -873,7 +1296,7 @@ function runsgdMarkUpdateReady(version){
 }
 function runsgdShowUpdating(version){
  let el=document.getElementById('runsgdUpdateGate');
- if(!el){el=document.createElement('div');el.id='runsgdUpdateGate';el.style.cssText='position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:28px;background:rgba(248,251,255,.97);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17213b;text-align:center';el.innerHTML='<div style="max-width:330px"><div style="font-size:30px;font-weight:900;letter-spacing:-1px">Updating RunSGD…</div><div id="runsgdUpdateGateText" style="margin-top:9px;color:#748097;font-size:14px;line-height:1.5"></div></div>';document.body.appendChild(el)}
+ if(!el){el=document.createElement('div');el.id='runsgdUpdateGate';el.style.cssText='position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:28px;background:rgba(248,251,255,.97);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17213b;text-align:center';el.innerHTML='<div style="max-width:330px"><div style="font-size:30px;font-weight:900;letter-spacing:-1px">Updating RunSGD…</div><div id="runsgdUpdateGateText" style="margin-top:9px;color:var(--muted);font-size:14px;line-height:1.5"></div></div>';document.body.appendChild(el)}
  const t=document.getElementById('runsgdUpdateGateText');if(t)t.innerHTML='Loading '+runsgdVersionLabel(version)+' so you do not use an outdated screen.<br><span style="font-size:12px">If this screen stays here, open <b>runsgd.site/update/?auth=rescue</b> once.</span>';
 }
 async function runsgdPurgeOldShellCaches(){
@@ -1050,12 +1473,12 @@ function runsgdShowUpdatePrompt(version){
  const card=document.createElement('div');card.setAttribute('role','dialog');card.setAttribute('aria-modal','true');
  card.style.cssText='width:min(92vw,390px);border-radius:26px;background:#fff;padding:22px;box-shadow:0 24px 70px rgba(20,29,48,.24);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17213b';
  const safe=String(version||'').replace(/[^0-9A-Za-z._-]/g,'');
- card.innerHTML='<div style="font-size:11px;font-weight:950;color:#5571df;text-transform:uppercase;letter-spacing:.6px">RunSGD update</div>'+
+ card.innerHTML='<div style="font-size:12px;font-weight:700;color:var(--accent-text);text-transform:uppercase;letter-spacing:.6px">RunSGD update</div>'+
   '<div style="font-size:24px;font-weight:950;letter-spacing:-.6px;margin-top:5px">New version available</div>'+
-  '<div style="margin-top:9px;font-size:14px;line-height:1.5;color:#66738d">'+runsgdVersionLabel(RUNSGD_VERSION)+' → <b>'+runsgdVersionLabel(safe)+'</b><br>Pull-to-refresh found a newer published app shell.</div>'+
-  (activeJourney?'<div style="margin-top:11px;padding:10px 12px;border-radius:14px;background:#fff5df;color:#815315;font-size:12px;font-weight:800">Your live journey is active. The update will be kept ready until you leave the Journey screen.</div>':'')+
-  '<div style="display:flex;gap:9px;margin-top:18px"><button id="runsgdUpdateLater" style="flex:1;border:1px solid #e4e8f2;background:#fff;border-radius:14px;padding:12px;font-weight:900;color:#52617b">Later</button>'+
-  '<button id="runsgdUpdateNow" style="flex:1;border:0;background:linear-gradient(110deg,#4f82ef,#8958e9);color:#fff;border-radius:14px;padding:12px;font-weight:950">'+(activeJourney?'Save for later':'Update now')+'</button></div>';
+  '<div style="margin-top:9px;font-size:14px;line-height:1.5;color:var(--muted)">'+runsgdVersionLabel(RUNSGD_VERSION)+' → <b>'+runsgdVersionLabel(safe)+'</b><br>Pull-to-refresh found a newer published app shell.</div>'+
+  (activeJourney?'<div style="margin-top:11px;padding:10px 12px;border-radius:14px;background:var(--warn-soft);color:var(--warn-text);font-size:12px;font-weight:600">Your live journey is active. The update will be kept ready until you leave the Journey screen.</div>':'')+
+  '<div style="display:flex;gap:9px;margin-top:18px"><button id="runsgdUpdateLater" style="flex:1;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px;font-weight:600;color:var(--muted)">Later</button>'+
+  '<button id="runsgdUpdateNow" style="flex:1;border:0;background:var(--primary-bg);color:var(--on-primary);border-radius:12px;padding:12px;font-weight:700">'+(activeJourney?'Save for later':'Update now')+'</button></div>';
  wrap.appendChild(card);document.body.appendChild(wrap);
  card.querySelector('#runsgdUpdateLater').onclick=runsgdCloseUpdatePrompt;
  card.querySelector('#runsgdUpdateNow').onclick=async()=>{
