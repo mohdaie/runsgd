@@ -175,7 +175,8 @@ Deno.serve(async (req: Request) => {
       const liveV=liveVersion.text.trim(),repoV=repoVersion.text.trim();
       const htmlMatch=liveHtml.text.match(/const RUNSGD_VERSION=['\"]([^'\"]+)['\"]/);
       const htmlV=htmlMatch?.[1]||"";
-      const compact=repoV.replace(/[^0-9]/g,"");
+      const versionParts=repoV.split('.');
+      const compact=versionParts.length===3?versionParts[0]+versionParts[1].padStart(2,'0')+versionParts[2].padStart(2,'0'):'';
       const swMatch=liveSw.text.match(/runsgd-shell-v(\d+)/);
       const swCompact=swMatch?.[1]||"";
       const aligned=!!repoV&&liveV===repoV&&htmlV===repoV&&swCompact===compact;

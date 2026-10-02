@@ -80,3 +80,9 @@ for(const failedId of ['places','drive']){
  assert.ok(results.every(x=>x.latency_ms===125),'provider timing is preserved');
 }
 console.log('Cached GPS classification preserves age; monitoring records only the failed dependency.');
+const versionLogic=readFileSync(new URL('../supabase/functions/extensive-health/index.ts',import.meta.url),'utf8').match(/const versionParts=repoV\.split\('\.'\);[\s\S]*?const swMatch=/)[0].replace('const swMatch=','');
+for(const [repoV,expected] of [['2.16.9','21609'],['2.16.10','21610']]){
+ const c={repoV};runInNewContext(versionLogic+';globalThis.cacheVersion=compact;',c);
+ assert.equal(c.cacheVersion,expected,'health check agrees with padded cache version');
+}
+console.log('Deployment health cache-version comparison passed.');
