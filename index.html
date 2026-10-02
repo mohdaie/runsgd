@@ -364,7 +364,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.9</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.10</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -735,7 +735,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.9</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.10</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -788,7 +788,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.9</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.10</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -820,7 +820,8 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div></nav>
 
 <script src="/assets/regions.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/vendor/supabase-js-2.117.2.js"></script>
+<script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"><\/script>')</script>
 <script>
 
 const SUPABASE_URL='https://gdycbluljgfezhgslppe.supabase.co';
@@ -831,7 +832,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.16.9';
+const RUNSGD_VERSION='2.16.10';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -1100,7 +1101,58 @@ const isGoogleAuthReturn=runsgdAuthParams.get('auth')==='google';
 const isGooglePopupReturn=isGoogleAuthReturn&&runsgdAuthParams.get('popup')==='1';
 const googleReturnTarget=runsgdAuthParams.get('return')||'community';
 const googleReturnAttempt=runsgdAuthParams.get('attempt')||sessionStorage.getItem('runsgdGooglePopup')||'';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+// If supabase-js failed to load (vendored copy and CDN fallback both blocked), keep the
+// app booting with a signed-out stub whose calls resolve to {data:null,error}.
+function runsgdOfflineSupabase(){
+ const error={message:"Can't reach RunSGD services. Check your connection and try again.",code:'RUNSGD_SERVICES_UNREACHABLE'};
+ const result=()=>Promise.resolve({data:null,error});
+ const query=()=>new Proxy(function(){},{
+  get(_,k){
+   if(k==='then')return (ok,fail)=>result().then(ok,fail);
+   if(k==='catch')return fail=>result().catch(fail);
+   if(k==='finally')return done=>result().finally(done);
+   if(k==='data')return null;
+   if(k==='error')return error;
+   if(typeof k==='symbol')return undefined;
+   return query();
+  },
+  apply(){return query()}
+ });
+ const channel=()=>{const c={on:()=>c,subscribe:()=>c,unsubscribe:()=>Promise.resolve('ok'),send:()=>Promise.resolve('error')};return c};
+ const signedOut={data:{session:null,user:null},error:null};
+ return {
+  runsgdOffline:true,
+  from:query,rpc:query,schema:query,functions:{invoke:result},
+  storage:{from:()=>({upload:result,download:result,remove:result,list:result,createSignedUrl:result,getPublicUrl:()=>({data:{publicUrl:''}})})},
+  channel,removeChannel:()=>Promise.resolve('ok'),removeAllChannels:()=>Promise.resolve([]),getChannels:()=>[],
+  auth:new Proxy({
+   getSession:()=>Promise.resolve(signedOut),
+   getUser:()=>Promise.resolve({data:{user:null},error}),
+   onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}}),
+   signOut:()=>Promise.resolve({error:null})
+  },{get:(t,k)=>k in t?t[k]:(k==='then'||typeof k==='symbol'?undefined:result)})
+ };
+}
+function runsgdShowServicesNotice(){
+ const show=()=>{
+  if(document.getElementById('runsgdServicesNotice'))return;
+  const el=document.createElement('button');el.id='runsgdServicesNotice';el.type='button';
+  el.textContent="Can't reach RunSGD services, tap to retry";
+  el.style.cssText='position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);transform:translateX(-50%);z-index:99989;width:max-content;max-width:min(88vw,380px);padding:9px 14px;border:0;border-radius:999px;background:#17213bee;color:#fff;box-shadow:0 10px 32px #17213b2a;font:800 12px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;text-align:center;cursor:pointer';
+  el.onclick=()=>{el.textContent='Retrying…';location.reload()};
+  document.body.appendChild(el);
+ };
+ document.body?show():document.addEventListener('DOMContentLoaded',show,{once:true});
+}
+let sb;
+try{
+ if(!window.supabase?.createClient)throw new Error('supabase-js unavailable');
+ sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+}catch(e){
+ console.warn('RunSGD services',e);
+ sb=runsgdOfflineSupabase();
+ runsgdShowServicesNotice();
+}
 const HOME_STATUS_DEFAULT='Only what matters right now. Calm, useful and live.';
 let appContentChannel=null;
 async function loadHomeStatus(){

@@ -1,5 +1,5 @@
-const CACHE='runsgd-shell-v21609';
-const SHELL=['/','/index.html','/assets/regions.js','/manifest.webmanifest','/icon.svg','/assets/landmarks/jb/bangunan-sultan-iskandar.webp','/assets/landmarks/jb/sultan-ibrahim-stadium.webp','/assets/landmarks/jb/istana-besar-johor.webp','/assets/landmarks/jb/sultan-abu-bakar-state-mosque.webp','/assets/landmarks/jb/johor-bahru-old-chinese-temple.webp','/admin/','/admin/health/','/admin/keys/','/admin/developer/','/admin/people/','/admin/ui/','/admin/affiliate-members/','/admin/community-business/','/admin/detailed-health/'];
+const CACHE='runsgd-shell-v21610';
+const SHELL=['/','/index.html','/assets/regions.js','/assets/vendor/supabase-js-2.117.2.js','/manifest.webmanifest','/icon.svg','/assets/landmarks/jb/bangunan-sultan-iskandar.webp','/assets/landmarks/jb/sultan-ibrahim-stadium.webp','/assets/landmarks/jb/istana-besar-johor.webp','/assets/landmarks/jb/sultan-abu-bakar-state-mosque.webp','/assets/landmarks/jb/johor-bahru-old-chinese-temple.webp','/admin/','/admin/health/','/admin/keys/','/admin/developer/','/admin/people/','/admin/ui/','/admin/affiliate-members/','/admin/community-business/','/admin/detailed-health/'];
 
 async function publicShellResponse(res){
   if(!res?.ok)return res;
@@ -7,7 +7,7 @@ async function publicShellResponse(res){
   if(!type.includes('text/html'))return res;
   let html=await res.text();
   html=html.replace('<article class="card landmarkCollectionCard">','<article class="card landmarkCollectionCard" hidden>');
-  html=html.replaceAll('2.16.3','2.16.9').replaceAll('2.16.4','2.16.9').replaceAll('2.16.5','2.16.9').replaceAll('2.16.6','2.16.9').replaceAll('2.16.7','2.16.9').replaceAll('2.16.8','2.16.9');
+  html=html.replaceAll('2.16.3','2.16.10').replaceAll('2.16.4','2.16.10').replaceAll('2.16.5','2.16.10').replaceAll('2.16.6','2.16.10').replaceAll('2.16.7','2.16.10').replaceAll('2.16.8','2.16.10').replaceAll('2.16.9','2.16.10');
   const headers=new Headers(res.headers);headers.delete('content-length');
   return new Response(html,{status:res.status,statusText:res.statusText,headers});
 }
