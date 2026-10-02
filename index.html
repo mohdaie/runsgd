@@ -364,7 +364,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 <body>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.8</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.9</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)">📍 Location</button>
     <div class="headerAccountRow">
@@ -735,7 +735,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 
 <section id="more" class="page">
 <h2 class="pageTitle">More</h2>
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.8</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.9</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)">↻ Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -788,7 +788,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.8</span></div>
+  <div class="head"><div class="title">🧪 Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.9</span></div>
   <p class="sub">Found something confusing, broken or useful? Send a short note directly to RunSGD.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -819,6 +819,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </button>
 </div></nav>
 
+<script src="/assets/regions.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
@@ -830,7 +831,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.16.8';
+const RUNSGD_VERSION='2.16.9';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -1830,9 +1831,9 @@ function updateAiAccessUi(){
  if($('aiAskStatus')&&!$('aiAnswer')?.classList.contains('show'))txt('aiAskStatus',signed?'Member AI · app data only · personalised Journey Planner unlocked.':'Guest AI available · app data only · sign-in not required.')
 }
 function headerAccountAction(){if(communityUser)showPage('more');else{let active=document.querySelector('.page.active')?.id||'home';openSignIn(['home','explore','journey','community','more'].includes(active)?active:'home','header')}}
-function restoreLocation(){try{let p=JSON.parse(localStorage.getItem('runsgdLocation')||'null');if(p?.lat){live.location=p;txt('locBtn','📍 '+p.name);txt('prayerLoc',p.name);updateSgRouteOrigin()}}catch{}}
+function restoreLocation(){try{let p=JSON.parse(localStorage.getItem('runsgdLocation')||'null');if(Number.isFinite(p?.lat)&&Number.isFinite(p?.lon)){live.location={...p,...classify(p.lat,p.lon)};localStorage.setItem('runsgdLocation',JSON.stringify(live.location));txt('locBtn','📍 '+live.location.name);txt('prayerLoc',live.location.name);updateSgRouteOrigin()}}catch{}}
 function classify(lat,lon){
- const inSG=lon>=103.55&&lon<=104.10&&lat>=1.15&&((lon<103.70&&lat<=1.365)||(lon>=103.70&&lat<=1.462));
+ const inSG=RunSGDRegions.inSingapore(lat,lon);
  if(!inSG){
   if(Math.hypot(lat-1.4637,lon-103.7648)<0.0040)return {name:'JB CIQ, MY',area:'JB CIQ',country:'MY',lat,lon,method:17};
   const johorTowns=[['JB City Centre',1.4655,103.7578],['Bukit Chagar',1.4677,103.7647],['Larkin',1.4950,103.7500],['Danga Bay',1.4756,103.7252],['Taman Sentosa',1.4867,103.7695],['Tampoi',1.4997,103.7050],['Kempas',1.5385,103.7147],['Skudai',1.5372,103.6578],['Bukit Indah',1.4828,103.6556],['Iskandar Puteri',1.4200,103.6300],['Gelang Patah',1.4494,103.5988],['Forest City',1.3366,103.5901],['Permas Jaya',1.4971,103.8169],['Taman Molek',1.5290,103.7910],['Tebrau',1.5490,103.7950],['Mount Austin',1.5617,103.7785],['Ulu Tiram',1.6006,103.8165],['Masai',1.4907,103.8835],['Pasir Gudang',1.4620,103.9020],['Senai',1.6006,103.6419],['Kulai',1.6561,103.6032]];

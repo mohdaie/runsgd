@@ -1,4 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import "../../../assets/regions.js";
+const {inSingapore,inJohor} = (globalThis as any).RunSGDRegions;
 
 const allowedOrigins = new Set([
   "https://runsgd.site",
@@ -89,13 +91,6 @@ function latLng(loc:any){
   const p=loc?.latLng||loc?.location?.latLng||loc;
   const lat=Number(p?.latitude??p?.lat),lon=Number(p?.longitude??p?.lng??p?.lon);
   return Number.isFinite(lat)&&Number.isFinite(lon)?{lat,lon}:null;
-}
-function inJohor(lat:number,lon:number){
-  return Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=1.20&&lat<=1.85&&lon>=103.35&&lon<=104.15&&!inSingapore(lat,lon);
-}
-function inSingapore(lat:number,lon:number){
-  return Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=1.15&&lon>=103.55&&lon<=104.10&&
-    ((lon<103.70&&lat<=1.365)||(lon>=103.70&&lat<=1.462));
 }
 function validRoadCoord(lat:number,lon:number){
   return inJohor(lat,lon)||inSingapore(lat,lon);
@@ -242,7 +237,7 @@ function normalizeRoute(route:any,idx:number,destination:any,travelMode="TRANSIT
     legs:hops,
   };
 }
-async function placesSearch(apiKey:string,q:string,pageSize=7,usageAction="places_search",context:"app"|"admin_test"="app",origin:any=null){
+async function placesSearch(apiKey:string,q:string,pageSize=7,usageAction="places_search",context:"app"|"admin_test"="app",origin:any=null,diagnostics:any=null){
   let j:any;
   try{j=await fetchJson("https://places.googleapis.com/v1/places:searchText",{
     method:"POST",
@@ -260,7 +255,8 @@ async function placesSearch(apiKey:string,q:string,pageSize=7,usageAction="place
     })
   });}finally{await logUsage(usageAction,context)}
   const hasOrigin=inJohor(Number(origin?.lat),Number(origin?.lon)),oLat=Number(origin?.lat),oLon=Number(origin?.lon);
-  return (Array.isArray(j?.places)?j.places:[]).map((p:any,index:number)=>{
+  const rawPlaces=Array.isArray(j?.places)?j.places:[];
+  const results=rawPlaces.map((p:any,index:number)=>{
     const name=String(p.displayName?.text||p.formattedAddress||"").trim(),address=String(p.formattedAddress||"").trim();
     const lat=Number(p.location?.latitude),lon=Number(p.location?.longitude);
     return {
@@ -272,6 +268,8 @@ async function placesSearch(apiKey:string,q:string,pageSize=7,usageAction="place
   }).filter((p:any)=>inJohor(p.lat,p.lon))
     .sort((a:any,b:any)=>(b._relevance-a._relevance)||((a.distance_m??Number.MAX_SAFE_INTEGER)-(b.distance_m??Number.MAX_SAFE_INTEGER))||(a._index-b._index))
     .map(({_relevance,_index,...x}:any)=>x);
+  if(diagnostics)Object.assign(diagnostics,{provider_result_count:rawPlaces.length,accepted_johor_count:results.length,filtered_count:rawPlaces.length-results.length});
+  return results;
 }
 async function computeRoute(apiKey:string,from:any,to:any,travelMode="TRANSIT",usageAction="routes_compute",context:"app"|"admin_test"="app",transitPreference=""){
   const modeRaw=String(travelMode||"TRANSIT").toUpperCase();
@@ -346,14 +344,31 @@ Deno.serve(async(req:Request)=>{
     const apiKey=await getMapsKey();
 
     if(action==="status"){
-      const places=await placesSearch(apiKey,"Johor Bahru City Square",1,"status_places","admin_test");
-      if(!places.length)throw new Error("Places API did not return a Johor result");
-      const drive=await computeRoute(apiKey,{lat:1.4629,lon:103.7643},{lat:1.4854,lon:103.7622},"DRIVE","status_routes_drive","admin_test");
-      if(!Array.isArray(drive?.routes)||!drive.routes.length)throw new Error("Routes API did not return a car test route");
-      const motorcycle=await computeRoute(apiKey,{lat:1.4629,lon:103.7643},{lat:1.4854,lon:103.7622},"TWO_WHEELER","status_routes_motorcycle","admin_test");
-      if(!Array.isArray(motorcycle?.routes)||!motorcycle.routes.length)throw new Error("Routes API did not return a motorcycle test route");
+      const selected=String(body?.check||"");
+      if(selected&&!['places','drive','two_wheeler'].includes(selected))return respond(req,{error:"Unknown routing health check."},400);
+      const definitions=[
+        {id:'places',name:'JB Google Places',run:async()=>{
+          const diagnostics:any={};
+          const places=await placesSearch(apiKey,"Johor Bahru City Square",4,"status_places","admin_test",null,diagnostics);
+          if(!places.length)throw new Error('No accepted Johor place: '+JSON.stringify(diagnostics));
+          return {detail:places.length+' accepted Johor place(s)',...diagnostics};
+        }},
+        ...['DRIVE','TWO_WHEELER'].map(mode=>({id:mode==='DRIVE'?'drive':'two_wheeler',name:mode==='DRIVE'?'JB Google Driving':'JB Google Motorcycle',run:async()=>{
+          const result=await computeRoute(apiKey,{lat:1.4629,lon:103.7643},{lat:1.4854,lon:103.7622},mode,mode==='DRIVE'?'status_routes_drive':'status_routes_motorcycle','admin_test');
+          if(!Array.isArray(result?.routes)||!result.routes.length)throw new Error('No '+mode+' test route returned');
+          return {detail:result.routes.length+' '+mode+' route(s)',route_count:result.routes.length};
+        }})),
+      ];
+      // A failing search must never prevent the independent road-mode probes.
+      const checks=await Promise.all(definitions.filter(x=>!selected||x.id===selected).map(async d=>{
+        const started=performance.now();
+        try{const result=await d.run();return {id:d.id,name:d.name,ok:true,status:'healthy',...result,latency_ms:Math.round(performance.now()-started)};}
+        catch(e){return {id:d.id,name:d.name,ok:false,status:'failed',latency_ms:Math.round(performance.now()-started),detail:cleanError(e)};}
+      }));
+      const ok=(id:string)=>checks.find(x=>x.id===id)?.ok===true;
+      const failed=checks.filter(x=>!x.ok);
       const browserMapsConfigured=!!(await getBrowserMapsKey(false));
-      return respond(req,{connected:true,provider:"Google Maps",places:true,routes:true,browser_maps_configured:browserMapsConfigured,modes:{transit:true,drive:true,two_wheeler:true,walk:true}});
+      return respond(req,{connected:failed.length===0,provider:"Google Maps",places:ok('places'),routes:ok('drive')&&ok('two_wheeler'),browser_maps_configured:browserMapsConfigured,checks,error:failed.length?failed.map(x=>x.name+': '+x.detail).join('; '):null,modes:{drive:ok('drive'),two_wheeler:ok('two_wheeler')}});
     }
 
     if(action==="search"){

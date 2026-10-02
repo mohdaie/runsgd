@@ -1,0 +1,15 @@
+{
+  "provider": "Urban Redevelopment Authority / data.gov.sg",
+  "dataset_id": "d_8594ae9ff96d0c708bc2af633048edfb",
+  "title": "Master Plan 2019 Subzone Boundary (No Sea) (GEOJSON)",
+  "source_url": "https://data.gov.sg/datasets/d_8594ae9ff96d0c708bc2af633048edfb/view",
+  "last_updated": "2025-12-03",
+  "retrieved": "2026-10-02",
+  "source_sha256": "77e30aa02b1784b649d9b6f23e3b2ebb825af787de554f3a3fb76bbee3013c42",
+  "source_features": 332,
+  "simplification_degrees": 5e-05,
+  "coordinate_decimal_places": 6,
+  "license": "Singapore Open Data Licence v1.0",
+  "license_url": "https://data.gov.sg/open-data-licence",
+  "purpose": "Local land-region routing classification; not a legal international maritime boundary"
+}

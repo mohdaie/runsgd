@@ -4,7 +4,7 @@ import { stripTypeScriptTypes } from 'node:module';
 import { runInNewContext } from 'node:vm';
 
 const source=readFileSync(new URL('../supabase/functions/runsgd-route-jb/index.ts',import.meta.url),'utf8')
- .replace(/^import "jsr:[^"]+";\s*/,'');
+ .replace(/^import [^;]+;\s*/gm,'');
 const requestBodies=[];
 let handler;
 const context={
@@ -34,6 +34,7 @@ const context={
   }]});
  },
 };
+runInNewContext(readFileSync(new URL('../assets/regions.js',import.meta.url),'utf8'),context);
 runInNewContext(stripTypeScriptTypes(source,{mode:'strip'}),context);
 assert.equal(typeof handler,'function');
 
