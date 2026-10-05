@@ -9,7 +9,7 @@ RunSGD uses the user's live GPS position as the start of a journey.
 | Driving / motorcycle | Google Routes, after Plan | Google Routes, after Plan |
 | Walking and live guidance | RunSGD follows the returned steps and GPS | RunSGD follows the returned steps and GPS |
 
-The Singapore place search continues to use the existing OneMap Edge Function. The Google Routes Edge Function is in supabase/functions/runsgd-route-jb/index.ts; it accepts local Singapore and local Johor public transport requests, and road requests in either region or across the border. The name is retained for compatibility with the existing deployment and cost tracking. The app requests routes only when a commuter plans or deliberately reroutes; it does not call Google on every GPS update. A JB-to-Singapore bus/MRT plan checks up to three onward station requests.
+The Singapore place search continues to use the existing OneMap Edge Function. The Google Routes Edge Function is in supabase/functions/runsgd-route-jb/index.ts; it accepts local Singapore and local Johor public transport requests, and road requests in either region or across the border. The name is retained for compatibility with the existing deployment and cost tracking. Route planning, manual rerouting and live road traffic checks call Google; GPS progress calculations run locally. A JB-to-Singapore bus/MRT plan checks up to three onward station requests.
 
 Border itineraries are assembled from local route legs and explicit, unmeasured immigration, border bus, parking and transfer hops. Bus 170X/170 links Woodlands Checkpoint with Kranji MRT, and bus 950 links it with Marsiling and Woodlands MRT. Google routes the onward Singapore segment from those stations. Since the app does not have live border bus waits, checkpoint queue times, or confirmed parking times, the displayed minutes are **known legs**, and the app does not claim a fastest or door-to-door ETA for such combinations. A booked KTM journey is a separate explicit option.
 
@@ -30,9 +30,21 @@ Theme assets are versioned and precached with the PWA shell. Adding a theme requ
 
 Browser verification: `node tests/theme-switcher.mjs` with Playwright and its Chromium browser installed. Set `RUNSGD_TEST_BROWSER` to use an existing Chromium executable. The test serves the app locally and blocks external services.
 
-# Singapore traffic and ERP locations
+# Singapore / Johor traffic and Singapore ERP locations
 
-During an active Singapore drive or motorcycle journey, the Google navigation map shows a `TrafficLayer` and yellow ERP markers. Traffic and ERP switches are saved locally and default to on. Layers are detached on walking/manual hops, outside Singapore and when the journey ends. Traffic colours show Google's available traffic coverage; they do not trigger new route calculations.
+During an active Singapore or Johor drive or motorcycle journey, the Google navigation map shows a `TrafficLayer`. Yellow ERP markers are available only in Singapore. Traffic and ERP switches are saved locally and default to on. Layers are detached on walking/manual hops, outside the supported region and when the journey ends. Traffic colours show Google's available coverage; the layer itself does not trigger new route calculations.
+
+Live road ETA decreases with accepted GPS progress. Google traffic-aware route durations are distributed across road steps rather than using their static durations unchanged. Auto ETA updates default to on, with the preference saved locally. While navigation is visible and GPS is fresh and within 30 m accuracy, traffic checks run every 10 minutes, away from junctions and arrival. Update ETA also permits a manual check. Each check uses up to two Google route requests: a route through at most six anchors on the current path and an unconstrained candidate. Both are recorded as `routes_compute` in the existing usage dashboard. This adds up to 12 route requests per hour of periodic checks; manual and off-route checks can add requests. Google billing remains authoritative.
+
+A different route is adopted only when a fresh, verified current-path estimate shows savings of at least two minutes and 15%, and the latest GPS position matches the candidate. An off-route reroute requires three distinct accurate GPS fixes over at least ten seconds, more than 70 m from the route while moving. Auto ETA off disables both automatic checks and automatic off-route rerouting; manual controls remain available. Checks have a persisted two-minute client cooldown and an additional best-effort per-function-instance user throttle (two minutes and ten checks per hour). This is not a global billing cap. Failed checks back off, retain current guidance, and indicate the failure. Responses for replaced routes, changed steps, ended journeys or background navigation are discarded. Future walking and manual checkpoint stages are preserved, and unknown border timings continue to show partial timing.
+
+Deploy the updated `runsgd-route-jb` Supabase Edge Function together with the frontend. GitHub Pages deployment alone does not deploy this function. The new `traffic_refresh` action requires a verified signed-in user; existing function-level `verify_jwt=false` is retained for compatibility with other actions. Focused checks use mocked external services and make no paid Google calls:
+
+~~~sh
+node tests/live-traffic.mjs
+node tests/traffic-route-service.mjs
+RUNSGD_TEST_BROWSER=/path/to/chromium node tests/live-traffic-browser.mjs
+~~~
 
 ERP geometry is bundled in `assets/singapore-erp.json`, derived from [LTA's September 2026 gantry file](https://datamall.lta.gov.sg/content/dam/datamall/datasets/Geospatial/ERPGantry_Sep2026.zip). The builder transforms SVY21 coordinates to WGS84, keeps only `TYP_CD=P` (ERP) and removes identical spans, leaving 101 distinct geometries. The source date, hash and attribution are included in the JSON and the date is displayed in marker details. Non-ERP EMAS, directional and height-limit gantries are excluded.
 

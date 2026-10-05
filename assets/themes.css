@@ -108,3 +108,5 @@ html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.utilityName
 .journeyErpWarning{order:1;display:flex;flex-direction:column;gap:5px;margin-top:8px;padding:12px 14px;background:#fff3cd;border:1px solid #d8b65c;border-radius:13px;color:#513e10}.journeyErpWarning b{font-size:15px;line-height:1.35}.journeyErpWarning span{font-size:11px;line-height:1.5}
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .journeyErpWarning{background:#ffdb58;color:var(--ink);border:var(--neo-border);box-shadow:2px 3px 0 #17202e}
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .journeyRoadLayerButtons [aria-pressed="true"]{background:#0755e9;color:#fff}
+
+.journeyTrafficUpdates{margin-top:8px}.journeyTrafficStatus{font-size:11px;line-height:1.5;color:#596475;margin-top:8px}.journeyRoadLayerButtons [hidden]{display:none}.journeyRoadLayerButtons button:disabled{opacity:.6;cursor:wait}

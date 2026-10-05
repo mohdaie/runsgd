@@ -78,6 +78,7 @@ try{
  await page.evaluate(()=>{document.getElementById('sgJourneyProdMap').dispatchEvent(new TouchEvent('touchstart',{touches:[new Touch({identifier:1,target:document.body}),new Touch({identifier:2,target:document.body})]}));});
  assert.equal(await page.evaluate(()=>sgJourneyGoogleMapFollowing),false,'pinch begins browse mode');
  await page.clock.install();
+ await page.clock.pauseAt(new Date(Date.now()+1000));
  await page.evaluate(()=>{document.getElementById('sgJourneyProdMap').dispatchEvent(new TouchEvent('touchend',{touches:[]}));});
  await page.clock.fastForward(7999);
  assert.equal(await page.evaluate(()=>sgJourneyGoogleMapFollowing),false);
@@ -152,7 +153,9 @@ try{
  await page.clock.fastForward(7000);await page.evaluate(()=>updateJourneyGpsHealth());
  assert.equal(await page.locator('#sgJourneyErpWarning').isVisible(),false);
  await page.evaluate(()=>{sgJourneyRuntime.lastLat=1.46;sgJourneyRuntime.lastLon=103.76;updateSingaporeRoadLayers();});
- assert.equal(await page.locator('#sgJourneyRoadLayers').isVisible(),false,'layers clear in Malaysia');
+ assert.equal(await page.locator('#sgJourneyRoadLayers').isVisible(),true,'traffic also appears in Johor');
+ assert.equal(await page.locator('#sgJourneyErpToggle').isVisible(),false,'ERP remains Singapore only');
+ assert.equal(await page.evaluate(()=>sgJourneyTrafficLayer.getMap()===sgJourneyGoogleMap),true);
  assert.equal(await page.evaluate(()=>sgJourneyErpMarkers.filter(m=>m.getMap()).length),0);
  await page.evaluate(()=>{__erpFix(-370);stopSgJourneyTracking();sgJourney.status='ended';});
  assert.equal(await page.evaluate(()=>sgJourneyTrafficLayer.getMap()),null,'ending tracking detaches layers');
