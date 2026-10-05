@@ -1,0 +1,62 @@
+/* The picker is present in both themes; Classic otherwise keeps its existing CSS. */
+.themePicker{margin:14px 0 20px}
+.themeChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0 0;padding:0;border:0;min-width:0}
+.themeChoice{position:relative;display:flex;flex-direction:column;gap:9px;min-width:0;cursor:pointer;padding:11px;border:2px solid #dce3f0;border-radius:17px;background:#fff;color:#17213b}
+.themeChoice:has(input:checked){border-color:#245fe0;background:#f3f7ff}
+.themeChoice:has(input:focus-visible){outline:3px solid #245fe0;outline-offset:3px}
+.themeChoice input{position:absolute;top:14px;right:14px;width:18px;height:18px;margin:0;accent-color:#245fe0;z-index:1}
+.themeChoiceName{font-size:13px;font-weight:850;line-height:1.35;overflow-wrap:anywhere}
+.themeChoiceDetail{font-size:11px;line-height:1.4;color:#59677f}
+.themePreview{height:88px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;padding:11px;border-radius:10px;overflow:hidden}
+.themePreview span{display:block;width:76%;height:23px;background:#fff;border-radius:8px}
+.themePreview i{display:block;width:55%;height:11px;border-radius:6px}
+.themePreviewClassic{background:linear-gradient(120deg,#dff2ff,#efe5ff,#fff5ef)}
+.themePreviewClassic span{box-shadow:0 5px 12px #46537d15}
+.themePreviewClassic i{background:linear-gradient(90deg,#4b82f5,#8b67ef)}
+.themePreviewNeo{background-color:#f7f8fa;background-image:linear-gradient(#dce0e7 1px,transparent 1px),linear-gradient(90deg,#dce0e7 1px,transparent 1px);background-size:14px 14px}
+.themePreviewNeo span{border:2px solid #17202e;box-shadow:3px 3px 0 #17202e}
+.themePreviewNeo i{background:#065bff;border:1px solid #17202e;box-shadow:2px 2px 0 #17202e}
+
+/* All visual overrides are opt-in. Never change display/visibility or map geometry. */
+html[data-runsgd-theme="neobrutalism"]{--ink:#17202e;--muted:#596475;--blue:#0755e9;--violet:#0755e9;--pink:#0755e9;--card:#fff;--line:#17202e;--soft:#edf3ff;--neo-border:2px solid #17202e;--neo-shadow:4px 5px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode){color:var(--ink);background-color:#f7f8fa;background-image:linear-gradient(#17202e0b 1px,transparent 1px),linear-gradient(90deg,#17202e0b 1px,transparent 1px);background-size:28px 28px}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.brand,.signinLogo){background:none;-webkit-text-fill-color:var(--ink);color:var(--ink)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .brand::after{content:'.';color:var(--blue);-webkit-text-fill-color:var(--blue)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.card,.feedcard,.widgetManager,.linkCard,.preview,.monitorPanel){background:#fff;border:var(--neo-border);border-radius:19px;box-shadow:var(--neo-shadow)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.soft,.result,.clockFace,.transitPanel,.aiCard,.routeOrigin,.routeSelectedNote,.journeyCompareSummary,.journeyGateIcon,.aiAccessNote,.trafficPlaceholder){background:#edf3ff;border:1px solid #c7d5ec;border-radius:13px}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.version,.tag,.badge,.badgeTag,.loc,.signinClientBadge){background:#fff;border:1.5px solid #17202e;border-radius:10px;color:var(--ink);box-shadow:2px 2px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.btn,.miniBtn,.chip,.routeRegionBtn,.routeModeBtn,.journeyChoice,.journeyStage,.journeyRecentItem,.googleBtn,.aiMiniBtn,.feedRefresh,.widgetIconBtn,.roomBtn,.secondary){border:1.5px solid #17202e;border-radius:11px;background:#fff;color:var(--ink);box-shadow:2px 3px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.refresh,.primary,.aiAskBtn,.chip.active,.routeRegionBtn.active,.routeModeBtn.active,.journeyChoice.active,.roomBtn.active){background:#0755e9;color:#fff;border-color:#17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.journeyStage.active,.routeOption.selected){background:#edf3ff;border-color:#0755e9;color:#064bc8;box-shadow:3px 4px 0 #0755e9}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .journeyStage.active span{background:#0755e9}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.journeyRecentItem,.routeOption,.routeSuggestions,.widgetManageRow,.aiAnswer){border:var(--neo-border);border-radius:13px;background:#fff;box-shadow:2px 3px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(input:not([type="radio"]):not([type="checkbox"]):not([type="range"]):not([type="file"]),select,textarea){border:1.5px solid #17202e;background:#fff;border-radius:11px;color:var(--ink);min-width:0}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(input,textarea)::placeholder{color:#647085;opacity:1}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .aiAskShell{border:var(--neo-border);border-radius:13px;background:#fff;box-shadow:2px 3px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .aiAskInput{border:0;background:transparent;box-shadow:none}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .aiAskBtn{border:1.5px solid #17202e;border-radius:11px;box-shadow:2px 3px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.sub,.status,.hello p,.aiMeta,.briefWhy,.feedmeta,.feedtag,.routeStats,.routeLegMeta,.routeModeWarning,.journeyRecentMeta,.journeyRecentTags,.journeyCheckHint,.distance,.busMeta,.aiAccessText,.muted,.meta,.label,.lede){color:#596475}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.title .ico,.transitHead .ico,.moreSectionTitle .ico){color:var(--ink)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.busNo,.routeLegIcon,.aiSource,.aiAccessPill,.actionline){background:#edf3ff;color:#174683;border:1px solid #c7d5ec;border-radius:8px}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .wiseReferral{background:#f0fae9;border:1.5px solid #517143;border-radius:13px}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .wiseReferralCta{border-radius:8px}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .aiAccessNote.member{background:#edf9f2;border-color:#b7d6c5}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .aiAccessNote.member .aiAccessPill{background:#ddf2e5;color:#216140}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .trafficSnap{border:1.5px solid #17202e;border-radius:13px}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.place,.nearbyBox,.transitStop){border-color:#d4d9e2}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.journeyLiveCard,.journeyDriveFocus){border:var(--neo-border);border-radius:17px;box-shadow:var(--neo-shadow)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .journeyLiveCard{background:#eef8f1}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .journeyDriveFocus{background:#173d2a}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .journeyLiveCard::before{background:none}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .journeyBtn{border:1.5px solid #17202e;border-radius:10px;box-shadow:2px 2px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .journeyProgressBar{background:#20844c}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .nav{background:#fff;backdrop-filter:none;border-top:2px solid #17202e;padding-bottom:env(safe-area-inset-bottom);height:calc(72px + env(safe-area-inset-bottom))}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .nav button{border-radius:11px;color:#596475;min-height:48px}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .nav button.active{color:#fff;background:#0755e9;border:1.5px solid #17202e;box-shadow:2px 2px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .nav button.active .navIcon{filter:none}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(button,a,input,textarea,select):focus-visible{outline:3px solid #0755e9;outline-offset:3px}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) button:active{transform:translate(1px,2px);filter:none}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .themeChoice{border:var(--neo-border);border-radius:13px;box-shadow:2px 3px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .themeChoice:has(input:checked){border-color:#0755e9;box-shadow:2px 3px 0 #0755e9}
+@media(max-width:360px){.themeChoices{grid-template-columns:1fr}.themeChoice{display:grid;grid-template-columns:76px minmax(0,1fr);column-gap:13px;padding-right:36px}.themePreview{grid-row:span 2;height:76px;padding:8px}.themeChoiceName{align-self:end}.themeChoiceDetail{align-self:start}html[data-runsgd-theme="neobrutalism"] .clockGrid{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){html[data-runsgd-theme="neobrutalism"] button{transition:none}}
