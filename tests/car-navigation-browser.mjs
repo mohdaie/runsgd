@@ -34,13 +34,15 @@ try{
    fitBounds(){}
   }
   class MarkerFixture{
-   constructor(options){Object.assign(this,options);}
+   constructor(options){Object.assign(this,options);this.events={};}
+   setMap(map){this.map=map;}
+   getMap(){return this.map||null;}
    setPosition(position){this.position=position;}
    setIcon(icon){this.icon=icon;}
    setVisible(visible){this.visible=visible;}
    setLabel(label){this.label=label;}
   }
-  window.google={maps:{Map:MapFixture,Marker:MarkerFixture,Polyline:class{constructor(options){Object.assign(this,options);}setPath(path){this.path=path;}},LatLngBounds:class{extend(){}},RenderingType:{VECTOR:'VECTOR'},SymbolPath:{FORWARD_CLOSED_ARROW:'arrow',CIRCLE:'circle'},event:{addListener(map,name,fn){(map.events[name]??=[]).push(fn);}}}};
+  window.google={maps:{Map:MapFixture,TrafficLayer:class{setMap(map){this.map=map;}getMap(){return this.map||null;}},Marker:MarkerFixture,Polyline:class{constructor(options){Object.assign(this,options);}setPath(path){this.path=path;}},LatLngBounds:class{extend(){}},RenderingType:{VECTOR:'VECTOR'},SymbolPath:{FORWARD_CLOSED_ARROW:'arrow',CIRCLE:'circle'},event:{addListener(map,name,fn){(map.events[name]??=[]).push(fn);}}}};
   function encode(points){let a=0,b=0,out='';for(const point of points){const c=Math.round(point.lat*1e5),d=Math.round(point.lon*1e5);for(let n of [c-a,d-b]){n=n<0?~(n<<1):n<<1;while(n>=32){out+=String.fromCharCode((32|(n&31))+63);n>>=5;}out+=String.fromCharCode(n+63);}a=c;b=d;}return out;}
   const points=[{lat:1.3,lon:103.8},{lat:1.30045,lon:103.8},{lat:1.30045,lon:103.802}];
   const legs=[{mode:'DRIVE',polyline:encode(points.slice(0,2)),to:{name:'Turn',...points[1]},duration_sec:20},{mode:'DRIVE',polyline:encode(points.slice(1)),to:{name:'Destination',...points[2]},duration_sec:60}];
@@ -90,6 +92,77 @@ try{
    assert.equal(boxes.overflow,false);
   }
  }
+ // Singapore road layers use the real bundled LTA data and actual GPS reconciliation.
+ await page.evaluate(async()=>{
+  await loadSingaporeErpLocations();
+  const line=sgJourneyErpData.gantries[0].lines[0],lat=(line[0][1]+line[1][1])/2,lon=(line[0][0]+line[1][0])/2;
+  const dx=(line[1][0]-line[0][0])*Math.cos(lat*Math.PI/180),dy=line[1][1]-line[0][1],len=Math.hypot(dx,dy);
+  const east=dy/len,north=-dx/len;
+  const point=m=>({lat:lat+north*m/110540,lon:lon+east*m/(111320*Math.cos(lat*Math.PI/180))});
+  const points=[point(-600),point(150)];
+  function encode(points){let a=0,b=0,out='';for(const point of points){const c=Math.round(point.lat*1e5),d=Math.round(point.lon*1e5);for(let n of [c-a,d-b]){n=n<0?~(n<<1):n<<1;while(n>=32){out+=String.fromCharCode((32|(n&31))+63);n>>=5;}out+=String.fromCharCode(n+63);}a=c;b=d;}return out;}
+  const leg={mode:'DRIVE',from:points[0],to:{name:'ERP test end',...points[1]},polyline:encode(points),duration_sec:75,distance_m:750};
+  sgJourney={status:'active',started_at:Date.now()+2,current_hop:0,destination:leg.to,route:{polyline:leg.polyline,legs:[leg]}};
+  Object.assign(sgJourneyRuntime,{roadCache:buildJourneyRoadCache(sgJourney.route),routeProgressM:null,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedGpsTimestamp:null,lastLat:points[0].lat,lastLon:points[0].lon,gpsUpdatedAt:0,gpsAccuracy:null,gpsError:false});
+  window.__erpFix=m=>{const p=point(m);handleSgJourneyPosition({timestamp:Date.now(),coords:{latitude:p.lat,longitude:p.lon,accuracy:8,speed:10,heading:journeyBearing(points[0].lat,points[0].lon,points[1].lat,points[1].lon)}});};
+  await renderJourneyGoogleMap(true,leg,0,[leg]);
+  __erpFix(-400);
+ });
+ assert.equal(await page.locator('#sgJourneyRoadLayers').isVisible(),true);
+ assert.equal(await page.evaluate(()=>sgJourneyTrafficLayer.getMap()===sgJourneyGoogleMap),true);
+ assert.equal(await page.evaluate(()=>sgJourneyErpMarkers.filter(m=>m.getMap()).length),101);
+ assert.equal(await page.locator('#sgJourneyErpWarning').isVisible(),false,'first fix does not warn');
+ await page.clock.fastForward(1000);await page.evaluate(()=>__erpFix(-390));
+ assert.equal(await page.locator('#sgJourneyErpWarning').isVisible(),true,'two accepted GPS fixes confirm ERP approach');
+ assert.match(await page.locator('#sgJourneyErpWarningTitle').innerText(),/ERP location ahead/);
+ assert.match(await page.locator('#sgJourneyErpWarningDetail').innerText(),/ERP 36/);
+ for(const theme of ['classic','neobrutalism'])for(const width of [320,390,480]){
+  await page.evaluate(value=>document.documentElement.dataset.runsgdTheme=value,theme);
+  await page.setViewportSize({width,height:844});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'ERP controls fit '+theme+' '+width);
+ }
+ await page.locator('#sgJourneyErpWarning').scrollIntoViewIfNeeded();
+ if(process.env.RUNSGD_TEST_SCREENSHOT)await page.screenshot({path:process.env.RUNSGD_TEST_SCREENSHOT});
+ await page.evaluate(()=>sgJourneyErpMarkers[0].events.click[0]());
+ assert.equal(await page.locator('#sgJourneyErpLocationDialog').isVisible(),true);
+ await page.locator('#sgJourneyErpLocationDialog .utilityClose').click();
+ await page.locator('#sgJourneyErpToggle').click();
+ assert.equal(await page.evaluate(()=>sgJourneyErpMarkers.filter(m=>m.getMap()).length),0);
+ assert.equal(await page.locator('#sgJourneyErpWarning').isVisible(),false);
+ assert.equal(await page.evaluate(()=>JSON.parse(localStorage.runsgdSingaporeRoadLayers).erp),false);
+ await page.locator('#sgJourneyErpToggle').click();
+ assert.equal(await page.evaluate(()=>sgJourneyErpMarkers.filter(m=>m.getMap()).length),101);
+ await page.locator('#sgJourneyTrafficToggle').click();
+ assert.equal(await page.evaluate(()=>sgJourneyTrafficLayer.getMap()),null);
+ assert.equal(await page.locator('#sgJourneyTrafficLegend').isVisible(),false);
+ await page.locator('#sgJourneyTrafficToggle').click();
+ // A later drive leg after a walking/manual boundary must not warn early.
+ await page.evaluate(()=>{
+  window.__erpOriginalRoute=sgJourney.route;window.__erpOriginalEnd=sgJourneyRuntime.roadCache.legEnds[0];
+  const leg=sgJourney.route.legs[0];sgJourney.route={...sgJourney.route,legs:[leg,{mode:'WALK'},leg]};
+  sgJourneyRuntime.roadCache.legEnds[0]=100;
+ });
+ await page.clock.fastForward(1000);await page.evaluate(()=>__erpFix(-385));
+ assert.equal(await page.locator('#sgJourneyErpWarning').isVisible(),false,'do not warn across a non-driving leg');
+ await page.evaluate(()=>{sgJourney.route=__erpOriginalRoute;sgJourneyRuntime.roadCache.legEnds[0]=__erpOriginalEnd;});
+ await page.clock.fastForward(1000);await page.evaluate(()=>__erpFix(-382));
+ // A stale fix clears the warning even without another GPS callback.
+ await page.clock.fastForward(1000);await page.evaluate(()=>__erpFix(-380));
+ assert.equal(await page.locator('#sgJourneyErpWarning').isVisible(),true);
+ await page.clock.fastForward(7000);await page.evaluate(()=>updateJourneyGpsHealth());
+ assert.equal(await page.locator('#sgJourneyErpWarning').isVisible(),false);
+ await page.evaluate(()=>{sgJourneyRuntime.lastLat=1.46;sgJourneyRuntime.lastLon=103.76;updateSingaporeRoadLayers();});
+ assert.equal(await page.locator('#sgJourneyRoadLayers').isVisible(),false,'layers clear in Malaysia');
+ assert.equal(await page.evaluate(()=>sgJourneyErpMarkers.filter(m=>m.getMap()).length),0);
+ await page.evaluate(()=>{__erpFix(-370);stopSgJourneyTracking();sgJourney.status='ended';});
+ assert.equal(await page.evaluate(()=>sgJourneyTrafficLayer.getMap()),null,'ending tracking detaches layers');
+ assert.equal(await page.locator('#sgJourneyErpWarning').isVisible(),false);
+ // Restore camera fixture route for the walking regression.
+ await page.evaluate(()=>{
+  const points=[{lat:1.3,lon:103.8},{lat:1.30045,lon:103.8},{lat:1.30045,lon:103.802}];
+  function encode(points){let a=0,b=0,out='';for(const point of points){const c=Math.round(point.lat*1e5),d=Math.round(point.lon*1e5);for(let n of [c-a,d-b]){n=n<0?~(n<<1):n<<1;while(n>=32){out+=String.fromCharCode((32|(n&31))+63);n>>=5;}out+=String.fromCharCode(n+63);}a=c;b=d;}return out;}
+  sgJourney.status='active';sgJourney.route={polyline:encode(points),legs:[{mode:'DRIVE',polyline:encode(points.slice(0,2)),to:points[1]},{mode:'DRIVE',polyline:encode(points.slice(1)),to:points[2]}]};
+ });
  await page.evaluate(()=>{
   const [first,second]=sgJourney.route.legs;
   const leg={mode:'WALK',step_polylines:[first.polyline,second.polyline],polyline:sgJourney.route.polyline,walk_instructions:[{lat:1.3,lon:103.8,instruction:'Walk north',polyline:first.polyline},{lat:1.30045,lon:103.8,instruction:'Turn right',polyline:second.polyline}],to:second.to,duration_sec:300};
@@ -105,5 +178,5 @@ try{
  assert.equal(walking.instructions,2);
  assert.match(await page.locator('#sgJourneyAction').innerText(),/Follow pedestrian path/);
  assert.deepEqual(errors,[],'no app runtime errors');
- console.log('Navigation browser passed: event wiring, rotation fallback, mobile themes, gesture recovery and walking geometry/distance.');
+ console.log('Navigation browser passed: event wiring, rotation fallback, mobile themes, gesture recovery, Singapore traffic/ERP GPS warnings and walking geometry/distance.');
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}
