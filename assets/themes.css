@@ -94,5 +94,9 @@ html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .routeAiSend{bac
 /* Compact commuter tools with feature illustrations, like the reference cards. */
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.utilityTile,.utilityDialog){border:var(--neo-border);border-radius:19px;background:#fff;box-shadow:var(--neo-shadow);color:var(--ink)}
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .utilityClose{border:1.5px solid #17202e;border-radius:10px;background:var(--neo-yellow);box-shadow:2px 2px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .themedSelectTrigger{border:1.5px solid #17202e;border-radius:11px;background:#fff;color:var(--ink)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .themedSelectOption{border:1.5px solid #17202e;background:#edf3ff;color:var(--ink);box-shadow:2px 2px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .themedSelectOption[aria-checked="true"]{background:#0755e9;color:#fff}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .themedSelectOption[aria-checked="true"] .themedSelectMark{border-color:#fff;background:#fff;color:#0755e9}
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .utilityArt{opacity:.85}
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.utilityName,.utilityValue){color:var(--ink)}
