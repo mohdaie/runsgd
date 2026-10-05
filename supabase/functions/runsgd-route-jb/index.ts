@@ -6,6 +6,7 @@ const allowedOrigins = new Set([
   "https://runsgd.site",
   "https://www.runsgd.site",
 ]);
+const trafficRate = new Map<string,{last:number,start:number,count:number}>();
 const rate = new Map<string,{count:number,reset:number}>();
 
 function cors(req:Request){
@@ -219,12 +220,19 @@ function normalizeRoute(route:any,idx:number,destination:any,travelMode="TRANSIT
   const allSteps=(route?.legs||[]).flatMap((l:any)=>Array.isArray(l.steps)?l.steps:[]);
   const hops=groupSteps(allSteps,destination);
   const transitCount=hops.filter((x:any)=>x.mode!=="WALK").length;
+  // Google road steps expose staticDuration; distribute the live route duration.
+  if(travelMode==="DRIVE"||travelMode==="TWO_WHEELER"){
+    const live=parseDuration(route.duration),total=hops.reduce((n:number,x:any)=>n+x.duration_sec,0);
+    if(live>0&&total>0){let allocated=0;hops.forEach((x:any,i:number)=>{x.static_duration_sec=x.duration_sec;x.duration_sec=i===hops.length-1?Math.max(0,live-allocated):Math.round(live*x.duration_sec/total);allocated+=x.duration_sec;});}
+  }
   const fare=route?.travelAdvisory?.transitFare;
   const fareValue=moneyValue(fare);
   return {
     id:idx,
     travel_mode:travelMode,
     duration_sec:parseDuration(route.duration),
+    static_duration_sec:parseDuration(route.staticDuration),
+    traffic_checked_at:Date.now(),
     distance_m:Math.round(Number(route.distanceMeters||0)),
     walk_distance_m:Math.round(hops.filter((x:any)=>x.mode==="WALK").reduce((n:number,x:any)=>n+Number(x.distance_m||0),0)),
     transfers:Math.max(0,transitCount-1),
@@ -271,11 +279,11 @@ async function placesSearch(apiKey:string,q:string,pageSize=7,usageAction="place
   if(diagnostics)Object.assign(diagnostics,{provider_result_count:rawPlaces.length,accepted_johor_count:results.length,filtered_count:rawPlaces.length-results.length});
   return results;
 }
-async function computeRoute(apiKey:string,from:any,to:any,travelMode="TRANSIT",usageAction="routes_compute",context:"app"|"admin_test"="app",transitPreference=""){
+async function computeRoute(apiKey:string,from:any,to:any,travelMode="TRANSIT",usageAction="routes_compute",context:"app"|"admin_test"="app",transitPreference="",intermediates:any[]=[]){
   const modeRaw=String(travelMode||"TRANSIT").toUpperCase();
   const mode=["TRANSIT","DRIVE","TWO_WHEELER","WALK"].includes(modeRaw)?modeRaw:"TRANSIT";
   const fieldMask=[
-    "routes.duration","routes.distanceMeters","routes.routeLabels","routes.polyline.encodedPolyline",
+    "routes.duration","routes.staticDuration","routes.distanceMeters","routes.routeLabels","routes.polyline.encodedPolyline",
     "routes.travelAdvisory.transitFare",
     "routes.legs.steps.distanceMeters","routes.legs.steps.staticDuration","routes.legs.steps.travelMode","routes.legs.steps.polyline.encodedPolyline",
     "routes.legs.steps.startLocation","routes.legs.steps.endLocation",
@@ -295,7 +303,7 @@ async function computeRoute(apiKey:string,from:any,to:any,travelMode="TRANSIT",u
     origin:{location:{latLng:{latitude:Number(from.lat),longitude:Number(from.lon)}}},
     destination:{location:{latLng:{latitude:Number(to.lat),longitude:Number(to.lon)}}},
     travelMode:mode,
-    computeAlternativeRoutes:true,
+    computeAlternativeRoutes:intermediates.length===0,
     languageCode:"en",
     units:"METRIC",
   };
@@ -312,6 +320,7 @@ async function computeRoute(apiKey:string,from:any,to:any,travelMode="TRANSIT",u
     body.routingPreference="TRAFFIC_AWARE";
     body.polylineQuality="HIGH_QUALITY";
   }
+  if(intermediates.length)body.intermediates=intermediates.map(p=>({via:true,location:{latLng:{latitude:p.lat,longitude:p.lon}}}));
   body.polylineEncoding="ENCODED_POLYLINE";
   try{return await fetchJson("https://routes.googleapis.com/directions/v2:computeRoutes",{
     method:"POST",
@@ -339,6 +348,28 @@ Deno.serve(async(req:Request)=>{
       const context=String(body?.context||"")==="admin_test"?"admin_test":"app";
       await logUsage("dynamic_map_load",context);
       return respond(req,{recorded:true,action:"dynamic_map_load",context});
+    }
+
+    if(action==="traffic_refresh"){
+      let user:any;try{user=await requireSignedInUser(req)}catch{return respond(req,{error:"Signed-in RunSGD session required"},401)}
+      const mode=String(body.travel_mode||"").toUpperCase(),from=body.from||{},to=body.to||{},via=body.via??[];
+      const valid=(p:any)=>p&&typeof p.lat==="number"&&typeof p.lon==="number"&&validRoadCoord(p.lat,p.lon);
+      if(!["DRIVE","TWO_WHEELER"].includes(mode)||!valid(from)||!valid(to)||!Array.isArray(via)||via.length>6||!via.every(valid))return respond(req,{error:"Invalid traffic refresh coordinates or mode"},400);
+      const now=Date.now(),old=trafficRate.get(user.id),state=!old||now-old.start>=3600000?{last:0,start:now,count:0}:old;
+      if((state.last&&now-state.last<120000)||state.count>=10)return respond(req,{error:"Traffic refresh cooldown",retry_after_sec:state.count>=10?Math.ceil((state.start+3600000-now)/1000):Math.ceil((state.last+120000-now)/1000)},429);
+      state.last=now;state.count++;trafficRate.set(user.id,state);
+      // Bound memory. This instance throttle supplements the client's persisted cooldown.
+      if(trafficRate.size>10000)for(const [id,x] of trafficRate)if(now-x.start>=3600000)trafficRate.delete(id);
+      const apiKey=await getMapsKey(),destination={name:String(to.name||"").slice(0,160),address:""};
+      const requests=via.length?[
+        computeRoute(apiKey,from,to,mode,"routes_compute","app","",via),
+        computeRoute(apiKey,from,to,mode,"routes_compute","app")
+      ]:[computeRoute(apiKey,from,to,mode,"routes_compute","app")];
+      const results=await Promise.allSettled(requests);
+      const route=(result:any)=>result.status==="fulfilled"?(result.value?.routes||[]).map((r:any,i:number)=>normalizeRoute(r,i,destination,mode)).filter((r:any)=>r.legs.length&&r.duration_sec>0):[];
+      const current=route(results[0])[0]||null,candidates=route(results[results.length-1]);
+      if(!current&&!candidates.length)throw Error("Traffic routes unavailable; keep the current route");
+      return respond(req,{current,routes:candidates,generated_at:new Date().toISOString(),query_count:requests.length,cooldown_sec:120,refresh_interval_sec:600});
     }
 
     const apiKey=await getMapsKey();

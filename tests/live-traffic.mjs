@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+const t=createRequire(import.meta.url)('../assets/live-traffic.js');
+const legs=[{mode:'DRIVE',duration_sec:120,distance_m:100,to:{lat:1.5,lon:103.75}},{mode:'DRIVE',duration_sec:240,to:{lat:1.5,lon:103.77}},{mode:'IMMIGRATION',manual:true},{mode:'DRIVE',duration_sec:600,to:{lat:1.3,lon:103.8}}];
+assert.equal(t.block(legs,0).end,1,'manual hop is a boundary');assert.equal(t.block(legs,2),null);assert.equal(t.block([{mode:'WALK'}],0),null);
+assert.equal(t.remaining(legs,0,50,100,1),300);assert.equal(t.remaining(legs,0,0,100,1),240);assert.equal(t.remaining(legs,0,null,100,1),360,'missing GPS never acts as completed');
+assert.equal(t.remaining(legs,0,150,100,1),360);assert.equal(t.remaining(legs,0,-5,100,1),240);
+assert.equal(t.savings(1000,850),true);assert.equal(t.savings(600,500),false);assert.equal(t.savings(2000,1800),false);assert.equal(t.savings(null,0),false);
+const now=100000,fix={mode:'DRIVE',lat:1.5,lon:103.75,accuracy:10,timestamp:now};assert.ok(t.trusted(fix,now));
+for(const x of [{mode:'WALK'},{accuracy:null},{lat:null},{accuracy:31},{accuracy:-1},{timestamp:now-6501},{timestamp:now+1001},{error:true}])assert.equal(t.trusted({...fix,...x},now),false);
+const path=[{lat:1.5,lon:103.75},{lat:1.5,lon:103.77}],cache=t.cache(path);
+assert.ok(t.follows(path,path));assert.equal(t.follows([{lat:1.502,lon:103.75},{lat:1.502,lon:103.77}],path),false);
+assert.equal(t.follows(path.slice().reverse(),path),false,'reverse travel is not the same route');assert.equal(t.follows([],path),false);
+assert.ok(t.anchors(cache,0,cache.total).length>0);assert.ok(t.anchors(t.cache([{lat:1.5,lon:103.4},{lat:1.5,lon:104.1}]),0,70000).length<=6);assert.deepEqual(t.anchors(cache,0,600),[]);
+assert.ok(t.slice(cache,100,1000).length>=2);assert.deepEqual(t.slice(cache,null,1000),[]);
+console.log('Live traffic helpers passed: progress ETA, mixed-mode boundaries, GPS quality, reroute savings, route corridor and bounded waypoints.');
