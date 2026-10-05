@@ -235,8 +235,9 @@ button{position:relative;overflow:hidden;transition:transform .14s ease,box-shad
 /* v2.15.0 Google Dynamic Map + RunSGD navigation */
 .journeyProdMapWrap{display:none;position:relative;order:2;height:29svh;min-height:220px;max-height:320px;margin:0 -2px 0;border-radius:0 0 19px 19px;overflow:hidden;background:#e8f3ed;border:1px solid #cfe5d8;border-top:0}
 .journeyProdMapWrap.show{display:block}.journeyProdMap{position:absolute;inset:0}.journeyProdMapFade{position:absolute;left:0;right:0;bottom:0;height:82px;pointer-events:none;background:linear-gradient(180deg,rgba(237,255,245,0) 0%,rgba(237,255,245,.16) 36%,#edfff5 100%);z-index:2}
-.journeyProdMapBadge{position:absolute;left:11px;top:11px;z-index:3;padding:6px 9px;border-radius:999px;background:#ffffffeb;color:#426352;font-size:9px;font-weight:900;box-shadow:0 4px 14px #173d2a18}
+.journeyProdMapBadge{position:absolute;left:11px;top:11px;z-index:3;max-width:calc(100% - 112px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:6px 9px;border-radius:999px;background:#ffffffeb;color:#426352;font-size:9px;font-weight:900;box-shadow:0 4px 14px #173d2a18}
 .journeyProdMapRecenter{position:absolute;right:11px;top:11px;z-index:3;border:1px solid #dce8e1;background:#ffffffef;color:#24563d;border-radius:12px;padding:8px 10px;font-size:10px;font-weight:900;box-shadow:0 5px 16px #173d2a18}
+.journeyProdMapWrap.followPaused .journeyProdMapRecenter{background:#fff2b4;color:#18202e}
 .journeyNow.roadFocus .journeyDriveFocus{border-radius:19px 19px 0 0;box-shadow:none}
 .journeyNow.roadFocus .journeyProdMapWrap{margin-top:0}
 .journeyNow.roadFocus .journeyGpsBar{order:3;margin-top:8px}
@@ -361,14 +362,14 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 .landmarkStatusRow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
 @media(max-width:420px){.landmarkTile{flex-basis:146px}.landmarkIconWrap{height:112px}}
 .ico{width:1.15em;height:1.15em;flex:none;display:inline-block;vertical-align:-.2em;margin-right:.38em}.ico.solo{margin:0;vertical-align:middle}.title .ico,.transitHead .ico,.moreSectionTitle .ico{color:#4965c7}</style>
-<script src="/assets/theme.js?v=2.16.16"></script>
-<link rel="stylesheet" href="/assets/themes.css?v=2.16.16">
+<script src="/assets/theme.js?v=2.16.17"></script>
+<link rel="stylesheet" href="/assets/themes.css?v=2.16.17">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-badge-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77a4 4 0 0 1 6.74 0a4 4 0 0 1 4.78 4.78a4 4 0 0 1 0 6.74a4 4 0 0 1-4.77 4.78a4 4 0 0 1-6.75 0a4 4 0 0 1-4.78-4.77a4 4 0 0 1 0-6.76"/><path d="m16 9l-5.5 5.5L8 12"/></g></symbol><symbol id="i-banknote" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></g></symbol><symbol id="i-book-open" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v16m8.001-2A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2a5 5 0 0 1 4-2z"/></symbol><symbol id="i-book-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 13a3 3 0 1 0-6 0"/><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><circle cx="12" cy="8" r="2"/></g></symbol><symbol id="i-bot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2m16 0h2m-7-1v2m-6-2v2"/></g></symbol><symbol id="i-building-bridge" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 5v14M18 5v14M2 15h20M3 8a7.5 7.5 0 0 0 3-2a6.5 6.5 0 0 0 12 0a7.5 7.5 0 0 0 3 2m-9 2v5"/></symbol><symbol id="i-building-mosque" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h7v-2a2 2 0 1 1 4 0v2h7M4 21V11m16 10V11M4 16h3v-3h10v3h3m-3-3a5 5 0 0 0-10 0m14-2.5c0-.329-.077-.653-.224-.947L20 8l-.776 1.553A2.1 2.1 0 0 0 19 10.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5m-16 0c0-.329-.077-.653-.224-.947L4 8l-.776 1.553A2.1 2.1 0 0 0 3 10.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5M12 2a2 2 0 1 0 2 2m-2 2v2"/></symbol><symbol id="i-bus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 6v6m7-6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2s-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></g></symbol><symbol id="i-bus-front" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4 6L2 7m8-1h4m8 1l-2-1"/><rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16M8 15h.01M16 15h.01M6 19v2m12 0v-2"/></g></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 2v3m8-3v3"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/></g></symbol><symbol id="i-car" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></g></symbol><symbol id="i-cctv" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.75 12h3.632a1 1 0 0 1 .894 1.447l-2.034 4.069a1 1 0 0 1-1.708.134l-2.124-2.97m1.696-5.627a1 1 0 0 1 .447 1.341l-3.106 6.211a1 1 0 0 1-1.342.447L3.61 12.3a2.92 2.92 0 0 1-1.3-3.91L3.69 5.6a2.92 2.92 0 0 1 3.92-1.3zM2 19h3.76a2 2 0 0 0 1.8-1.1L9 15m-7 6v-4m5-8h.01"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></g></symbol><symbol id="i-cloud-sun" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v2m-7.07.93l1.41 1.41M20 12h2m-2.93-7.07l-1.41 1.41m-1.713 6.31a4 4 0 0 0-5.925-4.128M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6"/></symbol><symbol id="i-door-open" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 21H2m8-18H7a2 2 0 0 0-2 2v16m9-9h.01"/><path d="M19 21V5a2 2 0 0 0-1.675-1.974l-6.163-1.013A1 1 0 0 0 10 3v18a1 1 0 0 0 1.124.992zm3 0h-3"/></g></symbol><symbol id="i-flask-conical" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2M6.453 15h11.094M8.5 2h7"/></symbol><symbol id="i-footprints" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0m16 4v-2.38c0-2.12 1.03-3.12 1-5.62c-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0m-4-3h4M4 13h4"/></symbol><symbol id="i-history" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9a9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5m4-1v5l4 2"/></g></symbol><symbol id="i-key-round" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></g></symbol><symbol id="i-landmark" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 18v-7m1.119-8.795a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949zM14 18v-7m4 7v-7M3 22h18M6 18v-7"/></symbol><symbol id="i-locate-fixed" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2 12h3m14 0h3M12 2v3m0 14v3"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></g></symbol><symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></g></symbol><symbol id="i-map" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0zm.894.211v15M9 3.236v15"/></symbol><symbol id="i-map-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></g></symbol><symbol id="i-message-circle-question" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092a10 10 0 1 0-4.777-4.719"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3m.08 4h.01"/></g></symbol><symbol id="i-motorbike" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2 16a3 3 0 1 0 6 0a3 3 0 1 0-6 0m14 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-8.5-2h5l4-4H6m1.5 4l4-4"/><path d="M13 6h2l1.5 3l2 4"/></g></symbol><symbol id="i-navigation" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 11l19-9l-9 19l-2-8z"/></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9a9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5m5 4a9 9 0 0 1-9 9a9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></g></symbol><symbol id="i-route" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></g></symbol><symbol id="i-send-horizontal" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904zM6 12h16"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></g></symbol><symbol id="i-shopping-bag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 10a4 4 0 0 1-8 0M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></g></symbol><symbol id="i-signpost" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13v8m0-18v3m-9.646 4.354a1.207 1.207 0 0 1 0-1.708l2.06-2.06A2 2 0 0 1 5.828 6h12.344a2 2 0 0 1 1.414.586l2.06 2.06a1.207 1.207 0 0 1 0 1.708l-2.06 2.06a2 2 0 0 1-1.414.586H5.828a2 2 0 0 1-1.414-.586z"/></symbol><symbol id="i-sliders-horizontal" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 5H3m9 14H3M14 3v4m2 10v4m5-9h-9m9 7h-5m5-14h-7m-6 5v4m0-2H3"/></symbol><symbol id="i-smartphone" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></g></symbol><symbol id="i-square-parking" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></g></symbol><symbol id="i-stopwatch" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13a7 7 0 1 0 14 0a7 7 0 0 0-14 0m9.5-2.5L12 13m5-5l1-1m-4-4h-4"/></symbol><symbol id="i-timer" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 2h4m-2 12l3-3"/><circle cx="12" cy="14" r="8"/></g></symbol><symbol id="i-traffic-cone" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16.05 10.966a5 2.5 0 0 1-8.1 0m8.973 3.083l4.48 2.04a1 1 0 0 1 .001 1.831l-8.574 3.9a2 2 0 0 1-1.66 0l-8.574-3.91a1 1 0 0 1 0-1.83l4.484-2.04"/><path d="M16.949 14.14a5 2.5 0 1 1-9.9 0L10.063 3.5a2 2 0 0 1 3.874 0z"/><path d="M9.194 6.57a5 2.5 0 0 0 5.61 0"/></g></symbol><symbol id="i-train-front" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 3.1V7a4 4 0 0 0 8 0V3.1M9 15l-1-1m7 1l1-1"/><path d="M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Zm-1 0l-2 3m10-3l2 3"/></g></symbol><symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g></symbol><symbol id="i-user-cog" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 15H6a4 4 0 0 0-4 4v2m12.305-4.47l.923-.382m0-2.296l-.923-.383m2.547-1.241l-.383-.923m.383 6.467l-.383.924m2.679-6.468l.383-.923m-.001 7.391l-.382-.924m1.624-3.92l.924-.383m-.924 2.679l.924.383"/><circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/></g></symbol><symbol id="i-wind" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.8 19.6A2 2 0 1 0 14 16H2m15.5-8a2.5 2.5 0 1 1 2 4H2m7.8-7.6A2 2 0 1 1 11 8H2"/></symbol><symbol id="i-wrench" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></symbol></svg>
 <main class="app">
 <div class="top">
-  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.16</span></div>
+  <div class="brandwrap"><div class="brand">runSGD</div><span id="appVersionBadge" class="version">v2.16.17</span></div>
   <div class="headerUser">
     <button id="locBtn" class="loc" onclick="requestLocation(this)"><svg class="ico" aria-hidden="true"><use href="#i-map-pin"/></svg>Location</button>
     <div class="headerAccountRow">
@@ -615,8 +616,8 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
       <div id="sgJourneyProdMapWrap" class="journeyProdMapWrap" aria-label="Google navigation map">
         <div id="sgJourneyProdMap" class="journeyProdMap"></div>
         <div class="journeyProdMapFade"></div>
-        <span id="sgJourneyProdMapBadge" class="journeyProdMapBadge">Google map · RunSGD guidance</span>
-        <button class="journeyProdMapRecenter" onclick="recenterJourneyGoogleMap()" aria-label="Recenter navigation map">Recenter</button>
+        <span id="sgJourneyProdMapBadge" class="journeyProdMapBadge" role="status" aria-live="polite">Google map · RunSGD guidance</span>
+        <button id="sgJourneyProdRecenter" class="journeyProdMapRecenter" onclick="recenterJourneyGoogleMap()" aria-label="Recenter navigation map">Recenter</button>
       </div>
       <div id="sgJourneyBeacon" class="journeyBeacon">
         <div class="journeyBeaconDial"><div id="sgJourneyBeaconArrow" class="journeyBeaconArrow">↑</div></div>
@@ -760,7 +761,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
   <div id="themeStatus" class="status" role="status" aria-live="polite"></div>
 </article>
 
-<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.16</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)"><svg class="ico" aria-hidden="true"><use href="#i-refresh-cw"/></svg>Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
+<article class="card"><div class="head"><div id="moreVersionTitle" class="title">RunSGD Beta · v2.16.17</div><span class="tag">Closed beta</span></div><p class="sub">Your last approved location and active journey can stay on this device. Signed-in Journey history is saved privately to your RunSGD profile.</p><button class="btn refresh" onclick="refreshAll(this)"><svg class="ico" aria-hidden="true"><use href="#i-refresh-cw"/></svg>Refresh app & live data</button><div id="moreRefreshStatus" class="status" role="status" aria-live="polite"></div></article>
 
 <article id="profileCard" class="card toolbox profileCard">
   <div class="profileTop">
@@ -813,7 +814,7 @@ body.communityMode .headerSignOut{border-left-color:#3c3c41;color:#ff9baa}
 </div>
 
 <article id="betaFeedbackCard" class="card toolbox">
-  <div class="head"><div class="title"><svg class="ico" aria-hidden="true"><use href="#i-flask-conical"/></svg>Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.16</span></div>
+  <div class="head"><div class="title"><svg class="ico" aria-hidden="true"><use href="#i-flask-conical"/></svg>Beta feedback</div><span id="betaFeedbackVersion" class="tag">v2.16.17</span></div>
   <p class="sub">Found something confusing, broken or useful? Send us a short note.</p>
   <div class="toolrow"><select id="betaFeedbackCategory" class="toolInput"><option value="feedback">Feedback</option><option value="bug">Bug</option><option value="idea">Idea</option></select></div>
   <textarea id="betaFeedbackMessage" class="toolInput" maxlength="2000" style="width:100%;min-height:90px;margin-top:9px;resize:vertical" placeholder="Tell us what happened or what would make RunSGD better…"></textarea>
@@ -857,7 +858,7 @@ const RUNSGD_AI_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsg
 const ROUTE_SG_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-sg';
 const ROUTE_JB_URL='https://gdycbluljgfezhgslppe.supabase.co/functions/v1/runsgd-route-jb';
 
-const RUNSGD_VERSION='2.16.16';
+const RUNSGD_VERSION='2.16.17';
 let runsgdReloadingForUpdate=false;
 let runsgdDetectedUpdateVersion='';
 function runsgdVersionLabel(version=RUNSGD_VERSION){
@@ -1805,7 +1806,8 @@ const WOODLANDS_CP={name:'Woodlands Checkpoint',address:'Woodlands Checkpoint, S
 const JB_CIQ={name:'JB CIQ',address:'Bangunan Sultan Iskandar, Johor Bahru',lat:1.4637,lon:103.7648};
 let sgJourney=null,sgJourneyWatchId=null,sgJourneyHeading=null,sgJourneyCompassListening=false,sgJourneyCompassPermissionNeeded=false,sgJourneyGpsTimer=null,sgJourneyFreshFixTimer=null,sgJourneyFreshFixPending=false;
 let sgJourneyGoogleMap=null,sgJourneyGoogleMapOutline=null,sgJourneyGoogleMapRoute=null,sgJourneyGoogleMapVehicle=null,sgJourneyGoogleMapTurn=null,sgJourneyGoogleMapPromise=null,sgJourneyGoogleMapConfigPromise=null,sgJourneyGoogleMapDisabledUntil=0,sgJourneyGoogleMapRouteKey='',sgJourneyGoogleMapFollowing=true,sgJourneyGoogleMapLogged=false,sgJourneyGoogleMapHeading=null;
-let sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:null,routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0,gpsAccuracy:null,gpsUpdatedAt:0,gpsSpeed:null,gpsError:false,movementBearing:null,currentStepRemainingM:null,currentStepProgressPct:null,stepProgressHop:null,stepProgressM:null,stepProgressAt:0,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedLat:null,lastAcceptedLon:null,turnConfirmHop:null,turnConfirmCount:0,lastTurnDetectedAt:0,lastTurnMessage:'',arrivalConfirmCount:0,lastArrivalDistanceM:null,walkCaches:null,walkProgressHop:null,walkProgressM:null,walkTotalM:null,walkRemainingM:null,walkOffPathM:null,walkOffCount:0,walkOffPath:false,walkArrivalCount:0,walkNextInstruction:null};
+let sgJourneyGoogleMapVehicleHeading=null,sgJourneyGoogleMapResumeTimer=null;
+let sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:null,routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0,gpsAccuracy:null,gpsUpdatedAt:0,gpsSpeed:null,gpsError:false,gpsHeading:null,movementBearing:null,movementBearingAt:0,bearingLat:null,bearingLon:null,currentStepRemainingM:null,currentStepProgressPct:null,stepProgressHop:null,stepProgressM:null,stepProgressAt:0,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedLat:null,lastAcceptedLon:null,turnConfirmHop:null,turnConfirmCount:0,lastTurnDetectedAt:0,lastTurnMessage:'',arrivalConfirmCount:0,lastArrivalDistanceM:null,walkCaches:null,walkProgressHop:null,walkProgressM:null,walkTotalM:null,walkRemainingM:null,walkOffPathM:null,walkOffCount:0,walkOffPath:false,walkArrivalCount:0,walkNextInstruction:null};
 const PROD_NAV_DIAG_KEY='runsgdProdNavDiagnosticsV1';
 let prodNavDiagSession=null,prodNavDiagLastSnapshotAt=0,prodNavDiagLastTurnState='';
 function prodNavDiagRead(){try{let v=JSON.parse(localStorage.getItem(PROD_NAV_DIAG_KEY)||'null');return v&&Array.isArray(v.sessions)?v:{version:1,sessions:[]}}catch{return {version:1,sessions:[]}}}
@@ -1861,6 +1863,7 @@ function prodNavDiagSnapshot(reason='gps',force=false){
   step_progress_pct:Number.isFinite(sgJourneyRuntime.currentStepProgressPct)?Math.round(sgJourneyRuntime.currentStepProgressPct):null,
   step_remaining_m:Number.isFinite(sgJourneyRuntime.currentStepRemainingM)?Math.round(sgJourneyRuntime.currentStepRemainingM):null,
   turn_confirm_count:Number(sgJourneyRuntime.turnConfirmCount||0),arrival_confirm_count:Number(sgJourneyRuntime.arrivalConfirmCount||0),precision_zone:road?journeyPrecisionZone():false,
+  map_following:sgJourneyGoogleMapFollowing,map_rendering:sgJourneyGoogleMap?.getRenderingType?.()||null,travel_heading:journeyNavNumber(sgJourneyGoogleMapVehicleHeading),map_heading:journeyNavNumber(sgJourneyGoogleMap?.getHeading?.()),
   next_maneuver:cue?.action||'',turn_state:String($('sgJourneyTurnState')?.textContent||'').slice(0,160),confidence};
  prodNavDiagSession.fix_count=Number(prodNavDiagSession.fix_count||0)+1;if(road)prodNavDiagSession.road_fix_count=Number(prodNavDiagSession.road_fix_count||0)+1;
  if(Number.isFinite(snap.gps_accuracy_m)){prodNavDiagSession.accuracy_sum=Number(prodNavDiagSession.accuracy_sum||0)+snap.gps_accuracy_m;prodNavDiagSession.accuracy_count=Number(prodNavDiagSession.accuracy_count||0)+1}
@@ -2742,6 +2745,7 @@ function journeyGoogleNavPath(legs,idx){
 }
 function hideJourneyGoogleMap(){
  $('sgJourneyProdMapWrap')?.classList.remove('show');
+ clearTimeout(sgJourneyGoogleMapResumeTimer);
  sgJourneyGoogleMapFollowing=true
 }
 function journeyRoutePointAt(cache,progressM){
@@ -2767,38 +2771,75 @@ function journeyWalkGuidanceHeading(cache,progress,routeHeading=null){
  if(Number.isFinite(phone))return phone;
  return Number.isFinite(routeHeading)?routeHeading:null
 }
+function journeyNavNumber(value){
+ if(value==null||value==='')return null;
+ let n=Number(value);return Number.isFinite(n)?n:null
+}
+function journeyRoadTangent(cache,progress){
+ if(!cache||!Number.isFinite(progress))return null;
+ let point=journeyRoutePointAt(cache,progress+.5);if(!point)return null;
+ for(let i=point.index;i<cache.points.length-1;i++){
+  let a=cache.points[i],b=cache.points[i+1];
+  if(cache.cum[i+1]-cache.cum[i]>.1)return journeyBearing(a.lat,a.lon,b.lat,b.lon)
+ }
+ return null
+}
+function journeyRoadGuidanceHeading(cache,progress,onRoute){
+ let speed=journeyNavNumber(sgJourneyRuntime.gpsSpeed),acc=journeyNavNumber(sgJourneyRuntime.gpsAccuracy),now=Date.now();
+ let fresh=sgJourneyRuntime.gpsUpdatedAt>0&&now-sgJourneyRuntime.gpsUpdatedAt<=6500,good=Number.isFinite(acc)&&acc<=50;
+ let gps=journeyNavNumber(sgJourneyRuntime.gpsHeading),movement=journeyNavNumber(sgJourneyRuntime.movementBearing);
+ if(fresh&&good&&speed>=2&&Number.isFinite(gps))return gps;
+ if(fresh&&good&&Number.isFinite(movement)&&sgJourneyRuntime.movementBearingAt>0&&now-sgJourneyRuntime.movementBearingAt<=6500&&(speed==null||speed>=2))return movement;
+ // At a stop keep the last travel direction rather than rotating with GPS jitter.
+ if(fresh&&speed!=null&&speed<2&&Number.isFinite(sgJourneyGoogleMapVehicleHeading))return sgJourneyGoogleMapVehicleHeading;
+ let tangent=onRoute?journeyRoadTangent(cache,progress):null;
+ return Number.isFinite(tangent)?tangent:null
+}
+function journeyCameraPointAhead(point,heading,meters){
+ if(!Number.isFinite(heading))return point;
+ let r=Math.PI/180,d=meters/6371000,b=heading*r,a=point.lat*r,l=point.lng*r;
+ let lat=Math.asin(Math.sin(a)*Math.cos(d)+Math.cos(a)*Math.sin(d)*Math.cos(b));
+ let lon=l+Math.atan2(Math.sin(b)*Math.sin(d)*Math.cos(a),Math.cos(d)-Math.sin(a)*Math.sin(lat));
+ return {lat:lat/r,lng:((lon/r+540)%360)-180}
+}
 function journeyGoogleCameraState(lat,lon){
  let walking=String(sgJourneyLeg()?.mode||'').toUpperCase()==='WALK',idx=Math.max(0,Number(sgJourney?.current_hop)||0);
- let cache=walking?sgJourneyRuntime.walkCaches?.[idx]:sgJourneyRuntime.roadCache,progress=walking?Number(sgJourneyRuntime.walkProgressM):Number(sgJourneyRuntime.routeProgressM),speed=Math.max(0,Number(sgJourneyRuntime.gpsSpeed)||0),stepRemain=walking?Number(sgJourneyRuntime.walkNextInstruction?.distance_m):Number(sgJourneyRuntime.currentStepRemainingM);
- let matched=journeyRoutePointAt(cache,progress),routeOffset=walking?Number(sgJourneyRuntime.walkOffPathM):Number(sgJourneyRuntime.offRouteM),display=matched&&(!Number.isFinite(routeOffset)||routeOffset<=90)?{lat:matched.lat,lng:matched.lon}:{lat,lng:lon};
+ let cache=walking?sgJourneyRuntime.walkCaches?.[idx]:sgJourneyRuntime.roadCache,progress=journeyNavNumber(walking?sgJourneyRuntime.walkProgressM:sgJourneyRuntime.routeProgressM),speed=Math.max(0,Number(sgJourneyRuntime.gpsSpeed)||0),stepRemain=journeyNavNumber(walking?sgJourneyRuntime.walkNextInstruction?.distance_m:sgJourneyRuntime.currentStepRemainingM);
+ let matched=journeyRoutePointAt(cache,progress),routeOffset=walking?Number(sgJourneyRuntime.walkOffPathM):journeyNavNumber(sgJourneyRuntime.offRouteM),onRoute=!!matched&&Number.isFinite(routeOffset)&&routeOffset<=90,display=onRoute?{lat:matched.lat,lng:matched.lon}:{lat,lng:lon};
  // Walking uses a shorter look-ahead so the position marker sits around the lower third
  // while still showing enough path before the next maneuver.
- let lookAhead=walking?(Number.isFinite(stepRemain)?Math.max(18,Math.min(42,stepRemain*.32)):32):(stepRemain<180?Math.max(38,Math.min(70,stepRemain*.42)):Math.max(65,Math.min(125,72+speed*2.2)));
+ let nearTurn=Number.isFinite(stepRemain)&&stepRemain<180;
+ let lookAhead=walking?(Number.isFinite(stepRemain)?Math.max(18,Math.min(42,stepRemain*.32)):32):(nearTurn?Math.max(38,Math.min(70,stepRemain*.42)):Math.max(65,Math.min(125,72+speed*2.2)));
  let ahead=journeyRoutePointAt(cache,progress+lookAhead),center=ahead?{lat:ahead.lat,lng:ahead.lon}:display;
  let routeHeading=matched&&ahead?journeyBearing(matched.lat,matched.lon,ahead.lat,ahead.lon):null;
- let heading=walking?journeyWalkGuidanceHeading(cache,progress,routeHeading):(Number.isFinite(routeHeading)?routeHeading:Number.isFinite(Number(sgJourneyRuntime.movementBearing))?Number(sgJourneyRuntime.movementBearing):Number.isFinite(Number(sgJourneyHeading))?Number(sgJourneyHeading):0);
- if(!Number.isFinite(heading))heading=0;
- let zoom=walking?18.15:(stepRemain<180?17.6:speed>24?16.8:speed>15?17.0:17.25);
+ let heading=walking?journeyWalkGuidanceHeading(cache,progress,routeHeading):journeyRoadGuidanceHeading(cache,progress,onRoute);
+ // Road look-ahead follows the current course, not a chord around the next turn.
+ if(!walking)center=onRoute?journeyCameraPointAhead(display,heading,lookAhead):display;
+ let zoom=walking?18.15:(nearTurn?17.6:speed>24?16.8:speed>15?17.0:17.25);
  return {display,center,heading,zoom,walking}
 }
 function journeyGoogleMapCourseHeading(target,force=false){
- target=Number(target);if(!Number.isFinite(target))target=0;target=((target%360)+360)%360;
+ target=journeyNavNumber(target);if(!Number.isFinite(target))return Number.isFinite(sgJourneyGoogleMapHeading)?sgJourneyGoogleMapHeading:0;target=((target%360)+360)%360;
  let walking=String(sgJourneyLeg()?.mode||'').toUpperCase()==='WALK';
  if(force||!Number.isFinite(sgJourneyGoogleMapHeading)){sgJourneyGoogleMapHeading=target;return target}
  let delta=((target-sgJourneyGoogleMapHeading+540)%360)-180,abs=Math.abs(delta);
  // Walking deadband prevents the map from twitching with every compass/GPS sample.
  if(walking&&abs<8)return sgJourneyGoogleMapHeading;
- let factor=walking?(abs>70?.55:abs>35?.38:.22):(abs>55?.55:.34);
+ // Car turns follow the latest accepted course immediately; only tiny noise is held.
+ if(!walking){if(abs>=3)sgJourneyGoogleMapHeading=target;return sgJourneyGoogleMapHeading}
+ let factor=abs>70?.55:abs>35?.38:.22;
  sgJourneyGoogleMapHeading=(sgJourneyGoogleMapHeading+delta*factor+360)%360;
  return sgJourneyGoogleMapHeading
 }
-function updateJourneyGoogleMapLive(lat=Number(sgJourneyRuntime.lastLat),lon=Number(sgJourneyRuntime.lastLon),force=false){
+function updateJourneyGoogleMapLive(lat=journeyNavNumber(sgJourneyRuntime.lastLat),lon=journeyNavNumber(sgJourneyRuntime.lastLon),force=false){
  if(!sgJourneyGoogleMap||!sgJourneyGoogleMapVehicle||![lat,lon].every(Number.isFinite))return;
  let now=Date.now();if(!force&&now-Number(updateJourneyGoogleMapLive.lastAt||0)<400)return;updateJourneyGoogleMapLive.lastAt=now;
  let cam=journeyGoogleCameraState(lat,lon),heading=journeyGoogleMapCourseHeading(cam.heading,force);
  sgJourneyGoogleMapVehicle.setPosition(cam.display);
- let icon=journeyGoogleMapVehicleIcon();if(icon)sgJourneyGoogleMapVehicle.setIcon(icon);
- if(sgJourneyGoogleMapFollowing||force){
+ sgJourneyGoogleMapVehicleHeading=cam.heading;
+ if(sgJourneyGoogleMapFollowing){
+  let rendering=sgJourneyGoogleMap.getRenderingType?.();
+  if(rendering==='RASTER')heading=0;
   if(typeof sgJourneyGoogleMap.moveCamera==='function'){
    sgJourneyGoogleMap.moveCamera({center:cam.center,zoom:cam.zoom,heading,tilt:0})
   }else{
@@ -2807,14 +2848,34 @@ function updateJourneyGoogleMapLive(lat=Number(sgJourneyRuntime.lastLat),lon=Num
    if(typeof sgJourneyGoogleMap.setHeading==='function')sgJourneyGoogleMap.setHeading(heading)
   }
  }
+ syncJourneyGoogleMapVehicle();updateJourneyGoogleMapFollowUi();
+}
+function syncJourneyGoogleMapVehicle(){
+ let icon=journeyGoogleMapVehicleIcon();if(icon&&sgJourneyGoogleMapVehicle)sgJourneyGoogleMapVehicle.setIcon(icon)
+}
+function updateJourneyGoogleMapFollowUi(){
+ let walking=String(sgJourneyLeg()?.mode||'').toUpperCase()==='WALK',rendering=sgJourneyGoogleMap?.getRenderingType?.();
+ txt('sgJourneyProdMapBadge',!sgJourneyGoogleMapFollowing?'Following paused':rendering==='RASTER'?'North-up map · direction arrow':walking?'Walking map · RunSGD guidance':'Driving map · following');
+ $('sgJourneyProdMapWrap')?.classList.toggle('followPaused',!sgJourneyGoogleMapFollowing);
+ txt('sgJourneyProdRecenter',sgJourneyGoogleMapFollowing?'Recenter':'Resume');
+ $('sgJourneyProdRecenter')?.setAttribute('aria-label',sgJourneyGoogleMapFollowing?'Recenter navigation map':'Resume map following');
+}
+function pauseJourneyGoogleMapFollowing(){
+ sgJourneyGoogleMapFollowing=false;clearTimeout(sgJourneyGoogleMapResumeTimer);updateJourneyGoogleMapFollowUi()
+}
+function scheduleJourneyGoogleMapFollowing(){
+ clearTimeout(sgJourneyGoogleMapResumeTimer);
+ sgJourneyGoogleMapResumeTimer=setTimeout(()=>{if(sgJourney?.status==='active')recenterJourneyGoogleMap()},8000)
 }
 function recenterJourneyGoogleMap(){
+ clearTimeout(sgJourneyGoogleMapResumeTimer);
  sgJourneyGoogleMapFollowing=true;
- updateJourneyGoogleMapLive(Number(sgJourneyRuntime.lastLat),Number(sgJourneyRuntime.lastLon),true)
+ updateJourneyGoogleMapLive(journeyNavNumber(sgJourneyRuntime.lastLat),journeyNavNumber(sgJourneyRuntime.lastLon),true)
 }
 function journeyGoogleMapVehicleIcon(){
  let maps=window.google?.maps;if(!maps)return null;
- return {path:maps.SymbolPath.FORWARD_CLOSED_ARROW,scale:6,rotation:0,fillColor:'#2567e8',fillOpacity:1,strokeColor:'#ffffff',strokeWeight:2}
+ let heading=journeyNavNumber(sgJourneyGoogleMapVehicleHeading),actual=journeyNavNumber(sgJourneyGoogleMap?.getHeading?.())??0;
+ return {path:Number.isFinite(heading)?maps.SymbolPath.FORWARD_CLOSED_ARROW:maps.SymbolPath.CIRCLE,scale:6,rotation:Number.isFinite(heading)?((heading-actual+540)%360)-180:0,fillColor:'#2567e8',fillOpacity:1,strokeColor:'#ffffff',strokeWeight:2}
 }
 async function renderJourneyGoogleMap(road,leg,idx,legs){
  let wrap=$('sgJourneyProdMapWrap'),host=$('sgJourneyProdMap');if(!wrap||!host)return;
@@ -2825,15 +2886,21 @@ async function renderJourneyGoogleMap(road,leg,idx,legs){
  let ok=await ensureJourneyGoogleMaps();
  if(!ok||!sgJourney||sgJourney.status!=='active'||String(sgJourney.started_at||'')!==journeyId)return;
  wrap.classList.add('show');
- let maps=google.maps,path=points.map(p=>({lat:p.lat,lng:p.lon})),lat=Number(sgJourneyRuntime.lastLat),lon=Number(sgJourneyRuntime.lastLon);
+ let maps=google.maps,path=points.map(p=>({lat:p.lat,lng:p.lon})),lat=journeyNavNumber(sgJourneyRuntime.lastLat),lon=journeyNavNumber(sgJourneyRuntime.lastLon);
  let livePos=[lat,lon].every(Number.isFinite)?{lat,lng:lon}:null;
  if(!sgJourneyGoogleMap){
   let start=livePos||path[0];
   let mapOptions={center:start,zoom:17.25,disableDefaultUI:true,clickableIcons:false,keyboardShortcuts:false,gestureHandling:'cooperative',mapTypeId:'roadmap',heading:0,tilt:0,headingInteractionEnabled:false,tiltInteractionEnabled:false};
   if(maps.RenderingType?.VECTOR)mapOptions.renderingType=maps.RenderingType.VECTOR;
   sgJourneyGoogleMap=new maps.Map(host,mapOptions);
-  maps.event.addListener(sgJourneyGoogleMap,'dragstart',()=>{sgJourneyGoogleMapFollowing=false});
-  host.addEventListener('touchstart',e=>{if((e.touches?.length||0)>=2)sgJourneyGoogleMapFollowing=false},{passive:true});
+  maps.event.addListener(sgJourneyGoogleMap,'dragstart',pauseJourneyGoogleMapFollowing);
+  maps.event.addListener(sgJourneyGoogleMap,'dragend',scheduleJourneyGoogleMapFollowing);
+  maps.event.addListener(sgJourneyGoogleMap,'heading_changed',syncJourneyGoogleMapVehicle);
+  maps.event.addListener(sgJourneyGoogleMap,'renderingtype_changed',()=>{updateJourneyGoogleMapLive(journeyNavNumber(sgJourneyRuntime.lastLat),journeyNavNumber(sgJourneyRuntime.lastLon),true)});
+  host.addEventListener('touchstart',e=>{if((e.touches?.length||0)>=2)pauseJourneyGoogleMapFollowing()},{passive:true});
+  host.addEventListener('touchend',e=>{if((e.touches?.length||0)===0&&!sgJourneyGoogleMapFollowing)scheduleJourneyGoogleMapFollowing()},{passive:true});
+  host.addEventListener('touchcancel',scheduleJourneyGoogleMapFollowing,{passive:true});
+  host.addEventListener('wheel',()=>{pauseJourneyGoogleMapFollowing();scheduleJourneyGoogleMapFollowing()},{passive:true});
   sgJourneyGoogleMapOutline=new maps.Polyline({map:sgJourneyGoogleMap,path,strokeColor:'#ffffff',strokeOpacity:.95,strokeWeight:10,zIndex:2});
   sgJourneyGoogleMapRoute=new maps.Polyline({map:sgJourneyGoogleMap,path,strokeColor:'#2468e8',strokeOpacity:1,strokeWeight:6,zIndex:3});
   sgJourneyGoogleMapVehicle=new maps.Marker({map:sgJourneyGoogleMap,position:start,icon:journeyGoogleMapVehicleIcon(),zIndex:6,title:'Current position'});
@@ -2855,7 +2922,7 @@ async function renderJourneyGoogleMap(road,leg,idx,legs){
   sgJourneyGoogleMapTurn.setLabel({text:journeyManeuverIcon(cue),color:'#ffffff',fontSize:'15px',fontWeight:'900'});
   sgJourneyGoogleMapTurn.setVisible(true)
  }else sgJourneyGoogleMapTurn.setVisible(false);
- txt('sgJourneyProdMapBadge',walking?'Walking map · RunSGD guidance':'Google map · RunSGD guidance')
+ updateJourneyGoogleMapFollowUi()
 }
 function makePointCache(points){
  points=(points||[]).filter(p=>Number.isFinite(Number(p?.lat))&&Number.isFinite(Number(p?.lon))).map(p=>({lat:Number(p.lat),lon:Number(p.lon)}));
@@ -3122,7 +3189,7 @@ function reconcileRoadProgress(p,lat,lon,leg,distance,moved,now){
  if(roadArrivalCheck(lat,lon,coords,quality,cache,curProj,idx,legs))return true;
  if(currentStep&&nextStep){
   let nextProj=projectJourneyToRoad(nextStep,lat,lon,false),tol=roadStepTolerance(coords),curRemain=curProj?Math.max(0,currentStep.total-curProj.progress_m):Infinity,acc=Number(quality.accuracy);
-  let nextHeading=roadPolylineHeading(nextStep,nextProj),motionHeading=Number(sgJourneyRuntime.movementBearing),gpsHeading=Number(coords.heading),phoneHeading=Number.isFinite(motionHeading)?motionHeading:Number.isFinite(gpsHeading)?gpsHeading:sgJourneyHeading;
+  let nextHeading=roadPolylineHeading(nextStep,nextProj),motionHeading=journeyNavNumber(sgJourneyRuntime.movementBearing),gpsHeading=journeyNavNumber(coords.heading),phoneHeading=Number.isFinite(gpsHeading)?gpsHeading:Number.isFinite(motionHeading)&&sgJourneyRuntime.movementBearingAt>0&&now-sgJourneyRuntime.movementBearingAt<=6500?motionHeading:null;
   let headingLimit=precision?40:55,headingOk=!Number.isFinite(phoneHeading)||!Number.isFinite(nextHeading)||Number(coords.speed)<2||headingDelta(phoneHeading,nextHeading)<=headingLimit;
   let entryNeed=precision?Math.min(28,Math.max(10,nextStep.total*.16)):Math.min(35,Math.max(8,nextStep.total*.12));
   let nextEntered=!!nextProj&&nextProj.progress_m>=entryNeed,nextClose=!!nextProj&&nextProj.distance_m<=Math.min(precision?45:70,tol);
@@ -3244,13 +3311,13 @@ function journeyRelative(delta){
 }
 function journeyOrientation(e){
  let h=null;
- if(Number.isFinite(Number(e.webkitCompassHeading)))h=Number(e.webkitCompassHeading);
- else if(Number.isFinite(Number(e.alpha)))h=(360-Number(e.alpha))%360;
+ if(Number.isFinite(journeyNavNumber(e.webkitCompassHeading)))h=Number(e.webkitCompassHeading);
+ else if(Number.isFinite(journeyNavNumber(e.alpha)))h=(360-Number(e.alpha))%360;
  if(Number.isFinite(h)){
   sgJourneyHeading=h;let now=Date.now(),walking=String(sgJourneyLeg()?.mode||'').toUpperCase()==='WALK';
   // Compass changes must drive the walking camera too, not only the separate beacon.
   if(walking&&sgJourneyGoogleMapFollowing&&now-Number(journeyOrientation.lastMapAt||0)>=220){
-   journeyOrientation.lastMapAt=now;updateJourneyGoogleMapLive(Number(sgJourneyRuntime.lastLat),Number(sgJourneyRuntime.lastLon))
+   journeyOrientation.lastMapAt=now;updateJourneyGoogleMapLive(journeyNavNumber(sgJourneyRuntime.lastLat),journeyNavNumber(sgJourneyRuntime.lastLon))
   }
   if(now-Number(journeyOrientation.lastRenderAt||0)>=120){journeyOrientation.lastRenderAt=now;renderJourneyBeacon()}
  }
@@ -3521,9 +3588,10 @@ function restoreSgJourney(){
 }
 function startSgJourneyTracking(){
  if(!sgJourney||sgJourney.status!=='active'||!navigator.geolocation)return;
+ clearTimeout(sgJourneyGoogleMapResumeTimer);sgJourneyGoogleMapFollowing=true;sgJourneyGoogleMapHeading=null;sgJourneyGoogleMapVehicleHeading=null;
  if(sgJourneyWatchId!=null)navigator.geolocation.clearWatch(sgJourneyWatchId);
  sgJourneyFreshFixPending=false;
- sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:buildJourneyRoadCache(sgJourney.route),routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0,gpsAccuracy:null,gpsUpdatedAt:0,gpsSpeed:null,gpsError:false,movementBearing:null,currentStepRemainingM:null,currentStepProgressPct:null,stepProgressHop:null,stepProgressM:null,stepProgressAt:0,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedLat:null,lastAcceptedLon:null,turnConfirmHop:null,turnConfirmCount:0,lastTurnDetectedAt:0,lastTurnMessage:'',arrivalConfirmCount:0,lastArrivalDistanceM:null,walkCaches:buildJourneyWalkCaches(sgJourney.route),walkProgressHop:null,walkProgressM:null,walkTotalM:null,walkRemainingM:null,walkOffPathM:null,walkOffCount:0,walkOffPath:false,walkArrivalCount:0,walkNextInstruction:null,hopEntryConfirmed:Number(sgJourney.current_hop||0)>0};
+ sgJourneyRuntime={lastLat:null,lastLon:null,lastMovedAt:Date.now(),bestDistance:Infinity,worseCount:0,lastAiAt:0,lastRenderAt:0,roadCache:buildJourneyRoadCache(sgJourney.route),routeProgressM:null,routeTotalM:null,offRouteM:null,lastFixAt:0,gpsAccuracy:null,gpsUpdatedAt:0,gpsSpeed:null,gpsError:false,gpsHeading:null,movementBearing:null,movementBearingAt:0,bearingLat:null,bearingLon:null,currentStepRemainingM:null,currentStepProgressPct:null,stepProgressHop:null,stepProgressM:null,stepProgressAt:0,lastAcceptedRouteProgressM:null,lastAcceptedRouteAt:0,lastAcceptedLat:null,lastAcceptedLon:null,turnConfirmHop:null,turnConfirmCount:0,lastTurnDetectedAt:0,lastTurnMessage:'',arrivalConfirmCount:0,lastArrivalDistanceM:null,walkCaches:buildJourneyWalkCaches(sgJourney.route),walkProgressHop:null,walkProgressM:null,walkTotalM:null,walkRemainingM:null,walkOffPathM:null,walkOffCount:0,walkOffPath:false,walkArrivalCount:0,walkNextInstruction:null,hopEntryConfirmed:Number(sgJourney.current_hop||0)>0};
  prodNavDiagStart();
  syncJourneyCompassForMode();startJourneyGpsUiTimer();setJourneyTurnState('Route matching…','turn');$('sgJourneyRerouteBtn')?.classList.remove('offroute');
  sgJourneyWatchId=navigator.geolocation.watchPosition(handleSgJourneyPosition,()=>{
@@ -3534,20 +3602,30 @@ function startSgJourneyTracking(){
  setTimeout(()=>{if(sgJourney?.status==='active'&&!document.hidden&&Date.now()-Number(sgJourneyRuntime.gpsUpdatedAt||0)>2500)reconcileSgJourneyPosition()},3000);
 }
 function stopSgJourneyTracking(){
+ clearTimeout(sgJourneyGoogleMapResumeTimer);
  if(sgJourneyWatchId!=null&&navigator.geolocation){navigator.geolocation.clearWatch(sgJourneyWatchId);sgJourneyWatchId=null}
  if(sgJourneyFreshFixTimer){clearInterval(sgJourneyFreshFixTimer);sgJourneyFreshFixTimer=null}
  sgJourneyFreshFixPending=false;stopJourneyCompass();stopJourneyGpsUiTimer();
 }
 function handleSgJourneyPosition(p){
  if(!sgJourney||sgJourney.status!=='active')return;
- let lat=Number(p.coords.latitude),lon=Number(p.coords.longitude),now=Date.now(),leg=sgJourneyLeg();
- if(Number.isFinite(Number(p.coords.heading)))sgJourneyHeading=Number(p.coords.heading);
+ let lat=journeyNavNumber(p.coords.latitude),lon=journeyNavNumber(p.coords.longitude),now=Date.now(),leg=sgJourneyLeg();
  if(!Number.isFinite(lat)||!Number.isFinite(lon)||!leg)return;
- sgJourneyRuntime.gpsUpdatedAt=Number.isFinite(Number(p.timestamp))?Number(p.timestamp):now;sgJourneyRuntime.gpsAccuracy=Number.isFinite(Number(p.coords.accuracy))?Number(p.coords.accuracy):null;sgJourneyRuntime.gpsSpeed=Number.isFinite(Number(p.coords.speed))?Number(p.coords.speed):null;sgJourneyRuntime.gpsError=false;updateJourneyGpsHealth();
+ sgJourneyRuntime.gpsHeading=journeyNavNumber(p.coords.heading);
+ if(Number.isFinite(sgJourneyRuntime.gpsHeading))sgJourneyHeading=sgJourneyRuntime.gpsHeading;
+ sgJourneyRuntime.gpsUpdatedAt=journeyNavNumber(p.timestamp)??now;sgJourneyRuntime.gpsAccuracy=journeyNavNumber(p.coords.accuracy);sgJourneyRuntime.gpsSpeed=journeyNavNumber(p.coords.speed);sgJourneyRuntime.gpsError=false;updateJourneyGpsHealth();
  live.location={...classify(lat,lon),detected_at:now,accuracy_m:sgJourneyRuntime.gpsAccuracy};
  let targetLat=Number(leg.to?.lat),targetLon=Number(leg.to?.lon),distance=journeyMeters(lat,lon,targetLat,targetLon);
  let prevLat=sgJourneyRuntime.lastLat,prevLon=sgJourneyRuntime.lastLon,moved=prevLat==null?0:journeyMeters(prevLat,prevLon,lat,lon);
- if(moved!=null&&moved>=8&&[prevLat,prevLon,lat,lon].every(Number.isFinite))sgJourneyRuntime.movementBearing=journeyBearing(prevLat,prevLon,lat,lon);
+ // Accumulate small GPS advances so frequent fixes still produce a movement course.
+ if(sgJourneyRuntime.gpsAccuracy!=null&&sgJourneyRuntime.gpsAccuracy<=50&&now-sgJourneyRuntime.gpsUpdatedAt<=6500){
+  let baseLat=sgJourneyRuntime.bearingLat,baseLon=sgJourneyRuntime.bearingLon;
+  if(![baseLat,baseLon].every(Number.isFinite)){sgJourneyRuntime.bearingLat=lat;sgJourneyRuntime.bearingLon=lon}
+  else if(journeyMeters(baseLat,baseLon,lat,lon)>=Math.max(8,sgJourneyRuntime.gpsAccuracy)){
+   sgJourneyRuntime.movementBearing=journeyBearing(baseLat,baseLon,lat,lon);sgJourneyRuntime.movementBearingAt=now;
+   sgJourneyRuntime.bearingLat=lat;sgJourneyRuntime.bearingLon=lon
+  }
+ }
  if(moved!=null&&moved>18)sgJourneyRuntime.lastMovedAt=now;
  sgJourneyRuntime.lastLat=lat;sgJourneyRuntime.lastLon=lon;
  if(leg.manual){prodNavDiagSnapshot('manual_hop');persistSgJourneyThrottled();if(!document.hidden)renderSgJourney(distance);return}
