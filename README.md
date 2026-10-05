@@ -29,3 +29,25 @@ Users can choose **Current theme** or **Rounded Neobrutalism** in **More → App
 Theme assets are versioned and precached with the PWA shell. Adding a theme requires registering its identifier in `assets/theme.js`, adding scoped CSS in `assets/themes.css`, and adding a radio choice in the Appearance panel.
 
 Browser verification: `node tests/theme-switcher.mjs` with Playwright and its Chromium browser installed. Set `RUNSGD_TEST_BROWSER` to use an existing Chromium executable. The test serves the app locally and blocks external services.
+
+# Singapore traffic and ERP locations
+
+During an active Singapore drive or motorcycle journey, the Google navigation map shows a `TrafficLayer` and yellow ERP markers. Traffic and ERP switches are saved locally and default to on. Layers are detached on walking/manual hops, outside Singapore and when the journey ends. Traffic colours show Google's available traffic coverage; they do not trigger new route calculations.
+
+ERP geometry is bundled in `assets/singapore-erp.json`, derived from [LTA's September 2026 gantry file](https://datamall.lta.gov.sg/content/dam/datamall/datasets/Geospatial/ERPGantry_Sep2026.zip). The builder transforms SVY21 coordinates to WGS84, keeps only `TYP_CD=P` (ERP) and removes identical spans, leaving 101 distinct geometries. The source date, hash and attribution are included in the JSON and the date is displayed in marker details. Non-ERP EMAS, directional and height-limit gantries are excluded.
+
+Warnings require an intersection of the planned road polyline with the actual ERP span, two distinct accepted GPS fixes, accuracy and route offset within 30 m, and GPS age within 6.5 seconds. The warning appears 500–800 m before the crossing, depending on speed, and clears when GPS becomes unreliable, the driver leaves the route, or the location is passed. Heading is compared with the current route tangent. A walking/manual boundary prevents warnings for a later drive leg; a reroute rebuilds the crossing list. Repeated UI updates do not count as additional GPS fixes.
+
+These are location advisories, not live ERP operation or payment detection. The dataset has no travel direction or current charging status, and road polylines have no reliable elevation. Geometry can therefore miss a crossing or confuse vertically separated roads. Rates, operating hours and ERP 2 charging zones are not inferred. Refresh the location dataset when LTA publishes a new file, including updating the builder's source metadata and the popup date. ERP lookups and GPS warning calculations do not call a paid API; existing Google map usage still applies.
+
+To reproduce the bundled geometry from the source ZIP:
+
+~~~sh
+python -m pip install pyshp pyproj
+python scripts/build-singapore-erp.py /path/to/ERPGantry_Sep2026.zip
+node tests/singapore-road-alerts.mjs
+RUNSGD_TEST_BROWSER=/path/to/chromium node tests/car-navigation-browser.mjs
+node tests/pwa-shell.mjs
+~~~
+
+The browser test uses renderer fixtures and real bundled ERP geometry, with external services blocked. It checks actual GPS reconciliation, switches, marker dialogs, stale GPS, the Singapore boundary, non-driving leg boundaries, map cleanup and mobile layouts in both themes. Live traffic tile coverage and field GPS accuracy require an on-device check after deployment.
