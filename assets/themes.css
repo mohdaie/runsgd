@@ -18,7 +18,7 @@
 .themePreviewNeo i{background:#065bff;border:1px solid #17202e;box-shadow:2px 2px 0 #17202e}
 
 /* All visual overrides are opt-in. Never change display/visibility or map geometry. */
-html[data-runsgd-theme="neobrutalism"]{--ink:#17202e;--muted:#596475;--blue:#0755e9;--violet:#0755e9;--pink:#0755e9;--card:#fff;--line:#17202e;--soft:#edf3ff;--neo-border:2px solid #17202e;--neo-shadow:4px 5px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"]{--ink:#17202e;--muted:#596475;--blue:#0755e9;--violet:#0755e9;--pink:#0755e9;--card:#fff;--line:#17202e;--soft:#edf3ff;--neo-border:2px solid #17202e;--neo-shadow:4px 5px 0 #17202e;--neo-mint:#b4d0ba;--neo-green:#81c783;--neo-purple:#a99dff;--neo-yellow:#ffdb58;--neo-orange:#ffab62;--neo-pink:#f68dbb}
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode){color:var(--ink);background-color:#f7f8fa;background-image:linear-gradient(#17202e0b 1px,transparent 1px),linear-gradient(90deg,#17202e0b 1px,transparent 1px);background-size:28px 28px}
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.brand,.signinLogo){background:none;-webkit-text-fill-color:var(--ink);color:var(--ink)}
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .brand::after{content:'.';color:var(--blue);-webkit-text-fill-color:var(--blue)}
@@ -58,5 +58,35 @@ html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(button,a,inp
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) button:active{transform:translate(1px,2px);filter:none}
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .themeChoice{border:var(--neo-border);border-radius:13px;box-shadow:2px 3px 0 #17202e}
 html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .themeChoice:has(input:checked){border-color:#0755e9;box-shadow:2px 3px 0 #0755e9}
+
+/* Explore and Admin use their own card classes. Give them the same flat palette. */
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.kbCard,.kbIntro,.navCard,.adminProfile){border:var(--neo-border);border-radius:17px;background:#fff;box-shadow:var(--neo-shadow)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) #explore .aiCard{background:var(--neo-mint);border:var(--neo-border)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .kbIntro{background:var(--neo-yellow)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .kbIcon{background:var(--neo-purple);color:var(--ink);border:2px solid #17202e;border-radius:10px;box-shadow:2px 2px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .kbCard:has(use[href="#i-traffic-cone"]) .kbIcon{background:var(--neo-orange)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .kbCard:has(use[href="#i-bus"]) .kbIcon{background:var(--neo-yellow)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .kbCard:has(use[href="#i-book-user"]) .kbIcon{background:var(--neo-pink)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .kbCard:has(use[href="#i-car"]) .kbIcon{background:var(--neo-green)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .kbCard:has(use[href="#i-banknote"]) .kbIcon{background:var(--neo-mint)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.kbSummary,.kbBody li,.kbChecked,.kbChevron,.navText,.metricLabel,.metricSub,.sparkLabel,.trendHead){color:#424e60}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .adminProfile{background:var(--neo-mint);margin-bottom:20px}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .adminAvatar{border:2px solid #17202e;background:#fff;border-radius:12px}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .monitorCard{background:#fff;overflow:visible}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .monitorCard .metric{border:2px solid #17202e;border-radius:12px;box-shadow:2px 3px 0 #17202e;background:var(--neo-green)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .monitorCard .metric:nth-child(2){background:var(--neo-purple)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .monitorCard .metric:nth-child(3){background:var(--neo-yellow)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .metricValue{color:var(--ink)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .sparkBar{background:#347e3c;border-radius:5px 5px 0 0;box-shadow:none}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.monitorLive,.memberTag){border:1px solid #17202e;border-radius:8px;box-shadow:none;background:var(--neo-green);color:#17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .monitorLive::before{background:#246331;box-shadow:none}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .navCard .navIcon{display:grid;place-items:center;width:44px;height:44px;background:var(--neo-purple);border:2px solid #17202e;border-radius:10px;box-shadow:2px 2px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .navCard[href="/admin/health/"] .navIcon{background:var(--neo-green)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .navCard[href="/admin/keys/"] .navIcon{background:var(--neo-yellow)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .navCard[href="/admin/people/"] .navIcon{background:var(--neo-pink)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .navCard[href="/admin/ui/"] .navIcon{background:var(--neo-orange)}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) :is(.routeAiShell,.routeAiUnderstood){background:#fff;border:var(--neo-border);border-radius:13px;box-shadow:2px 3px 0 #17202e}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .routeAiShell textarea{border:0;background:transparent}
+html[data-runsgd-theme="neobrutalism"] body:not(.communityMode) .routeAiSend{background:#0755e9;border:2px solid #17202e;border-radius:11px;box-shadow:2px 3px 0 #17202e}
 @media(max-width:360px){.themeChoices{grid-template-columns:1fr}.themeChoice{display:grid;grid-template-columns:76px minmax(0,1fr);column-gap:13px;padding-right:36px}.themePreview{grid-row:span 2;height:76px;padding:8px}.themeChoiceName{align-self:end}.themeChoiceDetail{align-self:start}html[data-runsgd-theme="neobrutalism"] .clockGrid{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){html[data-runsgd-theme="neobrutalism"] button{transition:none}}
