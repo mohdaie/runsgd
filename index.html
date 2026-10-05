@@ -5,16 +5,25 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="google-site-verification" content="iGemiKU9ImDboRJlfpkw5QDPl2T86-gurTiBvCb8oww">
 <meta name="theme-color" content="#ffffff">
-<title>RunSGD — Less blur. Less leceh. Your SG ↔ JB travel kaki.</title>
-<meta name="description" content="Work in Singapore or jalan-jalan in JB? Plan your journey, follow the next turn, check traffic and Singapore ERP locations, and ask RunSGD AI. Free for a limited time.">
+<title>JB–Singapore Traffic &amp; AI Journey Planner | RunSGD</title>
+<meta name="description" content="Plan Singapore–Johor Bahru trips with RunSGD. Check Causeway snapshots, traffic, bus arrivals, MRT status and ERP locations. Free for a limited time.">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://runsgd.site/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RunSGD">
-<meta property="og:title" content="Your commute got enough drama already. | RunSGD">
-<meta property="og:description" content="Less blur. Less leceh. Plan SG ↔ JB journeys, check traffic and ERP locations, and ask your travel kaki. Free for a limited time.">
+<meta property="og:title" content="JB–Singapore Traffic &amp; AI Journey Planner | RunSGD">
+<meta property="og:description" content="Plan Singapore–Johor Bahru trips with RunSGD. Check Causeway snapshots, traffic, bus arrivals, MRT status and ERP locations. Free for a limited time.">
 <meta property="og:url" content="https://runsgd.site/">
-<meta property="og:image" content="https://runsgd.site/assets/landing/approved-top.webp">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:locale" content="en_SG">
+<meta property="og:image" content="https://runsgd.site/icons/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="RunSGD app logo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JB–Singapore Traffic &amp; AI Journey Planner | RunSGD">
+<meta name="twitter:description" content="Plan Singapore–Johor Bahru trips with RunSGD. Check Causeway snapshots, traffic, bus arrivals, MRT status and ERP locations. Free for a limited time.">
+<meta name="twitter:image" content="https://runsgd.site/icons/icon-512.png">
+<meta name="twitter:image:alt" content="RunSGD app logo">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180">
@@ -22,8 +31,42 @@
 <script src="/assets/app-entry.js?v=2.17.0"></script>
 <script>const RUNSGD_VERSION='2.17.0';</script>
 <link rel="stylesheet" href="/assets/landing/landing.css?v=2.17.0">
+<style>#travel-guides .two-col{gap:12px;margin-top:28px;align-items:stretch}#travel-guides .feature-row small{font-size:14px}</style>
 <script src="/assets/landing/landing.js?v=2.17.0" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"RunSGD","url":"https://runsgd.site/","description":"Your Singapore and Johor travel kaki.","inLanguage":"en-SG"}</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization", "@id": "https://runsgd.site/#organization",
+   "name": "RunSGD", "url": "https://runsgd.site/",
+   "logo": {"@type": "ImageObject", "url": "https://runsgd.site/icons/icon-512.png", "width": 512, "height": 512}
+  },
+  {
+   "@type": "WebSite", "@id": "https://runsgd.site/#website",
+   "name": "RunSGD", "alternateName": "runSGD", "url": "https://runsgd.site/",
+   "description": "Singapore–Johor Bahru traffic and AI journey planning for commuters and day trips in both directions.",
+   "inLanguage": "en-SG", "publisher": {"@id": "https://runsgd.site/#organization"}
+  },
+  {
+   "@type": "WebPage", "@id": "https://runsgd.site/#webpage", "url": "https://runsgd.site/",
+   "name": "JB–Singapore Traffic & AI Journey Planner | RunSGD",
+   "description": "Plan Singapore–Johor Bahru trips with RunSGD. Check Causeway snapshots, traffic, bus arrivals, MRT status and ERP locations. Free for a limited time.",
+   "inLanguage": "en-SG", "isPartOf": {"@id": "https://runsgd.site/#website"},
+   "mainEntity": {"@id": "https://runsgd.site/app/#application"},
+   "about": [{"@type": "Place", "name": "Singapore"}, {"@type": "Place", "name": "Johor Bahru, Malaysia"}]
+  },
+  {
+   "@type": "WebApplication", "@id": "https://runsgd.site/app/#application",
+   "name": "RunSGD", "url": "https://runsgd.site/app/", "applicationCategory": "TravelApplication",
+   "operatingSystem": "Web", "browserRequirements": "Requires a modern web browser.",
+   "description": "Singapore–Johor Bahru journey planning with car, motorcycle, walking, bus and MRT options. AI planning and saved history require sign-in. Current features are free for a limited time.",
+   "publisher": {"@id": "https://runsgd.site/#organization"},
+   "featureList": ["AI journey planning and saved history", "Car, motorcycle and walking navigation", "Mixed-mode bus and MRT journeys", "Traffic-aware arrival estimates and rerouting", "Singapore ERP gantry location warnings, excluding rates and charging status", "Causeway snapshots", "Singapore bus arrivals and MRT service updates", "SGD–MYR currency converter", "Prayer times", "Explore AI and travel guides"]
+  }
+ ]
+}
+</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -41,9 +84,9 @@
  <section class="hero section container" aria-labelledby="hero-title">
   <div class="hero-copy">
    <span class="sticker">SG ↔ JB, work or jalan-jalan</span>
-   <h1 id="hero-title">Your commute got enough <span class="underline">drama already.</span></h1>
-   <p class="hero-bold">Let’s make the planning part easier.</p>
-   <p class="hero-sub">Still at home, already penat.</p>
+   <h1 id="hero-title">JB ↔ Singapore travel.<br><span class="underline">Less blur. Less leceh.</span></h1>
+   <p class="hero-bold">Your traffic check and AI journey planner.</p>
+   <p class="hero-sub">Plan trips between Johor Bahru and Singapore. Check Causeway traffic, connect bus and MRT journeys, or navigate by car, motorcycle and on foot.</p>
    <div class="hero-actions"><a class="button" href="/app/">Open RunSGD <svg class="icon " aria-hidden="true"><use href="#l-arrow"/></svg></a><a class="text-link" href="#how-it-works">See how it works <svg class="icon " aria-hidden="true"><use href="#l-down"/></svg></a></div>
   </div>
   <div class="art hero-art" role="img" aria-label="A commuter with kopi, a navigation phone, car, bus and MRT between Singapore and Johor" style="aspect-ratio:600/445;--art-width:134.8333%;--art-left:-16.6667%;--art-top:-100.2247%"><img src="/assets/landing/approved-top.webp" width="809" height="1942" alt="" loading="eager" decoding="async" fetchpriority="high"></div>
@@ -61,7 +104,7 @@
  <section class="planner section cream" id="features" aria-labelledby="planner-title">
   <div class="container">
    <div class="two-col planner-grid">
-    <div class="section-intro"><span class="eyebrow">One journey. Connected.</span><h2 id="planner-title">Tell us where you’re going.<br>We’ll help <span class="underline">connect the journey.</span></h2><p class="section-copy">Going to Tanjong Pagar? Or heading to JB to buy stuff?</p><p class="support-copy">Car, motorcycle, walking, bus or MRT. Put the pieces together in one place.</p></div>
+    <div class="section-intro"><span class="eyebrow">AI journey planner · Singapore ↔ Johor Bahru</span><h2 id="planner-title">Tell us where you’re going.<br>We’ll help <span class="underline">connect the journey.</span></h2><p class="section-copy">Going to Tanjong Pagar? Or heading to JB to buy stuff?</p><p class="support-copy">Car, motorcycle, walking, bus or MRT. Put the pieces together in one place.</p></div>
     <div class="planner-card outlined">
      <div class="card-heading"><svg class="icon " aria-hidden="true"><use href="#l-spark"/></svg><h3>AI Journey Planner</h3><span class="example-label">Example journey</span></div>
      <div class="example-prompt"><svg class="icon " aria-hidden="true"><use href="#l-pin"/></svg><span>Drive, then bus and MRT to Tanjong Pagar.</span></div>
@@ -89,7 +132,7 @@
  </section>
  <section class="daily section" aria-labelledby="daily-title">
   <div class="container">
-   <div class="section-intro"><span class="eyebrow">The little things, all together</span><h2 id="daily-title">Before leaving,<br><span class="underline">take a look first lah.</span></h2><p class="hero-bold">Check here, then jalan.</p></div>
+   <div class="section-intro"><span class="eyebrow">Causeway traffic, bus arrivals & MRT status</span><h2 id="daily-title">Before leaving,<br><span class="underline">take a look first lah.</span></h2><p class="hero-bold">Check here, then jalan.</p></div>
    <div class="daily-grid">
     <a class="daily-card causeway outlined" href="/app/#home"><div class="daily-heading"><span class="feature-icon blue"><svg class="icon " aria-hidden="true"><use href="#l-camera"/></svg></span><h3>Causeway snapshot</h3><span class="chevron">›</span></div><div class="art causeway-art" role="img" aria-label="Illustrated cars crossing the Causeway between the Singapore and Johor skylines" style="aspect-ratio:645/151;--art-width:124.9612%;--art-left:-12.7132%;--art-top:-617.2185%"><img src="/assets/landing/approved-middle.webp" width="806" height="1951" alt="" loading="lazy" decoding="async" ></div><p>See the crossing before you head out.</p></a>
     <a class="daily-card currency" href="/app/#home"><span class="daily-art currency-art" aria-hidden="true"><b>SGD</b><svg class="icon " aria-hidden="true"><use href="#l-exchange"/></svg><b>MYR</b></span><div><h3>Currency exchange</h3><p>SGD ↔ MYR</p></div><span class="chevron">›</span></a>
@@ -125,6 +168,19 @@
      <span class="sticker">Coming soon</span><h3>Premium<br>Android</h3><p>Features and pricing<br>to be announced.</p><span class="coming-soon">Coming soon</span>
      <div class="android-visual" aria-hidden="true"><span class="spark-one">✦</span><div class="android-phone"><span class="phone-notch"></span><b>runSGD<span>.</span></b><svg viewBox="0 0 100 100" class="android"><path d="M18 52a32 32 0 0 1 64 0Z" fill="currentColor"/><path d="M28 28 20 14m52 14 8-14" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><rect x="18" y="56" width="64" height="30" rx="7" fill="currentColor"/><circle cx="36" cy="40" r="3" fill="white"/><circle cx="64" cy="40" r="3" fill="white"/><path d="M31 82v13m38-13v13M10 59v22m80-22v22" stroke="currentColor" stroke-width="10" stroke-linecap="round"/></svg></div><span class="spark-two">✦</span></div>
     </article>
+   </div>
+  </div>
+ </section>
+ <section class="road section" id="travel-guides" aria-labelledby="guides-title">
+  <div class="container">
+   <div class="section-intro"><span class="eyebrow">Before you cross the border</span><h2 id="guides-title">Singapore ↔ JB<br><span class="underline">travel guides.</span></h2><p class="section-copy">Check your checkpoint, bus connections and travel documents before you leave.</p></div>
+   <div class="two-col">
+     <a class="feature-row" href="/guides/singapore-to-jb-public-transport/"><span><b>Singapore to Johor Bahru by public transport</b><small>MRT connections, cross-border buses and onward travel from JB CIQ.</small></span><span class="chevron" aria-hidden="true">›</span></a>
+     <a class="feature-row" href="/guides/woodlands-checkpoint-bus/"><span><b>Woodlands Checkpoint bus guide</b><small>Find out about 160, 170, 170X, 950 and Causeway Link connections.</small></span><span class="chevron" aria-hidden="true">›</span></a>
+     <a class="feature-row" href="/guides/tuas-second-link-bus/"><span><b>Tuas Second Link bus guide</b><small>Bus connections via Jurong East, Boon Lay and Tuas Link.</small></span><span class="chevron" aria-hidden="true">›</span></a>
+     <a class="feature-row" href="/guides/woodlands-vs-tuas/"><span><b>Woodlands vs Tuas checkpoints</b><small>Compare crossings for your destination and transport mode.</small></span><span class="chevron" aria-hidden="true">›</span></a>
+     <a class="feature-row" href="/guides/myica-myniise-checkpoint-apps/"><span><b>MyICA, MyNIISe and checkpoint apps</b><small>Prepare for immigration clearance and know which apps to check.</small></span><span class="chevron" aria-hidden="true">›</span></a>
+     <a class="feature-row" href="/guides/malaysia-vep-singapore-car/"><span><b>Malaysia VEP for Singapore cars</b><small>Read the registration, RFID and driving preparation checklist.</small></span><span class="chevron" aria-hidden="true">›</span></a>
    </div>
   </div>
  </section>
