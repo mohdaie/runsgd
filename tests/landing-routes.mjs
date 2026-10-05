@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+const entry={URL,URLSearchParams};vm.runInNewContext(fs.readFileSync('assets/app-entry.js','utf8'),entry);
+const go=entry.RunSGDEntry.destination;
+for(const path of ['/', '/index.html','#features','#pricing','#faq','#about'])assert.equal(go('https://runsgd.test'+(path.startsWith('#')?'/'+path:path)),null,'public landing stays on root');
+assert.equal(go('https://runsgd.test/',true),'/app/','existing installed root PWA enters the app');
+for(const tab of ['home','explore','journey','community','more','signin'])assert.equal(go('https://runsgd.test/#'+tab),'/app/#'+tab);
+for(const tail of ['?auth=google&popup=1&return=journey&attempt=abc#access_token=fake&refresh_token=fake','?code=abc&return=more','?appv=2.17.0&_refresh=123#home','?resume=mobile-app#journey','?mobile=1#more','#error=access_denied&error_description=test','#token_hash=fake&type=recovery'])assert.equal(go('https://runsgd.test/'+tail),'/app/'+tail,'callback / deep link preserved byte-for-byte');
+assert.equal(go('https://runsgd.test/app/#home',true),null,'app never loops to itself');
+const manifest=JSON.parse(fs.readFileSync('manifest.webmanifest'));assert.equal(manifest.id,'/');assert.equal(manifest.start_url,'/app/');assert.equal(manifest.scope,'/');
+const app=fs.readFileSync('app/index.html','utf8');assert.ok(!app.includes("new URL('/index.html'"));assert.ok(!app.includes("location.replace('/?"));assert.ok(app.includes('href="/privacy.html"'));
+assert.match(app,/runsgdLandingQuestion/);assert.match(app,/https:\/\/runsgd.site\/\?auth=google/,'existing allowed OAuth callback uses root bridge');
+const html=fs.readFileSync('index.html','utf8');for(const text of ['Limited Time','Premium','Android','Tanjong Pagar','heading to JB','ERP location warnings'])assert.ok(html.includes(text));
+assert.ok(!html.includes('window.supabase')&&!html.includes('maps.googleapis.com'),'landing does not initialize Supabase or Google Maps');
+const root='https://runsgd.test',buckets=new Map(),events={},navigated=[],messages=[];
+const caches={async keys(){return [...buckets.keys()]},async delete(n){return buckets.delete(n)},async open(n){if(!buckets.has(n))buckets.set(n,new Map());const m=buckets.get(n);const k=r=>new URL(typeof r==='string'?r:r.url,root).href;return {async put(r,v){m.set(k(r),v.clone())},async match(r){return m.get(k(r))?.clone()},async keys(){return [...m.keys()].map(x=>new Request(x))}}},async match(r){for(const name of buckets.keys()){const v=await(await this.open(name)).match(r);if(v)return v}}};
+const clients=['/#journey','/app/#journey','/#more','/','#pricing','/admin/','/guides/','/update/admin/'].map(t=>({url:root+(t.startsWith('#')?'/'+t:t),navigate:async u=>navigated.push(u),postMessage:m=>messages.push(m)}));
+let online=true;const network=async r=>{if(!online)throw Error('offline');const u=new URL(typeof r==='string'?r:r.url,root);return new Response(u.pathname.startsWith('/app')?'APPLICATION':u.pathname==='/'||u.pathname==='/index.html'?'LANDING':'asset',{headers:{'Content-Type':'text/html'}})};
+vm.runInNewContext(fs.readFileSync('sw.js','utf8'),{URL,Request,Response,Promise,Date,caches,fetch:network,self:{location:{origin:root},addEventListener:(n,f)=>events[n]=f,skipWaiting:async()=>{},clients:{claim:async()=>{},matchAll:async()=>clients},registration:{navigationPreload:{enable:async()=>{}}}}});
+async function lifecycle(type){let p;events[type]({waitUntil:v=>p=v});await p}
+async function get(path,mode='navigate'){let p;events.fetch({request:{method:'GET',url:root+path,mode},preloadResponse:Promise.resolve(),respondWith:v=>p=v});return p&&await p}
+await lifecycle('install');await lifecycle('activate');assert.equal(messages.length,2,'both active Journey pages remain protected');
+assert.equal(navigated.length,3,'only legacy/app/landing clients refresh');assert.ok(navigated.some(u=>new URL(u).pathname==='/app/'&&new URL(u).hash==='#more'));assert.ok(navigated.some(u=>new URL(u).pathname==='/'&&new URL(u).hash==='#pricing'));
+online=false;
+for(const path of ['/app','/app/','/app/index.html'])assert.equal(await(await get(path)).text(),'APPLICATION');
+for(const path of ['/','/index.html'])assert.equal(await(await get(path)).text(),'LANDING');
+assert.equal((await get('/app/index.html?_runsgd_probe=2.17.0','cors')).status,503,'release probes cannot falsely report cached current HTML');
+assert.equal(await get('/?auth=google'),undefined,'OAuth remains unmodified by worker');
+buckets.delete('runsgd-shell-v21700');
+await assert.rejects(lifecycle('install'),/New app shell unavailable/,'failed app install keeps the existing worker instead of activating a marketing-only shell');
+console.log('Landing routes passed: public root, PWA identity, old tabs/callbacks, separate offline app/landing, active Journey protection and live probes.');

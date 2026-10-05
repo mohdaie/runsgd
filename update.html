@@ -16,7 +16,7 @@
     (async()=>{
       const status=document.getElementById('status');
       try{
-        const response=await fetch('/index.html?_recover='+Date.now(),{cache:'no-store'});
+        const response=await fetch('/app/index.html?_recover='+Date.now(),{cache:'no-store'});
         if(!response.ok)throw new Error('Latest app unavailable');
         const html=await response.text();
         const version=html.match(/const RUNSGD_VERSION\s*=\s*['"](\d+\.\d+\.\d+)['"]/)?.[1];
@@ -26,7 +26,7 @@
           const names=await caches.keys();
           await Promise.all(names.filter(name=>name.startsWith('runsgd-shell-')).map(name=>caches.delete(name)));
         }
-        const next=new URL('/',location.origin);
+        const next=new URL('/app/',location.origin);
         next.searchParams.set('appv',version);
         next.searchParams.set('_refresh',String(Date.now()));
         location.replace(next.href);

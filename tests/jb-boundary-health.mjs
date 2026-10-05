@@ -4,7 +4,7 @@ import {stripTypeScriptTypes} from 'node:module';
 import {runInNewContext} from 'node:vm';
 const regions=readFileSync(new URL('../assets/regions.js',import.meta.url),'utf8');
 const source=readFileSync(new URL('../supabase/functions/runsgd-route-jb/index.ts',import.meta.url),'utf8').replace(/^import [^;]+;\s*/gm,'');
-const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=readFileSync(new URL('../app/index.html',import.meta.url),'utf8');
 let handler,placeScenario='normal',failedMode='',requests=[];
 const context={Request,Response,AbortSignal,performance,console,Deno:{env:{get:k=>({SUPABASE_URL:'https://test.invalid',SUPABASE_SERVICE_ROLE_KEY:'fake'}[k]||'')},serve:fn=>handler=fn},fetch:async(url,init={})=>{
  if(url.includes('app_settings'))return Response.json([{secret_value:'fake'}]);

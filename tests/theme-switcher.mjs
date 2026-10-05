@@ -24,7 +24,7 @@ page.on('pageerror',error=>errors.push(error.message));
 const theme=()=>page.evaluate(()=>document.documentElement.dataset.runsgdTheme);
 const select=async value=>{await page.locator(`input[name="runsgd-theme"][value="${value}"]`).check();};
 try{
-  await page.goto(origin+'/#more');
+  await page.goto(origin+'/app/#more');
   await page.locator('.nav button[data-page="more"]').click();
   assert.equal(await theme(),'classic','new visitors keep the current theme');
   const original=await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundImage);

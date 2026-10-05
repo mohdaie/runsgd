@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 
-const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=readFileSync(new URL('../app/index.html',import.meta.url),'utf8');
 
 function extractFunction(name){
  const start=html.indexOf('function '+name+'(');

@@ -63,3 +63,19 @@ node tests/pwa-shell.mjs
 ~~~
 
 The browser test uses renderer fixtures and real bundled ERP geometry, with external services blocked. It checks actual GPS reconciliation, switches, marker dialogs, stale GPS, the Singapore boundary, non-driving leg boundaries, map cleanup and mobile layouts in both themes. Live traffic tile coverage and field GPS accuracy require an on-device check after deployment.
+
+## Landing page and app URLs (v2.17.0)
+
+The public landing page is `/`; the app is `/app/` (GitHub Pages redirects `/app` to its directory URL). The eight approved sections use responsive HTML/CSS and the approved artwork, served as three WebP files totalling about 760 KB. Artwork is shown in CSS viewports; text, calls to action, pricing, navigation and FAQ are native HTML. Landing visits do not start Supabase, Google Maps or AI requests.
+
+The manifest keeps the existing `id: /` and root scope, and launches `/app/`. Root app tab links, installed root PWAs, old app update URLs and OAuth callbacks are bridged to `/app/` with query and fragment intact. The existing Supabase-allowed root OAuth callback remains valid. App update probes and both rescue pages now target app HTML. Session and journey storage keys remain unchanged. Live Journey screens are still protected from worker refreshes. Admin, guides and repair routes retain their current URLs.
+
+The service worker caches marketing and app HTML separately, normalizes app directory/index aliases, and never falls back between them. Deploy the small `extensive-health` endpoint change with the frontend so deployment monitoring checks `/app/index.html`.
+
+Checks:
+
+```sh
+node tests/landing-routes.mjs
+node tests/pwa-shell.mjs
+RUNSGD_TEST_BROWSER=/path/to/chromium node tests/landing-browser.mjs
+```

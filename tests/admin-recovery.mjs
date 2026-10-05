@@ -5,7 +5,7 @@ import {execFileSync} from 'node:child_process';
 const source=fs.readFileSync('sw.js','utf8');
 const legacy=execFileSync('git',['show','3ae8f07f8452e9a46733813fa7a3abfd27914729:sw.js'],{encoding:'utf8'});
 const admin=fs.readFileSync('admin/index.html','utf8');
-assert.equal(fs.readFileSync('update/admin/index.html','utf8'),admin.replaceAll('href="../#community"','href="/#community"').replaceAll('href="../"','href="/"'));
+assert.equal(fs.readFileSync('update/admin/index.html','utf8'),admin);
 const origin='https://runsgd.test';
 function harness(code=source){
  const buckets=new Map(),listeners={};let network=async()=>{throw Error('offline')};let calls=0,failWrite=false;

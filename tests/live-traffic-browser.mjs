@@ -4,13 +4,13 @@ import {createRequire} from 'node:module';
 import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 const {chromium}=createRequire(import.meta.url)('playwright');
-const server=createServer(async(req,res)=>{try{let path=new URL(req.url,'http://localhost').pathname;if(path==='/')path='/index.html';const data=await readFile(new URL('..'+path,import.meta.url));res.writeHead(200,{'Content-Type':path.endsWith('.js')?'application/javascript':path.endsWith('.css')?'text/css':path.endsWith('.html')?'text/html':'application/json'});res.end(data)}catch{res.writeHead(404);res.end()}});
+const server=createServer(async(req,res)=>{try{let path=new URL(req.url,'http://localhost').pathname;if(path==='/'||path==='/app/')path+='index.html';const data=await readFile(new URL('..'+path,import.meta.url));res.writeHead(200,{'Content-Type':path.endsWith('.js')?'application/javascript':path.endsWith('.css')?'text/css':path.endsWith('.html')?'text/html':'application/json'});res.end(data)}catch{res.writeHead(404);res.end()}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin='http://127.0.0.1:'+server.address().port;
 const browser=await chromium.launch({headless:true,executablePath:process.env.RUNSGD_TEST_BROWSER});
 const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'});await context.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());
 const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
 try{
- await page.goto(origin+'/#journey');await page.locator('.nav button[data-page="journey"]').click();await page.clock.install();await page.clock.pauseAt(new Date(Date.now()+1000));
+ await page.goto(origin+'/app/#journey');await page.locator('.nav button[data-page="journey"]').click();await page.clock.install();await page.clock.pauseAt(new Date(Date.now()+1000));
  await page.evaluate(()=>{
   class MapFixture{constructor(){this.events={};this.heading=0;this.rendering='VECTOR'}getHeading(){return this.heading}getRenderingType(){return this.rendering}getZoom(){return this.zoom}moveCamera(c){this.heading=c.heading;this.zoom=c.zoom}fitBounds(){}}
   class Marker{constructor(o){Object.assign(this,o);this.events={}}setMap(m){this.map=m}getMap(){return this.map||null}setPosition(p){this.position=p}setIcon(i){this.icon=i}setVisible(v){this.visible=v}setLabel(l){this.label=l}}
