@@ -8,7 +8,7 @@ const sw=read('sw.js'),html=read('index.html'),version=read('VERSION').trim();
 const shell=JSON.parse(sw.match(/const SHELL=(\[[^\]]*\]);/)[1].replaceAll("'",'"'));
 assert.ok(!shell.some(p=>p.startsWith('/admin')),'admin pages are not precached');
 for(const p of shell){
- const file=p==='/'?'index.html':p.replace(/^\//,'')+(p.endsWith('/')?'index.html':'');
+ const file=p==='/'?'index.html':p.split('?')[0].replace(/^\//,'')+(p.endsWith('/')?'index.html':'');
  assert.ok(existsSync(new URL('../'+file,import.meta.url)),'precached file exists: '+p);
 }
 

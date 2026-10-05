@@ -22,3 +22,10 @@ node tests/checkpoint-handoff.mjs
 node tests/route-provider-regions.mjs
 node tests/jb-test.mjs
 ~~~
+# Appearance
+
+Users can choose **Current theme** or **Rounded Neobrutalism** in **More → Appearance**. The current theme remains the default. Selection applies immediately and is saved to `runsgdTheme` on the device, independent of sign-in. Guides, privacy and Admin pages inherit the same preference. The Community feed retains its dark design.
+
+Theme assets are versioned and precached with the PWA shell. Adding a theme requires registering its identifier in `assets/theme.js`, adding scoped CSS in `assets/themes.css`, and adding a radio choice in the Appearance panel.
+
+Browser verification: `node tests/theme-switcher.mjs` with Playwright and its Chromium browser installed. Set `RUNSGD_TEST_BROWSER` to use an existing Chromium executable. The test serves the app locally and blocks external services.
