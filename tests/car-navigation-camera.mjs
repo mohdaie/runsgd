@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 
-const source=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const source=readFileSync(new URL('../app/index.html',import.meta.url),'utf8');
 function actual(name){
  const start=source.search(new RegExp('^\\s*(?:async )?function '+name+'\\(', 'm'));
  assert.ok(start>=0,'missing '+name);

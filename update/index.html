@@ -49,7 +49,7 @@ async function rescue(){
  }catch{}
  const v=await latestVersion();
  $('status').textContent='Loading RunSGD v'+v+'…';
- const target='/?appv='+encodeURIComponent(v)+'&_rescue='+Date.now()+'#home';
+ const target='/app/?appv='+encodeURIComponent(v)+'&_rescue='+Date.now()+'#home';
  setTimeout(()=>location.replace(target),150)
 }
 rescue().catch(e=>{$('status').textContent='Automatic refresh could not finish. Tap Retry.';$('retry').style.display='block'});

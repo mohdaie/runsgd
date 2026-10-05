@@ -169,7 +169,7 @@ Deno.serve(async (req: Request) => {
       const [liveVersion,repoVersion,liveHtml,liveSw] = await Promise.all([
         fetchAny("https://runsgd.site/VERSION?health="+stamp,{},8000),
         fetchAny("https://raw.githubusercontent.com/mohdaie/runsgd/main/VERSION?health="+stamp,{},8000),
-        fetchAny("https://runsgd.site/index.html?health="+stamp,{},10000),
+        fetchAny("https://runsgd.site/app/index.html?health="+stamp,{},10000),
         fetchAny("https://runsgd.site/sw.js?health="+stamp,{},10000)
       ]);
       const liveV=liveVersion.text.trim(),repoV=repoVersion.text.trim();

@@ -20,7 +20,7 @@ await context.route('**/*',route=>new URL(route.request().url()).origin===origin
 const page=await context.newPage(),errors=[];
 page.on('pageerror',error=>errors.push(error.message));
 try{
- await page.goto(origin+'/#journey');
+ await page.goto(origin+'/app/#journey');
  await page.locator('.nav button[data-page="journey"]').click();
  // Exercise the real app and Google event wiring with deterministic renderer fixtures.
  await page.evaluate(()=>{

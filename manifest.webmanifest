@@ -3,7 +3,7 @@
   "name": "RunSGD",
   "short_name": "RunSGD",
   "description": "Singapore ↔ Johor commute planner with live Causeway, bus and weather info",
-  "start_url": "/",
+  "start_url": "/app/",
   "scope": "/",
   "display": "standalone",
   "display_override": [
