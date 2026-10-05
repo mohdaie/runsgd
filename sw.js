@@ -1,5 +1,5 @@
-const CACHE='runsgd-shell-v21618';
-const SHELL=['/','/index.html','/assets/theme.js?v=2.16.18','/assets/themes.css?v=2.16.18','/assets/regions.js','/assets/vendor/supabase-js-2.117.2.js','/manifest.webmanifest','/icon.svg','/assets/landmarks/jb/bangunan-sultan-iskandar.webp','/assets/landmarks/jb/sultan-ibrahim-stadium.webp','/assets/landmarks/jb/istana-besar-johor.webp','/assets/landmarks/jb/sultan-abu-bakar-state-mosque.webp','/assets/landmarks/jb/johor-bahru-old-chinese-temple.webp'];
+const CACHE='runsgd-shell-v21619';
+const SHELL=['/','/index.html','/assets/theme.js?v=2.16.19','/assets/themes.css?v=2.16.19','/assets/regions.js','/assets/vendor/supabase-js-2.117.2.js','/manifest.webmanifest','/icon.svg','/assets/landmarks/jb/bangunan-sultan-iskandar.webp','/assets/landmarks/jb/sultan-ibrahim-stadium.webp','/assets/landmarks/jb/istana-besar-johor.webp','/assets/landmarks/jb/sultan-abu-bakar-state-mosque.webp','/assets/landmarks/jb/johor-bahru-old-chinese-temple.webp'];
 
 async function freshResponse(path){
   const req=new Request(new URL(path,self.location.origin).href,{cache:'reload'});
