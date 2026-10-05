@@ -40,7 +40,7 @@ try{
    setVisible(visible){this.visible=visible;}
    setLabel(label){this.label=label;}
   }
-  window.google={maps:{Map:MapFixture,Marker:MarkerFixture,Polyline:class{setPath(){}},LatLngBounds:class{extend(){}},RenderingType:{VECTOR:'VECTOR'},SymbolPath:{FORWARD_CLOSED_ARROW:'arrow',CIRCLE:'circle'},event:{addListener(map,name,fn){(map.events[name]??=[]).push(fn);}}}};
+  window.google={maps:{Map:MapFixture,Marker:MarkerFixture,Polyline:class{constructor(options){Object.assign(this,options);}setPath(path){this.path=path;}},LatLngBounds:class{extend(){}},RenderingType:{VECTOR:'VECTOR'},SymbolPath:{FORWARD_CLOSED_ARROW:'arrow',CIRCLE:'circle'},event:{addListener(map,name,fn){(map.events[name]??=[]).push(fn);}}}};
   function encode(points){let a=0,b=0,out='';for(const point of points){const c=Math.round(point.lat*1e5),d=Math.round(point.lon*1e5);for(let n of [c-a,d-b]){n=n<0?~(n<<1):n<<1;while(n>=32){out+=String.fromCharCode((32|(n&31))+63);n>>=5;}out+=String.fromCharCode(n+63);}a=c;b=d;}return out;}
   const points=[{lat:1.3,lon:103.8},{lat:1.30045,lon:103.8},{lat:1.30045,lon:103.802}];
   const legs=[{mode:'DRIVE',polyline:encode(points.slice(0,2)),to:{name:'Turn',...points[1]},duration_sec:20},{mode:'DRIVE',polyline:encode(points.slice(1)),to:{name:'Destination',...points[2]},duration_sec:60}];
@@ -90,6 +90,20 @@ try{
    assert.equal(boxes.overflow,false);
   }
  }
+ await page.evaluate(()=>{
+  const [first,second]=sgJourney.route.legs;
+  const leg={mode:'WALK',step_polylines:[first.polyline,second.polyline],polyline:sgJourney.route.polyline,walk_instructions:[{lat:1.3,lon:103.8,instruction:'Walk north',polyline:first.polyline},{lat:1.30045,lon:103.8,instruction:'Turn right',polyline:second.polyline}],to:second.to,duration_sec:300};
+  sgJourney={...sgJourney,current_hop:0,started_at:Date.now()+1,route:{...sgJourney.route,legs:[leg]}};
+  const caches=buildJourneyWalkCaches(sgJourney.route);
+  Object.assign(sgJourneyRuntime,{walkCaches:caches,walkProgressM:0,walkTotalM:caches[0].total,walkRemainingM:caches[0].total,walkOffPathM:0,walkNextInstruction:null,lastLat:1.3,lastLon:103.8});
+  recenterJourneyGoogleMap();renderSgJourney();
+ });
+ await page.waitForFunction(()=>sgJourneyGoogleMapRoute.path.length===3);
+ const walking=await page.evaluate(()=>({mapPoints:sgJourneyGoogleMapRoute.path.length,cachePoints:sgJourneyRuntime.walkCaches[0].points.length,distance:sgJourneyRuntime.walkCaches[0].total,instructions:sgJourneyRuntime.walkCaches[0].instructions.length}));
+ assert.equal(walking.cachePoints,walking.mapPoints,'walking drawing and matching agree');
+ assert.ok(walking.distance>270&&walking.distance<280,'walking distance counts the route once');
+ assert.equal(walking.instructions,2);
+ assert.match(await page.locator('#sgJourneyAction').innerText(),/Follow pedestrian path/);
  assert.deepEqual(errors,[],'no app runtime errors');
- console.log('Car navigation browser passed: real event wiring, renderer fallback, route redraw, Recenter, pinch recovery and mobile layouts in both themes.');
+ console.log('Navigation browser passed: event wiring, rotation fallback, mobile themes, gesture recovery and walking geometry/distance.');
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}
