@@ -44,6 +44,18 @@ try{
     }
   }
   await page.setViewportSize({width:390,height:844});
+  await page.locator('.nav button[data-page="explore"]').click();
+  await page.locator('.kbCard').first().waitFor();
+  for(const selector of ['#explore .aiCard','.kbIntro','.kbCard','.kbIcon']){
+    const styles=await page.locator(selector).evaluateAll(elements=>elements.map(el=>({background:getComputedStyle(el).backgroundImage,border:getComputedStyle(el).borderTopWidth,shadow:getComputedStyle(el).boxShadow})));
+    assert.ok(styles.length>0,selector+' exists');
+    assert.ok(styles.every(s=>s.background==='none'),selector+' uses a flat colour');
+    assert.ok(styles.every(s=>parseFloat(s.border)>=1.5),selector+' has a dark outline');
+    assert.ok(styles.every(s=>s.shadow.includes('0px 0px')),selector+' uses a hard shadow');
+  }
+  await page.locator('.kbHead').first().click();
+  assert.equal(await page.locator('.kbCard').first().evaluate(el=>el.classList.contains('open')),true,'guides still expand');
+  if(process.env.RUNSGD_THEME_SCREENSHOTS)await page.screenshot({path:process.env.RUNSGD_THEME_SCREENSHOTS+'/theme-explore-flat.png',fullPage:true});
   await page.reload();
   assert.equal(await theme(),'neobrutalism','selection survives a refresh');
   await page.locator('.nav button[data-page="more"]').click();
@@ -51,11 +63,40 @@ try{
   const second=await context.newPage();
   await second.goto(origin+'/guides/');
   assert.equal(await second.evaluate(()=>document.documentElement.dataset.runsgdTheme),'neobrutalism','theme follows guide navigation');
+  // A local SDK fixture exercises the complete admin shell without real account access.
+  await second.route('**/assets/vendor/supabase-js-2.117.2.js',route=>route.fulfill({contentType:'application/javascript',body:`
+    window.supabase={createClient:()=>({
+      auth:{getSession:async()=>({data:{session:{user:{id:'fixture-admin',email:'admin@example.test'}}}})},
+      from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>({data:{role:'admin',display_name:'Admin'},error:null})})})}),
+      rpc:async()=>({data:{views_today:10,visitors_today:4,members:10,views_7d:131,visitors_7d:57,members_7d:3,generated_at:'2026-10-05T02:04:00Z',daily:[3,7,10,12,3,4,3].map((views,i)=>({date:'2026-09-'+String(24+i),views}))},error:null})
+    })};
+  `}));
   await second.goto(origin+'/admin/');
   assert.equal(await second.evaluate(()=>document.documentElement.dataset.runsgdTheme),'neobrutalism','admin inherits the preference');
+  await second.locator('#adminApp').waitFor({state:'visible'});
+  await second.locator('.sparkBar').first().waitFor();
+  for(const selector of ['.adminProfile','.monitorCard','.metric','.navCard','.navCard .navIcon','.sparkBar']){
+    const styles=await second.locator(selector).evaluateAll(elements=>elements.map(el=>({background:getComputedStyle(el).backgroundImage,border:getComputedStyle(el).borderTopWidth,shadow:getComputedStyle(el).boxShadow})));
+    assert.ok(styles.length>0,selector+' exists');
+    assert.ok(styles.every(s=>s.background==='none'),selector+' uses flat colours');
+    if(selector!=='.sparkBar'){
+      assert.ok(styles.every(s=>parseFloat(s.border)>=1.5),selector+' has a dark outline');
+      assert.ok(styles.every(s=>s.shadow.includes('0px 0px')),selector+' has a hard shadow');
+    }
+  }
+  const metricColours=await second.locator('.metric').evaluateAll(elements=>elements.map(el=>getComputedStyle(el).backgroundColor));
+  assert.equal(new Set(metricColours).size,3,'admin metrics use three distinct flat colours');
+  for(const width of [320,390,1280]){
+    await second.setViewportSize({width,height:844});
+    assert.equal(await second.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'admin fits '+width+'px');
+  }
+  await second.setViewportSize({width:390,height:844});
+  if(process.env.RUNSGD_THEME_SCREENSHOTS)await second.screenshot({path:process.env.RUNSGD_THEME_SCREENSHOTS+'/theme-admin-flat.png',fullPage:true});
   await second.evaluate(()=>localStorage.setItem('runsgdTheme','classic'));
   await page.waitForFunction(()=>document.documentElement.dataset.runsgdTheme==='classic');
   assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundImage),original,'switching back fully restores the background');
+  await second.reload();
+  assert.match(await second.locator('.adminProfile').evaluate(el=>getComputedStyle(el).backgroundImage),/linear-gradient/,'Classic keeps its original Admin design');
   await select('neobrutalism');
   await select('classic');
   await page.reload();
