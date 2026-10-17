@@ -1,10 +1,10 @@
-const CACHE='runsgd-shell-v21700';
+const CACHE='runsgd-shell-v21701';
 const ADMIN_CACHE='runsgd-admin-shell-v1';
 const adminPath=p=>p.replace(/\/index\.html\/?$/,'/').replace(/^(\/admin(?:\/[^.]+)*)$/,'$1/');
 const isAdmin=p=>p==='/admin'||p.startsWith('/admin/');
 const appPath=p=>p==='/app'||p==='/app/'||p==='/app/index.html';
 const pageKey=p=>appPath(p)?'/app/':p==='/index.html'?'/':p;
-const SHELL=['/app/','/','/assets/theme.js?v=2.17.0','/assets/themes.css?v=2.17.0','/assets/singapore-road-alerts.js?v=2.17.0','/assets/live-traffic.js?v=2.17.0','/assets/singapore-erp.json?v=2.17.0','/assets/regions.js','/assets/vendor/supabase-js-2.117.2.js','/assets/app-entry.js?v=2.17.0','/assets/landing/landing.css?v=2.17.0','/assets/landing/landing.js?v=2.17.0','/assets/landing/approved-top.webp','/assets/landing/approved-middle.webp','/assets/landing/approved-bottom.webp','/manifest.webmanifest','/icon.svg','/assets/landmarks/jb/bangunan-sultan-iskandar.webp','/assets/landmarks/jb/sultan-ibrahim-stadium.webp','/assets/landmarks/jb/istana-besar-johor.webp','/assets/landmarks/jb/sultan-abu-bakar-state-mosque.webp','/assets/landmarks/jb/johor-bahru-old-chinese-temple.webp'];
+const SHELL=['/app/','/','/assets/theme.js?v=2.17.1','/assets/themes.css?v=2.17.1','/assets/singapore-road-alerts.js?v=2.17.1','/assets/live-traffic.js?v=2.17.1','/assets/singapore-erp.json?v=2.17.1','/assets/regions.js','/assets/vendor/supabase-js-2.117.2.js','/assets/app-entry.js?v=2.17.1','/assets/landing/landing.css?v=2.17.1','/assets/landing/landing.js?v=2.17.1','/assets/landing/approved-top.webp','/assets/landing/approved-middle.webp','/assets/landing/approved-bottom.webp','/manifest.webmanifest','/icon.svg','/assets/landmarks/jb/bangunan-sultan-iskandar.webp','/assets/landmarks/jb/sultan-ibrahim-stadium.webp','/assets/landmarks/jb/istana-besar-johor.webp','/assets/landmarks/jb/sultan-abu-bakar-state-mosque.webp','/assets/landmarks/jb/johor-bahru-old-chinese-temple.webp'];
 
 async function freshResponse(path){
   const req=new Request(new URL(path,self.location.origin).href,{cache:'reload'});

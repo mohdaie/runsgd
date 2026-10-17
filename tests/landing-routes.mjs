@@ -27,6 +27,6 @@ for(const path of ['/app','/app/','/app/index.html'])assert.equal(await(await ge
 for(const path of ['/','/index.html'])assert.equal(await(await get(path)).text(),'LANDING');
 assert.equal((await get('/app/index.html?_runsgd_probe=2.17.0','cors')).status,503,'release probes cannot falsely report cached current HTML');
 assert.equal(await get('/?auth=google'),undefined,'OAuth remains unmodified by worker');
-buckets.delete('runsgd-shell-v21700');
+buckets.delete(fs.readFileSync('sw.js','utf8').match(/const CACHE='([^']+)'/)[1]);
 await assert.rejects(lifecycle('install'),/New app shell unavailable/,'failed app install keeps the existing worker instead of activating a marketing-only shell');
 console.log('Landing routes passed: public root, PWA identity, old tabs/callbacks, separate offline app/landing, active Journey protection and live probes.');
