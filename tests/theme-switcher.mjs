@@ -92,10 +92,49 @@ try{
   }
   await second.setViewportSize({width:390,height:844});
   if(process.env.RUNSGD_THEME_SCREENSHOTS)await second.screenshot({path:process.env.RUNSGD_THEME_SCREENSHOTS+'/theme-admin-flat.png',fullPage:true});
+  await select('softmono');
+  assert.equal(await theme(),'softmono');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('runsgdTheme')),'softmono');
+  assert.equal(await page.locator('meta[name="theme-color"]').getAttribute('content'),'#eeecea');
+  await second.waitForFunction(()=>document.documentElement.dataset.runsgdTheme==='softmono');
+  assert.equal(await second.locator('.monitorCard').evaluate(el=>getComputedStyle(el).backgroundImage),'none','Admin uses the soft neutral surface');
+  await page.reload();
+  assert.equal(await theme(),'softmono','Soft Mono survives refresh');
+  await page.locator('.nav button[data-page="more"]').click();
+  assert.equal(await page.locator('input[value="softmono"]').isChecked(),true);
+  for(const width of [320,390,480,1280]){
+    await page.setViewportSize({width,height:844});
+    for(const name of ['home','explore','journey','more']){
+      await page.locator(`.nav button[data-page="${name}"]`).click();
+      assert.equal(await page.locator('.page.active').getAttribute('id'),name);
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`Soft Mono ${name} fits ${width}px`);
+      const nav=await page.locator('.nav').boundingBox();
+      assert.ok(nav.x>=11&&nav.x+nav.width<=width-11,'floating navigation stays inside the viewport');
+      for(const button of await page.locator('.nav button:visible').all()){
+        const rect=await button.boundingBox();
+        assert.ok(rect.width>=44&&rect.height>=44,'navigation keeps touch targets accessible');
+      }
+    }
+  }
+  await page.setViewportSize({width:390,height:844});
+  await page.locator('.utilityClock').click();
+  assert.equal(await page.locator('dialog[open]').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(248, 247, 245)','utility popups inherit Soft Mono');
+  await page.keyboard.press('Escape');
+  if(process.env.RUNSGD_THEME_SCREENSHOTS)await page.screenshot({path:process.env.RUNSGD_THEME_SCREENSHOTS+'/soft-mono-more.png',fullPage:true});
+  await page.locator('.nav button[data-page="home"]').click();
+  assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundImage),'none');
+  if(process.env.RUNSGD_THEME_SCREENSHOTS)await page.screenshot({path:process.env.RUNSGD_THEME_SCREENSHOTS+'/soft-mono-home.png',fullPage:true});
+  await second.goto(origin+'/guides/');
+  assert.equal(await second.evaluate(()=>document.documentElement.dataset.runsgdTheme),'softmono','guides inherit Soft Mono');
+  // Check the Community CSS exclusion without bypassing the admin-only route.
+  await page.evaluate(()=>document.body.classList.add('communityMode'));
+  assert.notEqual(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(238, 236, 234)','Community retains its dedicated appearance');
+  await page.evaluate(()=>document.body.classList.remove('communityMode'));
+  await page.locator('.nav button[data-page="more"]').click();
   await second.evaluate(()=>localStorage.setItem('runsgdTheme','classic'));
   await page.waitForFunction(()=>document.documentElement.dataset.runsgdTheme==='classic');
   assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundImage),original,'switching back fully restores the background');
-  await second.reload();
+  await second.goto(origin+'/admin/');
   assert.match(await second.locator('.adminProfile').evaluate(el=>getComputedStyle(el).backgroundImage),/linear-gradient/,'Classic keeps its original Admin design');
   await select('neobrutalism');
   await select('classic');
@@ -108,6 +147,8 @@ try{
   await page.locator('input[value="classic"]').focus();
   await page.keyboard.press('ArrowRight');
   assert.equal(await theme(),'neobrutalism','native radio controls work with a keyboard');
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await theme(),'softmono','Soft Mono is reachable with a keyboard');
   if(process.env.RUNSGD_THEME_SCREENSHOTS)await page.screenshot({path:process.env.RUNSGD_THEME_SCREENSHOTS+'/theme-more.png'});
   await page.locator('.nav button[data-page="home"]').click();
   if(process.env.RUNSGD_THEME_SCREENSHOTS)await page.screenshot({path:process.env.RUNSGD_THEME_SCREENSHOTS+'/theme-home.png'});

@@ -14,7 +14,7 @@ let browser;try{
  const page=await context.newPage();page.on('pageerror',e=>console.log('page error',e.message));await page.goto(origin+'/');
  await page.waitForFunction(async()=>{const r=await navigator.serviceWorker.getRegistration('/');return r?.active?.state==='activated'&&(await caches.match('/app/'))});
  await page.goto(origin+'/app/',{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>!!navigator.serviceWorker.controller);try{await page.waitForFunction(()=>document.querySelector('.page.active')?.id==='home',{},{timeout:10000})}catch(e){console.log('boot state',await page.evaluate(()=>({url:location.href,active:document.querySelector('.page.active')?.id,title:document.title,body:document.body.innerText.slice(0,1200)})));throw e};
- assert.match(await page.locator('#appVersionBadge').innerText(),/2\.17\.0/);
+ assert.equal(await page.locator('#appVersionBadge').innerText(),'v'+fs.readFileSync(path.join(root,'VERSION'),'utf8').trim());
  await context.setOffline(true);await page.goto(origin+'/app/index.html',{waitUntil:'domcontentloaded'});assert.equal(await page.locator('body[data-runsgd-app]').count(),1);assert.equal(await page.locator('.hero-copy').count(),0);
  await page.goto(origin+'/');assert.equal(await page.locator('.hero-copy').count(),1);assert.equal(await page.locator('body[data-runsgd-app]').count(),0);
  assert.equal(await page.locator('.hero-art img').evaluate(el=>el.complete&&el.naturalWidth>0),true);

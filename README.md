@@ -24,7 +24,9 @@ node tests/jb-test.mjs
 ~~~
 # Appearance
 
-Users can choose **Current theme** or **Rounded Neobrutalism** in **More → Appearance**. The current theme remains the default. Selection applies immediately and is saved to `runsgdTheme` on the device, independent of sign-in. Guides, privacy and Admin pages inherit the same preference. The Community feed retains its dark design.
+Users can choose **Current theme**, **Rounded Neobrutalism** or **Soft Mono** in **More → Appearance**. The current theme remains the default. Selection applies immediately and is saved to `runsgdTheme` on the device, independent of sign-in. Guides, privacy and Admin pages inherit the same preference. The Community feed retains its dark design.
+
+Soft Mono uses warm grey backgrounds, softly raised off-white cards, charcoal controls and a floating bottom navigation. Semantic status colours (online, GPS health and road warnings) remain legible.
 
 Theme assets are versioned and precached with the PWA shell. Adding a theme requires registering its identifier in `assets/theme.js`, adding scoped CSS in `assets/themes.css`, and adding a radio choice in the Appearance panel.
 

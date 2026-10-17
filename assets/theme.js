@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const key = 'runsgdTheme';
-  const themes = { classic: 'Current theme', neobrutalism: 'Rounded Neobrutalism' };
+  const themes = { classic: 'Current theme', neobrutalism: 'Rounded Neobrutalism', softmono: 'Soft Mono' };
   let current = 'classic';
   let defaultChrome;
   const normalize = value => Object.hasOwn(themes, value) ? value : 'classic';
@@ -13,7 +13,7 @@
     const chrome = document.querySelector('meta[name="theme-color"]');
     if (chrome) {
       if (defaultChrome === undefined) defaultChrome = chrome.content;
-      chrome.content = current === 'neobrutalism' ? '#f7f8fa' : defaultChrome;
+      chrome.content = current === 'softmono' ? '#eeecea' : current === 'neobrutalism' ? '#f7f8fa' : defaultChrome;
     }
     document.querySelectorAll('input[name="runsgd-theme"]').forEach(input => {
       input.checked = input.value === current;
