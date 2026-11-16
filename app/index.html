@@ -2040,6 +2040,29 @@ function journeyTransitAllowed(route,intent){
   return true
  })
 }
+function journeyTransitOnlyModes(intent){
+ return intent?.transit_only==='BUS'?['BUS']:intent?.transit_only==='RAIL'?['SUBWAY','TRAIN','LIGHT_RAIL','RAIL']:[]
+}
+function journeyTransitOnlyLabel(intent){return intent?.transit_only==='BUS'?'bus-only':intent?.transit_only==='RAIL'?'MRT/train-only':''}
+function journeyTransitMatchesOnly(route,intent){
+ let only=intent?.transit_only;if(!only)return true;
+ let modes=(route?.legs||[]).map(l=>String(l?.mode||'').toUpperCase()).filter(m=>m&&m!=='WALK');
+ if(!modes.length)return false;
+ return modes.every(m=>only==='BUS'?m==='BUS':['SUBWAY','RAIL','TRAIN','TRAM','LIGHT_RAIL'].includes(m))
+}
+// Same-country public transport. With a mode restriction ("bus only") Google is
+// asked for that mode first; if nothing fits, the normal mixed routes are kept
+// and flagged so the commuter is told, instead of getting nothing.
+async function localTransitRoutes(origin,destination,provider,intent){
+ let payload={action:'route',travel_mode:'TRANSIT',transit_preference:journeyTransitPreference(intent),from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}};
+ let only=journeyTransitOnlyModes(intent);
+ if(!only.length){let j=await routeApiSafe(payload,provider);return (j?.routes||[]).filter(x=>journeyTransitAllowed(x,intent))}
+ let first=await routeApiSafe({...payload,allowed_transit_modes:only},provider);
+ let matched=(first?.routes||[]).filter(x=>journeyTransitAllowed(x,intent)&&journeyTransitMatchesOnly(x,intent));
+ if(matched.length)return matched;
+ let mixed=first?.routes?.length?first:await routeApiSafe(payload,provider);
+ return (mixed?.routes||[]).filter(x=>journeyTransitAllowed(x,intent)).map(x=>({...x,mode_fallback:true}))
+}
 function routeProvider(){return routeProviderFor(live.location?.country==='MY'?'jb':'sg')}
 function destinationProvider(){return sgRouteDestRegion?routeProviderFor(sgRouteDestRegion):null}
 function routeTravelModeInfo(){
@@ -2158,6 +2181,18 @@ function chooseSgDestination(i){
 function journeyTravelPromptChanged(){
  let q=$('journeyTravelPrompt')?.value.trim()||'';if($('journeyPlanBtn'))$('journeyPlanBtn').disabled=!sgRouteSelection||q.length<2
 }
+// "bus" / "by bus" / "naik bas" alone means bus only; "mrt" / "train" alone
+// means rail only. Mentioning both (or negating one) keeps normal mixed routing.
+function journeyTransitOnlyFromText(q){
+ let s=String(q||'').toLowerCase();
+ let busRe=/\b(?:bus|buses|bas)\b/,railRe=/\b(?:mrt|lrt|train|trains|ktm|rail|subway|tren|keretapi)\b/;
+ let neg='\\b(?:no|avoid|without|not|never|except|tak\\s+nak|tak\\s+mahu|jangan|don\'?t\\s+(?:want|take|use|like))\\b[^.,;]{0,16}';
+ let noBus=new RegExp(neg+'\\b(?:bus|buses|bas)\\b').test(s),noRail=new RegExp(neg+'\\b(?:mrt|lrt|train|trains|ktm|rail|subway|tren|keretapi)\\b').test(s);
+ let bus=busRe.test(s)&&!noBus,rail=railRe.test(s)&&!noRail;
+ if(bus&&!rail)return 'BUS';
+ if(rail&&!bus)return 'RAIL';
+ return ''
+}
 function localJourneyIntent(q){
  let raw=String(q||'').trim(),s=raw.toLowerCase();
  let parkedMatch=raw.match(/(?:my\s+)?(?:car|kereta)\s+(?:is\s+)?(?:parked|parking)\s+(?:at|near|in)\s+(.+?)(?=\s+(?:then|and then|after|before|from there|so i|so we)\b|[,.;]|$)/i)
@@ -2178,13 +2213,14 @@ function localJourneyIntent(q){
  let avoidSg=/don't want to drive.*sg|dont want to drive.*sg|avoid.*driv.*sg|park.*jb|parking.*jb|tak nak.*drive.*sg|tak mahu.*drive.*sg/.test(s);
  let priority=/fastest|quickest|cepat/.test(s)?'fastest':/cheapest|cheap|murah/.test(s)?'cheapest':/easiest|easy|senang|simple/.test(s)?'easiest':'balanced';
  let allowBus=directDrive?false:!/no bus|avoid bus/.test(s),allowMrt=directDrive?false:!/no mrt|avoid mrt/.test(s),allowBorder=directDrive?false:!/no border bus/.test(s);
+ let transitOnly=directDrive||vehicleAccess||mixedRoadTransit||hasCar||hasMotorcycle?'':journeyTransitOnlyFromText(s);
  let requestedActions=[];
  if(vehicleAccess){
   requestedActions.push({order:1,action:'reach parked vehicle',mode:vehicleAccessMode,location:vehicleAccessLocation,relation:'before driving',purpose:'access vehicle',required:true,details:'Vehicle is not assumed to be at current GPS.'});
   requestedActions.push({order:2,action:'retrieve vehicle',mode:'CAR',location:vehicleAccessLocation,relation:'at vehicle location',purpose:'start vehicle leg',required:true,details:''});
   if(roadMention)requestedActions.push({order:3,action:'drive',mode:'DRIVE',location:'',relation:'after retrieving vehicle',purpose:'continue journey',required:true,details:''})
  }
- return {answer:vehicleAccess?('I’ll route you to '+(vehicleAccessLocation||'your parked car')+' first, then start the driving leg from your car there.'):directDrive?'Driving route only. I’ll keep this journey on the road from your current GPS position.':'Got it. I’ll compare the routes that fit your plan.',priority,has_car:hasCar||directDrive,has_motorcycle:hasMotorcycle,prefer_ktm:directDrive?false:preferKtm,avoid_sg_driving:avoidSg,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,direct_drive:directDrive,mixed_road_transit:mixedRoadTransit,explicit_road_request:explicitDrive,vehicle_access_required:vehicleAccess,vehicle_access_mode:vehicleAccess?vehicleAccessMode:'',vehicle_access_location:vehicleAccessLocation,vehicle_access_details:vehicleAccess?'Reach the parked vehicle before any driving leg.':'',must_preserve_sequence:vehicleAccess||mixedRoadTransit,requested_actions:requestedActions,resources:vehicleAccess?[{type:'vehicle',name:'car',status:'parked',location:vehicleAccessLocation,details:''}]:[],constraints:[],preferences:[],semantic_facts:[],assumptions:[],unresolved:vehicleAccess&&!vehicleAccessLocation?['Exact parked-car location was not extracted locally; AI should resolve it.']:[],avoid_modes:[],prefer_modes:[],parking_required:false,parking_location:'',parking_purpose:'',timing:{depart_at:'',arrive_by:'',flexibility:'',details:''},notes:'',ai:false}
+ return {answer:vehicleAccess?('I’ll route you to '+(vehicleAccessLocation||'your parked car')+' first, then start the driving leg from your car there.'):directDrive?'Driving route only. I’ll keep this journey on the road from your current GPS position.':'Got it. I’ll compare the routes that fit your plan.',priority,has_car:hasCar||directDrive,has_motorcycle:hasMotorcycle,prefer_ktm:directDrive?false:preferKtm,avoid_sg_driving:avoidSg,allow_bus:allowBus,allow_mrt:allowMrt,allow_cross_border_bus:allowBorder,transit_only:transitOnly,direct_drive:directDrive,mixed_road_transit:mixedRoadTransit,explicit_road_request:explicitDrive,vehicle_access_required:vehicleAccess,vehicle_access_mode:vehicleAccess?vehicleAccessMode:'',vehicle_access_location:vehicleAccessLocation,vehicle_access_details:vehicleAccess?'Reach the parked vehicle before any driving leg.':'',must_preserve_sequence:vehicleAccess||mixedRoadTransit,requested_actions:requestedActions,resources:vehicleAccess?[{type:'vehicle',name:'car',status:'parked',location:vehicleAccessLocation,details:''}]:[],constraints:[],preferences:[],semantic_facts:[],assumptions:[],unresolved:vehicleAccess&&!vehicleAccessLocation?['Exact parked-car location was not extracted locally; AI should resolve it.']:[],avoid_modes:[],prefer_modes:[],parking_required:false,parking_location:'',parking_purpose:'',timing:{depart_at:'',arrive_by:'',flexibility:'',details:''},notes:'',ai:false}
 }
 function parseEmbeddedJourneyIntent(v){
  let s=String(v||'').trim();if(!s)return null;
@@ -2256,17 +2292,30 @@ async function interpretJourneyIntent(q,origin,destination){
    vehicle_access_details:vehicleAccess?(j.vehicle_access_details||fallback.vehicle_access_details||'Reach the parked vehicle before any driving leg.'):'',
    must_preserve_sequence:mustPreserve,
    requested_actions:requestedActions,
+   ...journeyTransitOnlyOverride(fallback.transit_only,directDrive||vehicleAccess||mixedRoadTransit||hasCar,j,requestedActions,allowBus,allowMrt),
    resources:directDrive?[]:(Array.isArray(j.resources)?j.resources:fallback.resources),
    unresolved:directDrive?[]:(Array.isArray(j.unresolved)?j.unresolved:fallback.unresolved),
    answer:hardDirectDrive?fallback.answer:(j.answer||fallback.answer),
    ai:true}
  }catch{return fallback}
 }
+function journeyTransitOnlyOverride(only,blocked,ai,actions,allowBus,allowMrt){
+ if(!only||blocked)return {transit_only:''};
+ let bus=only==='BUS',railRe=/MRT|LRT|SUBWAY|TRAIN|RAIL|KTM/i,busRe=/\bBUS\b/i;
+ let conflict=(actions||[]).some(a=>(bus?railRe:busRe).test(String(a?.mode||'')+' '+String(a?.action||'')));
+ let answerConflict=bus?(railRe.test(String(ai?.answer||''))&&!busRe.test(String(ai?.answer||''))):(busRe.test(String(ai?.answer||''))&&!railRe.test(String(ai?.answer||'')));
+ let out={transit_only:only,
+  // The commuter asked for this mode, so never let the AI switch it off.
+  allow_bus:bus?true:allowBus,allow_mrt:bus?allowMrt:true};
+ if(conflict||!(actions||[]).length)out.requested_actions=[{order:1,action:'walk',mode:'walk'},{order:2,action:bus?'bus':'mrt',mode:bus?'bus':'mrt'}];
+ if(answerConflict||!ai?.answer)out.answer=bus?'Bus only. I’ll show bus routes for this trip.':'MRT / train only. I’ll show rail routes for this trip.';
+ return out
+}
 function renderJourneyIntent(intent){
  let el=$('journeyIntentStatus');if(!el)return;let parts=[];
  if(intent.vehicle_access_required){parts.push('reach '+(intent.vehicle_access_location||'parked vehicle')+' first')};
  if(intent.direct_drive)parts.push('driving only');else if(intent.has_car)parts.push('car available');
- if(intent.has_motorcycle)parts.push('motorcycle');if(intent.prefer_ktm)parts.push('prefer KTM');if(intent.avoid_sg_driving)parts.push('avoid driving in SG');parts.push('priority: '+(intent.priority||'balanced'));
+ if(intent.has_motorcycle)parts.push('motorcycle');if(intent.prefer_ktm)parts.push('prefer KTM');if(intent.avoid_sg_driving)parts.push('avoid driving in SG');if(intent.transit_only==='BUS')parts.push('bus only');else if(intent.transit_only==='RAIL')parts.push('MRT / train only');parts.push('priority: '+(intent.priority||'balanced'));
  let actions=(intent.requested_actions||[]).slice().sort((a,b)=>Number(a?.order||0)-Number(b?.order||0)).slice(0,6).map(a=>String(a?.mode||a?.action||'').trim()).filter(Boolean);
  let seq=actions.length?'<br><strong>Sequence:</strong> '+esc(actions.join(' → ')):'';
  el.innerHTML='<strong>'+(intent.ai?'AI understood':'RunSGD understood')+':</strong> '+esc(intent.answer||'')+'<br>'+esc(parts.join(' · '))+seq;el.classList.add('show')
@@ -2384,8 +2433,8 @@ async function planLocalSmart(origin,destination,provider,intent){
  let out=[],roadOrigin=journeyRoadStart(origin,intent);
  if(provider.id==='sg'){
   if(intent.allow_bus!==false||intent.allow_mrt!==false){
-   let j=await routeApiSafe({action:'route',travel_mode:'TRANSIT',transit_preference:journeyTransitPreference(intent),from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},transitRouteProviderFor('sg'));
-   (j?.routes||[]).filter(x=>journeyTransitAllowed(x,intent)).slice(0,3).forEach(x=>out.push(routeCandidate(x,{provider:'sg-google',kind:'transit',label:'Public transport',tag:'Google · Singapore',explanation:'Singapore bus/MRT route from Google Maps. Walking and transfer details are shown below.'})));
+   let transit=await localTransitRoutes(origin,destination,transitRouteProviderFor('sg'),intent),onlyLabel=journeyTransitOnlyLabel(intent);
+   transit.slice(0,3).forEach(x=>out.push(routeCandidate(x,{provider:'sg-google',kind:'transit',label:'Public transport',tag:'Google · Singapore',explanation:x.mode_fallback?'No '+onlyLabel+' route was found, so this is the closest Singapore public-transport route from Google Maps.':intent.transit_only==='BUS'?'Singapore bus route from Google Maps. Walking and transfer details are shown below.':intent.transit_only==='RAIL'?'Singapore MRT/LRT route from Google Maps. Walking and transfer details are shown below.':'Singapore bus/MRT route from Google Maps. Walking and transfer details are shown below.'})));
   }
   let roadProvider=routeProviderFor('jb');
   if(intent.has_car||intent.direct_drive||intent.active_road_mode==='DRIVE'){
@@ -2399,7 +2448,7 @@ async function planLocalSmart(origin,destination,provider,intent){
   return out
  }
  let tasks=[];
- if(intent.allow_bus!==false||intent.allow_mrt!==false)tasks.push({kind:'transit',mode:'TRANSIT',p:routeApiSafe({action:'route',travel_mode:'TRANSIT',transit_preference:journeyTransitPreference(intent),from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},provider)});
+ if(intent.allow_bus!==false||intent.allow_mrt!==false)tasks.push({kind:'transit',mode:'TRANSIT',p:localTransitRoutes(origin,destination,provider,intent).then(routes=>({routes}))});
  if(intent.has_car||intent.direct_drive)tasks.push({kind:'drive',mode:'DRIVE',p:routeApiSafe({action:'route',travel_mode:'DRIVE',from:{lat:roadOrigin.lat,lon:roadOrigin.lon,name:roadOrigin.name,address:roadOrigin.address},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},provider)});
  if(intent.has_motorcycle)tasks.push({kind:'motorcycle',mode:'TWO_WHEELER',p:routeApiSafe({action:'route',travel_mode:'TWO_WHEELER',from:{lat:origin.lat,lon:origin.lon},to:{lat:destination.lat,lon:destination.lon,name:destination.name,address:destination.address}},provider)});
  for(const t of tasks){
@@ -2619,10 +2668,11 @@ async function planAiJourney(btn){
   routes=chooseJourneyRouteSet(routes,sgJourneyIntent,4);
   if(!routes.length)throw Error('No usable route combination was returned for this plan.');
   sgRouteResults=routes;renderSgRoutes();
-  txt('journeyCompareRoute',routeOriginLabel(origin)+' → '+(sgRouteSelection.name||sgRouteSelection.address||'Destination'));let tags=journeyHistoryTags(sgJourneyIntent).map(journeyTagLabel);txt('journeyCompareIntent',tags.join(' · '));journeyPlanResultsOpen=true;setJourneyPlannerState('plan');
+  txt('journeyCompareRoute',routeOriginLabel(origin)+' → '+(sgRouteSelection.name||sgRouteSelection.address||'Destination'));let tags=journeyHistoryTags(sgJourneyIntent).map(journeyTagLabel);if(sgJourneyIntent.transit_only)tags.unshift(sgJourneyIntent.transit_only==='BUS'?'Bus only':'MRT / train only');txt('journeyCompareIntent',tags.join(' · '));journeyPlanResultsOpen=true;setJourneyPlannerState('plan');
   txt('sgRouteBadge',originP.id===destP.id?'Local mix':'Cross-border mix');
   txt('sgRouteProviderNote','OneMap finds Singapore places; Google Maps calculates the travel legs when you plan. RunSGD guides the chosen journey.');
-  txt('sgRouteStatus',sgRouteResults.length+' journey combination'+(sgRouteResults.length===1?'':'s')+' found. '+(sgRouteResults.some(r=>r.border_variable)?'Bus, parking and checkpoint times are excluded; no fastest route is claimed.':'Compare the routes below.'))
+  let onlyMiss=sgJourneyIntent.transit_only&&sgRouteResults.some(r=>r.mode_fallback)&&!sgRouteResults.some(r=>r.kind==='transit'&&!r.mode_fallback)?'No '+journeyTransitOnlyLabel(sgJourneyIntent)+' route found for this trip, so the closest public-transport options are shown. ':'';
+  txt('sgRouteStatus',onlyMiss+sgRouteResults.length+' journey combination'+(sgRouteResults.length===1?'':'s')+' found. '+(sgRouteResults.some(r=>r.border_variable)?'Bus, parking and checkpoint times are excluded; no fastest route is claimed.':'Compare the routes below.'))
  }catch(e){txt('sgRouteBadge',sgRouteResults.length?'Previous routes kept':'Unavailable');txt('sgRouteStatus',(e.message||'Journey planning unavailable.')+(sgRouteResults.length?' · Previous route suggestions are still shown.':''))}
  finally{setBusy(btn,false)}
 }
@@ -2712,15 +2762,15 @@ function renderSgRoutes(){
   if(r.fare_sgd!=null)fares.push('S'+String.fromCharCode(36)+Number(r.fare_sgd).toFixed(2));
   if(r.fare_myr!=null)fares.push('RM '+Number(r.fare_myr).toFixed(2));
   if(!fares.length&&r.fare_value!=null&&r.fare_currency)fares.push(r.fare_currency+' '+Number(r.fare_value).toFixed(2));
-  let stats=(r.walk_distance_m?ico('footprints')+routeDistance(r.walk_distance_m):'')+(r.transfers!=null?' · '+r.transfers+' transfer'+(r.transfers===1?'':'s'):'')+(fares.length?' · '+fares.join(' + '):'');
-  if(road)stats=ico('map-pin')+routeDistance(r.distance_m||0)+' · traffic-aware road ETA';
+  let stats=(r.walk_distance_m?ico('footprints')+esc(routeDistance(r.walk_distance_m)):'')+(r.transfers!=null?' · '+esc(String(r.transfers))+' transfer'+(Number(r.transfers)===1?'':'s'):'')+(fares.length?' · '+esc(fares.join(' + ')):'');
+  if(road)stats=ico('map-pin')+esc(routeDistance(r.distance_m||0))+' · traffic-aware road ETA';
   let duration=r.duration_text||(routeMinutes(r.duration_sec)+(r.border_variable?' known legs':''));
   let tag=r.tag||r.label||(r.provider==='jb'?'Google · Malaysia':r.provider==='sg-google'||r.provider==='sg'?'Google · Singapore':'Mixed journey');
   let border=r.border_variable?'<div class="routeBorderMeta">'+ico('book-user')+'Known legs only. Border, bus and parking times may be missing; this is not a door-to-door ETA.</div>':'';
   let maps=road?'<button class="miniBtn" onclick="openRoadRouteInGoogleMaps('+i+')">Open Google Maps</button>':'';
-  return '<div class="routeOption '+(i===0&&complete?'bestMatch':'')+'" id="sgRouteOption'+i+'">'+
-    (i===0?'<div class="routeOptionLabel">'+(complete?ico('badge-check')+'Best match':'Matches your plan · partial timing')+'</div>':'')+
-    '<div class="routeOptionTop"><div><div class="routeDuration">'+esc(duration)+'</div><div class="routeSummary">'+esc(sgRouteSummary(r)||r.label||'Journey')+'</div><div class="routeStats">'+esc(stats.replace(/^ · /,''))+'</div>'+
+  return '<div class="routeOption '+(i===0&&complete&&!r.mode_fallback?'bestMatch':'')+'" id="sgRouteOption'+i+'">'+
+    (i===0?'<div class="routeOptionLabel">'+(r.mode_fallback?'Closest available · not '+esc(journeyTransitOnlyLabel(sgJourneyIntent)||'your requested mode'):complete?ico('badge-check')+'Best match':'Matches your plan · partial timing')+'</div>':'')+
+    '<div class="routeOptionTop"><div><div class="routeDuration">'+esc(duration)+'</div><div class="routeSummary">'+esc(sgRouteSummary(r)||r.label||'Journey')+'</div><div class="routeStats">'+stats.replace(/^ · /,'')+'</div>'+
     (r.explanation?'<div class="routeOptionExplain">'+esc(r.explanation)+'</div>':'')+border+
     '</div><span class="tag">'+esc(tag)+'</span></div><div class="routeActions"><button class="miniBtn" onclick="toggleSgRouteDetails('+i+',this)">View hops</button>'+maps+'<button class="miniBtn" onclick="selectSgRoute('+i+')">Choose route</button></div><div id="sgRouteLegs'+i+'" class="routeLegs">'+(r.legs||[]).map((l,n)=>sgLegHtml(l,n,n===(r.legs||[]).length-1)).join('')+'</div></div>'
  }).join('')

@@ -279,7 +279,12 @@ async function placesSearch(apiKey:string,q:string,pageSize=7,usageAction="place
   if(diagnostics)Object.assign(diagnostics,{provider_result_count:rawPlaces.length,accepted_johor_count:results.length,filtered_count:rawPlaces.length-results.length});
   return results;
 }
-async function computeRoute(apiKey:string,from:any,to:any,travelMode="TRANSIT",usageAction="routes_compute",context:"app"|"admin_test"="app",transitPreference="",intermediates:any[]=[]){
+const GOOGLE_TRANSIT_MODES=["BUS","SUBWAY","TRAIN","LIGHT_RAIL","RAIL"];
+function sanitizeTransitModes(v:any):string[]{
+  if(!Array.isArray(v))return [];
+  return [...new Set(v.map((x:any)=>String(x||"").toUpperCase()).filter((x:string)=>GOOGLE_TRANSIT_MODES.includes(x)))];
+}
+async function computeRoute(apiKey:string,from:any,to:any,travelMode="TRANSIT",usageAction="routes_compute",context:"app"|"admin_test"="app",transitPreference="",intermediates:any[]=[],allowedTransitModes:string[]=[]){
   const modeRaw=String(travelMode||"TRANSIT").toUpperCase();
   const mode=["TRANSIT","DRIVE","TWO_WHEELER","WALK"].includes(modeRaw)?modeRaw:"TRANSIT";
   const fieldMask=[
@@ -311,8 +316,14 @@ async function computeRoute(apiKey:string,from:any,to:any,travelMode="TRANSIT",u
     // Keep the existing Johor less-walking behaviour. Singapore defaults to
     // Google's primary route unless the commuter asked for fewer transfers.
     const preference=String(transitPreference||"").toUpperCase();
-    if(preference==="LESS_WALKING"||preference==="FEWER_TRANSFERS")body.transitPreferences={routingPreference:preference};
-    else if(inJohor(Number(from.lat),Number(from.lon))&&inJohor(Number(to.lat),Number(to.lon)))body.transitPreferences={routingPreference:"LESS_WALKING"};
+    const transitPreferences:any={};
+    if(preference==="LESS_WALKING"||preference==="FEWER_TRANSFERS")transitPreferences.routingPreference=preference;
+    else if(inJohor(Number(from.lat),Number(from.lon))&&inJohor(Number(to.lat),Number(to.lon)))transitPreferences.routingPreference="LESS_WALKING";
+    // Optional commuter mode restriction, e.g. "bus only". Omitted = Google's
+    // normal mixed bus/rail routing, exactly as before.
+    const allowedModes=sanitizeTransitModes(allowedTransitModes);
+    if(allowedModes.length)transitPreferences.allowedTravelModes=allowedModes;
+    if(Object.keys(transitPreferences).length)body.transitPreferences=transitPreferences;
     body.polylineQuality="OVERVIEW";
   }else if(mode==="WALK"){
     body.polylineQuality="HIGH_QUALITY";
@@ -427,7 +438,7 @@ Deno.serve(async(req:Request)=>{
         }
       }
       const crossBorder=(inJohor(fromLat,fromLon)&&inSingapore(toLat,toLon))||(inSingapore(fromLat,fromLon)&&inJohor(toLat,toLon));
-      const j=await computeRoute(apiKey,{lat:fromLat,lon:fromLon},{lat:toLat,lon:toLon},travelMode,"routes_compute","app",String(body?.transit_preference||""));
+      const j=await computeRoute(apiKey,{lat:fromLat,lon:fromLon},{lat:toLat,lon:toLon},travelMode,"routes_compute","app",String(body?.transit_preference||""),[],travelMode==="TRANSIT"?sanitizeTransitModes(body?.allowed_transit_modes):[]);
       const raw=Array.isArray(j?.routes)?j.routes:[];
       const destination={name:String(to.name||"").trim(),address:String(to.address||"").trim()};
       const routes=raw.slice(0,3).map((x:any,i:number)=>normalizeRoute(x,i,destination,travelMode)).filter((x:any)=>x.legs.length)

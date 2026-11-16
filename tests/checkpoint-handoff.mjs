@@ -11,6 +11,7 @@ function actual(name){
 }
 const names=[
  'routeProviderFor','transitRouteProviderFor','journeyTransitPreference','journeyTransitAllowed',
+ 'journeyTransitOnlyModes','journeyTransitOnlyLabel','journeyTransitMatchesOnly','localTransitRoutes',
  'makeJbToSgBorderHops','makeBorderHops','sgStationRailRoute','sgCheckpointStationRoutes','routeCandidate',
  'planJbToSgSmart','planLocalSmart','planSgToJb','makeSgToJbRoutes','journeyRoadMode','rerouteProviderForBlock',
  'rankJourneyRoutes','chooseJourneyRouteSet','routeMinutes','routeDistance','routeModeIcon','ico',
